@@ -1,0 +1,209 @@
+                <div class="relative px-3 py-6">
+                    <div class="container px-3">
+                        <div class="-mx-3 mb-7 flex items-center justify-between">
+                            <div class="px-3">
+                                <h2 class="mb-1 text-xl font-bold text-slate-700 dark:text-white"> Packages </h2>
+                                <ul class="inline-flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-300">
+                                    <li>
+                                        <a href="dashboard.html" class="text-blue-500 hover:text-blue-700"> Dashboard </a>
+                                    </li>
+                                    <li class="mt-0.5 inline-flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="h-2 w-2">
+                                            <path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                                        </svg>
+                                    </li>
+                                    <li>Packages</li>
+                                </ul>
+                            </div>
+                            <div class="px-3">
+                                <a href="#" class="inline-flex items-center justify-center gap-3 rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800">Create Package</a>
+                            </div>
+                        </div>
+                        <!-- head -->
+                        <div class="rounded-md border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+                            <div class="flex items-center justify-between gap-3 px-5 py-5">
+                                <div class="w-full xs:w-64">
+                                    <div class="relative isolate flex w-full">
+                                        <input placeholder="Search all columns..." class="z-10 w-full rounded-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" type="text" />
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-x-3">
+                                    <div class="hidden text-sm text-slate-500 dark:text-slate-300 xs:block"> Show </div>
+                                    <div class="w-16 xs:w-20">
+                                        <select class="js-select z-10 w-full rounded-md border-slate-200 bg-white py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                                            <option>8</option>
+                                            <option>16</option>
+                                            <option>24</option>
+                                            <option>32</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- table-control-head -->
+                            <div class="overflow-x-auto scrollbar-thin scrollbar-track-slate-200 scrollbar-thumb-slate-600 dark:scrollbar-track-slate-800">
+                                <table class="w-full table-auto border-collapse border-b border-t border-slate-200 text-sm dark:border-slate-800">
+                                    <thead class="text-slate-600 dark:text-slate-200">
+                                        <tr>
+                                            <th class="py-2 pe-5 ps-5 text-start last:sticky last:end-0 last:bg-white last:ps-2 last:dark:bg-slate-950"> Name </th>
+                                            <th class="py-2 pe-5 ps-5 text-start last:sticky last:end-0 last:bg-white last:ps-2 last:dark:bg-slate-950"> Price </th>
+                                            <th class="py-2 pe-5 ps-5 text-start last:sticky last:end-0 last:bg-white last:ps-2 last:dark:bg-slate-950"> Subscriber </th>
+                                            <th class="py-2 pe-5 ps-5 text-start last:sticky last:end-0 last:bg-white last:ps-2 last:dark:bg-slate-950"> Status </th>
+                                            <th class="py-2 pe-5 ps-5 text-start last:sticky last:end-0 last:bg-white last:ps-2 last:dark:bg-slate-950"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <div class="flex items-baseline">
+                                                    <span class="block text-xs font-bold text-slate-600 dark:text-slate-200"> Free </span>
+                                                    <span class="ms-1 rounded-sm bg-slate-200 px-1 py-1 text-[10px] font-semibold leading-3 text-slate-500 dark:bg-slate-800 dark:text-slate-300"> Default </span>
+                                                </div>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <div class="flex flex-col">
+                                                    <div class="text-xs font-bold text-slate-600 dark:text-slate-200"> $ 0 </div>
+                                                    <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400"> Month </div>
+                                                </div>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <span class="text-xs font-medium text-slate-500 dark:text-slate-400"> 332 </span>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <span class="inline-flex rounded-full px-2 text-[11px] font-bold capitalize bg-emerald-100 dark:bg-emerald-950 text-emerald-500"> active </span>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <ul class="flex justify-end gap-2">
+                                                    <li>
+                                                        <a href="package-edit.html" class="inline-flex items-center justify-center rounded-full bg-slate-200 p-2 text-slate-600 transition-all hover:bg-blue-600 hover:text-white dark:bg-slate-800 dark:text-slate-200 hover:dark:bg-blue-600 hover:dark:text-white">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-3 w-3">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                                            </svg>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" class="inline-flex items-center justify-center rounded-full bg-slate-200 p-2 text-slate-600 transition-all hover:bg-rose-600 hover:text-white dark:bg-slate-800 dark:text-slate-200 hover:dark:bg-rose-600 hover:dark:text-white">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-3 w-3">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <div class="flex items-baseline">
+                                                    <span class="block text-xs font-bold text-slate-600 dark:text-slate-200"> Strater </span>
+                                                </div>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <div class="flex flex-col">
+                                                    <div class="text-xs font-bold text-slate-600 dark:text-slate-200"> $ 19 </div>
+                                                    <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400"> Month </div>
+                                                </div>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <span class="text-xs font-medium text-slate-500 dark:text-slate-400"> 97 </span>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <span class="inline-flex rounded-full px-2 text-[11px] font-bold capitalize bg-emerald-100 dark:bg-emerald-950 text-emerald-500"> active </span>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <ul class="flex justify-end gap-2">
+                                                    <li>
+                                                        <a href="package-edit.html" class="inline-flex items-center justify-center rounded-full bg-slate-200 p-2 text-slate-600 transition-all hover:bg-blue-600 hover:text-white dark:bg-slate-800 dark:text-slate-200 hover:dark:bg-blue-600 hover:dark:text-white">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-3 w-3">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                                            </svg>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" class="inline-flex items-center justify-center rounded-full bg-slate-200 p-2 text-slate-600 transition-all hover:bg-rose-600 hover:text-white dark:bg-slate-800 dark:text-slate-200 hover:dark:bg-rose-600 hover:dark:text-white">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-3 w-3">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <div class="flex items-baseline">
+                                                    <span class="block text-xs font-bold text-slate-600 dark:text-slate-200"> Premium </span>
+                                                </div>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <div class="flex flex-col">
+                                                    <div class="text-xs font-bold text-slate-600 dark:text-slate-200"> $ 39 </div>
+                                                    <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400"> Month </div>
+                                                </div>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <span class="text-xs font-medium text-slate-500 dark:text-slate-400"> 54 </span>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <span class="inline-flex rounded-full px-2 text-[11px] font-bold capitalize bg-rose-100 dark:bg-rose-950 text-rose-500"> disabled </span>
+                                            </td>
+                                            <td class="border-t border-slate-200 py-3 pe-5 ps-5 last:sticky last:end-0 last:bg-white last:ps-2 dark:border-slate-800 last:dark:bg-slate-950">
+                                                <ul class="flex justify-end gap-2">
+                                                    <li>
+                                                        <a href="package-edit.html" class="inline-flex items-center justify-center rounded-full bg-slate-200 p-2 text-slate-600 transition-all hover:bg-blue-600 hover:text-white dark:bg-slate-800 dark:text-slate-200 hover:dark:bg-blue-600 hover:dark:text-white">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-3 w-3">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                                            </svg>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" class="inline-flex items-center justify-center rounded-full bg-slate-200 p-2 text-slate-600 transition-all hover:bg-rose-600 hover:text-white dark:bg-slate-800 dark:text-slate-200 hover:dark:bg-rose-600 hover:dark:text-white">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-3 w-3">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- table -->
+                            </div>
+                            <!-- body -->
+                            <div class="flex flex-col justify-between gap-4 px-5 py-5 sm:flex-row sm:items-center">
+                                <div class="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-300">
+                                    <span>Showing</span>
+                                    <strong class="text-slate-600 dark:text-slate-200"> 1 </strong> - <strong class="text-slate-600 dark:text-slate-200"> 8 </strong> of <strong class="text-slate-600 dark:text-slate-200"> 32 </strong> results
+                                </div><!-- status -->
+                                <nav class="isolate inline-flex -space-x-px rounded-md shadow-xs">
+                                    <button class="relative inline-flex items-center border border-slate-200 px-2.5 py-2 text-sm font-semibold text-slate-600 first:rounded-s-md last:rounded-e-md hover:bg-slate-100 focus:z-20 dark:border-slate-800 dark:text-slate-200 hover:dark:bg-slate-900">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="h-4 w-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="relative inline-flex items-center border border-slate-200 px-2.5 py-2 text-sm font-semibold text-slate-600 first:rounded-s-md last:rounded-e-md hover:bg-slate-100 focus:z-20 dark:border-slate-800 dark:text-slate-200 hover:dark:bg-slate-900">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="h-4 w-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="relative inline-flex items-center border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 first:rounded-s-md last:rounded-e-md hover:bg-slate-100 focus:z-20 dark:border-slate-800 dark:text-slate-200 hover:dark:bg-slate-900"> 1 </button>
+                                    <button class="relative z-20 inline-flex items-center border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white first:rounded-s-md last:rounded-e-md hover:bg-blue-600 focus:z-20"> 2 </button>
+                                    <button class="relative inline-flex items-center border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 first:rounded-s-md last:rounded-e-md hover:bg-slate-100 focus:z-20 dark:border-slate-800 dark:text-slate-200 hover:dark:bg-slate-900"> 3 </button>
+                                    <button class="relative inline-flex items-center border border-slate-200 px-2.5 py-2 text-sm font-semibold text-slate-600 first:rounded-s-md last:rounded-e-md hover:bg-slate-100 focus:z-20 dark:border-slate-800 dark:text-slate-200 hover:dark:bg-slate-900">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="h-4 w-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="relative inline-flex items-center border border-slate-200 px-2.5 py-2 text-sm font-semibold text-slate-600 first:rounded-s-md last:rounded-e-md hover:bg-slate-100 focus:z-20 dark:border-slate-800 dark:text-slate-200 hover:dark:bg-slate-900">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="h-4 w-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"></path>
+                                        </svg>
+                                    </button>
+                                </nav>
+                                <!-- pagination -->
+                            </div>
+                            <!-- table-control-foot -->
+                        </div>
+                        <!-- card -->
+                    </div>
+                    <!-- container -->
+                </div><!-- page-body -->

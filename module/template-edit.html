@@ -1,0 +1,115 @@
+                <div class="relative px-3 py-6">
+                    <div class="container px-3">
+                        <div class="-mx-3 mb-7 flex items-center justify-between">
+                            <div class="px-3">
+                                <h2 class="mb-1 text-xl font-bold text-slate-700 dark:text-white"> Edit Template </h2>
+                                <ul class="inline-flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-300">
+                                    <li>
+                                        <a href="template-manager.html" class="text-blue-500 hover:text-blue-700"> Templates </a>
+                                    </li>
+                                    <li class="mt-0.5 inline-flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="h-2 w-2">
+                                            <path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                                        </svg>
+                                    </li>
+                                    <li>Template Name</li>
+                                </ul>
+                            </div>
+                            <div class="px-3">
+                                <a href="template-manager.html" class="inline-flex items-center justify-center gap-3 rounded-xl bg-slate-200 px-5 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-blue-600 hover:text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-mx-2 h-5 sm:mx-0 sm:h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                                    </svg>
+                                    <span class="hidden sm:block">Back</span>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- head -->
+                        <div class="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+                            <div class="border-b border-slate-200 px-6 py-4 dark:border-slate-800">
+                                <h2 class="text-xl font-bold text-slate-700 dark:text-white">
+                                    <span class="text-base font-normal text-slate-400 dark:text-slate-300"> Edit - </span> Template Name
+                                </h2>
+                            </div>
+                            <div class="px-6 pb-6 pt-5">
+                                <div class="-mx-3 -my-2 flex flex-wrap">
+                                    <div class="w-full px-3 lg:w-1/2 xl:w-2/5">
+                                        <div class="py-2">
+                                            <label for="templatename" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Template Name </label>
+                                            <input class="z-10 w-full rounded-xl border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" value="Template Name" id="templatename" />
+                                        </div>
+                                    </div>
+                                    <!-- col -->
+                                    <div class="w-full px-3 lg:w-1/2 xl:w-2/5">
+                                        <div class="py-2">
+                                            <label for="templateStatus" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Template Status </label>
+                                            <select id="templateStatus" class="js-select z-10 w-full rounded-xl border-slate-200 bg-white py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                                                <option>Active</option>
+                                                <option>Pending</option>
+                                                <option>Disabled</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- col -->
+                                    <div class="w-full px-3 lg:w-1/2 xl:w-2/5">
+                                        <div class="py-2">
+                                            <label for="templateApi" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> API Type </label>
+                                            <select id="templateApi" class="js-select z-10 w-full rounded-xl border-slate-200 bg-white py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                                                <option>Text</option>
+                                                <option>Image</option>
+                                                <option>Video</option>
+                                                <option>Chat</option>
+                                                <option>Code</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- col -->
+                                    <div class="w-full px-3 lg:w-1/2 xl:w-2/5">
+                                        <div class="py-2">
+                                            <label for="templateAiModel" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> AI Model </label>
+                                            <select id="templateAiModel" class="js-select z-10 w-full rounded-xl border-slate-200 bg-white py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                                                <option>gpt-4</option>
+                                                <option>gpt-3.5</option>
+                                                <option>dall-e</option>
+                                                <option>codex</option>
+                                                <option>davinci</option>
+                                                <option>curie</option>
+                                                <option>babbage</option>
+                                                <option>ada</option>
+                                                <option>whisper</option>
+                                                <option>motion</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- col -->
+                                    <div class="w-full px-3 lg:w-1/2 xl:w-2/5">
+                                        <div class="py-2">
+                                            <label for="templatedescription" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Template Name </label>
+                                            <div class="relative flex">
+                                                <textarea class="mb-0 w-full rounded-xl border-slate-200 bg-white py-2 text-sm text-slate-600 focus:border-slate-200 focus:shadow-none focus:outline-hidden dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200" id="templatedescription" rows="6">
+Template Description</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- col -->
+                                    <div class="w-full px-3 lg:w-1/2 xl:w-2/5">
+                                        <div class="py-2">
+                                            <label for="templateprompt" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Template Prompt </label>
+                                            <div class="relative flex">
+                                                <textarea class="mb-0 w-full rounded-xl border-slate-200 bg-white py-2 text-sm text-slate-600 focus:border-slate-200 focus:shadow-none focus:outline-hidden dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200" id="templateprompt" rows="6">Template Prompt</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- col -->
+                                    <div class="w-full px-3 pb-2 pt-4">
+                                        <button class="inline-flex items-center justify-center gap-3 rounded-xl bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800"> Update Template </button>
+                                    </div>
+                                    <!-- col -->
+                                </div>
+                                <!-- row -->
+                            </div>
+                        </div>
+                        <!-- card -->
+                    </div>
+                    <!-- container -->
+                </div><!-- page-body -->

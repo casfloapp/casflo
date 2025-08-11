@@ -1,0 +1,561 @@
+                <div class="relative px-3 py-6">
+                    <div class="container px-3">
+                        <div class="-mx-3 mb-7 flex items-center justify-between">
+                            <div class="px-3">
+                                <h2 class="mb-1 text-xl font-bold text-slate-700 dark:text-white"> Settings </h2>
+                                <ul class="inline-flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-300">
+                                    <li>
+                                        <a href="dashboard.html" class="text-blue-500 hover:text-blue-700"> Dashboard </a>
+                                    </li>
+                                    <li class="mt-0.5 inline-flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="h-2 w-2">
+                                            <path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                                        </svg>
+                                    </li>
+                                    <li>Settings</li>
+                                </ul>
+                            </div>
+                            <div class="px-3">
+                                <button data-target="#tabAside" class="class-toggle ui-open:bg-slate-200 ui-open:dark:bg-slate-800 ui-open:text-slate-600 ui-open:dark:text-slate-200 inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-slate-400 transition-all hover:bg-slate-200 hover:text-slate-600 dark:text-slate-300 hover:dark:bg-slate-800 hover:dark:text-slate-200 xl:hidden">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                                    </svg><!-- bars-3 - outline - heroicons -->
+                                </button>
+                            </div>
+                        </div>
+                        <!-- head -->
+                        <div class="flex items-start">
+                            <div id="tabAside" class="peer fixed end-4 top-20 z-[1010] hidden w-60 rounded-lg border border-slate-200 bg-white px-7 py-5 dark:border-slate-800 dark:bg-slate-950 xl:static xl:me-8 xl:block xl:w-96 [&.active]:block">
+                                <h4 class="mb-3 text-xl font-bold text-slate-700 dark:text-white"> Settings </h4>
+                                <ul class="tab-nav">
+                                    <li class="tab-item">
+                                        <a href="#" class="tab-toggle active relative isolate flex text-slate-500 dark:text-slate-200 [&.active]:text-blue-600 [&.active]:before:absolute [&.active]:before:-inset-x-3 [&.active]:before:inset-y-0 [&.active]:before:-z-10 [&.active]:before:rounded-md [&.active]:before:bg-blue-100 [&.active]:before:content-[''] [&.active]:dark:before:bg-blue-950/50" data-target="#general-settings">
+                                            <div class="flex items-center py-2">
+                                                <div class="me-3 h-5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-full">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                                                    </svg><!-- adjustments-horizontal - outline - heroicons  -->
+                                                </div>
+                                                <span class="text-sm font-medium"> General </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- tab-item -->
+                                    <li class="tab-item">
+                                        <a href="#" class="tab-toggle relative isolate flex text-slate-500 dark:text-slate-200 [&.active]:text-blue-600 [&.active]:before:absolute [&.active]:before:-inset-x-3 [&.active]:before:inset-y-0 [&.active]:before:-z-10 [&.active]:before:rounded-md [&.active]:before:bg-blue-100 [&.active]:before:content-[''] [&.active]:dark:before:bg-blue-950/50" data-target="#users-settings">
+                                            <div class="flex items-center py-2">
+                                                <div class="me-3 h-5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-full">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                                                    </svg><!-- users - outline - heroicons  -->
+                                                </div>
+                                                <span class="text-sm font-medium"> Users </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- tab-item -->
+                                    <li class="tab-item">
+                                        <a href="#" class="tab-toggle relative isolate flex text-slate-500 dark:text-slate-200 [&.active]:text-blue-600 [&.active]:before:absolute [&.active]:before:-inset-x-3 [&.active]:before:inset-y-0 [&.active]:before:-z-10 [&.active]:before:rounded-md [&.active]:before:bg-blue-100 [&.active]:before:content-[''] [&.active]:dark:before:bg-blue-950/50" data-target="#payment-settings">
+                                            <div class="flex items-center py-2">
+                                                <div class="me-3 h-5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-full">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                                                    </svg><!-- banknotes - outline - heroicons  -->
+                                                </div>
+                                                <span class="text-sm font-medium"> Payment </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- tab-item -->
+                                    <li class="tab-item">
+                                        <a href="#" class="tab-toggle relative isolate flex text-slate-500 dark:text-slate-200 [&.active]:text-blue-600 [&.active]:before:absolute [&.active]:before:-inset-x-3 [&.active]:before:inset-y-0 [&.active]:before:-z-10 [&.active]:before:rounded-md [&.active]:before:bg-blue-100 [&.active]:before:content-[''] [&.active]:dark:before:bg-blue-950/50" data-target="#notifications-settings">
+                                            <div class="flex items-center py-2">
+                                                <div class="me-3 h-5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-full">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5" />
+                                                    </svg><!-- bell-alert - outline - heroicons  -->
+                                                </div>
+                                                <span class="text-sm font-medium"> Notifications </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- tab-item -->
+                                    <li class="tab-item">
+                                        <a href="#" class="tab-toggle relative isolate flex text-slate-500 dark:text-slate-200 [&.active]:text-blue-600 [&.active]:before:absolute [&.active]:before:-inset-x-3 [&.active]:before:inset-y-0 [&.active]:before:-z-10 [&.active]:before:rounded-md [&.active]:before:bg-blue-100 [&.active]:before:content-[''] [&.active]:dark:before:bg-blue-950/50" data-target="#socilal-networks-settings">
+                                            <div class="flex items-center py-2">
+                                                <div class="me-3 h-5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-full">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+                                                    </svg><!-- share - outline - heroicons  -->
+                                                </div>
+                                                <span class="text-sm font-medium"> Social Networks </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- tab-item -->
+                                </ul>
+                                <!-- tab-nav -->
+                            </div>
+                            <div data-target="#tabAside" class="class-toggle pointer-events-none fixed inset-0 z-[1009] bg-slate-950/50 opacity-0 transition-all duration-200 peer-[.active]:pointer-events-auto peer-[.active]:opacity-100"></div>
+                            <div class="tab-content grow-1 w-full rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+                                <div class="tab-panel active hidden [&.active]:block" id="general-settings">
+                                    <div class="border-b border-slate-200 px-6 py-4 dark:border-slate-800">
+                                        <h4 class="text-xl font-bold text-slate-700 dark:text-white"> General Settings </h4>
+                                    </div>
+                                    <div class="border-b border-slate-200 px-6 pb-6 pt-5 dark:border-slate-800">
+                                        <div class="-mx-3 -my-2 flex flex-wrap">
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label for="siteName" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Site Name</label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <input value="Scribbler.AI" id="siteName" class="z-10 w-full rounded-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label for="siteTagline" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Site Tagline</label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <input value="No1. AI Copywriter" id="siteTagline" class="z-10 w-full rounded-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label for="siteEmail" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Site Email</label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <input value="contact@scribbler.ai" id="siteEmail" class="z-10 w-full rounded-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label for="siteURL" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Site URL</label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <input value="scribbler.ai" id="siteURL" class="z-10 w-full rounded-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label for="siteLanguage" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Site Default Language</label>
+                                                    <select id="siteLanguage" class="js-select z-10 w-full rounded-md border-slate-200 bg-white py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                                                        <option>English</option>
+                                                        <option>Spanish</option>
+                                                        <option>Portuguese</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label for="siteTimeZOne" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Site Time Zone</label>
+                                                    <select id="siteTimeZOne" class="js-select z-10 w-full rounded-md border-slate-200 bg-white py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                                                        <option>(UTC-12:00) International Date Line West</option>
+                                                        <option>(UTC-11:00) Coordinated Universal Time-11</option>
+                                                        <option>(UTC-10:00) Hawaii</option>
+                                                        <option>(UTC-09:00) Alaska</option>
+                                                        <option>(UTC-08:00) Baja California</option>
+                                                        <option> (UTC-07:00) Pacific Daylight Time (US & Canada) </option>
+                                                        <option>(UTC-07:00) Arizona</option>
+                                                        <option>(UTC-07:00) Chihuahua, La Paz, Mazatlan</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                        </div>
+                                        <!-- row -->
+                                    </div>
+                                    <div class="border-b border-slate-200 px-6 py-5 dark:border-slate-800">
+                                        <div class="-mx-3 -my-2 flex flex-wrap">
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <label class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Default Site Theme</label>
+                                                    <div class="-mx-2 -my-1 flex flex-wrap">
+                                                        <div class="px-2 py-1">
+                                                            <div class="relative flex">
+                                                                <input class="h-5 w-5 rounded-full border-2 border-slate-300 bg-white p-1 text-sm dark:border-slate-700 dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600 focus:dark:ring-offset-slate-950" type="radio" id="themeSystem" name="sitetheme" />
+                                                                <label class="inline-flex cursor-pointer ps-3 text-sm font-medium text-slate-600 dark:text-slate-200" for="themeSystem"> System </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="px-2 py-1">
+                                                            <div class="relative flex">
+                                                                <input class="h-5 w-5 rounded-full border-2 border-slate-300 bg-white p-1 text-sm dark:border-slate-700 dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600 focus:dark:ring-offset-slate-950" type="radio" id="themeDark" name="sitetheme" />
+                                                                <label class="inline-flex cursor-pointer ps-3 text-sm font-medium text-slate-600 dark:text-slate-200" for="themeDark"> Dark </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="px-2 py-1">
+                                                            <div class="relative flex">
+                                                                <input class="h-5 w-5 rounded-full border-2 border-slate-300 bg-white p-1 text-sm dark:border-slate-700 dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600 focus:dark:ring-offset-slate-950" type="radio" id="themeLight" name="sitetheme" checked />
+                                                                <label class="inline-flex cursor-pointer ps-3 text-sm font-medium text-slate-600 dark:text-slate-200" for="themeLight">Light</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Dark Theme Logo</label>
+                                                    <div class="js-upload" id="siteLogoDarkTheme">
+                                                        <div class="dz-message" data-dz-message>
+                                                            <div class="flex flex-col items-center">
+                                                                <p class="mb-3 text-center text-sm font-medium text-slate-500 dark:text-slate-300"> Drag &amp; Drop your files or </p>
+                                                                <div class="inline-flex cursor-pointer rounded-sm bg-blue-600 px-2 py-1 text-sm font-medium text-white"> Browse </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Light Theme Logo</label>
+                                                    <div class="js-upload" id="siteLogoLightTheme">
+                                                        <div class="dz-message" data-dz-message>
+                                                            <div class="flex flex-col items-center">
+                                                                <p class="mb-3 text-center text-sm font-medium text-slate-500 dark:text-slate-300"> Drag &amp; Drop your files or </p>
+                                                                <div class="inline-flex cursor-pointer rounded-sm bg-blue-600 px-2 py-1 text-sm font-medium text-white"> Browse </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                        </div>
+                                        <!-- row -->
+                                    </div>
+                                    <div class="border-slate-200 px-6 py-5 dark:border-slate-800">
+                                        <div class="-mx-3 -my-2 flex flex-wrap items-center">
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-5 rounded-sm border-2 border-slate-300 bg-white p-1 text-sm dark:border-slate-700 dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600 focus:dark:ring-offset-slate-950" type="checkbox" id="allowsearch" />
+                                                        <label class="inline-flex cursor-pointer ps-3 text-sm font-medium text-slate-600 dark:text-slate-200" for="allowsearch"> Allow search engines indexing </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-5 rounded-sm border-2 border-slate-300 bg-white p-1 text-sm dark:border-slate-700 dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600 focus:dark:ring-offset-slate-950" type="checkbox" id="autolanguage" />
+                                                        <label class="inline-flex cursor-pointer ps-3 text-sm font-medium text-slate-600 dark:text-slate-200" for="autolanguage"> Auto Language Detection </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- col -->
+                                            <div class="w-full px-3 py-2">
+                                                <button class="inline-flex items-center justify-center gap-3 rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800"> Update Settings </button>
+                                            </div>
+                                            <!-- col -->
+                                        </div>
+                                        <!-- row -->
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <div class="tab-panel hidden [&.active]:block" id="users-settings">
+                                    <div class="border-b border-slate-200 px-6 py-4 dark:border-slate-800">
+                                        <h4 class="text-xl font-bold text-slate-700 dark:text-white"> Users Settings </h4>
+                                    </div>
+                                    <div class="px-6 py-5">
+                                        <div class="-mx-3 flex flex-wrap items-center">
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="enableUsersRegistration" />
+                                                        <label class="cursor-pointer ps-3" for="enableUsersRegistration">
+                                                            <span class="block text-sm font-medium text-slate-600 dark:text-slate-200"> Enable new users registration </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="emailVerification" />
+                                                        <label class="cursor-pointer ps-3" for="emailVerification">
+                                                            <span class="block text-sm font-medium text-slate-600 dark:text-slate-200"> Email Verification </span>
+                                                            <span class="block pt-1 text-xs text-slate-500 dark:text-slate-300"> Send email verification when a user create account or changes email address. </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label for="unverifiedUsers" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Delete unverified users</label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <input type="number" value="3" min="0" id="unverifiedUsers" class="z-10 w-full rounded-s-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                        <div class="inline-flex items-center rounded-e-md border border-s-0 border-slate-200 bg-slate-100 px-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"> Days </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label for="inactiveUsers" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Delete inactive users</label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <input type="number" value="4" min="0" id="inactiveUsers" class="z-10 w-full rounded-s-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                        <div class="inline-flex items-center rounded-e-md border border-s-0 border-slate-200 bg-slate-100 px-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"> Weeks </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="testimonialReminders" />
+                                                        <label class="cursor-pointer ps-3" for="testimonialReminders">
+                                                            <span class="block text-sm font-medium text-slate-600 dark:text-slate-200"> Testimonial reminders </span>
+                                                            <span class="block pt-1 text-xs text-slate-500 dark:text-slate-300"> Send an email reminding customer for a tesimonial </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="serverDown" />
+                                                        <label class="cursor-pointer ps-3" for="serverDown">
+                                                            <span class="block text-sm font-medium text-slate-600 dark:text-slate-200"> Notify via email for server down time </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3 py-2">
+                                                <button class="inline-flex items-center justify-center gap-3 rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800"> Update User </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <div class="tab-panel hidden [&.active]:block" id="payment-settings">
+                                    <div class="border-b border-slate-200 px-6 py-4 dark:border-slate-800">
+                                        <h4 class="text-xl font-bold text-slate-700 dark:text-white"> Payment Settings </h4>
+                                    </div>
+                                    <div class="px-6 py-5">
+                                        <div class="-mx-3 flex flex-wrap items-center">
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="enablePayment" />
+                                                        <label class="cursor-pointer ps-3" for="enablePayment">
+                                                            <span class="block text-sm font-medium text-slate-600 dark:text-slate-200"> Enable Payment System </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <label class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Enabled payment types </label>
+                                                    <div class="-mx-2 -my-1 flex flex-wrap">
+                                                        <div class="px-2 py-1">
+                                                            <div class="relative flex">
+                                                                <input class="h-5 w-5 rounded-full border-2 border-slate-300 bg-white p-1 text-sm focus:dark:ring-offset-slate-950 dark:border-slate-700 dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="radio" id="oneTimePayment" name="paymentsystem" />
+                                                                <label class="inline-flex cursor-pointer ps-3 text-sm font-medium text-slate-600 dark:text-slate-200" for="oneTimePayment">One Time</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="px-2 py-1">
+                                                            <div class="relative flex">
+                                                                <input class="h-5 w-5 rounded-full border-2 border-slate-300 bg-white p-1 text-sm focus:dark:ring-offset-slate-950 dark:border-slate-700 dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="radio" id="recurringPayment" name="paymentsystem" />
+                                                                <label class="inline-flex cursor-pointer ps-3 text-sm font-medium text-slate-600 dark:text-slate-200" for="recurringPayment">Recurring</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="px-2 py-1">
+                                                            <div class="relative flex">
+                                                                <input class="h-5 w-5 rounded-full border-2 border-slate-300 bg-white p-1 text-sm focus:dark:ring-offset-slate-950 dark:border-slate-700 dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="radio" id="bothPayment" name="paymentsystem" />
+                                                                <label class="inline-flex cursor-pointer ps-3 text-sm font-medium text-slate-600 dark:text-slate-200" for="bothPayment">Both</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label for="acceptedCurrency" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Accepted Currency </label>
+                                                    <select class="js-select z-10 w-full rounded-md border-slate-200 bg-white py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200" id="acceptedCurrency">
+                                                        <option value="USD">USD</option>
+                                                        <option value="AUD">AUD</option>
+                                                        <option value="CAD">CAD</option>
+                                                        <option value="EUR">EUR</option>
+                                                        <option value="GBP">GBP</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="enableDiscount" />
+                                                        <label class="cursor-pointer ps-3" for="enableDiscount">
+                                                            <span class="block text-sm font-medium text-slate-600 dark:text-slate-200"> Enable Discount Codes </span>
+                                                            <span class="block pt-1 text-xs text-slate-500 dark:text-slate-300"> Enabling this settings will enable users to add a discount code created from the admin panel, before checkout. </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="enableInvoices" />
+                                                        <label class="cursor-pointer ps-3" for="enableInvoices">
+                                                            <span class="block text-sm font-medium text-slate-600 dark:text-slate-200"> Enable Invoices </span>
+                                                            <span class="block pt-1 text-xs text-slate-500 dark:text-slate-300"> Enableing Invoices will generate invoice for every transaction by an customer </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3 sm:w-1/2">
+                                                <div class="py-2">
+                                                    <label for="expiryReminder" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Plan expiry reminder </label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <input type="number" value="14" min="0" id="expiryReminder" class="z-10 w-full rounded-s-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                        <div class="inline-flex items-center rounded-e-md border border-s-0 border-slate-200 bg-slate-100 px-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"> Days </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3 py-2">
+                                                <button class="inline-flex items-center justify-center gap-3 rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800"> Update Payment </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <div class="tab-panel hidden [&.active]:block" id="notifications-settings">
+                                    <div class="border-b border-slate-200 px-6 py-4 dark:border-slate-800">
+                                        <h4 class="text-xl font-bold text-slate-700 dark:text-white"> Notifications Settings </h4>
+                                    </div>
+                                    <div class="px-6 pb-6 pt-5">
+                                        <div class="mb-3">
+                                            <h5 class="text-lg font-bold text-slate-700 dark:text-white"> Security Alerts </h5>
+                                        </div>
+                                        <div class="-mx-3 -my-2 flex flex-wrap items-center">
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="allowNetworkShow" />
+                                                        <label class="cursor-pointer ps-3" for="allowNetworkShow">
+                                                            <span class="block text-sm font-medium text-slate-600 dark:text-slate-200"> Unusual activity </span>
+                                                            <span class="block pt-1 text-xs text-slate-500 dark:text-slate-300"> Email me whenever encounter unusual activity. </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 mt-6">
+                                            <h5 class="text-lg font-bold text-slate-700 dark:text-white"> Other Alerts </h5>
+                                        </div>
+                                        <div class="-mx-3 -my-2 flex flex-wrap items-center">
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="newPayment" />
+                                                        <label class="cursor-pointer ps-3" for="newPayment">
+                                                            <span class="block text-sm font-medium text-slate-600 dark:text-slate-200"> New Payment Recive </span>
+                                                            <span class="block pt-1 text-xs text-slate-500 dark:text-slate-300"> Notify me when a new payment is successfully processed. </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="SupportRequest" />
+                                                        <label class="cursor-pointer ps-3" for="SupportRequest">
+                                                            <span class="block font-medium text-slate-600 dark:text-slate-200"> Support Request </span>
+                                                            <span class="block pt-1 text-xs text-slate-500 dark:text-slate-300"> Send email every time for customer support request. </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-9 cursor-pointer rounded-full border-2 border-slate-200 bg-slate-200 p-1 after:absolute after:start-1 after:top-1 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-[all] checked:bg-none checked:after:start-5 focus:ring-0 focus:ring-offset-0 focus-visible:outline-hidden dark:border-slate-800 dark:bg-slate-700 after:dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600" type="checkbox" id="dailySummary" />
+                                                        <label class="cursor-pointer ps-3" for="dailySummary">
+                                                            <span class="block text-sm font-medium text-slate-600 dark:text-slate-200"> Daily summary emails </span>
+                                                            <span class="block pt-1 text-xs text-slate-500 dark:text-slate-300"> Send me a daily summary of an overview via email. </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3 py-2">
+                                                <button class="inline-flex items-center justify-center gap-3 rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800"> Update Profile </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <div class="tab-panel hidden [&.active]:block" id="socilal-networks-settings">
+                                    <div class="border-b border-slate-200 px-6 py-4 dark:border-slate-800">
+                                        <h4 class="text-xl font-bold text-slate-700 dark:text-white"> Social Networks Settings </h4>
+                                    </div>
+                                    <div class="px-6 pb-6 pt-5">
+                                        <div class="-mx-3 -my-2 flex flex-wrap items-center">
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <label for="tiktokProfile" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200">Tiktok</label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <div class="inline-flex items-center rounded-s-md border border-e-0 border-slate-200 bg-slate-100 px-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"> tiktok.com/@ </div>
+                                                        <input value="scribbler.ai" id="tiktokProfile" class="z-10 w-full rounded-e-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <label for="youtubeProfile" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Youtube </label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <div class="inline-flex items-center rounded-s-md border border-e-0 border-slate-200 bg-slate-100 px-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"> youtube.com/ </div>
+                                                        <input value="scribbler.ai" id="youtubeProfile" class="z-10 w-full rounded-e-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <label for="twitterProfile" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Twitter </label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <div class="inline-flex items-center rounded-s-md border border-e-0 border-slate-200 bg-slate-100 px-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"> twitter.com/ </div>
+                                                        <input placeholder="username" id="twitterProfile" class="z-10 w-full rounded-e-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <label for="instagramProfile" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Instagram </label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <div class="inline-flex items-center rounded-s-md border border-e-0 border-slate-200 bg-slate-100 px-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"> instagram.com/ </div>
+                                                        <input placeholder="username" id="instagramProfile" class="z-10 w-full rounded-e-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-2">
+                                                    <label for="facebookProfile" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Facebook </label>
+                                                    <div class="relative isolate flex w-full">
+                                                        <div class="inline-flex items-center rounded-s-md border border-e-0 border-slate-200 bg-slate-100 px-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"> facebook.com/ </div>
+                                                        <input placeholder="username" id="facebookProfile" class="z-10 w-full rounded-e-md border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3">
+                                                <div class="py-3">
+                                                    <div class="relative flex">
+                                                        <input class="h-5 w-5 rounded-sm border-2 border-slate-300 bg-white p-1 text-sm dark:border-slate-700 dark:bg-slate-950 checked:border-blue-600 checked:bg-blue-600 checked:dark:border-blue-600 checked:dark:bg-blue-600 focus:dark:ring-offset-slate-950" type="checkbox" id="showLandingPage" />
+                                                        <label class="inline-flex cursor-pointer ps-3 text-sm font-medium text-slate-600 dark:text-slate-200" for="showLandingPage"> Show this on landing page </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full px-3 py-2">
+                                                <button class="inline-flex items-center justify-center gap-3 rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800"> Update Networks </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                            </div>
+                            <!-- tab-content -->
+                        </div>
+                    </div>
+                    <!-- container -->
+                </div><!-- page-body -->
