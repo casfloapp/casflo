@@ -20,7 +20,7 @@ buttons.forEach(button => {
 });
 
 // =================================================================
-// KODE INTEGRASI API (Disesuaikan untuk SPA)
+// KODE INTEGRASI API CASFLO (Disesuaikan untuk SPA)
 // =================================================================
 window.App = (() => {
     // Konfigurasi Global
@@ -31,7 +31,6 @@ window.App = (() => {
     const toggleLoading = (form, isLoading) => {
         const button = form.querySelector('button[type="submit"]');
         if (!button) return;
-        // Beberapa tombol mungkin tidak punya spinner, jadi kita buat jika tidak ada
         let spinner = button.querySelector('.loading-spinner');
         if (!spinner) {
             spinner = document.createElement('span');
@@ -83,7 +82,6 @@ window.App = (() => {
             if (!response.ok) throw new Error(result.error?.message);
             
             localStorage.setItem('emailForVerification', email);
-            // Gunakan router untuk navigasi
             history.pushState(null, '', '/two-step');
             window.dispatchEvent(new PopStateEvent('popstate'));
         } catch (error) {
@@ -154,14 +152,18 @@ window.App = (() => {
         }
     };
 
-    const handleLogout = () => {
+    // --- [BARU] Fungsi untuk Logout ---
+    const handleLogout = (e) => {
+        e.preventDefault();
         localStorage.removeItem('sessionToken');
         localStorage.removeItem('user');
+        
+        // Arahkan kembali ke halaman login
         history.pushState(null, '', '/login');
         window.dispatchEvent(new PopStateEvent('popstate'));
     };
 
-    // Fungsi ini akan dipanggil oleh router.js setiap kali halaman baru dimuat
+    // --- [DIUBAH] Fungsi initPage diperbarui untuk menangani logout ---
     const initPage = (pageName) => {
         if (pageName === 'login') {
             document.getElementById('login-form')?.addEventListener('submit', handleLogin);
@@ -176,7 +178,12 @@ window.App = (() => {
             const user = JSON.parse(localStorage.getItem('user'));
             const userNameSpan = document.getElementById('user-name-dashboard');
             if(userNameSpan) userNameSpan.textContent = user?.full_name || 'Pengguna';
-            document.getElementById('logout-button')?.addEventListener('click', handleLogout);
+        }
+        
+        // Tambahkan event listener ini secara umum agar berfungsi di semua halaman setelah login
+        const logoutButton = document.getElementById('logout-button');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', handleLogout);
         }
     };
 
