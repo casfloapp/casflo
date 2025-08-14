@@ -20,7 +20,7 @@ buttons.forEach(button => {
 });
 
 // =================================================================
-// KODE INTEGRASI API KASKITA (Disesuaikan untuk SPA)
+// KODE INTEGRASI API (Disesuaikan untuk SPA)
 // =================================================================
 window.App = (() => {
     // Konfigurasi Global
