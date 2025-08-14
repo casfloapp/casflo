@@ -64,7 +64,12 @@ window.App = (() => {
     // --- [BARU] Fungsi untuk Google Sign-In ---
     const handleGoogleSignIn = async (credentialResponse) => {
         const form = document.getElementById('login-form') || document.getElementById('register-form');
-        if (form) toggleLoading(form, true, true);
+        const googleButton = document.getElementById('google-signin-btn');
+        
+        if (googleButton) {
+            googleButton.disabled = true;
+            // Anda bisa menambahkan visual loading di sini jika mau
+        }
 
         try {
             const response = await fetch(`${apiUrl}/auth/google`, {
@@ -83,7 +88,7 @@ window.App = (() => {
             displayMessage('login-error', error.message);
             displayMessage('register-error', error.message);
         } finally {
-            if (form) toggleLoading(form, false, true);
+            if (googleButton) googleButton.disabled = false;
         }
     };
 
