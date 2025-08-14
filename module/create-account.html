@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buat Akun - Casflo.id</title>
-    <!-- Anda bisa mengganti ini dengan link ke file CSS Anda -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -56,10 +55,8 @@
                                 <p class="text-sm text-slate-500 dark:text-slate-400"> Mulai kelola keuangan Anda bersama Casflo. </p>
                             </div>
 
-                            <!-- Container untuk menampilkan pesan error -->
                             <div id="register-error" class="hidden my-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-950 dark:text-red-400"></div>
 
-                            <!-- Form diberi ID dan hapus 'action' -->
                             <form id="register-form"> 
                                 <div class="py-2">
                                     <label for="full-name" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Nama Lengkap </label>
@@ -110,51 +107,38 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT EMBEDDED -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const registerForm = document.getElementById('register-form');
-            
-            // Konfigurasi
-            const apiUrl = 'https://api.casflo.id/api/v1'; // GANTI DENGAN URL API ANDA
+            const apiUrl = 'https://api.casflo.id/api/v1';
 
-            // Fungsi Bantuan
             const toggleLoading = (form, isLoading) => {
                 const button = form.querySelector('button[type="submit"]');
                 if (!button) return;
                 const spinner = button.querySelector('.loading-spinner');
                 const buttonText = button.querySelector('span:not(.loading-spinner)');
-                
                 button.disabled = isLoading;
                 spinner.classList.toggle('hidden', !isLoading);
                 buttonText.classList.toggle('hidden', isLoading);
             };
 
-            const displayMessage = (containerId, message, type = 'error') => {
+            const displayMessage = (containerId, message) => {
                 const container = document.getElementById(containerId);
                 if (container) {
                     container.textContent = message || `Terjadi kesalahan. Silakan coba lagi.`;
-                    container.className = type === 'error' 
-                        ? 'my-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-950 dark:text-red-400'
-                        : 'my-2 p-3 text-sm text-green-700 bg-green-100 rounded-md dark:bg-green-950 dark:text-green-400';
                     container.classList.remove('hidden');
                 }
             };
             
             const clearMessages = (formId) => {
                 const errorDiv = document.getElementById(`${formId}-error`);
-                if (errorDiv) {
-                    errorDiv.classList.add('hidden');
-                    errorDiv.textContent = '';
-                }
+                if (errorDiv) errorDiv.classList.add('hidden');
             };
 
-            // Fungsi Utama untuk Registrasi
             const handleRegister = async (e) => {
                 e.preventDefault();
                 clearMessages('register');
                 toggleLoading(registerForm, true);
-
                 const fullName = document.getElementById('full-name').value;
                 const email = document.getElementById('email-address').value;
                 const password = document.getElementById('password').value;
@@ -166,19 +150,11 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ fullName, email, password, confirmPassword })
                     });
-
                     const result = await response.json();
-
-                    if (!response.ok) {
-                        throw new Error(result.error?.message || 'Registrasi gagal. Silakan coba lagi.');
-                    }
+                    if (!response.ok) throw new Error(result.error?.message);
                     
-                    // Simpan email untuk halaman verifikasi
                     localStorage.setItem('emailForVerification', email);
-                    
-                    // Arahkan ke halaman verifikasi
                     window.location.href = '/two-step.html';
-
                 } catch (error) {
                     displayMessage('register-error', error.message);
                 } finally {
@@ -186,9 +162,7 @@
                 }
             };
 
-            if(registerForm) {
-                registerForm.addEventListener('submit', handleRegister);
-            }
+            if(registerForm) registerForm.addEventListener('submit', handleRegister);
         });
     </script>
 </body>

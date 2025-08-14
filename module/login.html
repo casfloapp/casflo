@@ -37,7 +37,6 @@
                     </div>
                    <ul class="flex items-center gap-x-3 lg:gap-x-5">
                         <li class="relative inline-flex">
-                            <!-- Mengarahkan ke halaman registrasi yang benar -->
                             <a href="/create-account.html" class="inline-flex rounded-xl bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800">
                                 <span>Buat Akun</span>
                             </a>
@@ -57,10 +56,8 @@
                                 <p class="text-sm text-slate-500 dark:text-slate-400"> Selamat datang kembali! </p>
                             </div>
 
-                            <!-- Container untuk menampilkan pesan error -->
                             <div id="login-error" class="hidden my-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-950 dark:text-red-400"></div>
 
-                            <!-- Form diberi ID dan hapus 'action' -->
                             <form id="login-form">
                                 <div class="py-2">
                                     <label for="email-address" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Alamat Email </label>
@@ -75,7 +72,6 @@
                                     </div>
                                 </div>
                                 <div class="pt-3">
-                                    <!-- Tombol diberi type="submit" dan struktur untuk loading spinner -->
                                     <button type="submit" class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800">
                                         <span class="loading-spinner hidden"></span>
                                         <span>Login ke Akun</span>
@@ -100,51 +96,38 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT EMBEDDED -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loginForm = document.getElementById('login-form');
-            
-            // Konfigurasi
-            const apiUrl = 'https://api.casflo.id/api/v1'; // GANTI DENGAN URL API ANDA
+            const apiUrl = 'https://api.casflo.id/api/v1';
 
-            // Fungsi Bantuan
             const toggleLoading = (form, isLoading) => {
                 const button = form.querySelector('button[type="submit"]');
                 if (!button) return;
                 const spinner = button.querySelector('.loading-spinner');
                 const buttonText = button.querySelector('span:not(.loading-spinner)');
-                
                 button.disabled = isLoading;
                 spinner.classList.toggle('hidden', !isLoading);
                 buttonText.classList.toggle('hidden', isLoading);
             };
 
-            const displayMessage = (containerId, message, type = 'error') => {
+            const displayMessage = (containerId, message) => {
                 const container = document.getElementById(containerId);
                 if (container) {
                     container.textContent = message || `Terjadi kesalahan. Silakan coba lagi.`;
-                    container.className = type === 'error' 
-                        ? 'my-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-950 dark:text-red-400'
-                        : 'my-2 p-3 text-sm text-green-700 bg-green-100 rounded-md dark:bg-green-950 dark:text-green-400';
                     container.classList.remove('hidden');
                 }
             };
             
             const clearMessages = (formId) => {
                 const errorDiv = document.getElementById(`${formId}-error`);
-                if (errorDiv) {
-                    errorDiv.classList.add('hidden');
-                    errorDiv.textContent = '';
-                }
+                if (errorDiv) errorDiv.classList.add('hidden');
             };
 
-            // Fungsi Utama untuk Login
             const handleLogin = async (e) => {
                 e.preventDefault();
                 clearMessages('login');
                 toggleLoading(loginForm, true);
-
                 const email = document.getElementById('email-address').value;
                 const password = document.getElementById('password').value;
 
@@ -154,21 +137,12 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password })
                     });
-
                     const result = await response.json();
-
-                    if (!response.ok) {
-                        throw new Error(result.error?.message || 'Login gagal. Periksa kembali email dan password Anda.');
-                    }
+                    if (!response.ok) throw new Error(result.error?.message);
                     
-                    // Simpan token sesi dan data pengguna
                     localStorage.setItem('sessionToken', result.data.sessionToken);
                     localStorage.setItem('user', JSON.stringify(result.data.user));
-                    
-                    // Arahkan ke dashboard setelah berhasil login
-                    // Untuk SPA, Anda akan menggunakan router.js untuk memuat halaman dashboard
                     window.location.href = '/dashboard.html'; 
-
                 } catch (error) {
                     displayMessage('login-error', error.message);
                 } finally {
@@ -176,9 +150,7 @@
                 }
             };
 
-            if(loginForm) {
-                loginForm.addEventListener('submit', handleLogin);
-            }
+            if(loginForm) loginForm.addEventListener('submit', handleLogin);
         });
     </script>
 </body>
