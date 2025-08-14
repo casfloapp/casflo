@@ -1,106 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Casflo.id</title>
+    <!-- Anda bisa mengganti ini dengan link ke file CSS Anda -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .loading-spinner {
+            display: inline-block;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            width: 1rem;
+            height: 1rem;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-slate-200 dark:bg-slate-900">
 
-        <div class="flex min-h-screen max-w-full flex-col overflow-x-hidden pt-[calc(theme(space.16)+theme(space.1))]" id="#pagecontent">
-            <div class="fixed start-0 top-0 isolate z-[1020] w-full px-3 py-4 xl:py-3">
-                <div class="container px-3">
-                    <div class="w-full flex items-center justify-between">
-                        <div class="flex items-center gap-x-2">
-                            <a href="index-2.html" class="shrink-0">
-                                <div class="flex items-center">
-                                    <img class="h-6 dark:hidden" src="https://scribbler-html.themeyn.com/images/logo.png" alt="" />
-                                    <img class="hidden h-6 dark:block" src="https://scribbler-html.themeyn.com/images/logo-white.png" alt="" />
-                                </div>
-                            </a>
-                        </div>
-                       <ul class="flex items-center gap-x-3 lg:gap-x-5">
-                            <li class="relative inline-flex">
-                                <button class="theme-toggle inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-slate-400 transition-all *:pointer-events-none hover:bg-slate-200 hover:text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="hidden h-4 dark:block">
-                                        <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd" />
-                                    </svg><!-- moon - solid - heroicons  -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 dark:hidden">
-                                        <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
-                                    </svg><!-- sun - solid - heroicons  -->
-                                </button>
-                            </li>
-                            <li class="relative inline-flex">
-                                <a href="/create-account" class="inline-flex rounded-xl bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800">
-                                    <span class="xs:hidden">Create</span>
-                                    <span class="hidden xs:inline">Buat Akun</span>
-                                </a>
-                            </li>
-                        </ul>
+    <div class="flex min-h-screen max-w-full flex-col overflow-x-hidden">
+        <div class="fixed start-0 top-0 isolate z-[1020] w-full px-3 py-4 xl:py-3">
+            <div class="container px-3 mx-auto">
+                <div class="w-full flex items-center justify-between">
+                    <div class="flex items-center gap-x-2">
+                        <a href="/" class="shrink-0 text-xl font-bold text-slate-700 dark:text-white">
+                           Casflo.id
+                        </a>
                     </div>
+                   <ul class="flex items-center gap-x-3 lg:gap-x-5">
+                        <li class="relative inline-flex">
+                            <!-- Mengarahkan ke halaman registrasi yang benar -->
+                            <a href="/create-account.html" class="inline-flex rounded-xl bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800">
+                                <span>Buat Akun</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                <!-- container -->
             </div>
-            <!-- header -->
-            <div class="relative my-auto">
-                <div class="container px-3">
-                    <div class="-mx-3 flex justify-center">
-                        <div class="w-full px-3 xs:w-4/5 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3">
-                            <div class="w-full rounded-xl border border-slate-200 bg-white p-6 pt-5 dark:border-slate-800 dark:bg-slate-950">
-                                <div class="mb-2">
-                                    <h3 class="mb-1 text-xl font-bold text-slate-700 dark:text-white"> Login </h3>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400"> With valid credentials </p>
+        </div>
+        
+        <div class="relative my-auto py-10">
+            <div class="container px-3 mx-auto">
+                <div class="-mx-3 flex justify-center">
+                    <div class="w-full px-3 xs:w-4/5 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3">
+                        <div class="w-full rounded-xl border border-slate-200 bg-white p-6 pt-5 dark:border-slate-800 dark:bg-slate-950">
+                            <div class="mb-2">
+                                <h3 class="mb-1 text-xl font-bold text-slate-700 dark:text-white"> Login </h3>
+                                <p class="text-sm text-slate-500 dark:text-slate-400"> Selamat datang kembali! </p>
+                            </div>
+
+                            <!-- Container untuk menampilkan pesan error -->
+                            <div id="login-error" class="hidden my-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-950 dark:text-red-400"></div>
+
+                            <!-- Form diberi ID dan hapus 'action' -->
+                            <form id="login-form">
+                                <div class="py-2">
+                                    <label for="email-address" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Alamat Email </label>
+                                    <div class="relative isolate flex w-full">
+                                        <input class="z-10 w-full rounded-xl border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200" placeholder="contoh@email.com" id="email-address" type="email" required/>
+                                    </div>
                                 </div>
-                                <form action="https://scribbler-html.themeyn.com/two-step.html">
-                                    <div class="py-2">
-                                        <label for="emial-address" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Email Address </label>
-                                        <div class="relative isolate flex w-full">
-                                            <input class="z-10 w-full rounded-xl border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" placeholder="example@email.com" id="emial-address" type="email"/>
-                                        </div>
+                                <div class="py-2">
+                                    <label for="password" class="mb-2 inline-flex w-full cursor-pointer items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-200"> Password </label>
+                                    <div class="relative isolate flex w-full">
+                                        <input class="z-10 w-full rounded-xl border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200" id="password" type="password" required />
                                     </div>
-                                    <div class="py-2">
-                                        <label for="password" class="mb-2 inline-flex w-full cursor-pointer items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-200"> Password <a class="text-xs text-blue-500 hover:text-blue-700" href="#"> Forgot </a>
-                                        </label>
-                                        <div class="relative isolate flex w-full">
-                                            <input class="z-10 w-full rounded-xl border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 placeholder:dark:text-slate-500" value="123456" id="password" type="password" />
-                                        </div>
-                                    </div>
-                                    <div class="pt-3">
-                                        <button class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800"> Account Login </button>
-                                    </div>
-                                </form>
-                                <div class="mb-4 mt-5">
-                                    <h6 class="text-center text-[11px] font-bold uppercase tracking-wider text-slate-400"> Login With </h6>
                                 </div>
-                                <div class="-mx-3 flex flex-wrap">
-                                    <div class="w-1/2 px-3">
-                                        <button class="inline-flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-blue-100 hover:text-blue-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 hover:dark:border-blue-950 hover:dark:bg-blue-950 hover:dark:text-blue-600">
-                                            <svg class="h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
-                                                <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-                                            </svg>
-                                            <span>Google</span>
-                                        </button>
-                                    </div>
-                                    <div class="w-1/2 px-3">
-                                        <button class="inline-flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-blue-100 hover:text-blue-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 hover:dark:border-blue-950 hover:dark:bg-blue-950 hover:dark:text-blue-600">
-                                            <svg class="h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                                                <path d="M80 299.3V512H196V299.3h86.5l18-97.8H196V166.9c0-51.7 20.3-71.5 72.7-71.5c16.3 0 29.4 .4 37 1.2V7.9C291.4 4 256.4 0 236.2 0C129.3 0 80 50.5 80 159.4v42.1H14v97.8H80z" />
-                                            </svg>
-                                            <span>Facebook</span>
-                                        </button>
-                                    </div>
+                                <div class="pt-3">
+                                    <!-- Tombol diberi type="submit" dan struktur untuk loading spinner -->
+                                    <button type="submit" class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800">
+                                        <span class="loading-spinner hidden"></span>
+                                        <span>Login ke Akun</span>
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="mb-4 mt-5">
+                                <h6 class="text-center text-[11px] font-bold uppercase tracking-wider text-slate-400"> Atau Login Dengan </h6>
+                            </div>
+                            <div class="-mx-3 flex flex-wrap">
+                                <div class="w-full px-3">
+                                    <button class="inline-flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-blue-100 hover:text-blue-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                                        <svg class="h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" /></svg>
+                                        <span>Google</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div><!-- container -->
-            </div>
-            <div class="relative isolate px-6 py-4">
-                <div class="container px-3">
-                    <div class="flex items-center justify-between">
-                        <p class="text-xs font-medium text-slate-600 dark:text-white"> &copy; 2024. Crafted By&nbsp; <a class="text-slate-700 transition-all hover:text-blue-600 dark:text-white hover:dark:text-blue-600" href="https://themeforest.net/user/themeyn/portfolio" target="_blank"> themeyn </a>
-                        </p>
-                        <ul class="-mx-3 flex flex-wrap">
-                            <li>
-                                <a href="#" class="px-3 text-sm font-medium text-slate-600 transition-all hover:text-blue-600 dark:text-slate-100 hover:dark:text-blue-600"> Terms </a>
-                            </li>
-                            <li>
-                                <a href="about.html" class="px-3 text-sm font-medium text-slate-600 transition-all hover:text-blue-600 dark:text-slate-100 hover:dark:text-blue-600"> About </a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </div>
-        </div><!-- page-content -->
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT EMBEDDED -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('login-form');
+            
+            // Konfigurasi
+            const apiUrl = 'YOUR_API_ENDPOINT_HERE/api/v1'; // GANTI DENGAN URL API ANDA
+
+            // Fungsi Bantuan
+            const toggleLoading = (form, isLoading) => {
+                const button = form.querySelector('button[type="submit"]');
+                if (!button) return;
+                const spinner = button.querySelector('.loading-spinner');
+                const buttonText = button.querySelector('span:not(.loading-spinner)');
+                
+                button.disabled = isLoading;
+                spinner.classList.toggle('hidden', !isLoading);
+                buttonText.classList.toggle('hidden', isLoading);
+            };
+
+            const displayMessage = (containerId, message, type = 'error') => {
+                const container = document.getElementById(containerId);
+                if (container) {
+                    container.textContent = message || `Terjadi kesalahan. Silakan coba lagi.`;
+                    container.className = type === 'error' 
+                        ? 'my-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-950 dark:text-red-400'
+                        : 'my-2 p-3 text-sm text-green-700 bg-green-100 rounded-md dark:bg-green-950 dark:text-green-400';
+                    container.classList.remove('hidden');
+                }
+            };
+            
+            const clearMessages = (formId) => {
+                const errorDiv = document.getElementById(`${formId}-error`);
+                if (errorDiv) {
+                    errorDiv.classList.add('hidden');
+                    errorDiv.textContent = '';
+                }
+            };
+
+            // Fungsi Utama untuk Login
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                clearMessages('login');
+                toggleLoading(loginForm, true);
+
+                const email = document.getElementById('email-address').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    const response = await fetch(`${apiUrl}/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.error?.message || 'Login gagal. Periksa kembali email dan password Anda.');
+                    }
+                    
+                    // Simpan token sesi dan data pengguna
+                    localStorage.setItem('sessionToken', result.data.sessionToken);
+                    localStorage.setItem('user', JSON.stringify(result.data.user));
+                    
+                    // Arahkan ke dashboard setelah berhasil login
+                    // Untuk SPA, Anda akan menggunakan router.js untuk memuat halaman dashboard
+                    window.location.href = '/dashboard.html'; 
+
+                } catch (error) {
+                    displayMessage('login-error', error.message);
+                } finally {
+                    toggleLoading(loginForm, false);
+                }
+            };
+
+            if(loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+        });
+    </script>
+</body>
+</html>
