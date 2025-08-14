@@ -24,7 +24,7 @@ buttons.forEach(button => {
 // =================================================================
 window.App = (() => {
     // Konfigurasi Global
-    const apiUrl = 'https://kaskita-api.mandakeuangan.workers.dev/api/v1';
+    const apiUrl = 'https://api.casflo.id/api/v1';
 
     // Helper Functions (Fungsi Bantuan)
     const toggleLoading = (form, isLoading) => {
