@@ -25,7 +25,7 @@ buttons.forEach(button => {
 window.App = (() => {
     // Konfigurasi Global
     const apiUrl = 'https://api.casflo.id/api/v1';
-    const googleClientId = '39605099480-esqvcsucqacror5k3fkgpj84cnl8oddh.apps.googleusercontent.com'; // <-- GANTI DENGAN CLIENT ID ANDA
+    const googleClientId = 'YOUR_GOOGLE_CLIENT_ID_HERE'; // <-- GANTI DENGAN CLIENT ID ANDA
 
     // Helper Functions (Fungsi Bantuan)
     const toggleLoading = (form, isLoading, isGoogle = false) => {
@@ -66,10 +66,7 @@ window.App = (() => {
         const form = document.getElementById('login-form') || document.getElementById('register-form');
         const googleButton = document.getElementById('google-signin-btn');
         
-        if (googleButton) {
-            googleButton.disabled = true;
-            // Anda bisa menambahkan visual loading di sini jika mau
-        }
+        if (googleButton) googleButton.disabled = true;
 
         try {
             const response = await fetch(`${apiUrl}/auth/google`, {
