@@ -145,34 +145,40 @@ window.App = (() => {
         window.dispatchEvent(new PopStateEvent('popstate'));
     };
 
-    // --- [BARU] Fungsi untuk menangani callback dari Google ---
+    // --- [DIUBAH TOTAL] Fungsi untuk menangani callback dari Google ---
     const handleAuthCallback = async () => {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
         const error = params.get('error');
 
         if (token) {
+            // 1. Simpan token sesi
             localStorage.setItem('sessionToken', token);
-            // Ambil data user setelah mendapatkan token
+            
+            // 2. Gunakan token untuk mengambil data pengguna
             try {
                 const response = await fetch(`${apiUrl}/auth/users/me`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const result = await response.json();
                 if (!response.ok) throw new Error('Gagal mengambil data pengguna.');
+                
+                // 3. Simpan data pengguna ke localStorage
                 localStorage.setItem('user', JSON.stringify(result.data));
                 
-                // Arahkan ke dashboard setelah semua data disimpan
+                // 4. Arahkan ke dashboard SETELAH semua data disimpan
                 history.pushState(null, '', '/dashboard');
                 window.dispatchEvent(new PopStateEvent('popstate'));
 
             } catch (err) {
                 console.error(err);
+                // Jika gagal mengambil data user, kembali ke login dengan pesan error
                 sessionStorage.setItem('loginError', 'Gagal memuat data pengguna setelah login.');
                 history.pushState(null, '', '/login');
                 window.dispatchEvent(new PopStateEvent('popstate'));
             }
         } else if (error) {
+            // Jika ada error dari backend, tampilkan di halaman login
             sessionStorage.setItem('loginError', 'Login via Google gagal. Silakan coba lagi.');
             history.pushState(null, '', '/login');
             window.dispatchEvent(new PopStateEvent('popstate'));
@@ -193,6 +199,7 @@ window.App = (() => {
                 });
             }
 
+            // Tampilkan pesan error jika ada dari proses callback
             const loginError = sessionStorage.getItem('loginError');
             if (loginError) {
                 displayMessage('login-error', loginError);
@@ -209,6 +216,7 @@ window.App = (() => {
             const userNameSpan = document.getElementById('user-name-dashboard');
             if(userNameSpan) userNameSpan.textContent = user?.full_name || 'Pengguna';
         } else if (pageName === 'auth/callback') {
+            // Tangani halaman callback
             handleAuthCallback();
         }
         
