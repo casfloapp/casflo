@@ -2,7 +2,7 @@
     "use strict";
     
     
-    /*  =======================================================
+    /* =======================================================
       Custom Menu (sidebar/header)
     ========================================================== */
     let menu={
@@ -101,7 +101,7 @@
     };
 
 
-    /*  =======================================================
+    /* =======================================================
       Custom Sidebar
     ========================================================== */
     MainApp.Sidebar ={
@@ -140,7 +140,7 @@
       });
     }
 
-    /*  =======================================================
+    /* =======================================================
       Custom Header
     ========================================================== */
     MainApp.Header ={
@@ -179,33 +179,41 @@
       });
     }
     
-    /*  =======================================================
+    /* =======================================================
       Add some class to current link
     ========================================================== */
+    // [DIUBAH] Menambahkan pengecekan apakah elemen menu ada
     MainApp.CurrentLink = function(selector, parent, submenu, base, active){
-      let elm = document.querySelectorAll(selector);
+      let menuWrapper = document.querySelector(`.${base}`);
+      if (!menuWrapper) return; // <-- PERBAIKAN: Hentikan jika menu tidak ada
+
+      let elm = menuWrapper.querySelectorAll(selector);
       let currentURL = document.location.href,
       removeHash = currentURL.substring(0, (currentURL.indexOf("#") == -1) ? currentURL.length : currentURL.indexOf("#")),
       removeQuery = removeHash.substring(0, (removeHash.indexOf("?") == -1) ? removeHash.length : removeHash.indexOf("?")),
       fileName = removeQuery;
       
       elm.forEach(function(item){
-        var selfLink = item.getAttribute('href').split('../').slice(-1);
-        if (fileName.match(selfLink)) {
+        var selfLink = item.getAttribute('href').split('../').slice(-1)[0];
+        if (fileName.endsWith(selfLink)) {
           let parents = MainApp.getParents(item,`.${base}`, parent);
           parents.forEach(parentElemets =>{
             parentElemets.classList.add(...active);
             let subItem = parentElemets.querySelector(`.${submenu}`);
             subItem !== null && (subItem.style.display = "block")
-            parentElemets.scrollIntoView({ behavior: "smooth", block: "start",inline: "nearest"});
           })
         } else {
           item.parentElement.classList.remove(...active);
         }
       })
     }
+    
+    // [DIUBAH] Menambahkan pengecekan apakah elemen menu ada
     MainApp.CurrentLinkApp = function(selector, parent, submenu, base, active){
-      let elm = document.querySelectorAll(selector);
+      let menuWrapper = document.querySelector(`.${base}`);
+      if (!menuWrapper) return; // <-- PERBAIKAN: Hentikan jika menu tidak ada
+
+      let elm = menuWrapper.querySelectorAll(selector);
       let currentURL = document.location.href,
       removeHash = currentURL.substring(0, (currentURL.indexOf("#") == -1) ? currentURL.length : currentURL.indexOf("#")),
       fileName = removeHash;
@@ -217,7 +225,6 @@
             parentElemets.classList.add(...active);
             let subItem = parentElemets.querySelector(`.${submenu}`);
             subItem !== null && (subItem.style.display = "block")
-            parentElemets.scrollIntoView({ behavior: "smooth", block: "start",inline: "nearest"});
           })
         } else {
           item.parentElement.classList.remove(...active);
@@ -225,7 +232,7 @@
       })
     }
 
-    /*  ================================================================
+    /* ================================================================
       Custom select js (Choices)
     ==================================================================== */
     MainApp.Select = function(selector,options){
@@ -252,228 +259,7 @@
       }
     }
 
-    /*  ================================================================
-      Drag and drop input/upload field (dropzone)
-    ==================================================================== */
-    MainApp.Dropzone = function(selector){
-      let elm = document.querySelectorAll(selector);
-      if( elm != 'undefined' && elm != null ){
-        elm.forEach(item => {
-          let itemId = item.id;
-          let maxFiles = item.dataset.maxFiles ? parseInt(item.dataset.maxFiles) : null;
-          let maxFilesize = item.dataset.maxFilesize ? parseInt(item.dataset.maxFilesize) : 256;
-          let acceptedFiles = item.dataset.acceptedFiles ? item.dataset.acceptedFiles : null;
-
-          //add styling Class 
-          item.classList.add('dropzone');
-          
-          let myDropzone = new Dropzone(`#${itemId}`,{
-            url: "image",
-            maxFilesize: maxFilesize,
-            maxFiles: maxFiles,
-            acceptedFiles: acceptedFiles
-          });
-        })
-      }
-    }
-
-    /*  ================================================================
-      Slider (swiper)
-    ==================================================================== */
-    MainApp.Slider = function(selector){
-      let elm = document.querySelectorAll(selector);
-      if( elm != 'undefined' && elm != null ){
-        elm.forEach(item => {
-          let _breakpoints = item.dataset.breakpoints ? JSON.parse(item.dataset.breakpoints) : null;
-          let _autoplay = item.dataset.autoplay ? JSON.parse(item.dataset.autoplay) : false;
-          let _loop = item.dataset.loop ? JSON.parse(item.dataset.loop) : false;
-          let _centeredSlides = item.dataset.centeredslides ? JSON.parse(item.dataset.centeredslides) : false;
-          let _speed = item.dataset.speed ? parseInt(item.dataset.speed) : 1000;
-          let _spaceBetween = item.dataset.spaceBetween ? parseInt(item.dataset.spaceBetween) : 0;
-          let _effect = item.dataset.effect ? item.dataset.effect : '';
-          let _parent = item.dataset.parent ? item.dataset.parent : false;
-          var swiper = new Swiper(item, {
-            // Optional parameters
-            centeredSlides: _centeredSlides,
-            loop: _loop,
-            speed: _speed,
-            autoplay:_autoplay,
-            effect: _effect,
-            spaceBetween: _spaceBetween,
-            // If we need pagination
-            pagination: {
-              el: ".swiper-pagination",
-              type: 'bullets',
-              clickable: true,
-            },
-            // Navigation arrows
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-              clickable: true,
-            },
-            breakpoints: _breakpoints,
-          });
-
-          if(_parent){
-            let item = document.querySelector(_parent);
-            let _breakpoints = item.dataset.breakpoints ? JSON.parse(item.dataset.breakpoints) : null;
-            let _autoplay = item.dataset.autoplay ? JSON.parse(item.dataset.autoplay) : false;
-            let _loop = item.dataset.loop ? JSON.parse(item.dataset.loop) : false;
-            let _centeredSlides = item.dataset.centeredslides ? JSON.parse(item.dataset.centeredslides) : false;
-            let _speed = item.dataset.speed ? parseInt(item.dataset.speed) : 1000;
-            let _spaceBetween = item.dataset.spaceBetween ? parseInt(item.dataset.spaceBetween) : 0;
-            let _effect = item.dataset.effect ? item.dataset.effect : '';
-            var swiper_parent = new Swiper(item, {
-              // Optional parameters
-              centeredSlides: _centeredSlides,
-              loop: _loop,
-              speed: _speed,
-              autoplay:_autoplay,
-              effect: _effect,
-              spaceBetween: _spaceBetween,
-              // If we need pagination
-              pagination: {
-                el: ".swiper-pagination",
-                type: 'bullets',
-                clickable: true,
-              },
-              // Navigation arrows
-              navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-                clickable: true,
-              },
-              breakpoints: _breakpoints,
-              thumbs: {
-                swiper: swiper,
-              },
-            });
-          }
-
-          
-        });
-      }
-    }
-    
-    /*  =======================================================
-      Editor
-    ========================================================== */
-    MainApp.Quill = function (selector, opt) {
-      let elm = document.querySelectorAll(selector);
-        if( elm != 'undefined' && elm != null ){
-          elm.forEach(item => {
-            let toolbarConfig = [
-              [{ 'header': [ 3, 4, 5, 6, false] }],
-              ['bold', 'italic', 'underline'],
-              [ 'blockquote' ,{ 'list': 'bullet' }],
-              [{ 'align': [] }],
-              ['clean']
-          ]
-            let quill = new Quill(item, {
-                modules: {
-                    toolbar: toolbarConfig
-                },
-                theme: 'snow'
-            });
-          })
-        }
-    }
-
-    /*  =======================================================
-      Lightbox
-    ========================================================== */
-    MainApp.Lightbox = function () {
-      let elm = document.querySelectorAll('.js-lightbox-toggle');
-      if( elm != 'undefined' && elm != null ){
-        elm.forEach(item => {
-          const lightbox = new PhotoSwipeLightbox({
-            gallery: '.js-lightbox-gallery',
-            children: '.js-lightbox-toggle',
-            maxWidthToAnimate: 10,
-            pswpModule: PhotoSwipe 
-          });
-          lightbox.init();
-        })
-      }
-    }
-
-    /*  =======================================================
-      SyntaxHighlight
-    ========================================================== */
-    MainApp.SyntaxHighlight = function () {
-      let elm = document.querySelectorAll('pre code');
-      if( elm != 'undefined' && elm != null ){
-        elm.forEach(item => {
-          hljs.highlightElement(item);
-        })
-      }
-    }
-    /*  =======================================================
-      Clipboard
-    ========================================================== */
-    MainApp.Clipboard = function() {
-      let clipboardTrigger = document.querySelectorAll('.js-copy');
-      let options = {
-        tooltip:{
-          init: 'Copy',
-          success : 'Copied',
-        }
-      }
-      clipboardTrigger.forEach(item => {
-        //init clipboard
-        let clipboard = new ClipboardJS(item);
-        //set markup
-        let initMarkup = `${options.tooltip.init}`;
-        let successMarkup = `${options.tooltip.success}`;
-        item.innerHTML = initMarkup;
-        //on-sucess
-        clipboard.on("success", function(e){
-          let target = e.trigger;
-          target.classList.add('success')
-          target.innerHTML = successMarkup;
-          setTimeout(function(){
-            target.innerHTML = initMarkup;
-            target.classList.remove('success')
-          }, 1000)
-        });
-      });
-    }
-
-    /*  ================================================================
-      Typewriter (typewriter)
-    ==================================================================== */
-    MainApp.Typewriter = function(selector){
-      let elm = document.querySelectorAll(selector);
-      if( elm != 'undefined' && elm != null ){
-        elm.forEach(item => {
-          let _strings = item.dataset.strings ? JSON.parse(item.dataset.strings) : null;
-          let _autostart = item.dataset.autostart ? JSON.parse(item.dataset.autostart) : true;
-          let _loop = item.dataset.loop ? JSON.parse(item.dataset.loop) : true;
-          new Typewriter(item, {
-            strings: _strings,
-            autoStart: _autostart,
-            loop: _loop
-          });
-        });
-      }
-    }
-
-    /*  ================================================================
-      Typewriter (typewriter)
-    ==================================================================== */
-    MainApp.Masonry = function(selector){
-      let elm = document.querySelectorAll(selector);
-      if( elm != 'undefined' && elm != null ){
-        elm.forEach(item => {
-          var msnry = new Masonry( item, {
-            itemSelector: '.masonry-item'
-          });
-        });
-      }
-    }
-
-    /*  ================================================================
+    /* ================================================================
       AutoChangeInput
     ==================================================================== */
     MainApp.AutoChangeInput = function (selector) {
@@ -581,7 +367,8 @@
       })
     }
 
-    
+
+        
     /*  =======================================================
       Custom Scripts init 
     ========================================================== */
@@ -615,4 +402,3 @@
     
     return MainApp;
     })(MainApp);
-    
