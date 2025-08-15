@@ -96,62 +96,6 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginForm = document.getElementById('login-form');
-            const apiUrl = 'https://api.casflo.id/api/v1';
 
-            const toggleLoading = (form, isLoading) => {
-                const button = form.querySelector('button[type="submit"]');
-                if (!button) return;
-                const spinner = button.querySelector('.loading-spinner');
-                const buttonText = button.querySelector('span:not(.loading-spinner)');
-                button.disabled = isLoading;
-                spinner.classList.toggle('hidden', !isLoading);
-                buttonText.classList.toggle('hidden', isLoading);
-            };
-
-            const displayMessage = (containerId, message) => {
-                const container = document.getElementById(containerId);
-                if (container) {
-                    container.textContent = message || `Terjadi kesalahan. Silakan coba lagi.`;
-                    container.classList.remove('hidden');
-                }
-            };
-            
-            const clearMessages = (formId) => {
-                const errorDiv = document.getElementById(`${formId}-error`);
-                if (errorDiv) errorDiv.classList.add('hidden');
-            };
-
-            const handleLogin = async (e) => {
-                e.preventDefault();
-                clearMessages('login');
-                toggleLoading(loginForm, true);
-                const email = document.getElementById('email-address').value;
-                const password = document.getElementById('password').value;
-
-                try {
-                    const response = await fetch(`${apiUrl}/auth/login`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, password })
-                    });
-                    const result = await response.json();
-                    if (!response.ok) throw new Error(result.error?.message);
-                    
-                    localStorage.setItem('sessionToken', result.data.sessionToken);
-                    localStorage.setItem('user', JSON.stringify(result.data.user));
-                    window.location.href = '/dashboard.html'; 
-                } catch (error) {
-                    displayMessage('login-error', error.message);
-                } finally {
-                    toggleLoading(loginForm, false);
-                }
-            };
-
-            if(loginForm) loginForm.addEventListener('submit', handleLogin);
-        });
-    </script>
 </body>
 </html>
