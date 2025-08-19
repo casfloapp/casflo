@@ -52,7 +52,18 @@ const routeHandler = async () => {
     const filePath = `/pages/${pageName}.html`; 
     const contentDiv = isAuthPage ? authContainer : document.getElementById("content");
 
-
+    if (contentDiv) {
+        try {
+            const response = await fetch(filePath);
+            if (!response.ok) throw new Error(`Halaman tidak ditemukan: ${filePath}`);
+            contentDiv.innerHTML = await response.text();
+            document.title = `${pageName.charAt(0).toUpperCase() + pageName.slice(1).replace('-', ' ')} | Casflo`;
+            reinitializeThemeScripts(pageName);
+        } catch (error) {
+            console.error("Error fetching page: ", error);
+            contentDiv.innerHTML = `<div class="p-10 text-center"><h2>404 - Halaman Tidak Ditemukan</h2><p>Halaman yang Anda cari tidak ada.</p><a href="/login" data-link class="text-blue-600">Kembali ke Login</a></div>`;
+        }
+    }
 };
 
 
