@@ -19,11 +19,21 @@ const reinitializeThemeScripts = (pageName) => {
 };
 
 const routeHandler = async () => {
+    // --- [BARU] Logika untuk menangani callback Google secara khusus ---
+    if (window.location.pathname === '/auth/callback') {
+        // Ini adalah rute virtual, tidak perlu memuat HTML.
+        // Cukup panggil fungsi handler-nya dari apps.js
+        if (window.App && typeof window.App.initPage === 'function') {
+            window.App.initPage('auth/callback');
+        }
+        return; // Hentikan eksekusi lebih lanjut untuk rute ini
+    }
+
+    // --- Logika yang sudah ada (tidak berubah) ---
     const token = localStorage.getItem('sessionToken');
     let path = window.location.pathname;
     
-    // Logika Redirect
-    if (token && (path === '/login' || path === '/create-account' || path === '/two-step' || path === '/')) {
+    if (token && ['/login', '/create-account', '/two-step', '/'].includes(path)) {
         history.replaceState(null, '', '/dashboard');
         path = '/dashboard';
     } else if (!token && !['/login', '/create-account', '/two-step'].includes(path)) {
@@ -31,37 +41,20 @@ const routeHandler = async () => {
         path = '/login';
     }
     
-    // Tampilkan/sembunyikan layout utama vs layout auth
     const appContainer = document.getElementById('app-container');
     const authContainer = document.getElementById('auth-container');
-    const navbar = document.getElementById('navbar');
     const isAuthPage = ['/login', '/create-account', '/two-step'].includes(path);
 
-    if (appContainer) appContainer.style.display = isAuthPage ? 'none' : 'block';
-    if (navbar) navbar.style.display = isAuthPage ? 'none' : 'block';
+    appContainer.style.display = isAuthPage ? 'none' : 'block';
+    authContainer.style.display = isAuthPage ? 'block' : 'none';
 
     const pageName = path.substring(1) || 'login';
-    // Ganti nama file agar konsisten
-    const filePath = `/module/${pageName.replace(/_/g, '-')}.html`; 
+    const filePath = `/pages/${pageName}.html`; 
     const contentDiv = isAuthPage ? authContainer : document.getElementById("content");
 
-    if (contentDiv) {
-        try {
-            const response = await fetch(filePath);
-            if (!response.ok) throw new Error(`File not found: ${filePath}`);
-            
-            contentDiv.innerHTML = await response.text();
-            document.title = `${pageName.charAt(0).toUpperCase() + pageName.slice(1)} | KasKita`;
-            
-            reinitializeThemeScripts(pageName);
 
-        } catch (error) {
-            console.error("Error fetching page: ", error);
-            contentDiv.innerHTML = "<h2>404 - Halaman Tidak Ditemukan</h2>";
-        }
-    }
 };
-ß
+
 
 // Event untuk tombol back/forward browser
 window.addEventListener("popstate", routeHandler);
