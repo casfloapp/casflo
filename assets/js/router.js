@@ -14,48 +14,48 @@ const reinitializeThemeScripts = (pageName) => {
         console.log(`Initializing page-specific scripts for: ${pageName}`);
         window.App.initPage(pageName);
     } else {
-        console.warn("KasKita API initialization function (App.initPage) not found.");
+        console.warn("Casflo API initialization function (App.initPage) not found.");
     }
 };
 
 const routeHandler = async () => {
-    // --- [BARU] Logika untuk menangani callback Google secara khusus ---
+    // --- Logika untuk menangani callback Google secara khusus ---
     if (window.location.pathname === '/auth/callback') {
-        // Ini adalah rute virtual, tidak perlu memuat HTML.
-        // Cukup panggil fungsi handler-nya dari apps.js
         if (window.App && typeof window.App.initPage === 'function') {
             window.App.initPage('auth/callback');
         }
-        return; // Hentikan eksekusi lebih lanjut untuk rute ini
+        return; 
     }
 
-    // --- Logika yang sudah ada (tidak berubah) ---
     const token = localStorage.getItem('sessionToken');
     let path = window.location.pathname;
     
+    // Logika Redirect
     if (token && ['/login', '/create-account', '/two-step', '/'].includes(path)) {
         history.replaceState(null, '', '/dashboard');
         path = '/dashboard';
-    } else if (!token && !['/login', '/create-account', '/two-step'].includes(path)) {
+    } else if (!token && !['/login', '/create-account', '/two-step', '/auth/callback'].includes(path)) {
         history.replaceState(null, '', '/login');
         path = '/login';
     }
     
+    // Tampilkan/sembunyikan layout
     const appContainer = document.getElementById('app-container');
     const authContainer = document.getElementById('auth-container');
     const isAuthPage = ['/login', '/create-account', '/two-step'].includes(path);
 
-    appContainer.style.display = isAuthPage ? 'none' : 'block';
-    authContainer.style.display = isAuthPage ? 'block' : 'none';
+    if (appContainer) appContainer.style.display = isAuthPage ? 'none' : 'block';
+    if (authContainer) authContainer.style.display = isAuthPage ? 'block' : 'none';
 
     const pageName = path.substring(1) || 'login';
-    const filePath = `/pages/${pageName}.html`; 
+    // [PERBAIKAN] Menggunakan path folder '/module/' agar konsisten
+    const filePath = `/module/${pageName.replace(/_/g, '-')}.html`; 
     const contentDiv = isAuthPage ? authContainer : document.getElementById("content");
 
     if (contentDiv) {
         try {
             const response = await fetch(filePath);
-            if (!response.ok) throw new Error(`Halaman tidak ditemukan: ${filePath}`);
+            if (!response.ok) throw new Error(`File not found: ${filePath}`);
             contentDiv.innerHTML = await response.text();
             document.title = `${pageName.charAt(0).toUpperCase() + pageName.slice(1).replace('-', ' ')} | Casflo`;
             reinitializeThemeScripts(pageName);
@@ -66,6 +66,18 @@ const routeHandler = async () => {
     }
 };
 
+// Mencegat klik pada link
+document.addEventListener("click", (e) => {
+    const link = e.target.closest("a[data-link]");
+    if (link) {
+        e.preventDefault();
+        const url = link.getAttribute('href');
+        if (url !== window.location.pathname) {
+            history.pushState({ path: url }, '', url);
+            routeHandler();
+        }
+    }
+});
 
 // Event untuk tombol back/forward browser
 window.addEventListener("popstate", routeHandler);
