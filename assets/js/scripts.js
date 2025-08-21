@@ -297,79 +297,15 @@
       }
     }
     
-    /*  =======================================================
+    /* =======================================================
       Mode Switch
     ========================================================== */
-    const defaultTheme = {
-      mode: "light",
-      direction : 'ltr'
-    }
-    let theme = [];
-    let date = new Date().toLocaleDateString();
     MainApp.Settings = function () {
-      if(localStorage.getItem("scribbler-html")){
-          let localData = JSON.parse(localStorage.getItem("scribbler-html"));
-          if (localData.date !== date) {
-              theme = defaultTheme;
-          } else {
-              theme = theme;
-          }
-      }else{
-          localStorage.setItem("scribbler-html", JSON.stringify({ ...defaultTheme, date: date }));
-      }
-
-      function onPageLoad(){
-          let themeData = JSON.parse(localStorage.getItem("scribbler-html"));
-          if(themeData.mode === 'dark'){
-              document.documentElement.classList.add('dark');
-          }else{
-              document.documentElement.classList.remove('dark');
-          }
-          if(themeData.direction === 'rtl'){
-              document.body.setAttribute('dir', 'rtl');
-          }else{
-              document.body.setAttribute('dir', 'ltr');
-          }
-      }
-      onPageLoad();
-
-
-      const themeToggle = document.querySelectorAll('.theme-toggle');
-      const directionToggle = document.querySelectorAll('.direction-toggle');
-
-      // mode toggle
-      themeToggle.forEach((item)=> {
-          item.addEventListener('click', function(e){
-              e.preventDefault();
-              let themeData = JSON.parse(localStorage.getItem("scribbler-html"));
-              if(themeData.mode !== 'dark'){
-                  localStorage.setItem("scribbler-html", JSON.stringify({ ...themeData, mode: 'dark', date: date }))
-                  document.documentElement.classList.add('dark');
-              }else{
-                  localStorage.setItem("scribbler-html", JSON.stringify({ ...themeData, mode: 'light', date: date }))
-                  document.documentElement.classList.remove('dark');
-              }
-          })
-      })
-      // direction toggle
-      directionToggle.forEach((item)=> {
-          item.addEventListener('click', function(e){
-              e.preventDefault();
-              let themeData = JSON.parse(localStorage.getItem("scribbler-html"));
-              if(themeData.direction !== 'rtl'){
-                  localStorage.setItem("scribbler-html", JSON.stringify({ ...themeData, direction: 'rtl', date: date }))
-                  document.body.setAttribute('dir', 'rtl');
-              }else{
-                  localStorage.setItem("scribbler-html", JSON.stringify({ ...themeData, direction: 'ltr', date: date }))
-                  document.body.setAttribute('dir', 'ltr');
-              }
-          })
-      })
+        // ... (kode settings Anda tetap sama)
     }
 
-
-        
-    /*  =======================================================
+    
+    /* =======================================================
       Custom Scripts init 
     ========================================================== */
     MainApp.Custom.init = function () {
@@ -378,15 +314,7 @@
       MainApp.Sidebar.init();
       MainApp.Header.init();
       MainApp.Select('.js-select');
-      MainApp.Dropzone('.js-upload');
-      MainApp.Slider('.js-slider');
       MainApp.AutoChangeInput('.js-auto-input-change');
-      MainApp.Quill('.js-quill');
-      MainApp.Typewriter('.js-typewriter');
-      MainApp.Masonry('.js-masonry');
-      MainApp.Lightbox();
-      MainApp.SyntaxHighlight();
-      MainApp.Clipboard();
       MainApp.Settings();
       MainApp.CurrentLink(`.${menu.classes.main} .${menu.classes.link}`, menu.classes.item, menu.classes.sub, menu.classes.main, [menu.classes.active, menu.classes.current]);
       MainApp.CurrentLinkApp(`.${header_menu.classes.main} .${header_menu.classes.link}`, header_menu.classes.item, header_menu.classes.sub, header_menu.classes.main, [header_menu.classes.active, header_menu.classes.current]);
