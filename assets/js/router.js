@@ -54,8 +54,8 @@ const routeHandler = async () => {
     if (authContainer) authContainer.style.display = isAuthPage ? 'block' : 'none';
 
     const pageName = path.substring(1) || 'login';
-    // [PERBAIKAN] Menggunakan path folder '/module/' agar konsisten
-    const filePath = `/module/${pageName.replace(/_/g, '-')}.html`; 
+    // [PERBAIKAN] Menggunakan path folder '/pages/' agar konsisten
+    const filePath = `/pages/${pageName.replace(/_/g, '-')}.html`; 
     const contentDiv = isAuthPage ? authContainer : document.getElementById("content");
 
     if (contentDiv) {
