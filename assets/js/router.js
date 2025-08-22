@@ -19,12 +19,18 @@ const reinitializeThemeScripts = (pageName) => {
 };
 
 const routeHandler = async () => {
-    // --- Logika untuk menangani callback Google secara khusus ---
+    // Logika untuk menangani callback Google secara khusus
     if (window.location.pathname === '/auth/callback') {
         if (window.App && typeof window.App.initPage === 'function') {
+            const authContainer = document.getElementById('auth-container');
+            if (authContainer) {
+                authContainer.innerHTML = '<div class="flex justify-center items-center h-screen"><p>Memproses login...</p></div>';
+                authContainer.style.display = 'block';
+                document.getElementById('app-container').style.display = 'none';
+            }
             window.App.initPage('auth/callback');
         }
-        return; 
+        return; // Hentikan eksekusi lebih lanjut untuk rute ini
     }
 
     const token = localStorage.getItem('sessionToken');
@@ -48,8 +54,8 @@ const routeHandler = async () => {
     if (authContainer) authContainer.style.display = isAuthPage ? 'block' : 'none';
 
     const pageName = path.substring(1) || 'login';
-    // [PERBAIKAN] Menggunakan path folder '/pages/' agar konsisten
-    const filePath = `/pages/${pageName.replace(/_/g, '-')}.html`; 
+    // [PERBAIKAN] Menggunakan path folder '/module/' agar konsisten
+    const filePath = `/module/${pageName.replace(/_/g, '-')}.html`; 
     const contentDiv = isAuthPage ? authContainer : document.getElementById("content");
 
     if (contentDiv) {

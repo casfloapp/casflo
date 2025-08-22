@@ -182,7 +182,6 @@
     /* =======================================================
       Add some class to current link
     ========================================================== */
-    // [DIUBAH] Menambahkan pengecekan apakah elemen menu ada
     MainApp.CurrentLink = function(selector, parent, submenu, base, active){
       let menuWrapper = document.querySelector(`.${base}`);
       if (!menuWrapper) return; // <-- PERBAIKAN: Hentikan jika menu tidak ada
@@ -208,7 +207,6 @@
       })
     }
     
-    // [DIUBAH] Menambahkan pengecekan apakah elemen menu ada
     MainApp.CurrentLinkApp = function(selector, parent, submenu, base, active){
       let menuWrapper = document.querySelector(`.${base}`);
       if (!menuWrapper) return; // <-- PERBAIKAN: Hentikan jika menu tidak ada
