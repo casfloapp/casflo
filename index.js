@@ -1,15 +1,15 @@
 import layout from './templates/layout.html';
-import dashboardContent from './templates/dashboard.html';
+import mainContent from './templates/main.html';
 
 export default {
     async fetch(request) {
         const url = new URL(request.url);
         const path = url.pathname;
 
-        // Routing sederhana: jika path adalah halaman utama, tampilkan dashboard
+        // Routing sederhana: jika path adalah halaman utama, tampilkan main
         if (path === '/') {
-            // Gabungkan layout dengan konten dashboard
-            const finalHtml = layout.replace('{{PAGE_CONTENT}}', dashboardContent);
+            // Gabungkan layout dengan konten main
+            const finalHtml = layout.replace('{{PAGE_CONTENT}}', mainContent);
 
             return new Response(finalHtml, {
                 headers: { 'Content-Type': 'text/html;charset=UTF-8' },
