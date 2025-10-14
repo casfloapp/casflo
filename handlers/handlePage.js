@@ -1,17 +1,24 @@
-// Untuk saat ini, karena Worker tidak bisa langsung membaca file sistem,
-// kita akan "bundle" HTML-nya langsung ke dalam kode.
-// Nanti saat deploy, Wrangler akan menanganinya.
-
 import layout from '../templates/layout.html';
-import mainPage from '../templates/main.html';
+import mainContent from '../templates/main.html';
+import walletContent from '../templates/wallet.html'; // Impor konten wallet
 
-export async function handlePage() {
-    // Gabungkan layout dengan konten halaman utama
-    const finalHtml = layout.replace('{{content}}', mainPage);
+export async function handlePageRequest(request) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    let pageContent;
+
+    // Tentukan konten mana yang akan digunakan berdasarkan path
+    if (path === '/wallet') {
+        pageContent = walletContent;
+    } else {
+        pageContent = mainContent; // Default ke halaman utama
+    }
+
+    // Gabungkan layout dengan konten yang sesuai
+    const finalHtml = layout.replace('{{PAGE_CONTENT}}', pageContent);
 
     return new Response(finalHtml, {
-        headers: {
-            'Content-Type': 'text/html;charset=UTF-8',
-        },
+        headers: { 'Content-Type': 'text/html;charset=UTF-8' },
     });
 }
