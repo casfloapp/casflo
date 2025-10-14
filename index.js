@@ -1,4 +1,3 @@
-// Tidak ada lagi import itty-router
 import layout from './templates/layout.html';
 import mainContent from './templates/main.html';
 import walletContent from './templates/wallet.html';
@@ -10,19 +9,24 @@ export default {
 
         let pageContent;
 
-        // Logika routing manual menggunakan if/else
         if (path === '/') {
             pageContent = mainContent;
         } else if (path === '/wallet') {
             pageContent = walletContent;
         } else {
-            // Jika path tidak cocok, kirim response 404 Not Found
             return new Response('Halaman tidak ditemukan', { status: 404 });
         }
 
-        // Gabungkan layout dengan konten halaman yang sesuai
-        const finalHtml = layout.replace('{{PAGE_CONTENT}}', pageContent);
+        // Cek apakah ini permintaan dari SPA (fetch)
+        if (request.headers.get('X-Requested-With') === 'XMLHttpRequest') {
+            // Jika ya, kirim potongan kontennya saja
+            return new Response(pageContent, {
+                headers: { 'Content-Type': 'text/html' },
+            });
+        }
 
+        // Jika tidak (beban halaman penuh), kirim dengan layout lengkap
+        const finalHtml = layout.replace('{{PAGE_CONTENT}}', pageContent);
         return new Response(finalHtml, {
             headers: { 'Content-Type': 'text/html;charset=UTF-8' },
         });
