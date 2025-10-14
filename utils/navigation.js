@@ -1,9 +1,6 @@
 // utils/navigation.js
 
-/**
- * Fungsi ini akan dipanggil setiap kali konten halaman baru dimuat.
- * Tugasnya adalah menjalankan kembali semua logika spesifik halaman.
- */
+// Impor fungsi inisialisasi dari app.js
 import { initializePageEventListeners } from '../static/app.js';
 
 /**
@@ -19,7 +16,9 @@ export async function navigate(path) {
         
         const newContent = await response.text();
         
+        // Ganti konten di dalam wrapper
         document.getElementById('page-content-wrapper').innerHTML = newContent;
+        // Perbarui URL di browser tanpa reload
         window.history.pushState({path: path}, '', path);
 
         // Jalankan kembali semua event listener untuk konten baru

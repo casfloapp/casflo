@@ -1,3 +1,8 @@
-name = "casflo" # Ganti dengan nama worker Anda
+name = "casflo-app"
 main = "index.js"
 compatibility_date = "2023-10-30"
+
+# Perintah agar Wrangler bisa mengimpor file .html dan .js sebagai teks
+[[rules]]
+type = "Text"
+globs = ["**/*.html", "**/*.js"]
