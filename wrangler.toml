@@ -1,4 +1,4 @@
-name = "casflo-app" # Ganti dengan nama worker Anda
+name = "casflo" # Ganti dengan nama worker Anda
 main = "index.js"
 compatibility_date = "2023-10-30"
 
