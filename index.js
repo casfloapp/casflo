@@ -1,19 +1,22 @@
-import { Router } from 'itty-router';
-import { handlePage } from './handlers/handlePage';
-// Impor handler lain jika sudah dibuat
-// import { handleApi } from './handlers/handleApi';
-
-const router = Router();
-
-// Rute utama untuk halaman
-router.get('/', () => handlePage());
-
-// Rute untuk API di masa depan
-// router.get('/api/v1/transactions', handleApi);
-
-// Fallback untuk request yang tidak cocok
-router.all('*', () => new Response('Not Found.', { status: 404 }));
+import layout from './templates/layout.html';
+import dashboardContent from './templates/dashboard.html';
 
 export default {
-    fetch: router.handle
+    async fetch(request) {
+        const url = new URL(request.url);
+        const path = url.pathname;
+
+        // Routing sederhana: jika path adalah halaman utama, tampilkan dashboard
+        if (path === '/') {
+            // Gabungkan layout dengan konten dashboard
+            const finalHtml = layout.replace('{{PAGE_CONTENT}}', dashboardContent);
+
+            return new Response(finalHtml, {
+                headers: { 'Content-Type': 'text/html;charset=UTF-8' },
+            });
+        }
+
+        // Untuk semua path lain, kembalikan halaman "Not Found"
+        return new Response('Halaman tidak ditemukan', { status: 404 });
+    }
 };
