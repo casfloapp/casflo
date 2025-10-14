@@ -1,0 +1,166 @@
+    <div class="app-container">
+        
+        <header class="main-header">
+            <div class="header-top">
+                <div class="left">
+                    <i class="fas fa-search"></i>
+                    <div class="header-title">
+                        <span>buku bawaan</span>
+                        <i class="fas fa-chevron-down fa-xs"></i>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="view-toggle-group">
+                        <button class="toggle-btn" id="detailToggleBtn">
+                            <i class="fas fa-store"></i>
+                            <span>Detail</span>
+                        </button>
+                        <button class="toggle-btn" id="calendarToggleBtn">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Kalender</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="action-box">
+                    <div class="icon"><i class="fas fa-book"></i></div>
+                    <span class="text">buku b...</span>
+                </div>
+                <div class="action-box">
+                    <div class="icon"><i class="fas fa-plus"></i></div>
+                    <span class="text">Baru B...</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="view-container" id="viewContainer">
+                <div class="card overview-card" id="overviewCard">
+                    <div class="card-header">
+                        <div class="icon"><i class="fas fa-book-open"></i></div>
+                        <div class="date-selector">
+                            <i class="fas fa-chevron-left" id="prevMonthBtn"></i>
+                            <span id="currentMonthDisplay"></span>
+                            <i class="fas fa-chevron-right" id="nextMonthBtn"></i>
+                        </div>
+                        <div class="card-actions">
+                            <div class="icon"><i class="fas fa-envelope"></i></div>
+                            <div class="icon"><i class="fas fa-eye"></i></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="stat-item">
+                            <div class="label"><i class="fas fa-wallet fa-xs"></i><span>Total</span></div>
+                            <div class="amount expense" id="totalAmount">Rp0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="label"><i class="fas fa-arrow-down fa-xs"></i><span>Penghasilan</span></div>
+                            <div class="amount" id="incomeAmount">Rp0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="label"><i class="fas fa-arrow-up fa-xs"></i><span>Pengeluaran</span></div>
+                            <div class="amount expense" id="expenseAmount">Rp0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card calendar-card view-hidden" id="calendarCard">
+                    <div class="calendar-header">
+                        <i class="fas fa-chevron-left" id="calendarPrevMonthBtn"></i>
+                        <span class="month-year" id="calendarMonthYear"></span>
+                        <button class="btn-month-toggle">Month</button>
+                        <i class="fas fa-chevron-right" id="calendarNextMonthBtn"></i>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <div class="day-name weekend">Min</div>
+                        <div class="day-name">Sen</div>
+                        <div class="day-name">Sel</div>
+                        <div class="day-name">Rab</div>
+                        <div class="day-name">Kam</div>
+                        <div class="day-name">Jum</div>
+                        <div class="day-name weekend">Sab</div>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                    <div class="calendar-summary-tabs">
+                        <button class="tab active" id="tabPengeluaran">Pengeluaran</button>
+                        <button class="tab" id="tabPenghasilan">Penghasilan</button>
+                        <button class="tab" id="tabTotal">Total</button>
+                    </div>
+                    <div class="calendar-summary-amounts">
+                        <div>
+                            <div class="label">Total</div>
+                            <div class="amount expense" id="calendarTotalAmount">Rp0</div>
+                        </div>
+                        <div>
+                            <div class="label">Penghasilan</div>
+                            <div class="amount" id="calendarIncomeAmount">Rp0</div>
+                        </div>
+                        <div>
+                            <div class="label">Pengeluaran</div>
+                            <div class="amount expense" id="calendarExpenseAmount">Rp0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card transaction-list">
+                 </div>
+        </main>
+
+        <div class="fab" onclick="showAddView()">
+            <i class="fas fa-pencil-alt"></i>
+        </div>
+
+        <footer class="bottom-nav">
+            <div class="nav-item active"><i class="fas fa-book"></i><span>Buku</span></div>
+            <div class="nav-item"><i class="fas fa-wallet"></i><span>Dompet</span></div>
+            <div class="nav-item"><i class="fas fa-chart-pie"></i><span>Analisis</span></div>
+            <div class="nav-item"><i class="fas fa-ellipsis-h"></i><span>Lebih</span></div>
+        </footer>
+
+        <div class="add-view" id="addView">
+            <div class="add-header">
+                <div class="type-selector-header">
+                    <button class="type-btn-header expense active" id="expenseBtn" onclick="selectType('expense')"><i class="fas fa-minus-circle"></i><span>Pengeluaran</span></button>
+                    <button class="type-btn-header income" id="incomeBtn" onclick="selectType('income')"><i class="fas fa-plus-circle"></i><span>Pemasukan</span></button>
+                </div>
+                <button class="close-btn" onclick="showMainView()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="categories-section">
+                <div class="category-group"><div class="group-title">Direkomendasikan</div><div class="category-grid" id="recommendedGrid"></div></div>
+                <div class="category-group"><div class="group-title">Belum Dikelompokkan</div><div class="category-grid" id="uncategorizedGrid"></div></div>
+            </div>
+            <div class="calculator-section">
+                <div class="amount-container">
+                    <div class="account-card" onclick="selectAccount()"><i class="fas fa-credit-card"></i></div>
+                    <div class="amount-display" id="amountDisplay">0</div>
+                </div>
+                <div class="top-action-bar">
+                    <button class="action-btn personal" onclick="selectMember()"><i class="fas fa-users"></i></button>
+                    <button class="action-btn today" onclick="selectDate()"><i class="fas fa-calendar-day"></i></button>
+                    <button class="action-btn add" onclick="addNewItem()"><i class="fas fa-plus"></i></button>
+                    <button class="action-btn check" id="actionBtn" onclick="handleActionClick()"><i class="fas fa-check"></i></button>
+                </div>
+                <div class="calc-grid">
+                    <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
+                    <button class="calc-btn" onclick="appendToCalc('7')">7</button>
+                    <button class="calc-btn" onclick="appendToCalc('8')">8</button>
+                    <button class="calc-btn" onclick="appendToCalc('9')">9</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('/')">÷</button>
+                    <button class="calc-btn" onclick="appendToCalc('4')">4</button>
+                    <button class="calc-btn" onclick="appendToCalc('5')">5</button>
+                    <button class="calc-btn" onclick="appendToCalc('6')">6</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+                    <button class="calc-btn" onclick="appendToCalc('1')">1</button>
+                    <button class="calc-btn" onclick="appendToCalc('2')">2</button>
+                    <button class="calc-btn" onclick="appendToCalc('3')">3</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+                    <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+                    <button class="calc-btn" onclick="appendToCalc('0')">0</button>
+                    <button class="calc-btn delete" onclick="deleteLast()"><i class="fas fa-backspace"></i></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
