@@ -1,45 +1,52 @@
-import layout from './templates/layout.html';
+// index.js
+
+// Impor semua aset yang dibutuhkan sebagai teks mentah
+import layoutTemplate from './templates/layout.html';
 import mainContent from './templates/main.html';
 import walletContent from './templates/wallet.html';
-
-// Impor file JS sebagai teks mentah untuk disajikan ke klien
-import navScript from './utils/navigation.js';
-import appScript from './static/app.js';
+import cssContent from './static/style.css';
+import jsContent from './utils/main.js';
 
 export default {
     async fetch(request) {
         const url = new URL(request.url);
         const path = url.pathname;
 
-        // Rute untuk menyajikan file JavaScript
-        if (path === '/utils/navigation.js') {
-            return new Response(navScript, { headers: { 'Content-Type': 'application/javascript' } });
-        }
-        if (path === '/static/app.js') {
-            return new Response(appScript, { headers: { 'Content-Type': 'application/javascript' } });
-        }
-
-        // Logika routing untuk halaman HTML
+        // --- Logika Routing Halaman ---
         let pageContent;
-        if (path === '/') {
-            pageContent = mainContent;
-        } else if (path === '/wallet') {
-            pageContent = walletContent;
-        } else {
-            // Jika path tidak cocok, bisa redirect ke halaman utama atau tampilkan 404
-            pageContent = mainContent; // Redirect ke halaman utama untuk path lain
+        switch (path) {
+            case '/':
+                pageContent = mainContent;
+                break;
+            case '/wallet':
+                pageContent = walletContent;
+                break;
+            // Jika Anda ingin menambah halaman baru, cukup tambahkan di sini
+            // case '/profile':
+            //     pageContent = profileContent; // (setelah mengimpor profileContent)
+            //     break;
+            default:
+                // Jika halaman tidak ditemukan, kita arahkan kembali ke halaman utama
+                return Response.redirect(new URL('/', request.url).toString(), 302);
         }
 
-        // Cek apakah ini permintaan dari SPA (fetch)
+        // --- Logika Rendering ---
+
+        // Cek jika ini permintaan dari SPA (fetch dari front-end)
         if (request.headers.get('X-Requested-With') === 'XMLHttpRequest') {
-            // Jika ya, kirim potongan kontennya saja
+            // Jika ya, kirim potongan konten HTML-nya saja
             return new Response(pageContent, {
-                headers: { 'Content-Type': 'text/html' },
+                headers: { 'Content-Type': 'text/html;charset=UTF-8' },
             });
         }
 
-        // Jika tidak (beban halaman penuh), kirim dengan layout lengkap
-        const finalHtml = layout.replace('{{PAGE_CONTENT}}', pageContent);
+        // Jika ini permintaan halaman penuh (pertama kali dibuka atau refresh)
+        // Gabungkan semuanya menjadi satu file HTML lengkap
+        let finalHtml = layoutTemplate
+            .replace('{{PAGE_CONTENT}}', pageContent)
+            .replace('<style></style>', `<style>${cssContent}</style>`)
+            .replace('<script></script>', `<script>${jsContent}</script>`);
+
         return new Response(finalHtml, {
             headers: { 'Content-Type': 'text/html;charset=UTF-8' },
         });
