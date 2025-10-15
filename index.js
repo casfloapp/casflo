@@ -4,8 +4,6 @@
 import layoutTemplate from './templates/layout.html';
 import mainContent from './templates/main.html';
 import walletContent from './templates/wallet.html';
-import cssContent from './static/style.json';
-import jsContent from './utils/main.json';
 
 export default {
     async fetch(request) {
@@ -34,8 +32,6 @@ export default {
         // Jika ini permintaan halaman penuh, gabungkan semuanya
         let finalHtml = layoutTemplate
             .replace('{{PAGE_CONTENT}}', pageContent)
-            .replace('{{CSS_CONTENT}}', cssContent)
-            .replace('{{JS_CONTENT}}', jsContent);
 
         return new Response(finalHtml, {
             headers: { 'Content-Type': 'text/html;charset=UTF-8' },
