@@ -2,6 +2,16 @@ name = "casflo"
 main = "index.js"
 compatibility_date = "2023-10-30"
 
+# Aturan ini sekarang lebih spesifik
+
 [[rules]]
 type = "Text"
-globs = ["**/*.html", "**/*.js", "**/*.css"]
+globs = ["templates/**/*.html"] # Hanya file .html di dalam folder templates
+
+[[rules]]
+type = "Text"
+globs = ["static/**/*.css"] # Hanya file .css di dalam folder static
+
+[[rules]]
+type = "Text"
+globs = ["utils/**/*.js"] # Hanya file .js di dalam folder utils
