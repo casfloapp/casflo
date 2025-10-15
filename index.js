@@ -12,7 +12,21 @@ export default {
         const url = new URL(request.url);
         const path = url.pathname;
 
-        // --- Logika Routing Halaman ---
+        // --- Rute untuk Aset Statis (CSS & JS) ---
+        // Jika browser meminta file CSS, sajikan isinya
+        if (path === '/static/style.css') {
+            return new Response(cssContent, {
+                headers: { 'Content-Type': 'text/css' },
+            });
+        }
+        // Jika browser meminta file JS, sajikan isinya
+        if (path === '/utils/main.js') {
+            return new Response(jsContent, {
+                headers: { 'Content-Type': 'application/javascript' },
+            });
+        }
+
+        // --- Logika Routing Halaman HTML ---
         let pageContent;
         switch (path) {
             case '/':
@@ -21,32 +35,19 @@ export default {
             case '/wallet':
                 pageContent = walletContent;
                 break;
-            // Jika Anda ingin menambah halaman baru, cukup tambahkan di sini
-            // case '/profile':
-            //     pageContent = profileContent; // (setelah mengimpor profileContent)
-            //     break;
             default:
-                // Jika halaman tidak ditemukan, kita arahkan kembali ke halaman utama
+                // Jika halaman tidak ditemukan, redirect ke halaman utama
                 return Response.redirect(new URL('/', request.url).toString(), 302);
         }
 
         // --- Logika Rendering ---
-
-        // Cek jika ini permintaan dari SPA (fetch dari front-end)
+        // Cek jika ini permintaan dari SPA (fetch)
         if (request.headers.get('X-Requested-With') === 'XMLHttpRequest') {
-            // Jika ya, kirim potongan konten HTML-nya saja
-            return new Response(pageContent, {
-                headers: { 'Content-Type': 'text/html;charset=UTF-8' },
-            });
+            return new Response(pageContent, { headers: { 'Content-Type': 'text/html' } });
         }
 
-        // Jika ini permintaan halaman penuh (pertama kali dibuka atau refresh)
-        // Gabungkan semuanya menjadi satu file HTML lengkap
-        let finalHtml = layoutTemplate
-            .replace('{{PAGE_CONTENT}}', pageContent)
-            .replace('<style></style>', `<style>${cssContent}</style>`)
-            .replace('<script></script>', `<script>${jsContent}</script>`);
-
+        // Jika ini halaman penuh, kirim halaman lengkap (sudah termasuk link ke CSS & JS)
+        const finalHtml = layoutTemplate.replace('{{PAGE_CONTENT}}', pageContent);
         return new Response(finalHtml, {
             headers: { 'Content-Type': 'text/html;charset=UTF-8' },
         });
