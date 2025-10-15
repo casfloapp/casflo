@@ -144,7 +144,7 @@
 
     <script>
         // === BAGIAN 1: VARIABEL & FUNGSI GLOBAL ===
-        // Variabel dan fungsi diletakkan di sini agar bisa diakses oleh onclick di HTML Anda
+        // Semua variabel dan fungsi diletakkan di sini agar bisa diakses oleh onclick di HTML Anda.
         let currentDate = new Date();
         let selectedDate = new Date();
         let currentView = 'overview';
@@ -159,6 +159,7 @@
         const incomeCategories = [ { id: 101, name: 'Gaji', icon: '💰', color: '#D4EDDA' }, { id: 102, name: 'Bonus', icon: '🎁', color: '#D1ECF1' }, { id: 103, name: 'Investasi', icon: '📈', color: '#E2E3E5' }, { id: 104, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
+        // Fungsi yang dipanggil oleh onclick harus global
         function showAddView() { document.getElementById('addView').classList.add('active'); selectType('expense'); clearCalc(); }
         function showMainView() { document.getElementById('addView').classList.remove('active'); }
         function selectType(type) { currentType = type; document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); document.getElementById(type + 'Btn').classList.add('active'); selectedCategory = null; loadCategories(); }
@@ -166,8 +167,9 @@
         function deleteLast() { calcValue = calcValue.slice(0, -1) || '0'; checkWaitingForEquals(); updateDisplay(); }
         function handleActionClick() { if (waitingForEquals) calculateResult(); else saveTransaction(); }
 
+        // Fungsi pembantu lainnya
         function setView(viewName) { currentView = viewName; localStorage.setItem('preferredView', currentView); const cardToShow = document.getElementById(viewName === 'calendar' ? 'calendarCard' : 'overviewCard'); const cardToHide = document.getElementById(viewName === 'calendar' ? 'overviewCard' : 'calendarCard'); document.getElementById('detailToggleBtn').classList.toggle('active-view', viewName === 'overview'); document.getElementById('calendarToggleBtn').classList.toggle('active-view', viewName === 'calendar'); cardToHide.classList.add('view-hidden'); cardToShow.classList.remove('view-hidden'); setTimeout(() => { if (cardToShow) document.getElementById('viewContainer').style.height = cardToShow.offsetHeight + 'px'; }, 50); if (viewName === 'calendar') { renderCalendar(); } }
-        function updateMonthDisplay() { const month = currentDate.getMonth() + 1; const year = currentDate.getFullYear(); document.getElementById('currentMonthDisplay').textContent = `${String(month).padStart(2, '0')}/${year}`; updateMainView(); }
+        function updateMonthDisplay() { const month = currentDate.getMonth() + 1; const year = currentDate.getFullYear(); const display = document.getElementById('currentMonthDisplay'); if (display) display.textContent = `${String(month).padStart(2, '0')}/${year}`; updateMainView(); }
         function goToPrevMonth() { currentDate.setMonth(currentDate.getMonth() - 1); if(currentView === 'calendar') { renderCalendar(); } updateMonthDisplay(); }
         function goToNextMonth() { currentDate.setMonth(currentDate.getMonth() + 1); if(currentView === 'calendar') { renderCalendar(); } updateMonthDisplay(); }
         function setCalendarFilter(filter) { calendarFilter = filter; document.querySelectorAll('.calendar-summary-tabs .tab').forEach(t => t.classList.remove('active')); if (filter === 'expense') document.getElementById('tabPengeluaran').classList.add('active'); else if (filter === 'income') document.getElementById('tabPenghasilan').classList.add('active'); else document.getElementById('tabTotal').classList.add('active'); renderCalendar(); }
@@ -188,6 +190,7 @@
         // === BAGIAN 2: LOGIKA INISIALISASI & SPA ROUTING ===
         
         function initMainPage() {
+            // Menghubungkan tombol-tombol yang TIDAK memiliki onclick di HTML
             document.getElementById('detailToggleBtn').addEventListener('click', () => setView('overview'));
             document.getElementById('calendarToggleBtn').addEventListener('click', () => setView('calendar'));
             document.getElementById('prevMonthBtn').addEventListener('click', goToPrevMonth);
@@ -198,6 +201,7 @@
             document.getElementById('tabPenghasilan').addEventListener('click', () => setCalendarFilter('income'));
             document.getElementById('tabTotal').addEventListener('click', () => setCalendarFilter('total'));
             
+            // Panggil fungsi-fungsi inisialisasi awal saat halaman utama dimuat
             loadCategories();
             const savedView = localStorage.getItem('preferredView');
             setView(savedView || 'overview');
