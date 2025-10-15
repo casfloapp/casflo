@@ -157,7 +157,7 @@
 
             // Elemen DOM Halaman Utama
             const addView = document.getElementById('addView'); const amountDisplay = document.getElementById('amountDisplay'); const viewContainer = document.getElementById('viewContainer'); const overviewCard = document.getElementById('overviewCard'); const calendarCard = document.getElementById('calendarCard'); const detailToggleBtn = document.getElementById('detailToggleBtn'); const calendarToggleBtn = document.getElementById('calendarToggleBtn'); const prevMonthBtn = document.getElementById('prevMonthBtn'); const nextMonthBtn = document.getElementById('nextMonthBtn'); const currentMonthDisplay = document.getElementById('currentMonthDisplay'); const calendarGrid = document.getElementById('calendarGrid'); const calendarMonthYear = document.getElementById('calendarMonthYear'); const calendarPrevMonthBtn = document.getElementById('calendarPrevMonthBtn'); const calendarNextMonthBtn = document.getElementById('calendarNextMonthBtn'); const tabPengeluaran = document.getElementById('tabPengeluaran'); const tabPenghasilan = document.getElementById('tabPenghasilan'); const tabTotal = document.getElementById('tabTotal');
-            const addTransactionBtn = document.getElementById('addTransactionBtn'); // Tombol FAB
+            const addTransactionBtn = document.getElementById('addTransactionBtn');
 
             // --- Kumpulan fungsi untuk Halaman Utama ---
             function setView(viewName) { currentView = viewName; localStorage.setItem('preferredView', currentView); const cardToShow = (viewName === 'calendar') ? calendarCard : overviewCard; const cardToHide = (viewName === 'calendar') ? overviewCard : calendarCard; detailToggleBtn.classList.toggle('active-view', viewName === 'overview'); calendarToggleBtn.classList.toggle('active-view', viewName === 'calendar'); cardToHide.classList.add('view-hidden'); cardToShow.classList.remove('view-hidden'); setTimeout(() => { if (cardToShow) viewContainer.style.height = cardToShow.offsetHeight + 'px'; }, 50); if (viewName === 'calendar') { renderCalendar(); } }
@@ -186,7 +186,10 @@
             function renderTransactionList(filteredTransactions) { const transactionListEl = document.querySelector('.transaction-list'); if(!transactionListEl) return; transactionListEl.innerHTML = ''; if (filteredTransactions.length === 0) { transactionListEl.innerHTML = `<div class="empty-transaction-list">Belum ada transaksi di bulan ini</div>`; return; } const listHeader = document.createElement('div'); listHeader.className = 'list-header'; let totalExpenseToday = filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0); listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>Sel, 14/10</span></div><div class="summary">Pengeluaran: Rp${totalExpenseToday.toLocaleString('id-ID')}</div>`; transactionListEl.appendChild(listHeader); filteredTransactions.forEach(t => { const itemEl = document.createElement('div'); itemEl.className = 'transaction-item'; itemEl.innerHTML = `<div class="icon" style="background-color: ${t.color};"><span>${t.icon}</span></div><div class="details"><div class="category">${t.category}</div><div class="notes">${t.notes}</div></div><div class="info"><div class="amount" style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}">${t.type === 'expense' ? '-' : ''}Rp${t.amount.toLocaleString('id-ID')}</div><div class="account">${t.account}</div></div>`; transactionListEl.appendChild(itemEl); }); }
 
             // --- Inisialisasi Event Listener Halaman Utama ---
-            if(addTransactionBtn) addTransactionBtn.addEventListener('click', showAddView); // PERBAIKAN DI SINI
+            // PERBAIKAN DI SINI: Menghubungkan tombol FAB ke fungsinya
+            if(addTransactionBtn) {
+                addTransactionBtn.addEventListener('click', showAddView);
+            }
             if(detailToggleBtn) detailToggleBtn.addEventListener('click', () => setView('overview'));
             if(calendarToggleBtn) calendarToggleBtn.addEventListener('click', () => setView('calendar'));
             if(prevMonthBtn) prevMonthBtn.addEventListener('click', goToPrevMonth);
@@ -197,7 +200,6 @@
             if(tabPenghasilan) tabPenghasilan.addEventListener('click', () => setCalendarFilter('income'));
             if(tabTotal) tabTotal.addEventListener('click', () => setCalendarFilter('total'));
             
-            // Panggil fungsi-fungsi inisialisasi awal
             loadCategories();
             const savedView = localStorage.getItem('preferredView');
             setView(savedView || 'overview');
@@ -209,7 +211,6 @@
          */
         function initWalletPage() {
             console.log("Halaman dompet dimuat.");
-            // Logika spesifik untuk halaman dompet bisa ditambahkan di sini jika perlu
         }
 
 
@@ -237,7 +238,7 @@
             const response = await fetch(path, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
             
             if (!response.ok) {
-                window.location.href = path; // Fallback jika fetch gagal
+                window.location.href = path;
                 return;
             }
 
