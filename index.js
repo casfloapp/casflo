@@ -4,8 +4,8 @@
 import layoutTemplate from './templates/layout.html';
 import mainContent from './templates/main.html';
 import walletContent from './templates/wallet.html';
-import cssContent from './static/style.css';
-import jsContent from './utils/main.js';
+import cssContent from './static/style.json';
+import jsContent from './utils/main.json';
 
 export default {
     async fetch(request) {
