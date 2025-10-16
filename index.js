@@ -1,6 +1,7 @@
 import layoutTemplate from './templates/layout.html';
 import mainContent from './templates/main.html';
 import walletContent from './templates/wallet.html';
+import createContent from './templates/create.html';
 
 export default {
     async fetch(request) {
@@ -14,6 +15,9 @@ export default {
                 break;
             case '/wallet':
                 pageContent = walletContent;
+                break;
+            case '/create':
+                pageContent = createContent;
                 break;
             default:
                 // Redirect ke halaman utama jika halaman tidak ditemukan
