@@ -133,49 +133,5 @@
         </div>
     </footer>
 
-        <div class="add-view" id="addView">
-            <div class="add-header">
-                <div class="type-selector-header">
-                    <button class="type-btn-header expense active" id="expenseBtn" onclick="selectType('expense')"><i class="fas fa-minus-circle"></i><span>Pengeluaran</span></button>
-                    <button class="type-btn-header income" id="incomeBtn" onclick="selectType('income')"><i class="fas fa-plus-circle"></i><span>Pemasukan</span></button>
-                </div>
-                <button class="close-btn" onclick="showMainView()"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="categories-section">
-                <div class="category-group"><div class="group-title">Direkomendasikan</div><div class="category-grid" id="recommendedGrid"></div></div>
-                <div class="category-group"><div class="group-title">Belum Dikelompokkan</div><div class="category-grid" id="uncategorizedGrid"></div></div>
-            </div>
-            <div class="calculator-section">
-                <div class="amount-container">
-                    <div class="account-card" onclick="selectAccount()"><i class="fas fa-credit-card"></i></div>
-                    <div class="amount-display" id="amountDisplay">0</div>
-                </div>
-                <div class="top-action-bar">
-                    <button class="action-btn personal" onclick="selectMember()"><i class="fas fa-users"></i></button>
-                    <button class="action-btn today" onclick="selectDate()"><i class="fas fa-calendar-day"></i></button>
-                    <button class="action-btn add" onclick="addNewItem()"><i class="fas fa-plus"></i></button>
-                    <button class="action-btn check" id="actionBtn" onclick="handleActionClick()"><i class="fas fa-check"></i></button>
-                </div>
-                <div class="calc-grid">
-                    <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
-                    <button class="calc-btn" onclick="appendToCalc('7')">7</button>
-                    <button class="calc-btn" onclick="appendToCalc('8')">8</button>
-                    <button class="calc-btn" onclick="appendToCalc('9')">9</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('/')">÷</button>
-                    <button class="calc-btn" onclick="appendToCalc('4')">4</button>
-                    <button class="calc-btn" onclick="appendToCalc('5')">5</button>
-                    <button class="calc-btn" onclick="appendToCalc('6')">6</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
-                    <button class="calc-btn" onclick="appendToCalc('1')">1</button>
-                    <button class="calc-btn" onclick="appendToCalc('2')">2</button>
-                    <button class="calc-btn" onclick="appendToCalc('3')">3</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
-                    <button class="calc-btn" onclick="appendToCalc('.')">.</button>
-                    <button class="calc-btn" onclick="appendToCalc('0')">0</button>
-                    <button class="calc-btn delete" onclick="deleteLast()"><i class="fas fa-backspace"></i></button>
-                </div>
-            </div>
-        </div>
-
     </div>
     </div>
