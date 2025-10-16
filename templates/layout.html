@@ -24,7 +24,7 @@
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .header-top .left { display: flex; align-items: center; gap: 18px; }
         .view-toggle-group { display: flex; align-items: center; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px; }
-        .toggle-btn { background: transparent; border: none; color: white; padding: 8px 12px; border-radius: 16px; display: flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; transition: background-color: 0.3s; white-space: nowrap; }
+        .toggle-btn { background: transparent; border: none; color: white; padding: 8px 12px; border-radius: 16px; display: flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; transition: background-color 0.3s; white-space: nowrap; }
         .toggle-btn.active-view { background: rgba(255,255,255,0.2); }
         .toggle-btn span { display: inline-block; transition: max-width 0.3s ease-in-out, opacity 0.2s ease-in-out, margin-left 0.3s ease-in-out; max-width: 100px; opacity: 1; margin-left: 5px; overflow: hidden; }
         .toggle-btn:not(.active-view) span { max-width: 0; opacity: 0; margin-left: 0; }
@@ -38,15 +38,9 @@
         .card { background: white; border-radius: 18px; margin-bottom: 20px; margin-top: 20px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); padding: 18px; }
         .empty-transaction-list { text-align: center; color: #888; padding: 40px 0; }
         
-        /* Tata letak stabil untuk view Detail & Kalender */
-        .view-container { display: grid; }
-        .overview-card, .calendar-card {
-            grid-area: 1 / 1;
-            transition: opacity 0.2s ease-in-out;
-        }
+        /* PERBAIKAN: Tata letak untuk view Detail & Kalender disederhanakan */
         .view-hidden {
-            opacity: 0;
-            pointer-events: none;
+            display: none;
         }
 
         .overview-card .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -189,6 +183,7 @@
         function selectCategory(category, element) { selectedCategory = category; document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); element.classList.add('selected'); }
         function saveTransaction() { const amount = parseFloat(calcValue); if (isNaN(amount) || amount <= 0) return alert('Masukkan jumlah yang valid'); if (!selectedCategory) return alert('Pilih kategori terlebih dahulu'); const transaction = { id: Date.now(), type: currentType, amount, category: selectedCategory.name, notes: 'diri sendiri', account: 'akun bawaan', icon: selectedCategory.icon, color: selectedCategory.color, date: new Date() }; transactions.push(transaction); alert('Transaksi disimpan!'); navigate('/'); }
         
+        // PERBAIKAN: Menggunakan versi setView yang stabil
         function setView(viewName) {
             currentView = viewName;
             localStorage.setItem('preferredView', viewName);
@@ -251,6 +246,7 @@
             else if (path === '/create') { initCreatePage(); }
         }
 
+        // PERBAIKAN: Mengembalikan ke versi navigate tanpa animasi
         async function navigate(path) {
             if (!pageContainer) return;
             const response = await fetch(path, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
@@ -272,6 +268,7 @@
             }
         });
 
+        // PERBAIKAN: Mengembalikan ke versi popstate tanpa animasi
         window.addEventListener('popstate', (event) => {
             if (event.state && event.state.path) {
                 (async () => {
