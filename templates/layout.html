@@ -19,8 +19,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         html { height: -webkit-fill-available; }
         body { background: var(--bg-gray); color: var(--text-dark); width: 100%; min-height: 100vh; min-height: 100svh; touch-action: manipulation; }
-        /* PERUBAHAN: overflow diubah untuk animasi vertikal */
-        .app-container { width: 100%; min-height: 100vh; min-height: 100svh; background: white; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .app-container { width: 100%; min-height: 100vh; min-height: 100svh; background: white; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
         .main-header { background: var(--primary-blue); color: white; padding: 20px 20px 20px 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; flex-shrink: 0; z-index: 10; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .header-top .left { display: flex; align-items: center; gap: 18px; }
@@ -90,8 +89,8 @@
         .nav-item span { font-size: 11px; }
         .nav-item.active { color: var(--primary-blue); }
 
-        /* PERUBAHAN: Layout untuk Halaman Create */
-        .add-view { display: flex; flex-direction: column; height: 100vh; }
+        /* PERUBAHANレイアウト UNTUK HALAMAN CREATE */
+        .add-view { display: flex; flex-direction: column; height: 100%; }
         .add-header { padding: 20px; border-bottom: 1px solid #e9ecef; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background-color: white; }
         .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); text-decoration: none; }
         .type-selector-header { display: flex; background: #f8f9fa; border-radius: 25px; padding: 3px; }
@@ -113,7 +112,7 @@
             background: #f8f9fa; 
             padding: 15px; 
             border-top: 1px solid #e9ecef; 
-            flex-shrink: 0;
+            flex-shrink: 0; /* Mencegah bagian ini menyusut */
             display: grid; 
             grid-template-rows: repeat(6, 1fr); 
             gap: 8px; 
@@ -149,16 +148,17 @@
         /* PERUBAHAN: PENYESUAIAN UNTUK DESKTOP & IPAD */
         @media (min-width: 768px) {
             body {
-                background-color: #e9ecef;
+                background-color: #e9ecef; /* Latar belakang abu-abu untuk desktop */
             }
             .app-container {
-                max-width: 480px;
+                max-width: 480px; /* Lebar maksimal container aplikasi */
                 margin: 0 auto;
                 height: 100vh;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             }
-             .add-view {
-                max-width: 834px;
+             /* Khusus untuk halaman create di desktop */
+            .add-view {
+                max-width: 480px;
                 margin: 0 auto;
             }
             .calculator-section {
@@ -177,22 +177,6 @@
                 font-size: 28px;
             }
         }
-        
-        /* PERUBAHAN: ANIMASI PERPINDAHAN HALAMAN */
-        @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        .page-enter-active {
-            animation: slideUp 0.35s ease-out forwards;
-        }
-
     </style>
 </head>
 <body>
@@ -202,6 +186,7 @@
 
     <script>
         // === BAGIAN 1: VARIABEL & FUNGSI GLOBAL ===
+        // ... (Kode JavaScript lainnya tidak berubah) ...
         let currentDate = new Date();
         let selectedDate = new Date();
         let transactions = [];
@@ -271,12 +256,6 @@
         const pageContainer = document.getElementById('app-container');
 
         function runPageInit(path) {
-            // PERUBAHAN: Terapkan animasi saat halaman dimuat
-            const pageContent = pageContainer.children[0];
-            if (pageContent) {
-                pageContent.classList.add('page-enter-active');
-            }
-
             if (path === '/') {
                 initMainPage();
             } else if (path === '/wallet') {
@@ -288,14 +267,13 @@
 
         async function navigate(path) {
             if (!pageContainer) return;
-            // Hapus opacity untuk animasi yang lebih mulus
+            pageContainer.style.opacity = '0.5';
             const response = await fetch(path, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
             if (!response.ok) { window.location.href = path; return; }
             const newContent = await response.text();
             history.pushState({ path }, '', path);
             pageContainer.innerHTML = newContent;
-            
-            // Panggil inisialisasi yang akan menjalankan animasi
+            pageContainer.style.opacity = '1';
             runPageInit(path);
         }
 
@@ -314,11 +292,11 @@
             if (event.state && event.state.path) {
                 (async () => {
                     if (!pageContainer) return;
+                    pageContainer.style.opacity = '0.5';
                     const response = await fetch(event.state.path, { headers: { 'X-Requested-with': 'XMLHttpRequest' } });
                     const newContent = await response.text();
                     pageContainer.innerHTML = newContent;
-                    
-                    // Panggil inisialisasi yang akan menjalankan animasi
+                    pageContainer.style.opacity = '1';
                     runPageInit(event.state.path);
                 })();
             }
@@ -327,7 +305,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             history.replaceState({ path: location.pathname }, '', location.pathname);
             runPageInit(location.pathname);
-});
+        });
     </script>
 </body>
 </html>
