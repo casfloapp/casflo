@@ -197,8 +197,48 @@
         let calcValue = '0';
         let waitingForEquals = false;
 
-        const expenseCategories = [ { id: 1, name: 'Diet', icon: '🍔', color: '#FEF3E2' }, { id: 2, name: 'Harian', icon: '🪴', color: '#E6F3F2' }, { id: 3, name: 'Transport', icon: '🚗', color: '#EBE9F9' }, { id: 4, name: 'Belanja', icon: '🛍️', color: '#FCE8E7' }, { id: 5, name: 'Hiburan', icon: '🎮', color: '#D4EDDA' }, { id: 6, name: 'Kesehatan', icon: '❤️', color: '#F8D7DA' }, { id: 7, name: 'Pendidikan', icon: '🎓', color: '#D1ECF1' }, { id: 8, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
-        const incomeCategories = [ { id: 101, name: 'Gaji', icon: '💰', color: '#D4EDDA' }, { id: 102, name: 'Bonus', icon: '🎁', color: '#D1ECF1' }, { id: 103, name: 'Investasi', icon: '📈', color: '#E2E3E5' }, { id: 104, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
+        const expenseCategories = [
+            // Kategori Awal
+            { id: 1, name: 'Makanan', icon: '🍔', color: '#FEF3E2' }, 
+            { id: 2, name: 'Kebutuhan', icon: '🪴', color: '#E6F3F2' }, 
+            { id: 3, name: 'Transport', icon: '🚗', color: '#EBE9F9' }, 
+            { id: 4, name: 'Belanja', icon: '🛍️', color: '#FCE8E7' },
+            { id: 5, name: 'Hiburan', icon: '🎮', color: '#D4EDDA' }, 
+            { id: 6, name: 'Kesehatan', icon: '❤️', color: '#F8D7DA' }, 
+            { id: 7, name: 'Pendidikan', icon: '🎓', color: '#D1ECF1' },
+            // Kategori Tambahan
+            { id: 8, name: 'Tagihan', icon: '🧾', color: '#FADBD8' },
+            { id: 9, name: 'Cicilan', icon: '🏠', color: '#D6EAF8' },
+            { id: 10, name: 'Listrik', icon: '💡', color: '#FCF3CF' },
+            { id: 11, name: 'Air', icon: '💧', color: '#D4E6F1' },
+            { id: 12, name: 'Internet', icon: '🌐', color: '#E8DAEF' },
+            { id: 13, name: 'Pakaian', icon: '👕', color: '#D1F2EB' },
+            { id: 14, name: 'Langganan', icon: '🔁', color: '#FDEDEC' },
+            { id: 15, name: 'Hadiah', icon: '🎁', color: '#FDEBD0' },
+            { id: 16, name: 'Donasi', icon: '💖', color: '#E6F3F2' },
+            { id: 17, name: 'Liburan', icon: '✈️', color: '#EBE9F9' },
+            { id: 18, name: 'Anak', icon: '👶', color: '#FCE8E7' },
+            { id: 19, name: 'Pajak', icon: '🏛️', color: '#D5DBDB' },
+            { id: 20, name: 'Asuransi', icon: '🛡️', color: '#D6EAF8' },
+            { id: 21, name: 'Olahraga', icon: '⚽️', color: '#D4EDDA' },
+            { id: 22, name: 'Peliharaan', icon: '🐾', color: '#FEF3E2' },
+            { id: 23, name: 'Perawatan', icon: '💅', color: '#F8D7DA' },
+            { id: 24, name: 'Perabotan', icon: '🛋️', color: '#FDEBD0' },
+            { id: 25, name: 'Bensin', icon: '⛽️', color: '#FADBD8' },
+            { id: 26, name: 'Lainnya', icon: '...', color: '#F8F9FA' }
+        ];
+        const incomeCategories = [
+            // Kategori Awal
+            { id: 101, name: 'Gaji', icon: '💰', color: '#D4EDDA' }, 
+            { id: 102, name: 'Bonus', icon: '🏆', color: '#D1ECF1' }, 
+            { id: 103, name: 'Investasi', icon: '📈', color: '#E2E3E5' },
+            // Kategori Tambahan
+            { id: 104, name: 'Freelance', icon: '💻', color: '#FCF3CF' },
+            { id: 105, name: 'Hadiah', icon: '🎁', color: '#FDEBD0' },
+            { id: 106, name: 'Penjualan', icon: '🏷️', color: '#E8DAEF' },
+            { id: 107, name: 'Sewa', icon: '🔑', color: '#D6EAF8' },
+            { id: 108, name: 'Lainnya', icon: '...', color: '#F8F9FA' }
+        ];
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
         function appendToCalc(value) { const operators = ['+', '-', '*', '/']; if (operators.includes(value)) { waitingForEquals = true; changeButtonToEquals(); } if (calcValue === '0' && !operators.includes(value)) calcValue = value; else { const lastChar = calcValue.slice(-1); if (operators.includes(lastChar) && operators.includes(value)) calcValue = calcValue.slice(0, -1) + value; else calcValue += value; } updateDisplay(); }
