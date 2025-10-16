@@ -19,14 +19,14 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         html { height: -webkit-fill-available; }
         body { background: var(--bg-gray); color: var(--text-dark); width: 100%; min-height: 100vh; min-height: 100svh; touch-action: manipulation; }
-        .app-container { width: 100%; min-height: 100vh; min-height: 100svh; background: white; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
+        .app-container { width: 100%; min-height: 100vh; min-height: 100svh; background: white; display: flex; flex-direction: column; position: relative; overflow: hidden; }
         .main-header { background: var(--primary-blue); color: white; padding: 20px 20px 20px 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; flex-shrink: 0; z-index: 10; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .header-top .left { display: flex; align-items: center; gap: 18px; }
         .view-toggle-group { display: flex; align-items: center; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px; }
-        .toggle-btn { background: transparent; border: none; color: white; padding: 8px 12px; border-radius: 16px; display: flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; transition: background-color 0.3s; white-space: nowrap; }
+        .toggle-btn { background: transparent; border: none; color: white; padding: 8px 12px; border-radius: 16px; display: flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; transition: background-color: 0.3s; white-space: nowrap; }
         .toggle-btn.active-view { background: rgba(255,255,255,0.2); }
-        .toggle-btn span { display: inline-block; transition: max-width 0.3s ease-in-out, opacity 0.2s ease-in-out, margin-left 0.3s ease-in-out; max-width: 100px; opacity: 1; margin-left: 5px; overflow: hidden; }
+        .toggle-btn span { display: inline-block; transition: max-width 0.3s ease-in-out, opacity: 0.2s ease-in-out, margin-left: 0.3s ease-in-out; max-width: 100px; opacity: 1; margin-left: 5px; overflow: hidden; }
         .toggle-btn:not(.active-view) span { max-width: 0; opacity: 0; margin-left: 0; }
         .toggle-btn:not(.active-view) { padding: 8px 10px; }
         .header-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; }
@@ -37,8 +37,6 @@
         .main-content { flex: 1; overflow-y: auto; padding: 0 20px; position: relative; z-index: 5; padding-bottom: 100px; background-color: var(--bg-gray); }
         .card { background: white; border-radius: 18px; margin-bottom: 20px; margin-top: 20px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); padding: 18px; }
         .empty-transaction-list { text-align: center; color: #888; padding: 40px 0; }
-        
-        /* Tata letak stabil untuk view Detail & Kalender */
         .view-container { display: grid; }
         .overview-card, .calendar-card {
             grid-area: 1 / 1;
@@ -48,7 +46,6 @@
             opacity: 0;
             pointer-events: none;
         }
-
         .overview-card .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .overview-card .card-header .icon { width: 40px; height: 40px; background: var(--light-purple); color: var(--primary-blue); display: flex; align-items: center; justify-content: center; border-radius: 8px; }
         .overview-card .date-selector { display: flex; align-items: center; gap: 12px; font-weight: 600; }
@@ -105,7 +102,13 @@
         .type-btn-header.active { background: white; color: var(--text-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .type-btn-header.expense.active { color: var(--expense-red); }
         .type-btn-header.income.active { color: var(--income-green); }
-        .categories-section { flex-grow: 1; overflow-y: auto; padding: 20px; background-color: white; min-height: 0; }
+        .categories-section {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: white;
+            min-height: 0; /* PERBAIKAN: Memastikan scroll berfungsi di semua browser */
+        }
         .category-group { margin-bottom: 20px; }
         .group-title { font-size: 12px; color: var(--text-light); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; }
         .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; }
@@ -170,8 +173,8 @@
         let calcValue = '0';
         let waitingForEquals = false;
 
-        const expenseCategories = [ { id: 1, name: 'Makanan', icon: '🍔', color: '#FEF3E2' }, { id: 2, name: 'Kebutuhan', icon: '🪴', color: '#E6F3F2' }, { id: 3, name: 'Transport', icon: '🚗', color: '#EBE9F9' }, { id: 4, name: 'Belanja', icon: '🛍️', color: '#FCE8E7' }, { id: 5, name: 'Hiburan', icon: '🎮', color: '#D4EDDA' }, { id: 6, name: 'Kesehatan', icon: '❤️', color: '#F8D7DA' }, { id: 7, name: 'Pendidikan', icon: '🎓', color: '#D1ECF1' }, { id: 8, name: 'Tagihan', icon: '🧾', color: '#FADBD8' }, { id: 9, name: 'Cicilan', icon: '🏠', color: '#D6EAF8' }, { id: 10, name: 'Listrik', icon: '💡', color: '#FCF3CF' }, { id: 11, name: 'Air', icon: '💧', color: '#D4E6F1' }, { id: 12, name: 'Internet', icon: '🌐', color: '#E8DAEF' }, { id: 13, name: 'Pakaian', icon: '👕', color: '#D1F2EB' }, { id: 14, name: 'Langganan', icon: '🔁', color: '#FDEDEC' }, { id: 15, name: 'Hadiah', icon: '🎁', color: '#FDEBD0' }, { id: 16, name: 'Donasi', icon: '💖', color: '#E6F3F2' }, { id: 17, name: 'Liburan', icon: '✈️', color: '#EBE9F9' }, { id: 18, name: 'Anak', icon: '👶', color: '#FCE8E7' }, { id: 19, name: 'Pajak', icon: '🏛️', color: '#D5DBDB' }, { id: 20, name: 'Asuransi', icon: '🛡️', color: '#D6EAF8' }, { id: 21, name: 'Olahraga', icon: '⚽️', color: '#D4EDDA' }, { id: 22, name: 'Peliharaan', icon: '🐾', color: '#FEF3E2' }, { id: 23, name: 'Perawatan', icon: '💅', color: '#F8D7DA' }, { id: 24, name: 'Perabotan', icon: '🛋️', color: '#FDEBD0' }, { id: 25, name: 'Bensin', icon: '⛽️', color: '#FADBD8' }, { id: 26, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
-        const incomeCategories = [ { id: 101, name: 'Gaji', icon: '💰', color: '#D4EDDA' }, { id: 102, name: 'Bonus', icon: '🏆', color: '#D1ECF1' }, { id: 103, name: 'Investasi', icon: '📈', color: '#E2E3E5' }, { id: 104, name: 'Freelance', icon: '💻', color: '#FCF3CF' }, { id: 105, name: 'Hadiah', icon: '🎁', color: '#FDEBD0' }, { id: 106, name: 'Penjualan', icon: '🏷️', color: '#E8DAEF' }, { id: 107, name: 'Sewa', icon: '🔑', color: '#D6EAF8' }, { id: 108, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
+        const expenseCategories = [ { id: 1, name: 'Diet', icon: '🍔', color: '#FEF3E2' }, { id: 2, name: 'Harian', icon: '🪴', color: '#E6F3F2' }, { id: 3, name: 'Transport', icon: '🚗', color: '#EBE9F9' }, { id: 4, name: 'Belanja', icon: '🛍️', color: '#FCE8E7' }, { id: 5, name: 'Hiburan', icon: '🎮', color: '#D4EDDA' }, { id: 6, name: 'Kesehatan', icon: '❤️', color: '#F8D7DA' }, { id: 7, name: 'Pendidikan', icon: '🎓', color: '#D1ECF1' }, { id: 8, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
+        const incomeCategories = [ { id: 101, name: 'Gaji', icon: '💰', color: '#D4EDDA' }, { id: 102, name: 'Bonus', icon: '🎁', color: '#D1ECF1' }, { id: 103, name: 'Investasi', icon: '📈', color: '#E2E3E5' }, { id: 104, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
         function appendToCalc(value) { const operators = ['+', '-', '*', '/']; if (operators.includes(value)) { waitingForEquals = true; changeButtonToEquals(); } if (calcValue === '0' && !operators.includes(value)) calcValue = value; else { const lastChar = calcValue.slice(-1); if (operators.includes(lastChar) && operators.includes(value)) calcValue = calcValue.slice(0, -1) + value; else calcValue += value; } updateDisplay(); }
@@ -188,7 +191,6 @@
         function createCategoryElement(category) { const div = document.createElement('div'); div.className = 'category-item'; div.onclick = () => selectCategory(category, div); div.innerHTML = `<div class="category-icon" style="background: ${category.color}">${category.icon}</div><div class="category-name">${category.name}</div>`; return div; }
         function selectCategory(category, element) { selectedCategory = category; document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); element.classList.add('selected'); }
         function saveTransaction() { const amount = parseFloat(calcValue); if (isNaN(amount) || amount <= 0) return alert('Masukkan jumlah yang valid'); if (!selectedCategory) return alert('Pilih kategori terlebih dahulu'); const transaction = { id: Date.now(), type: currentType, amount, category: selectedCategory.name, notes: 'diri sendiri', account: 'akun bawaan', icon: selectedCategory.icon, color: selectedCategory.color, date: new Date() }; transactions.push(transaction); alert('Transaksi disimpan!'); navigate('/'); }
-        
         function setView(viewName) {
             currentView = viewName;
             localStorage.setItem('preferredView', viewName);
@@ -205,7 +207,6 @@
                 renderCalendar();
             }
         }
-
         function updateMonthDisplay() { const month = currentDate.getMonth() + 1; const year = currentDate.getFullYear(); const display = document.getElementById('currentMonthDisplay'); if (display) display.textContent = `${String(month).padStart(2, '0')}/${year}`; updateMainView(); }
         function goToPrevMonth() { currentDate.setMonth(currentDate.getMonth() - 1); if(currentView === 'calendar') { renderCalendar(); } updateMonthDisplay(); }
         function goToNextMonth() { currentDate.setMonth(currentDate.getMonth() + 1); if(currentView === 'calendar') { renderCalendar(); } updateMonthDisplay(); }
