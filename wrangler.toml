@@ -2,6 +2,8 @@ name = "casflo"
 main = "index.js"
 compatibility_date = "2023-10-30"
 
-[[rules]]
-type = "Text"
-globs = ["**/*.html", "**/*.js"]
+# [BARU] Tambahkan bagian ini untuk memberitahu bundler cara mengimpor file
+[build]
+module_rules = [
+  { type = "Text", globs = ["**/*.html"] }
+]
