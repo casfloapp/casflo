@@ -11,20 +11,20 @@ const routes = {
 // Fungsi router utama di sisi klien
 const router = async () => {
     const app = document.getElementById('app');
+    if (!app) return;
+
     const path = location.pathname;
     const page = routes[path] || routes['/']; // Default ke halaman utama
 
-    // Render HTML halaman ke dalam #app
+    // Render HTML dan jalankan skrip halaman
     app.innerHTML = await page.render();
-    
-    // Jalankan skrip spesifik halaman (untuk event listener)
     await page.after_render();
 };
 
 // Event listener untuk navigasi SPA
 window.addEventListener('popstate', router); // Untuk tombol back/forward browser
 window.addEventListener('DOMContentLoaded', () => {
-    // Tangani semua klik link internal
+    // Tangani semua klik link internal agar tidak me-refresh halaman
     document.body.addEventListener('click', e => {
         const link = e.target.closest('a');
         if (link && link.href.startsWith(location.origin)) {
@@ -41,4 +41,3 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Ekspor string kosong agar bisa diimpor oleh index.js
 export default "";
-
