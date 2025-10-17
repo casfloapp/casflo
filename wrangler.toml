@@ -1,3 +1,15 @@
 name = "casflo"
 main = "index.js"
 compatibility_date = "2023-10-30"
+
+# Aturan ini memberitahu proses build:
+# "Saat kamu menemukan impor untuk file .html atau file .js di dalam folder src,
+# jangan jalankan isinya, cukup baca sebagai teks biasa (string)."
+# INI ADALAH KUNCI UNTUK MENGHINDARI SEMUA ERROR.
+[[build.module_rules]]
+type = "Text"
+globs = ["**/*.html"]
+
+[[build.module_rules]]
+type = "Text"
+globs = ["**/src/**/*.js"]
