@@ -1,9 +1,9 @@
 // Berkat aturan di wrangler.toml, semua file ini diimpor sebagai teks mentah (string)
-import indexHtml from './index.html';
-import appJS from './src/App.js';
-import mainPageJS from './src/pages/MainPage.js';
-import walletPageJS from './src/pages/WalletPage.js';
-import createPageJS from './src/pages/CreatePage.js';
+import indexHtml from 'index.html';
+import appJS from 'src/App.js';
+import mainPageJS from 'src/pages/MainPage.js';
+import walletPageJS from 'src/pages/WalletPage.js';
+import createPageJS from 'src/pages/CreatePage.js';
 
 // Peta sederhana untuk semua aset kita yang akan disajikan ke browser
 const assets = {
