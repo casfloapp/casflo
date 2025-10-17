@@ -1,25 +1,4 @@
 <style>
-    @media (min-width: 768px) {
-        .app-container, .add-view {
-            max-width: 480px;
-            margin: 0 auto;
-            height: 100vh;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-    }
-
-    .app-container {
-        width: 100%;
-        min-height: 100vh;
-        min-height: 100svh;
-        background: white;
-        display: flex
-        ;
-        flex-direction: column;
-        position: relative;
-        overflow-x: hidden;
-    }
-
     /* [KUNCI PERBAIKAN] Mengatur layout utama agar header dan footer tidak ikut scroll */
     .more-page-container {
         display: flex;
@@ -27,6 +6,8 @@
         height: 100vh; /* Mengisi seluruh tinggi layar */
         height: 100svh;
         background-color: white;
+        max-width: 480px;
+        margin: 0 auto;
     }
 
     .more-header {
