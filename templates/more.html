@@ -1,14 +1,13 @@
 <style>
     /* == GAYA KHUSUS HALAMAN LEBIH (DIPERBARUI) == */
 
-    /* [KUNCI PERBAIKAN] Mengatur layout utama agar tidak bisa di-scroll dan presisi */
+    /* [KUNCI PERBAIKAN] Mengatur layout utama agar header dan footer tidak ikut scroll */
     .more-page-container {
         display: flex;
         flex-direction: column;
-        height: 100vh; /* Mengisi seluruh tinggi layar modern */
-        height: 100svh; /* Fallback untuk browser lama & menangani notch/dynamic island */
+        height: 100vh; /* Mengisi seluruh tinggi layar */
+        height: 100svh;
         background-color: white;
-        overflow: hidden; /* Mencegah seluruh halaman bisa di-scroll */
     }
 
     .more-header {
@@ -20,7 +19,7 @@
         align-items: center;
         font-size: 18px;
         font-weight: 600;
-        flex-shrink: 0; /* Mencegah header menyusut */
+        flex-shrink: 0; /* Mencegah header menyusut saat konten banyak */
         z-index: 10;
     }
     .more-header .settings-icon {
@@ -28,14 +27,17 @@
         cursor: pointer;
     }
 
-    /* [KUNCI PERBAIKAN] Konten utama sekarang bisa di-scroll vertikal jika perlu */
+    /* [KUNCI PERBAIKAN] Konten utama sekarang bisa di-scroll secara independen */
     .more-content {
         flex-grow: 1; /* Mengambil sisa ruang yang tersedia */
-        overflow-y: auto; /* Mengaktifkan scroll vertikal HANYA jika kontennya meluap */
-        overscroll-behavior-y: contain; /* Mencegah 'bounce' effect saat scroll sampai ujung */
+        overflow-y: auto; /* Mengaktifkan scroll hanya untuk area ini */
         padding: 20px;
+        
+        /* [KUNCI PERBAIKAN] Memberi ruang di bawah agar tidak tertutup navigasi */
+        padding-bottom: 100px; 
     }
 
+    /* [PERBAIKAN] Grid dikembalikan menjadi 3 kolom */
     .more-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -57,6 +59,7 @@
         aspect-ratio: 1 / 1; /* Menjaga kartu tetap persegi */
     }
 
+    /* Ikon diperbesar untuk tampilan yang lebih baik */
     .grid-item .icon {
         font-size: 36px;
         margin-bottom: 10px;
