@@ -285,6 +285,114 @@
             history.replaceState({ path: location.pathname }, '', location.pathname);
             runPageInit(location.pathname);
         });
+
+
+
+
+        function initAnalysisPage() {
+            console.log("Halaman Analisis diinisialisasi!");
+            const activePill = document.querySelector('.header-tabs .active-pill');
+            const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
+            if (!activePill || !tabButtons.length) return;
+
+            function movePill(targetButton) {
+                requestAnimationFrame(() => {
+                    if (targetButton) {
+                        activePill.style.width = `${targetButton.offsetWidth}px`;
+                        activePill.style.left = `${targetButton.offsetLeft}px`;
+                    }
+                });
+            }
+
+            function handleTabClick(event) {
+                const clickedButton = event.currentTarget;
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                clickedButton.classList.add('active');
+                movePill(clickedButton);
+                // Sisa logika...
+            }
+
+            tabButtons.forEach(button => button.addEventListener('click', handleTabClick));
+
+            const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
+            if (initialActiveTab) { movePill(initialActiveTab); }
+            
+            // Sisa logika initAnalysisPage...
+        }
+        
+        // === BAGIAN 2: LOGIKA SPA ROUTING (DENGAN PERBAIKAN) ===
+        
+        const isBlobEnvironment = window.location.protocol === 'blob:';
+
+        function runPageInit(path) {
+            if (path === '/') { initMainPage(); } 
+            else if (path === '/wallet') { initWalletPage(); } 
+            else if (path === '/create') { initCreatePage(); }
+            else if (path === '/more') { initMorePage(); }
+            else if (path === '/analysis') { initAnalysisPage(); }
+        }
+        
+        async function navigate(path) {
+            if (isBlobEnvironment) { 
+                console.log("Navigasi di lingkungan BLOB, menggunakan fallback reload.");
+                // Fallback sederhana untuk lingkungan preview, cukup reload ke halaman yang dituju
+                const targetUrl = new URL(path, window.location.origin);
+                window.location.href = targetUrl.href;
+                return; 
+            }
+            
+            if (!pageContainer) return;
+            try {
+                const response = await fetch(path, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                if (!response.ok) { window.location.href = path; return; }
+                const newContent = await response.text();
+                
+                history.pushState({ path }, '', path);
+                
+                pageContainer.innerHTML = newContent;
+                runPageInit(path);
+            } catch (error) {
+                console.error("Gagal melakukan navigasi:", error);
+                window.location.href = path;
+            }
+        }
+
+        document.addEventListener('click', (event) => {
+            const anchor = event.target.closest('a');
+            if (anchor && anchor.href && new URL(anchor.href).origin === location.origin) {
+                event.preventDefault();
+                const path = new URL(anchor.href).pathname;
+                if (path !== location.pathname) {
+                    navigate(path);
+                }
+            }
+        });
+
+        window.addEventListener('popstate', (event) => {
+            if (isBlobEnvironment) return; 
+            if (event.state && event.state.path) {
+                (async () => {
+                    if (!pageContainer) return;
+                    try {
+                        const response = await fetch(event.state.path, { headers: { 'X-Requested-with': 'XMLHttpRequest' } });
+                        if (!response.ok) { window.location.href = event.state.path; return; }
+                        const newContent = await response.text();
+                        pageContainer.innerHTML = newContent;
+                        runPageInit(event.state.path);
+                    } catch (error) {
+                         console.error("Gagal memuat state:", error);
+                         window.location.href = event.state.path;
+                    }
+                })();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!isBlobEnvironment) {
+                history.replaceState({ path: location.pathname }, '', location.pathname);
+            }
+            runPageInit(location.pathname);
+        });
     </script>
 </body>
 </html>
