@@ -1,8 +1,3 @@
 name = "casflo"
 main = "index.js"
 compatibility_date = "2023-10-30"
-
-# Konfigurasi ini adalah cara standar untuk memberitahu Wrangler
-# agar mengunggah semua file di dalam folder 'public' sebagai aset statis.
-[site]
-bucket = "./public"
