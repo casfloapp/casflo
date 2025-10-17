@@ -35,24 +35,25 @@
         font-size: 18px;
     }
 
-    /* [KUNCI ANIMASI] Kontainer untuk animasi sliding pill */
+    /* [PERBAIKAN] Kontainer untuk animasi sliding pill */
     .header-tabs {
         display: flex;
         align-items: center;
-        background: rgba(0,0,0,0.2);
+        /* background: rgba(0,0,0,0.2); Dihapus agar minimalis */
         border-radius: 25px;
-        padding: 5px;
+        padding: 0; /* Padding dihapus */
         position: relative; /* Diperlukan untuk elemen 'active-pill' */
+        justify-content: space-between; /* Memastikan ikon menyebar selebar layout */
     }
 
-    /* [KUNCI ANIMASI] Latar belakang putih yang akan bergeser */
+    /* [PERBAIKAN] Latar belakang putih yang akan bergeser */
     .header-tabs .active-pill {
         position: absolute;
-        top: 5px;
-        left: 5px; /* Posisi awal */
-        height: calc(100% - 10px);
+        top: 0;
+        left: 0; /* Posisi awal */
+        height: 100%;
         background-color: white;
-        border-radius: 20px;
+        border-radius: 25px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1), width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         z-index: 1;
@@ -62,7 +63,7 @@
         background: transparent;
         border: none;
         color: white;
-        padding: 8px 10px;
+        padding: 10px; /* Padding diatur ulang */
         border-radius: 20px;
         font-size: 14px;
         font-weight: 500;
@@ -71,8 +72,8 @@
         align-items: center;
         gap: 5px;
         z-index: 2; /* Tombol harus di atas 'active-pill' */
-        transition: color 0.3s, padding 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        flex-shrink: 0; /* Mencegah tombol menyusut */
+        transition: color 0.3s;
+        flex-grow: 1; 
         justify-content: center;
     }
     .header-tabs .tab-button.active {
@@ -87,7 +88,7 @@
         max-width: 0;
         opacity: 0;
         overflow: hidden;
-        transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out, margin-left 0.4s ease-in-out;
+        transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease-in-out, margin-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         white-space: nowrap;
     }
     .header-tabs .tab-button.active .tab-label {
@@ -174,92 +175,6 @@
 </div>
 
 <script>
-    function initAnalysisPage() {
-        console.log("Halaman Analisis dimuat!");
-
-        const activePill = document.querySelector('.header-tabs .active-pill');
-        const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
-
-        function movePill(targetButton) {
-            // Memberi sedikit waktu agar browser bisa menghitung lebar tombol yang baru
-            // setelah label muncul/hilang
-            setTimeout(() => {
-                if (targetButton) {
-                    activePill.style.width = `${targetButton.offsetWidth}px`;
-                    activePill.style.left = `${targetButton.offsetLeft}px`;
-                }
-            }, 0);
-        }
-
-        function handleTabClick(event) {
-            const clickedButton = event.currentTarget;
-            
-            // Hapus kelas 'active' dari semua tombol, lalu tambahkan ke yang diklik
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            clickedButton.classList.add('active');
-            
-            // Pindahkan 'pill' ke tombol yang baru aktif
-            movePill(clickedButton);
-
-            const mode = clickedButton.dataset.mode;
-            console.log('Mode diganti ke: ' + mode);
-
-            // Ganti data chart berdasarkan mode (ini data dummy)
-            if (mode === 'pengeluaran') {
-                animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)');
-            } else if (mode === 'penghasilan') {
-                animateChart(85, 850000000, 'Penghasilan', 'var(--income-green)');
-            } else {
-                animateChart(0, 0, clickedButton.querySelector('.tab-label').textContent, '#ccc');
-            }
-        }
-
-        tabButtons.forEach(button => {
-            button.addEventListener('click', handleTabClick);
-        });
-
-        // Fungsi ini dijalankan setelah semua gambar, font, dan stylesheet selesai dimuat
-        // Ini penting agar perhitungan lebar dan posisi tombol akurat.
-        window.addEventListener('load', () => {
-             const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
-             if (initialActiveTab) {
-                movePill(initialActiveTab);
-             }
-        }, { once: true });
-
-
-        function animateChart(percentage, totalAmount, label, color) {
-            // ... (Fungsi animasi chart tidak berubah dari sebelumnya)
-            const segment = document.getElementById('chart-segment');
-            const amountEl = document.getElementById('chart-total-amount');
-            const labelEl = document.getElementById('chart-center-label');
-            if (!segment || !amountEl || !labelEl) return;
-            labelEl.textContent = label;
-            segment.style.stroke = color;
-            const radius = segment.r.baseVal.value;
-            const circumference = 2 * Math.PI * radius;
-            segment.style.strokeDasharray = `${circumference} ${circumference}`;
-            const offset = circumference - (percentage / 100) * circumference;
-            segment.style.strokeDashoffset = offset;
-            let currentAmount = 0;
-            const steps = 100;
-            const increment = totalAmount / steps;
-            const counter = setInterval(() => {
-                currentAmount += increment;
-                if (currentAmount >= totalAmount) {
-                    currentAmount = totalAmount;
-                    clearInterval(counter);
-                }
-                amountEl.textContent = 'Rp' + Math.floor(currentAmount).toLocaleString('id-ID');
-            }, 10);
-        }
-
-        // Panggil animasi awal
-        setTimeout(() => {
-            animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)'); 
-        }, 100);
-    }
-
-    initAnalysisPage();
+    // Pastikan fungsi ini hanya ada di layout.html
 </script>
 
