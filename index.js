@@ -3,7 +3,7 @@ import mainContent from './templates/main.html';
 import walletContent from './templates/wallet.html';
 import createContent from './templates/create.html';
 import moreContent from './templates/more.html';
-import statisticContent from './templates/statistic.html';
+import analysisContent from './templates/analysis.html';
 
 export default {
     async fetch(request) {
@@ -24,8 +24,8 @@ export default {
             case '/more':
                 pageContent = moreContent;
                 break;
-            case '/statistic':
-                pageContent = statisticContent;
+            case '/analysis':
+                pageContent = analysisContent;
                 break;
             default:
                 // Redirect ke halaman utama jika halaman tidak ditemukan
