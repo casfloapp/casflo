@@ -1,0 +1,306 @@
+<style>
+    /* == GAYA KHUSUS HALAMAN ANALISIS == */
+
+    .analysis-page-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100svh;
+        background-color: var(--bg-gray);
+        overflow: hidden;
+    }
+
+    .analysis-header {
+        background: var(--primary-blue);
+        color: white;
+        padding: 20px;
+        flex-shrink: 0;
+        z-index: 10;
+    }
+    
+    .header-main-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+    .header-main-nav .book-selector, .header-main-nav .date-selector {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+    }
+    .header-main-nav .title {
+        font-size: 18px;
+    }
+
+    .header-tabs-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0,0,0,0.2);
+        border-radius: 25px;
+        padding: 5px;
+    }
+
+    /* [PERBAIKAN] Logika animasi untuk tombol mode */
+    .header-tabs .tab-button {
+        background: transparent;
+        border: none;
+        color: white;
+        padding: 8px 10px; /* Padding saat hanya ikon */
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: background-color 0.3s;
+    }
+    .header-tabs .tab-button.active {
+        background: white;
+        color: var(--primary-blue);
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 8px 15px; /* Padding lebih besar saat aktif */
+    }
+    .header-tabs .tab-button .tab-icon {
+        font-size: 20px;
+    }
+    .header-tabs .tab-button .tab-label {
+        display: inline-block;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
+        white-space: nowrap;
+    }
+    .header-tabs .tab-button.active .tab-label {
+        max-width: 100px; /* Lebar maksimal teks */
+        opacity: 1;
+        margin-left: 5px;
+    }
+    
+    .analysis-content {
+        flex-grow: 1;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        padding: 20px;
+        padding-bottom: 100px;
+    }
+    
+    .filter-bar {
+        font-weight: 600;
+        color: var(--primary-blue);
+        margin-bottom: 20px;
+    }
+
+    .donut-chart-card {
+        background-color: white;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+        margin-bottom: 20px;
+    }
+
+    .donut-chart {
+        width: 100%;
+        max-width: 250px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .donut-chart-svg {
+        transform: rotate(-90deg); /* Mulai dari atas */
+    }
+
+    .donut-chart-svg .chart-background {
+        fill: none;
+        stroke: #eee;
+        stroke-width: 3.8;
+    }
+
+    .donut-chart-svg .chart-segment {
+        fill: none;
+        stroke: var(--expense-red);
+        stroke-width: 3.8;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 1s ease-out; /* Animasi */
+    }
+
+    .donut-chart-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+    .donut-chart-center .label { font-size: 14px; color: var(--text-light); }
+    .donut-chart-center .amount { font-size: 22px; font-weight: 700; color: var(--text-dark); }
+
+    .category-list-card {
+        background-color: white;
+        border-radius: 18px;
+        padding: 10px 20px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+    }
+    .category-item-row {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--bg-gray);
+    }
+    .category-item-row:last-child { border-bottom: none; }
+    .category-item-row .icon { font-size: 24px; margin-right: 15px; }
+    .category-item-row .name { font-weight: 500; flex-grow: 1; }
+    .category-item-row .percentage { width: 50px; text-align: right; color: var(--text-light); }
+    .category-item-row .amount { width: 120px; text-align: right; font-weight: 600; }
+</style>
+
+<div class="analysis-page-container">
+    <header class="analysis-header">
+        <div class="header-main-nav">
+            <div class="book-selector">
+                <i class="fas fa-book"></i>
+            </div>
+            <span class="title">Analisis</span>
+            <div class="date-selector">
+                <i class="fas fa-chevron-left"></i>
+                <span>10/2025</span>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        <div class="header-tabs">
+            <button class="tab-button active" data-mode="pengeluaran">
+                <i class="fas fa-shopping-cart tab-icon"></i>
+                <span class="tab-label">Pengeluaran</span>
+            </button>
+            <button class="tab-button" data-mode="penghasilan">
+                <i class="fas fa-dollar-sign tab-icon"></i>
+                <span class="tab-label">Penghasilan</span>
+            </button>
+            <button class="tab-button" data-mode="anggaran">
+                <i class="fas fa-file-invoice-dollar tab-icon"></i>
+                <span class="tab-label">Anggaran</span>
+            </button>
+            <button class="tab-button" data-mode="tren">
+                <i class="fas fa-chart-line tab-icon"></i>
+                <span class="tab-label">Tren</span>
+            </button>
+            <button class="tab-button" data-mode="aset">
+                <i class="fas fa-landmark tab-icon"></i>
+                <span class="tab-label">Aset</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="analysis-content">
+        <div class="filter-bar">
+            Oleh Kategori <i class="fas fa-chevron-down fa-xs"></i>
+        </div>
+
+        <div class="donut-chart-card">
+            <div class="donut-chart">
+                <svg viewBox="0 0 36 36" class="donut-chart-svg">
+                    <circle class="chart-background" cx="18" cy="18" r="15.9155"></circle>
+                    <circle id="chart-segment" class="chart-segment" cx="18" cy="18" r="15.9155" stroke-dasharray="0 100"></circle>
+                </svg>
+                <div class="donut-chart-center">
+                    <div class="label" id="chart-center-label">Pengeluaran</div>
+                    <div class="amount" id="chart-total-amount">Rp0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category-list-card">
+            <div class="category-item-row">
+                <div class="icon">🍔</div>
+                <div class="name">diet</div>
+                <div class="percentage">100%</div>
+                <div class="amount">Rp1.000.054.542</div>
+            </div>
+            <div class="category-item-row">
+                <div class="icon">🪴</div>
+                <div class="name">harian</div>
+                <div class="percentage">0%</div>
+                <div class="amount">Rp150.000</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bottom-nav">
+        <a href="/" class="nav-item"><i class="fas fa-book"></i><span>Buku</span></a>
+        <a href="/wallet" class="nav-item"><i class="fas fa-wallet"></i><span>Dompet</span></a>
+        <a href="/analysis" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Analisis</span></a>
+        <a href="/more" class="nav-item"><i class="fas fa-ellipsis-h"></i><span>Lebih</span></a>
+    </footer>
+</div>
+
+<script>
+    function initStatisticPage() {
+        console.log("Halaman Analisis dimuat!");
+
+        function animateChart(percentage, totalAmount, label, color) {
+            const segment = document.getElementById('chart-segment');
+            const amountEl = document.getElementById('chart-total-amount');
+            const labelEl = document.getElementById('chart-center-label');
+            if (!segment || !amountEl || !labelEl) return;
+            
+            labelEl.textContent = label;
+            segment.style.stroke = color;
+            
+            const radius = segment.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+            
+            segment.style.strokeDasharray = `${circumference} ${circumference}`;
+            const offset = circumference - (percentage / 100) * circumference;
+            segment.style.strokeDashoffset = offset;
+
+            let currentAmount = 0;
+            const stepTime = 10;
+            const steps = 1000 / stepTime;
+            const increment = totalAmount / steps;
+
+            const counter = setInterval(() => {
+                currentAmount += increment;
+                if (currentAmount >= totalAmount) {
+                    currentAmount = totalAmount;
+                    clearInterval(counter);
+                }
+                amountEl.textContent = 'Rp' + Math.floor(currentAmount).toLocaleString('id-ID');
+            }, stepTime);
+        }
+        
+        function handleTabClick(event) {
+            const clickedButton = event.currentTarget;
+            document.querySelector('.header-tabs .tab-button.active').classList.remove('active');
+            clickedButton.classList.add('active');
+            
+            const mode = clickedButton.dataset.mode;
+            console.log('Mode diganti ke: ' + mode);
+
+            // Ganti data chart berdasarkan mode (ini data dummy)
+            if (mode === 'pengeluaran') {
+                animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)');
+            } else if (mode === 'penghasilan') {
+                animateChart(85, 850000000, 'Penghasilan', 'var(--income-green)');
+            } else {
+                 animateChart(0, 0, clickedButton.querySelector('.tab-label').textContent, '#ccc');
+            }
+        }
+
+        document.querySelectorAll('.header-tabs .tab-button').forEach(button => {
+            button.addEventListener('click', handleTabClick);
+        });
+
+        // Panggil animasi awal untuk tab "Pengeluaran"
+        setTimeout(() => {
+            animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)'); 
+        }, 100);
+    }
+
+    initStatisticPage();
+</script>
+
