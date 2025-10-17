@@ -1,40 +1,39 @@
-// PERBAIKAN: Semua path impor sekarang menggunakan './' untuk menandakan path relatif.
-import MainPage from './pages/MainPage.js';
-import WalletPage from './pages/WalletPage.js';
-import CreatePage from './pages/CreatePage.js';
+import layoutTemplate from './templates/layout.html';
+import mainContent from './templates/main.html';
+import walletContent from './templates/wallet.html';
+import createContent from './templates/create.html';
 
-const routes = {
-    '/': MainPage,
-    '/wallet': WalletPage,
-    '/create': CreatePage
-};
+export default {
+    async fetch(request) {
+        const url = new URL(request.url);
+        const path = url.pathname;
 
-const router = async () => {
-    const appContainer = document.getElementById('app');
-    if (!appContainer) {
-        console.error("Elemen #app tidak ditemukan!");
-        return;
-    }
-
-    const path = location.pathname;
-    const page = routes[path] || routes['/'];
-
-    appContainer.innerHTML = await page.render();
-    await page.after_render();
-};
-
-window.addEventListener('popstate', router);
-window.addEventListener('DOMContentLoaded', () => {
-    document.body.addEventListener('click', e => {
-        const link = e.target.closest('a');
-        if (link && link.href.startsWith(location.origin)) {
-            e.preventDefault();
-            const newPath = new URL(link.href).pathname;
-            if (newPath !== location.pathname) {
-                history.pushState(null, '', newPath);
-                router();
-            }
+        let pageContent;
+        switch (path) {
+            case '/':
+                pageContent = mainContent;
+                break;
+            case '/wallet':
+                pageContent = walletContent;
+                break;
+            case '/create':
+                pageContent = createContent;
+                break;
+            default:
+                // Redirect ke halaman utama jika halaman tidak ditemukan
+                return Response.redirect(new URL('/', request.url).toString(), 302);
         }
-    });
-    router();
-});
+
+        // Untuk navigasi SPA, kirim hanya potongan kontennya
+        if (request.headers.get('X-Requested-With') === 'XMLHttpRequest') {
+            return new Response(pageContent, { headers: { 'Content-Type': 'text/html' } });
+        }
+
+        // Untuk pemuatan halaman pertama kali, kirim seluruh layout
+        const finalHtml = layoutTemplate.replace('{{PAGE_CONTENT}}', pageContent);
+
+        return new Response(finalHtml, {
+            headers: { 'Content-Type': 'text/html;charset=UTF-8' },
+        });
+    }
+};
