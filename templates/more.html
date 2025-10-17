@@ -1,0 +1,149 @@
+<style>
+    /* == GAYA KHUSUS HALAMAN LEBIH == */
+    .more-header {
+        background: var(--primary-blue);
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .more-header .settings-icon {
+        font-size: 22px;
+        cursor: pointer;
+    }
+    .more-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 20px;
+    }
+    .grid-item {
+        background-color: #F8F9FA;
+        border-radius: 18px;
+        padding: 15px;
+        text-align: center;
+        text-decoration: none;
+        color: var(--text-dark);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 1 / 1;
+    }
+    .grid-item .icon {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+    .grid-item .label {
+        font-size: 13px;
+        font-weight: 500;
+    }
+    .grid-item .badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background-color: var(--primary-blue);
+        color: white;
+        font-size: 9px;
+        font-weight: bold;
+        padding: 3px 6px;
+        border-radius: 10px;
+    }
+     .grid-item .badge-top {
+        background-color: #adb5bd;
+        color: white;
+        font-size: 9px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+    }
+</style>
+
+<div class="app-container">
+    <header class="more-header">
+        <span>Lebih</span>
+        <i class="fas fa-cog settings-icon"></i>
+    </header>
+
+    <main class="main-content" style="background-color: white; padding: 0;">
+        <div class="more-grid">
+            <a href="#" class="grid-item">
+                <div class="icon">📫</div>
+                <div class="label">Kotak Pesan</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">⛰️</div>
+                <div class="label">Tujuan tabungan</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">⏰</div>
+                <div class="label">Tagihan berkala</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">🔔</div>
+                <div class="label">Peringatan</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">👑</div>
+                <div class="label">Beli Premium</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">💱</div>
+                <div class="label">Tukar Mata Uang</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">🗂️</div>
+                <div class="label">Kategori</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">👨‍👩‍👧‍👦</div>
+                <div class="label">Anggota</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">💰</div>
+                <div class="label">Anggaran</div>
+                <span class="badge">New</span>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">📖</div>
+                <div class="label">Buku</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">💳</div>
+                <div class="label">Akun</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">🔎</div>
+                <div class="label">Cari</div>
+            </a>
+            <a href="#" class="grid-item">
+                 <div class="badge-top">Cadangan tidak terdeteksi</div>
+                <div class="icon">💾</div>
+                <div class="label">Cadangan</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">📊</div>
+                <div class="label">Ekspor</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">👍</div>
+                <div class="label">Beri saya</div>
+            </a>
+        </div>
+    </main>
+
+    <footer class="bottom-nav">
+        <a href="/" class="nav-item"><i class="fas fa-book"></i><span>Buku</span></a>
+        <a href="/wallet" class="nav-item"><i class="fas fa-wallet"></i><span>Dompet</span></a>
+        <a href="#" class="nav-item"><i class="fas fa-chart-pie"></i><span>Analisis</span></a>
+        <a href="/more" class="nav-item active"><i class="fas fa-ellipsis-h"></i><span>Lebih</span></a>
+    </footer>
+</div>

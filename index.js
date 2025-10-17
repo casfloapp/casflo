@@ -2,6 +2,7 @@ import layoutTemplate from './templates/layout.html';
 import mainContent from './templates/main.html';
 import walletContent from './templates/wallet.html';
 import createContent from './templates/create.html';
+import moreContent from './templates/more.html';
 
 export default {
     async fetch(request) {
@@ -18,6 +19,9 @@ export default {
                 break;
             case '/create':
                 pageContent = createContent;
+                break;
+            case '/more':
+                pageContent = moreContent;
                 break;
             default:
                 // Redirect ke halaman utama jika halaman tidak ditemukan
