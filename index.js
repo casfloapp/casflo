@@ -1,39 +1,32 @@
-import layoutTemplate from './templates/layout.html';
-import mainContent from './templates/main.html';
-import walletContent from './templates/wallet.html';
-import createContent from './templates/create.html';
+import layout from './layout.html';
+import appJS from './src/App.js';
+import mainPageJS from './src/pages/MainPage.js';
+import walletPageJS from './src/pages/WalletPage.js';
+import createPageJS from './src/pages/CreatePage.js';
+
+const staticAssets = {
+  '/src/App.js': { content: appJS, type: 'application/javascript' },
+  '/src/pages/MainPage.js': { content: mainPageJS, type: 'application/javascript' },
+  '/src/pages/WalletPage.js': { content: walletPageJS, type: 'application/javascript' },
+  '/src/pages/CreatePage.js': { content: createPageJS, type: 'application/javascript' },
+};
 
 export default {
-    async fetch(request) {
-        const url = new URL(request.url);
-        const path = url.pathname;
+  async fetch(request) {
+    const url = new URL(request.url);
+    const path = url.pathname;
 
-        let pageContent;
-        switch (path) {
-            case '/':
-                pageContent = mainContent;
-                break;
-            case '/wallet':
-                pageContent = walletContent;
-                break;
-            case '/create':
-                pageContent = createContent;
-                break;
-            default:
-                // Redirect ke halaman utama jika halaman tidak ditemukan
-                return Response.redirect(new URL('/', request.url).toString(), 302);
-        }
-
-        // Untuk navigasi SPA, kirim hanya potongan kontennya
-        if (request.headers.get('X-Requested-With') === 'XMLHttpRequest') {
-            return new Response(pageContent, { headers: { 'Content-Type': 'text/html' } });
-        }
-
-        // Untuk pemuatan halaman pertama kali, kirim seluruh layout
-        const finalHtml = layoutTemplate.replace('{{PAGE_CONTENT}}', pageContent);
-
-        return new Response(finalHtml, {
-            headers: { 'Content-Type': 'text/html;charset=UTF-8' },
-        });
+    // Jika browser meminta file JS, layani file tersebut
+    if (staticAssets[path]) {
+      const asset = staticAssets[path];
+      return new Response(asset.content, {
+        headers: { 'Content-Type': asset.type },
+      });
     }
+
+    // Untuk semua permintaan halaman lain, layani cangkang HTML utama
+    return new Response(layout, {
+      headers: { 'Content-Type': 'text/html;charset=UTF-8' },
+    });
+  }
 };
