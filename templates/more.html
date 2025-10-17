@@ -1,7 +1,7 @@
 <style>
     /* == GAYA KHUSUS HALAMAN LEBIH (DIPERBARUI) == */
-    
-    /* PERBAIKAN: Mengatur layout utama agar header dan footer tidak ikut scroll */
+
+    /* [KUNCI PERBAIKAN] Mengatur layout utama agar header dan footer tidak ikut scroll */
     .more-page-container {
         display: flex;
         flex-direction: column;
@@ -19,7 +19,7 @@
         align-items: center;
         font-size: 18px;
         font-weight: 600;
-        flex-shrink: 0; /* Mencegah header menyusut */
+        flex-shrink: 0; /* Mencegah header menyusut saat konten banyak */
         z-index: 10;
     }
     .more-header .settings-icon {
@@ -27,24 +27,27 @@
         cursor: pointer;
     }
 
-    /* PERBAIKAN: Konten utama sekarang bisa di-scroll secara independen */
+    /* [KUNCI PERBAIKAN] Konten utama sekarang bisa di-scroll secara independen */
     .more-content {
         flex-grow: 1; /* Mengambil sisa ruang yang tersedia */
         overflow-y: auto; /* Mengaktifkan scroll hanya untuk area ini */
-        padding: 15px;
+        padding: 20px;
+        
+        /* [KUNCI PERBAIKAN] Memberi ruang di bawah agar tidak tertutup navigasi */
+        padding-bottom: 100px; 
     }
 
-    /* PERBAIKAN: Grid diubah menjadi 4 kolom */
+    /* [PERBAIKAN] Grid dikembalikan menjadi 3 kolom */
     .more-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
     }
 
     .grid-item {
         background-color: #F8F9FA;
         border-radius: 18px;
-        padding: 10px;
+        padding: 15px;
         text-align: center;
         text-decoration: none;
         color: var(--text-dark);
@@ -56,14 +59,14 @@
         aspect-ratio: 1 / 1; /* Menjaga kartu tetap persegi */
     }
 
-    /* PERBAIKAN: Ukuran ikon diperbesar */
+    /* Ikon diperbesar untuk tampilan yang lebih baik */
     .grid-item .icon {
-        font-size: 32px; /* Ikon lebih besar */
-        margin-bottom: 8px;
+        font-size: 36px;
+        margin-bottom: 10px;
     }
 
     .grid-item .label {
-        font-size: 12px; /* Ukuran font label disesuaikan */
+        font-size: 13px;
         font-weight: 500;
     }
     .grid-item .badge {
@@ -91,6 +94,7 @@
     }
 </style>
 
+<!-- Menggunakan kontainer khusus untuk halaman ini agar scroll berfungsi benar -->
 <div class="more-page-container">
     <header class="more-header">
         <span>Lebih</span>
@@ -162,6 +166,14 @@
                 <div class="label">Umpan Balik</div>
             </a>
             <a href="#" class="grid-item">
+                <div class="icon">💖</div>
+                <div class="label">Rekomendasi</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">ℹ️</div>
+                <div class="label">Tentang</div>
+            </a>
+             <a href="#" class="grid-item">
                 <div class="icon">⚙️</div>
                 <div class="label">Pengaturan</div>
             </a>
@@ -175,3 +187,4 @@
         <a href="/more" class="nav-item active"><i class="fas fa-ellipsis-h"></i><span>Lebih</span></a>
     </footer>
 </div>
+
