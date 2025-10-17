@@ -71,8 +71,8 @@
         align-items: center;
         gap: 5px;
         z-index: 2; /* Tombol harus di atas 'active-pill' */
-        transition: color 0.3s;
-        flex-grow: 1; 
+        transition: color 0.3s, padding 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        flex-shrink: 0; /* Mencegah tombol menyusut */
         justify-content: center;
     }
     .header-tabs .tab-button.active {
@@ -81,6 +81,19 @@
     }
     .header-tabs .tab-button .tab-icon {
         font-size: 20px;
+    }
+    .header-tabs .tab-button .tab-label {
+        display: inline-block;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out, margin-left 0.4s ease-in-out;
+        white-space: nowrap;
+    }
+    .header-tabs .tab-button.active .tab-label {
+        max-width: 100px;
+        opacity: 1;
+        margin-left: 5px;
     }
     
     .analysis-content { flex-grow: 1; overflow-y: auto; overscroll-behavior-y: contain; padding: 20px; padding-bottom: 100px; }
@@ -114,18 +127,23 @@
             <div class="active-pill"></div>
             <button class="tab-button active" data-mode="pengeluaran">
                 <i class="fas fa-shopping-cart tab-icon"></i>
+                <span class="tab-label">Pengeluaran</span>
             </button>
             <button class="tab-button" data-mode="penghasilan">
                 <i class="fas fa-dollar-sign tab-icon"></i>
+                <span class="tab-label">Penghasilan</span>
             </button>
             <button class="tab-button" data-mode="anggaran">
                 <i class="fas fa-file-invoice-dollar tab-icon"></i>
+                <span class="tab-label">Anggaran</span>
             </button>
             <button class="tab-button" data-mode="tren">
                 <i class="fas fa-chart-line tab-icon"></i>
+                <span class="tab-label">Tren</span>
             </button>
             <button class="tab-button" data-mode="aset">
                 <i class="fas fa-landmark tab-icon"></i>
+                <span class="tab-label">Aset</span>
             </button>
         </div>
     </header>
@@ -144,20 +162,7 @@
                 </div>
             </div>
         </div>
-        <div class="category-list-card">
-            <div class="category-item-row">
-                <div class="icon">🍔</div>
-                <div class="name">diet</div>
-                <div class="percentage">100%</div>
-                <div class="amount">Rp1.000.054.542</div>
-            </div>
-            <div class="category-item-row">
-                <div class="icon">🪴</div>
-                <div class="name">harian</div>
-                <div class="percentage">0%</div>
-                <div class="amount">Rp150.000</div>
-            </div>
-        </div>
+        <div class="category-list-card">...</div>
     </main>
 
     <footer class="bottom-nav">
@@ -176,8 +181,11 @@
         const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
 
         function movePill(targetButton) {
-            activePill.style.width = `${targetButton.offsetWidth}px`;
-            activePill.style.left = `${targetButton.offsetLeft}px`;
+            // Memberi sedikit waktu agar browser bisa menghitung lebar tombol yang baru
+            setTimeout(() => {
+                activePill.style.width = `${targetButton.offsetWidth}px`;
+                activePill.style.left = `${targetButton.offsetLeft}px`;
+            }, 0);
         }
 
         function handleTabClick(event) {
@@ -194,7 +202,7 @@
             } else if (mode === 'penghasilan') {
                 animateChart(85, 850000000, 'Penghasilan', 'var(--income-green)');
             } else {
-                animateChart(0, 0, mode.charAt(0).toUpperCase() + mode.slice(1), '#ccc');
+                animateChart(0, 0, clickedButton.querySelector('.tab-label').textContent, '#ccc');
             }
         }
 
@@ -204,10 +212,13 @@
 
         const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
         if (initialActiveTab) {
-            movePill(initialActiveTab);
+            // Gunakan 'load' event untuk memastikan semua font dan style sudah dimuat
+            // sebelum kita menghitung posisi dan lebar tombol.
+            window.addEventListener('load', () => movePill(initialActiveTab));
         }
 
         function animateChart(percentage, totalAmount, label, color) {
+            // ... (Fungsi animasi chart tidak berubah)
             const segment = document.getElementById('chart-segment');
             const amountEl = document.getElementById('chart-total-amount');
             const labelEl = document.getElementById('chart-center-label');
@@ -239,3 +250,4 @@
 
     initAnalysisPage();
 </script>
+
