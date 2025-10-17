@@ -182,21 +182,29 @@
 
         function movePill(targetButton) {
             // Memberi sedikit waktu agar browser bisa menghitung lebar tombol yang baru
+            // setelah label muncul/hilang
             setTimeout(() => {
-                activePill.style.width = `${targetButton.offsetWidth}px`;
-                activePill.style.left = `${targetButton.offsetLeft}px`;
+                if (targetButton) {
+                    activePill.style.width = `${targetButton.offsetWidth}px`;
+                    activePill.style.left = `${targetButton.offsetLeft}px`;
+                }
             }, 0);
         }
 
         function handleTabClick(event) {
             const clickedButton = event.currentTarget;
+            
+            // Hapus kelas 'active' dari semua tombol, lalu tambahkan ke yang diklik
             tabButtons.forEach(btn => btn.classList.remove('active'));
             clickedButton.classList.add('active');
+            
+            // Pindahkan 'pill' ke tombol yang baru aktif
             movePill(clickedButton);
 
             const mode = clickedButton.dataset.mode;
             console.log('Mode diganti ke: ' + mode);
 
+            // Ganti data chart berdasarkan mode (ini data dummy)
             if (mode === 'pengeluaran') {
                 animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)');
             } else if (mode === 'penghasilan') {
@@ -210,15 +218,18 @@
             button.addEventListener('click', handleTabClick);
         });
 
-        const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
-        if (initialActiveTab) {
-            // Gunakan 'load' event untuk memastikan semua font dan style sudah dimuat
-            // sebelum kita menghitung posisi dan lebar tombol.
-            window.addEventListener('load', () => movePill(initialActiveTab));
-        }
+        // Fungsi ini dijalankan setelah semua gambar, font, dan stylesheet selesai dimuat
+        // Ini penting agar perhitungan lebar dan posisi tombol akurat.
+        window.addEventListener('load', () => {
+             const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
+             if (initialActiveTab) {
+                movePill(initialActiveTab);
+             }
+        }, { once: true });
+
 
         function animateChart(percentage, totalAmount, label, color) {
-            // ... (Fungsi animasi chart tidak berubah)
+            // ... (Fungsi animasi chart tidak berubah dari sebelumnya)
             const segment = document.getElementById('chart-segment');
             const amountEl = document.getElementById('chart-total-amount');
             const labelEl = document.getElementById('chart-center-label');
@@ -243,6 +254,7 @@
             }, 10);
         }
 
+        // Panggil animasi awal
         setTimeout(() => {
             animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)'); 
         }, 100);
