@@ -1,7 +1,7 @@
 // PERBAIKAN: Semua path impor sekarang menggunakan './' untuk menandakan path relatif.
-import MainPage from './src/pages/MainPage.js';
-import WalletPage from './src/pages/WalletPage.js';
-import CreatePage from './src/pages/CreatePage.js';
+import MainPage from './pages/MainPage.js';
+import WalletPage from './pages/WalletPage.js';
+import CreatePage from './pages/CreatePage.js';
 
 const routes = {
     '/': MainPage,
