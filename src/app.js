@@ -41,3 +41,4 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Ekspor string kosong agar bisa diimpor oleh index.js
 export default "";
+
