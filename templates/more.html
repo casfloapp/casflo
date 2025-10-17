@@ -1,5 +1,15 @@
 <style>
-    /* == GAYA KHUSUS HALAMAN LEBIH == */
+    /* == GAYA KHUSUS HALAMAN LEBIH (DIPERBARUI) == */
+    
+    /* PERBAIKAN: Mengatur layout utama agar header dan footer tidak ikut scroll */
+    .more-page-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh; /* Mengisi seluruh tinggi layar */
+        height: 100svh;
+        background-color: white;
+    }
+
     .more-header {
         background: var(--primary-blue);
         color: white;
@@ -9,21 +19,32 @@
         align-items: center;
         font-size: 18px;
         font-weight: 600;
+        flex-shrink: 0; /* Mencegah header menyusut */
+        z-index: 10;
     }
     .more-header .settings-icon {
         font-size: 22px;
         cursor: pointer;
     }
+
+    /* PERBAIKAN: Konten utama sekarang bisa di-scroll secara independen */
+    .more-content {
+        flex-grow: 1; /* Mengambil sisa ruang yang tersedia */
+        overflow-y: auto; /* Mengaktifkan scroll hanya untuk area ini */
+        padding: 15px;
+    }
+
+    /* PERBAIKAN: Grid diubah menjadi 4 kolom */
     .more-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-        padding: 20px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
     }
+
     .grid-item {
         background-color: #F8F9FA;
         border-radius: 18px;
-        padding: 15px;
+        padding: 10px;
         text-align: center;
         text-decoration: none;
         color: var(--text-dark);
@@ -32,14 +53,17 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        aspect-ratio: 1 / 1;
+        aspect-ratio: 1 / 1; /* Menjaga kartu tetap persegi */
     }
+
+    /* PERBAIKAN: Ukuran ikon diperbesar */
     .grid-item .icon {
-        font-size: 28px;
-        margin-bottom: 10px;
+        font-size: 32px; /* Ikon lebih besar */
+        margin-bottom: 8px;
     }
+
     .grid-item .label {
-        font-size: 13px;
+        font-size: 12px; /* Ukuran font label disesuaikan */
         font-weight: 500;
     }
     .grid-item .badge {
@@ -67,37 +91,37 @@
     }
 </style>
 
-<div class="app-container">
+<div class="more-page-container">
     <header class="more-header">
         <span>Lebih</span>
         <i class="fas fa-cog settings-icon"></i>
     </header>
 
-    <main class="main-content" style="background-color: white; padding: 0;">
+    <main class="more-content">
         <div class="more-grid">
             <a href="#" class="grid-item">
-                <div class="icon">📫</div>
+                <div class="icon">💌</div>
                 <div class="label">Kotak Pesan</div>
             </a>
             <a href="#" class="grid-item">
-                <div class="icon">⛰️</div>
-                <div class="label">Tujuan tabungan</div>
+                <div class="icon">🎯</div>
+                <div class="label">Tujuan</div>
             </a>
             <a href="#" class="grid-item">
-                <div class="icon">⏰</div>
-                <div class="label">Tagihan berkala</div>
+                <div class="icon">🗓️</div>
+                <div class="label">Tagihan</div>
             </a>
             <a href="#" class="grid-item">
                 <div class="icon">🔔</div>
                 <div class="label">Peringatan</div>
             </a>
             <a href="#" class="grid-item">
-                <div class="icon">👑</div>
+                <div class="icon">✨</div>
                 <div class="label">Beli Premium</div>
             </a>
             <a href="#" class="grid-item">
                 <div class="icon">💱</div>
-                <div class="label">Tukar Mata Uang</div>
+                <div class="label">Mata Uang</div>
             </a>
             <a href="#" class="grid-item">
                 <div class="icon">🗂️</div>
@@ -113,7 +137,7 @@
                 <span class="badge">New</span>
             </a>
             <a href="#" class="grid-item">
-                <div class="icon">📖</div>
+                <div class="icon">📚</div>
                 <div class="label">Buku</div>
             </a>
             <a href="#" class="grid-item">
@@ -121,21 +145,25 @@
                 <div class="label">Akun</div>
             </a>
             <a href="#" class="grid-item">
-                <div class="icon">🔎</div>
+                <div class="icon">🔍</div>
                 <div class="label">Cari</div>
             </a>
             <a href="#" class="grid-item">
-                 <div class="badge-top">Cadangan tidak terdeteksi</div>
-                <div class="icon">💾</div>
+                 <div class="badge-top">Cadangan iCloud</div>
+                <div class="icon">☁️</div>
                 <div class="label">Cadangan</div>
             </a>
             <a href="#" class="grid-item">
-                <div class="icon">📊</div>
+                <div class="icon">📄</div>
                 <div class="label">Ekspor</div>
             </a>
             <a href="#" class="grid-item">
-                <div class="icon">👍</div>
-                <div class="label">Beri saya</div>
+                <div class="icon">💬</div>
+                <div class="label">Umpan Balik</div>
+            </a>
+            <a href="#" class="grid-item">
+                <div class="icon">⚙️</div>
+                <div class="label">Pengaturan</div>
             </a>
         </div>
     </main>
