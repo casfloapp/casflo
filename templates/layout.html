@@ -239,37 +239,144 @@
             console.log("Halaman dompet dimuat.");
         }
 
-        function initAnalysisPage() {
-            console.log("Halaman Analisis diinisialisasi!");
-            const activePill = document.querySelector('.header-tabs .active-pill');
-            const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
-            if (!activePill || !tabButtons.length) return;
+  
+        // GANTI FUNGSI initAnalysisPage YANG LAMA DENGAN VERSI LENGKAP INI
+function initAnalysisPage() {
+    console.log("Halaman Analisis diinisialisasi!");
 
-            function movePill(targetButton) {
-                requestAnimationFrame(() => {
-                    if (targetButton) {
-                        activePill.style.width = `${targetButton.offsetWidth}px`;
-                        activePill.style.left = `${targetButton.offsetLeft}px`;
-                    }
-                });
+    // --- 1. Seleksi Elemen ---
+    const activePill = document.querySelector('.header-tabs .active-pill');
+    const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
+    const prevMonthBtn = document.querySelector('.analysis-header .date-selector .fa-chevron-left');
+    const nextMonthBtn = document.querySelector('.analysis-header .date-selector .fa-chevron-right');
+
+    // Keluar jika elemen penting tidak ditemukan
+    if (!activePill || !tabButtons.length) {
+        console.error("Elemen untuk animasi tab tidak ditemukan.");
+        return;
+    }
+
+    // --- 2. Fungsi-Fungsi Logika ---
+
+    /**
+     * Memindahkan dan mengubah ukuran 'pill' agar pas dengan tombol target.
+     * Menggunakan requestAnimationFrame untuk akurasi animasi.
+     * @param {HTMLElement} targetButton - Tombol yang sedang aktif.
+     */
+    function movePill(targetButton) {
+        requestAnimationFrame(() => {
+            if (targetButton) {
+                activePill.style.width = `${targetButton.offsetWidth}px`;
+                activePill.style.left = `${targetButton.offsetLeft}px`;
             }
+        });
+    }
 
-            function handleTabClick(event) {
-                const clickedButton = event.currentTarget;
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                clickedButton.classList.add('active');
-                movePill(clickedButton);
-                // ... (sisa logika handleTabClick)
+    /**
+     * Menganimasikan grafik donat dan teks di tengahnya.
+     * @param {number} percentage - Nilai persentase (0-100).
+     * @param {number} totalAmount - Jumlah total untuk ditampilkan.
+     * @param {string} label - Teks label di tengah (misal: "Pengeluaran").
+     * @param {string} color - Warna segmen grafik (misal: 'var(--expense-red)').
+     */
+    function animateChart(percentage, totalAmount, label, color) {
+        const segment = document.getElementById('chart-segment');
+        const amountEl = document.getElementById('chart-total-amount');
+        const labelEl = document.getElementById('chart-center-label');
+        if (!segment || !amountEl || !labelEl) return;
+
+        labelEl.textContent = label;
+        segment.style.stroke = color;
+        
+        const radius = segment.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        
+        segment.style.strokeDasharray = `${circumference} ${circumference}`;
+        const offset = circumference - (percentage / 100) * circumference;
+        segment.style.strokeDashoffset = offset;
+
+        // Animasi angka (counter)
+        let currentAmount = 0;
+        const steps = 100;
+        const increment = totalAmount / steps;
+        // Hentikan interval sebelumnya jika ada
+        if(window.chartCounter) clearInterval(window.chartCounter);
+
+        window.chartCounter = setInterval(() => {
+            currentAmount += increment;
+            if (currentAmount >= totalAmount) {
+                currentAmount = totalAmount;
+                clearInterval(window.chartCounter);
             }
+            amountEl.textContent = 'Rp' + Math.floor(currentAmount).toLocaleString('id-ID');
+        }, 10); // Interval 10ms untuk animasi 1 detik
+    }
 
-            tabButtons.forEach(button => button.addEventListener('click', handleTabClick));
+    /**
+     * Menangani event saat tombol mode di-klik.
+     * @param {Event} event - Event klik.
+     */
+    function handleTabClick(event) {
+        const clickedButton = event.currentTarget;
+        
+        // 1. Update kelas 'active' pada tombol
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        clickedButton.classList.add('active');
+        
+        // 2. Pindahkan 'pill' ke posisi tombol yang baru
+        movePill(clickedButton);
 
-            const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
-            if (initialActiveTab) {
-                movePill(initialActiveTab);
-            }
-            // ... (sisa logika initAnalysisPage)
+        // --- SISA LOGIKA YANG HILANG ADA DI SINI ---
+        const mode = clickedButton.dataset.mode;
+        console.log('Mode diganti ke: ' + mode);
+
+        // 3. Update konten berdasarkan mode yang dipilih (gunakan data dummy)
+        switch (mode) {
+            case 'pengeluaran':
+                animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)');
+                // Di sini Anda akan memanggil fungsi untuk me-render daftar pengeluaran
+                break;
+            case 'penghasilan':
+                animateChart(85, 850000000, 'Penghasilan', 'var(--income-green)');
+                // Di sini Anda akan memanggil fungsi untuk me-render daftar penghasilan
+                break;
+            case 'anggaran':
+                animateChart(60, 600000, 'Anggaran', 'var(--primary-blue)');
+                break;
+            case 'tren':
+                animateChart(75, 750, 'Tren', '#ff9f40');
+                break;
+            case 'aset':
+                animateChart(100, 1850000000, 'Aset', '#4bc0c0');
+                break;
         }
+    }
+
+    // --- 3. Pemasangan Event Listener ---
+
+    // Pasang event listener untuk setiap tombol mode
+    tabButtons.forEach(button => {
+        button.addEventListener('click', handleTabClick);
+    });
+
+    // Pasang event listener untuk tombol navigasi bulan
+    prevMonthBtn.addEventListener('click', () => console.log("Klik Bulan Sebelumnya"));
+    nextMonthBtn.addEventListener('click', () => console.log("Klik Bulan Berikutnya"));
+
+
+    // --- 4. Inisialisasi Tampilan Awal ---
+
+    // Posisikan 'pill' pada tombol yang aktif saat halaman pertama kali dimuat
+    const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
+    if (initialActiveTab) {
+        movePill(initialActiveTab);
+    }
+    
+    // Jalankan animasi chart untuk tampilan awal
+    setTimeout(() => {
+        animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)'); 
+    }, 100);
+}
         // === BAGIAN 3: LOGIKA SPA ROUTING (DENGAN PERBAIKAN) ===
         
         const pageContainer = document.getElementById('app-container');
