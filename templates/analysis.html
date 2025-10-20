@@ -53,10 +53,10 @@
 
     /* [PERBAIKAN] Tombol dibuat memenuhi lebar layout */
     .header-tabs .tab-button {
-        background: transparent;
         border: none;
         color: white;
         padding: 10px;
+        border-radius: 20px;
         font-size: 14px;
         font-weight: 500;
         cursor: pointer;
@@ -64,6 +64,7 @@
         align-items: center;
         gap: 5px;
         z-index: 2; /* Tombol harus di atas 'active-pill' */
+        transition: color 0.3s;
         flex-grow: 1; /* Memastikan setiap tombol mengambil ruang yang sama */
         justify-content: center;
     }
@@ -79,6 +80,7 @@
         max-width: 0;
         opacity: 0;
         overflow: hidden;
+        transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease-in-out, margin-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         white-space: nowrap;
     }
     .header-tabs .tab-button.active .tab-label {
