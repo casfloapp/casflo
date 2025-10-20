@@ -145,61 +145,6 @@
             .calc-btn, .action-btn { font-size: 28px; min-height: 50px; border-radius: 12px; }
             .calc-btn .fas { font-size: 28px; }
         }
-        /* [PERBAIKAN] Kontainer untuk animasi sliding pill */
-        .header-tabs {
-            display: flex;
-            align-items: center;
-            position: relative;
-            justify-content: space-around; /* [PERBAIKAN] Menyebarkan tombol secara merata */
-        }
-
-        /* [PERBAIKAN] Latar belakang putih yang akan bergeser */
-        .header-tabs .active-pill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            z-index: 1;
-        }
-
-        /* [PERBAIKAN] Tombol tidak lagi dipaksa memenuhi ruang */
-        .header-tabs .tab-button {
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            z-index: 2;
-            transition: color 0.3s;
-            /* flex-grow: 1; <-- [PERBAIKAN] Dihapus */
-            justify-content: center;
-        }
-        .header-tabs .tab-button.active {
-            color: #fff;
-            font-weight: 600;
-        }
-        .header-tabs .tab-button .tab-icon {
-            font-size: 20px;
-        }
-        .header-tabs .tab-button .tab-label {
-            display: inline-block;
-            max-width: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease-in-out, margin-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            white-space: nowrap;
-        }
-        .header-tabs .tab-button.active .tab-label {
-            max-width: 100px;
-            opacity: 1;
-            margin-left: 5px;
-        }
     </style>
 </head>
 <body>
