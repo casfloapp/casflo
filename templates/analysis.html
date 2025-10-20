@@ -157,7 +157,20 @@
                 </div>
             </div>
         </div>
-        <div class="category-list-card">...</div>
+        <div class="category-list-card">
+             <div class="category-item-row">
+                <div class="icon">🍔</div>
+                <div class="name">diet</div>
+                <div class="percentage">100%</div>
+                <div class="amount">Rp1.000.054.542</div>
+            </div>
+            <div class="category-item-row">
+                <div class="icon">🪴</div>
+                <div class="name">harian</div>
+                <div class="percentage">0%</div>
+                <div class="amount">Rp150.000</div>
+            </div>
+        </div>
     </main>
 
     <footer class="bottom-nav">
@@ -170,7 +183,7 @@
 
 <script>
     // Seluruh logika JavaScript untuk halaman ini sekarang ada di sini.
-    // Ini akan berjalan saat halaman /analysis dimuat secara langsung.
+    // Ini akan berjalan saat halaman /analysis dimuat.
     (function initAnalysisPage() {
         console.log("Halaman Analisis diinisialisasi dari file-nya sendiri!");
 
@@ -209,10 +222,10 @@
 
         const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
         if (initialActiveTab) {
-            // Beri jeda untuk memastikan semua style dan font sudah dimuat
+            // [PERBAIKAN KUNCI] Beri jeda untuk memastikan semua style dan font sudah dimuat
             setTimeout(() => {
                 movePill(initialActiveTab);
-            }, 50);
+            }, 50); // Jeda 50 milidetik biasanya sudah cukup.
         }
 
         function animateChart(percentage, totalAmount, label, color) {
