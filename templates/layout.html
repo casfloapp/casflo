@@ -301,7 +301,6 @@
   
         function initAnalysisPage() {
             console.log("Halaman Analisis diinisialisasi!");
-
             const activePill = document.querySelector('.header-tabs .active-pill');
             const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
             if (!activePill || !tabButtons.length) return;
@@ -331,20 +330,15 @@
                 }
             }
 
-            tabButtons.forEach(button => {
-                button.addEventListener('click', handleTabClick);
-            });
+            tabButtons.forEach(button => button.addEventListener('click', handleTabClick));
 
-            // [PERBAIKAN KUNCI] Beri jeda sesaat sebelum menghitung posisi awal.
-            // Ini memberi waktu bagi browser untuk menyelesaikan render animasi CSS.
             const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
             if (initialActiveTab) {
                 setTimeout(() => {
                     movePill(initialActiveTab);
-                }, 50); // Jeda 50 milidetik biasanya sudah cukup.
+                }, 50);
             }
             
-            // Menambahkan listener untuk memperbaiki posisi saat layar dirotasi
             window.addEventListener('resize', () => {
                 const currentActiveTab = document.querySelector('.header-tabs .tab-button.active');
                 if (currentActiveTab) {
@@ -352,7 +346,7 @@
                 }
             });
             
-                        function animateChart(percentage, totalAmount, label, color) {
+            function animateChart(percentage, totalAmount, label, color) {
                 const segment = document.getElementById('chart-segment');
                 const amountEl = document.getElementById('chart-total-amount');
                 const labelEl = document.getElementById('chart-center-label');
@@ -400,7 +394,6 @@
         
         async function navigate(path) {
             if (isBlobEnvironment) { 
-                console.log("Navigasi di lingkungan BLOB, menggunakan fallback reload.");
                 const targetUrl = new URL(path, window.location.origin);
                 window.location.href = targetUrl.href;
                 return; 
@@ -411,9 +404,7 @@
                 const response = await fetch(path, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
                 if (!response.ok) { window.location.href = path; return; }
                 const newContent = await response.text();
-                
                 history.pushState({ path }, '', path);
-                
                 pageContainer.innerHTML = newContent;
                 runPageInit(path);
             } catch (error) {
