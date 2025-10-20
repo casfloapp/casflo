@@ -1,5 +1,5 @@
 <style>
-    /* == GAYA KHUSUS HALAMAN ANALISIS == */
+    /* == GAYA KHUSUS HALAMAN ANALISIS (DIPERBARUI) == */
 
     .analysis-page-container {
         display: flex;
@@ -35,21 +35,27 @@
         font-size: 18px;
     }
 
-    .header-tabs-container {
+    /* [PERBAIKAN] Kontainer dibuat minimalis tanpa background */
+    .header-tabs {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        background: rgba(0,0,0,0.2);
-        border-radius: 25px;
-        padding: 5px;
+        position: relative;
     }
 
-    /* [PERBAIKAN] Logika animasi untuk tombol mode */
+    /* [PERBAIKAN] Latar belakang putih yang akan bergeser */
+    .header-tabs .active-pill {
+        position: absolute;
+        top: 0;
+        left: 0; /* Posisi awal diatur oleh JS */
+        height: 100%;
+        z-index: 1;
+    }
+
+    /* [PERBAIKAN] Tombol dibuat memenuhi lebar layout */
     .header-tabs .tab-button {
-        background: transparent;
         border: none;
         color: white;
-        padding: 8px 10px; /* Padding saat hanya ikon */
+        padding: 10px;
         border-radius: 20px;
         font-size: 14px;
         font-weight: 500;
@@ -57,14 +63,14 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        transition: background-color 0.3s;
+        z-index: 2; /* Tombol harus di atas 'active-pill' */
+        transition: color 0.3s;
+        flex-grow: 1; /* Memastikan setiap tombol mengambil ruang yang sama */
+        justify-content: center;
     }
     .header-tabs .tab-button.active {
-        background: white;
-        color: var(--primary-blue);
+        color: #fff;
         font-weight: 600;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        padding: 8px 15px; /* Padding lebih besar saat aktif */
     }
     .header-tabs .tab-button .tab-icon {
         font-size: 20px;
@@ -74,84 +80,27 @@
         max-width: 0;
         opacity: 0;
         overflow: hidden;
-        transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
+        transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease-in-out, margin-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         white-space: nowrap;
     }
     .header-tabs .tab-button.active .tab-label {
-        max-width: 100px; /* Lebar maksimal teks */
+        max-width: 100px;
         opacity: 1;
         margin-left: 5px;
     }
     
-    .analysis-content {
-        flex-grow: 1;
-        overflow-y: auto;
-        overscroll-behavior-y: contain;
-        padding: 20px;
-        padding-bottom: 100px;
-    }
-    
-    .filter-bar {
-        font-weight: 600;
-        color: var(--primary-blue);
-        margin-bottom: 20px;
-    }
-
-    .donut-chart-card {
-        background-color: white;
-        border-radius: 18px;
-        padding: 20px;
-        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
-        margin-bottom: 20px;
-    }
-
-    .donut-chart {
-        width: 100%;
-        max-width: 250px;
-        margin: 0 auto;
-        position: relative;
-    }
-
-    .donut-chart-svg {
-        transform: rotate(-90deg); /* Mulai dari atas */
-    }
-
-    .donut-chart-svg .chart-background {
-        fill: none;
-        stroke: #eee;
-        stroke-width: 3.8;
-    }
-
-    .donut-chart-svg .chart-segment {
-        fill: none;
-        stroke: var(--expense-red);
-        stroke-width: 3.8;
-        stroke-linecap: round;
-        transition: stroke-dashoffset 1s ease-out; /* Animasi */
-    }
-
-    .donut-chart-center {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-    }
+    .analysis-content { flex-grow: 1; overflow-y: auto; overscroll-behavior-y: contain; padding: 20px; padding-bottom: 100px; }
+    .filter-bar { font-weight: 600; color: var(--primary-blue); margin-bottom: 20px; }
+    .donut-chart-card { background-color: white; border-radius: 18px; padding: 20px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); margin-bottom: 20px; }
+    .donut-chart { width: 100%; max-width: 250px; margin: 0 auto; position: relative; }
+    .donut-chart-svg { transform: rotate(-90deg); }
+    .donut-chart-svg .chart-background { fill: none; stroke: #eee; stroke-width: 3.8; }
+    .donut-chart-svg .chart-segment { fill: none; stroke: var(--expense-red); stroke-width: 3.8; stroke-linecap: round; transition: stroke-dashoffset 1s ease-out; }
+    .donut-chart-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
     .donut-chart-center .label { font-size: 14px; color: var(--text-light); }
     .donut-chart-center .amount { font-size: 22px; font-weight: 700; color: var(--text-dark); }
-
-    .category-list-card {
-        background-color: white;
-        border-radius: 18px;
-        padding: 10px 20px;
-        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
-    }
-    .category-item-row {
-        display: flex;
-        align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px solid var(--bg-gray);
-    }
+    .category-list-card { background-color: white; border-radius: 18px; padding: 10px 20px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); }
+    .category-item-row { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--bg-gray); }
     .category-item-row:last-child { border-bottom: none; }
     .category-item-row .icon { font-size: 24px; margin-right: 15px; }
     .category-item-row .name { font-weight: 500; flex-grow: 1; }
@@ -162,17 +111,13 @@
 <div class="analysis-page-container">
     <header class="analysis-header">
         <div class="header-main-nav">
-            <div class="book-selector">
-                <i class="fas fa-book"></i>
-            </div>
+            <div class="book-selector"><i class="fas fa-book"></i></div>
             <span class="title">Analisis</span>
-            <div class="date-selector">
-                <i class="fas fa-chevron-left"></i>
-                <span>10/2025</span>
-                <i class="fas fa-chevron-right"></i>
-            </div>
+            <div class="date-selector"><i class="fas fa-chevron-left"></i><span>10/2025</span><i class="fas fa-chevron-right"></i></div>
         </div>
+        
         <div class="header-tabs">
+            <div class="active-pill"></div>
             <button class="tab-button active" data-mode="pengeluaran">
                 <i class="fas fa-shopping-cart tab-icon"></i>
                 <span class="tab-label">Pengeluaran</span>
@@ -197,10 +142,7 @@
     </header>
 
     <main class="analysis-content">
-        <div class="filter-bar">
-            Oleh Kategori <i class="fas fa-chevron-down fa-xs"></i>
-        </div>
-
+        <div class="filter-bar">Oleh Kategori <i class="fas fa-chevron-down fa-xs"></i></div>
         <div class="donut-chart-card">
             <div class="donut-chart">
                 <svg viewBox="0 0 36 36" class="donut-chart-svg">
@@ -213,7 +155,6 @@
                 </div>
             </div>
         </div>
-        
         <div class="category-list-card">
             <div class="category-item-row">
                 <div class="icon">🍔</div>
