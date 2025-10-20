@@ -298,9 +298,79 @@
             console.log("Halaman dompet dimuat.");
         }
 
-  
+  function initAnalysisPage() {
+            console.log("Halaman Analisis diinisialisasi!");
+
+            const activePill = document.querySelector('.header-tabs .active-pill');
+            const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
+            if (!activePill || !tabButtons.length) return;
+
+            function movePill(targetButton) {
+                requestAnimationFrame(() => {
+                    if (targetButton) {
+                        activePill.style.width = `${targetButton.offsetWidth}px`;
+                        activePill.style.left = `${targetButton.offsetLeft}px`;
+                    }
+                });
+            }
+
+            function handleTabClick(event) {
+                const clickedButton = event.currentTarget;
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                clickedButton.classList.add('active');
+                movePill(clickedButton);
+                
+                const mode = clickedButton.dataset.mode;
+                if (mode === 'pengeluaran') {
+                    animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)');
+                } else if (mode === 'penghasilan') {
+                    animateChart(85, 850000000, 'Penghasilan', 'var(--income-green)');
+                } else {
+                    animateChart(0, 0, mode.charAt(0).toUpperCase() + mode.slice(1), '#ccc');
+                }
+            }
+
+            tabButtons.forEach(button => button.addEventListener('click', handleTabClick));
+
+            const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
+            if (initialActiveTab) {
+                movePill(initialActiveTab);
+            }
+            
+            function animateChart(percentage, totalAmount, label, color) {
+                const segment = document.getElementById('chart-segment');
+                const amountEl = document.getElementById('chart-total-amount');
+                const labelEl = document.getElementById('chart-center-label');
+                if (!segment || !amountEl || !labelEl) return;
+                labelEl.textContent = label;
+                segment.style.stroke = color;
+                const radius = segment.r.baseVal.value;
+                const circumference = 2 * Math.PI * radius;
+                segment.style.strokeDasharray = `${circumference} ${circumference}`;
+                const offset = circumference - (percentage / 100) * circumference;
+                segment.style.strokeDashoffset = offset;
+                let currentAmount = 0;
+                const steps = 100;
+                const increment = totalAmount / steps;
+                if(window.chartCounter) clearInterval(window.chartCounter);
+                window.chartCounter = setInterval(() => {
+                    currentAmount += increment;
+                    if (currentAmount >= totalAmount) {
+                        currentAmount = totalAmount;
+                        clearInterval(window.chartCounter);
+                    }
+                    amountEl.textContent = 'Rp' + Math.floor(currentAmount).toLocaleString('id-ID');
+                }, 10);
+            }
+
+            setTimeout(() => {
+                animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)'); 
+            }, 100);
+        }
+        
         function initAnalysisPage() {
             console.log("Halaman Analisis diinisialisasi!");
+
             const activePill = document.querySelector('.header-tabs .active-pill');
             const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
             if (!activePill || !tabButtons.length) return;
@@ -330,15 +400,20 @@
                 }
             }
 
-            tabButtons.forEach(button => button.addEventListener('click', handleTabClick));
+            tabButtons.forEach(button => {
+                button.addEventListener('click', handleTabClick);
+            });
 
+            // [PERBAIKAN KUNCI] Beri jeda sesaat sebelum menghitung posisi awal.
+            // Ini memberi waktu bagi browser untuk menyelesaikan render animasi CSS.
             const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
             if (initialActiveTab) {
                 setTimeout(() => {
                     movePill(initialActiveTab);
-                }, 50);
+                }, 50); // Jeda 50 milidetik biasanya sudah cukup.
             }
             
+            // Menambahkan listener untuk memperbaiki posisi saat layar dirotasi
             window.addEventListener('resize', () => {
                 const currentActiveTab = document.querySelector('.header-tabs .tab-button.active');
                 if (currentActiveTab) {
@@ -346,7 +421,7 @@
                 }
             });
             
-            function animateChart(percentage, totalAmount, label, color) {
+                        function animateChart(percentage, totalAmount, label, color) {
                 const segment = document.getElementById('chart-segment');
                 const amountEl = document.getElementById('chart-total-amount');
                 const labelEl = document.getElementById('chart-center-label');
@@ -394,6 +469,7 @@
         
         async function navigate(path) {
             if (isBlobEnvironment) { 
+                console.log("Navigasi di lingkungan BLOB, menggunakan fallback reload.");
                 const targetUrl = new URL(path, window.location.origin);
                 window.location.href = targetUrl.href;
                 return; 
@@ -404,7 +480,9 @@
                 const response = await fetch(path, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
                 if (!response.ok) { window.location.href = path; return; }
                 const newContent = await response.text();
+                
                 history.pushState({ path }, '', path);
+                
                 pageContainer.innerHTML = newContent;
                 runPageInit(path);
             } catch (error) {
