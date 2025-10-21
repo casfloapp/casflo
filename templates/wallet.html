@@ -1,21 +1,20 @@
 <style>
-    /* == GAYA KHUSUS HALAMAN DOMPET == */
+    /* == GAYA KHUSUS HALAMAN DOMPET (DIPERBARUI) == */
 
-    /* [KUNCI LAYOUT] Mengatur layout utama agar header & footer tidak ikut scroll */
     .wallet-page-container {
         display: flex;
         flex-direction: column;
-        height: 100vh; /* Mengisi seluruh tinggi layar modern */
+        height: 100vh;
         height: 100svh;
         background-color: var(--bg-gray);
-        overflow: hidden; /* Mencegah seluruh halaman bisa di-scroll */
+        overflow: hidden;
     }
 
     .wallet-header {
         background: var(--primary-blue);
         color: white;
         padding: 20px;
-        flex-shrink: 0; /* Mencegah header menyusut */
+        flex-shrink: 0;
         z-index: 10;
     }
     
@@ -23,7 +22,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 25px; /* Menambah jarak */
         font-size: 20px;
     }
     .header-top-nav .nav-icons {
@@ -31,41 +30,37 @@
         gap: 20px;
     }
 
-    .wallet-header h1 {
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 20px;
+    /* [PERBAIKAN] Mengubah tata letak statistik */
+    .stats-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px; /* Jarak antara baris Aset Bersih dan baris bawah */
     }
 
-    .stats-grid {
-        display: grid;
-        grid-template-columns: 1.5fr 1fr;
-        gap: 15px;
-    }
-    .stats-grid .label {
+    .stats-container .label {
         font-size: 14px;
         opacity: 0.8;
+        margin-bottom: 4px;
     }
-    .stats-grid .amount {
+    .stats-container .amount {
         font-size: 22px;
         font-weight: 600;
     }
-    .stat-item-large .amount {
-        font-size: 28px;
+    .stats-container .main-balance .amount {
+        font-size: 32px;
+        font-weight: 700;
     }
-    .stats-grid .sub-stats {
+    .stats-container .sub-balances {
         display: flex;
-        flex-direction: column;
-        gap: 10px;
+        justify-content: space-between;
     }
-
-    /* [KUNCI LAYOUT] Konten utama sekarang bisa di-scroll secara independen */
+    
     .wallet-content {
-        flex-grow: 1; /* Mengambil sisa ruang yang tersedia */
-        overflow-y: auto; /* Mengaktifkan scroll vertikal HANYA jika kontennya meluap */
-        overscroll-behavior-y: contain; /* Mencegah 'bounce' effect */
+        flex-grow: 1;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
         padding: 20px;
-        padding-bottom: 100px; /* Ruang agar tidak tertutup navigasi bawah */
+        padding-bottom: 100px;
     }
     
     .account-section-header {
@@ -120,7 +115,7 @@
     .account-item .balance-info .amount {
         font-weight: 700;
         font-size: 16px;
-        color: var(--expense-red); /* Warna merah untuk minus */
+        color: var(--expense-red);
     }
     .account-item .balance-info .currency {
         font-size: 12px;
@@ -132,6 +127,7 @@
     <header class="wallet-header">
         <div class="header-top-nav">
             <i class="fas fa-book"></i>
+            <span style="flex-grow: 1; text-align: center;">Dompet</span>
             <div class="nav-icons">
                 <i class="fas fa-eye"></i>
                 <i class="fas fa-dollar-sign"></i>
@@ -139,19 +135,17 @@
             </div>
         </div>
 
-        <h1>Dompet</h1>
-
-        <div class="stats-grid">
-            <div class="stat-item-large">
+        <div class="stats-container">
+            <div class="main-balance">
                 <div class="label">Aset Bersih</div>
                 <div class="amount">Rp0</div>
             </div>
-            <div class="sub-stats">
+            <div class="sub-balances">
                 <div class="stat-item">
                     <div class="label">Aset</div>
                     <div class="amount">Rp0</div>
                 </div>
-                <div class="stat-item">
+                <div class="stat-item" style="text-align: right;">
                     <div class="label">Hutang</div>
                     <div class="amount">Rp0</div>
                 </div>
@@ -177,7 +171,7 @@
                         <div class="currency">IDR(1.0)</div>
                     </div>
                 </div>
-                </div>
+            </div>
         </div>
     </main>
 
