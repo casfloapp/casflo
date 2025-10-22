@@ -4,10 +4,10 @@
     .wallet-page-container {
         display: flex;
         flex-direction: column;
-        height: 100vh;
+        height: 100vh; /* Mengisi seluruh tinggi layar modern */
         height: 100svh;
         background-color: var(--bg-gray);
-        overflow: hidden;
+        overflow: hidden; /* Mencegah seluruh halaman bisa di-scroll */
     }
 
     .wallet-header {
@@ -22,15 +22,19 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 25px; /* Menambah jarak */
+        margin-bottom: 25px;
         font-size: 20px;
+    }
+    .header-top-nav .center-title {
+        font-size: 18px;
+        font-weight: 600;
     }
     .header-top-nav .nav-icons {
         display: flex;
         gap: 20px;
     }
 
-    /* [PERBAIKAN] Mengubah tata letak statistik */
+    /* [PERBAIKAN] Mengubah tata letak statistik agar sesuai desain baru */
     .stats-container {
         display: flex;
         flex-direction: column;
@@ -58,8 +62,9 @@
     .wallet-content {
         flex-grow: 1;
         overflow-y: auto;
-        overscroll-behavior-y: contain;
+        overscroll-behavior-y: contain; /* Mencegah 'bounce' effect saat scroll */
         padding: 20px;
+        padding-top: 0; /* Menempelkan kartu ke header */
         padding-bottom: 100px;
     }
     
@@ -70,8 +75,7 @@
         font-size: 14px;
         font-weight: 600;
         color: var(--text-light);
-        margin-bottom: 10px;
-        padding: 0 5px;
+        margin: 20px 5px 10px 5px;
     }
 
     .account-list {
@@ -99,6 +103,7 @@
     .account-item .icon-group .drag-handle {
         color: var(--text-light);
         opacity: 0.5;
+        cursor: grab;
     }
     .account-item .icon-group .main-icon {
         font-size: 24px;
@@ -127,7 +132,7 @@
     <header class="wallet-header">
         <div class="header-top-nav">
             <i class="fas fa-book"></i>
-            <span style="flex-grow: 1; text-align: center;">Dompet</span>
+            <span class="center-title">Dompet</span>
             <div class="nav-icons">
                 <i class="fas fa-eye"></i>
                 <i class="fas fa-dollar-sign"></i>
