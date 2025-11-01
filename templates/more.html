@@ -1,13 +1,12 @@
 <style>
-    /* [KUNCI PERBAIKAN] Mengatur layout utama agar header dan footer tidak ikut scroll */
+    /* [PERBAIKAN] Mengatur layout utama agar header dan footer tidak ikut scroll */
     .more-page-container {
         display: flex;
         flex-direction: column;
         height: 100vh; /* Mengisi seluruh tinggi layar */
         height: 100svh;
         background-color: white;
-        max-width: 480px;
-        margin: 0 auto;
+        /* max-width dan margin dihapus, karena sudah diatur oleh layout.html */
     }
 
     .more-header {
@@ -27,17 +26,16 @@
         cursor: pointer;
     }
 
-    /* [KUNCI PERBAIKAN] Konten utama sekarang bisa di-scroll secara independen */
+    /* [PERBAIKAN] Konten utama sekarang bisa di-scroll secara independen */
     .more-content {
         flex-grow: 1; /* Mengambil sisa ruang yang tersedia */
         overflow-y: auto; /* Mengaktifkan scroll hanya untuk area ini */
-        padding-top: 20px;
-        max-width: 480px;
-        margin: 0 auto;
-        padding-bottom: 100px; 
+        padding: 20px; /* [PERBAIKAN] Mengganti max-width dengan padding */
+        padding-bottom: 100px; /* Memberi ruang agar tidak tertutup navigasi */
+        /* max-width dan margin dihapus */
     }
 
-    /* [PERBAIKAN] Grid dikembalikan menjadi 3 kolom */
+    /* Grid 3 kolom */
     .more-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
