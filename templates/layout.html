@@ -324,7 +324,13 @@
             }, 100);
         }
 
-
+        function initMorePage() {
+            currentType = 'expense';
+            selectedCategory = null;
+            clearCalc();
+            loadCategories();
+            console.log("Halaman More dimuat.");
+        }
         // === BAGIAN 3: LOGIKA SPA ROUTING (DENGAN PERBAIKAN) ===
         
         const pageContainer = document.getElementById('app-container');
