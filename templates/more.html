@@ -187,24 +187,7 @@
     function initMorePageInternal() {
         console.log("Logika Halaman Lebih (Internal) dijalankan.");
         
-        const logoutButton = document.getElementById('logout-btn');
-        
-        if (logoutButton) {
-            logoutButton.addEventListener('click', () => {
-                console.log("Tombol Logout diklik.");
-                
-                // Tampilkan konfirmasi sederhana
-                // NOTE: confirm() mungkin tidak berfungsi di beberapa lingkungan 'blob'
-                // Jika ini tidak muncul, kita harus membuat modal custom
-                if (confirm("Apakah Anda yakin ingin logout?")) {
-                    // 1. Hapus session token dari localStorage
-                    localStorage.removeItem('sessionToken');
-                    
-                    // 2. Arahkan pengguna kembali ke halaman login (reload penuh)
-                    window.location.href = '/login';
-                }
-            });
-        }
+       
     }
 </script>
 
