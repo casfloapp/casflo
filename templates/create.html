@@ -1,43 +1,205 @@
-<div class="add-view active">
-    <div class="add-header">
+<style>
+    /* == GAYA KHUSUS HALAMAN TAMBAH == */
+
+    /* [KUNCI LAYOUT] Mengatur layout utama agar tidak bisa di-scroll */
+    .add-view-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100svh;
+        background-color: white;
+    }
+
+    .add-header {
+        padding: 20px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0; /* Mencegah header menyusut */
+        background-color: white;
+    }
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--text-light);
+        text-decoration: none;
+    }
+    .type-selector-header {
+        display: flex;
+        background: #f8f9fa;
+        border-radius: 25px;
+        padding: 3px;
+    }
+    .type-btn-header {
+        padding: 8px 16px;
+        border: none;
+        background: transparent;
+        border-radius: 22px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--text-light);
+    }
+    .type-btn-header.active {
+        background: white;
+        color: var(--text-dark);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .type-btn-header.expense.active { color: var(--expense-red); }
+    .type-btn-header.income.active { color: var(--income-green); }
+
+    /* [KUNCI LAYOUT] Area kategori yang bisa di-scroll */
+    .categories-section {
+        flex-grow: 1; /* Mengambil sisa ruang */
+        overflow-y: auto; /* Hanya scroll di area ini */
+        overscroll-behavior-y: contain; /* Mencegah bounce effect */
+        padding: 20px;
+        background-color: white;
+        min-height: 0;
+    }
+    .category-group { margin-bottom: 20px; }
+    .group-title {
+        font-size: 12px;
+        color: var(--text-light);
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+    .category-grid {
+        display: grid;
+        /* [PERBAIKAN] Menggunakan metode grid responsif seperti 'more.html' */
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 10px;
+    }
+    .category-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    .category-item:hover { background: #f8f9fa; }
+    .category-item.selected {
+        background: var(--primary-blue);
+        color: white;
+    }
+    .category-item.selected .category-icon {
+        background: rgba(255,255,255,0.2) !important;
+        color: white !important;
+    }
+    .category-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5px;
+        font-size: 20px;
+    }
+    .category-name {
+        font-size: 11px;
+        text-align: center;
+    }
+
+    /* [KUNCI LAYOUT] Kalkulator yang tetap di bawah */
+    .calculator-section {
+        background: #f8f9fa;
+        padding: 15px;
+        border-top: 1px solid #e9ecef;
+        flex-shrink: 0; /* Mencegah kalkulator menyusut */
+        display: grid;
+        grid-template-rows: repeat(6, 1fr);
+        gap: 8px;
+    }
+    .amount-container { display: flex; gap: 8px; }
+    .account-card {
+        aspect-ratio: 1 / 1;
+        height: 100%;
+        background: var(--primary-blue);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(102, 102, 234, 0.3);
+    }
+    .account-card i { color: white; font-size: 24px; }
+    .amount-display {
+        flex-grow: 1;
+        background: white;
+        padding: 0 12px;
+        border-radius: 10px;
+        text-align: right;
+        font-size: 28px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        height: 100%;
+    }
+    .top-action-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .action-btn { background: white; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 24px; }
+    .action-btn.personal { background: #f8f9fa; color: #6c757d; }
+    .action-btn.today { background: #e3f2fd; color: #1976d2; }
+    .action-btn.add { background: var(--income-green); color: white; }
+    .action-btn.check { background: var(--income-green); color: white; }
+    .action-btn.equals { background: var(--primary-blue); color: white; }
+    .calc-grid { grid-row: 3 / 7; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; grid-auto-rows: 1fr; }
+    .calc-btn { background: white; border: none; border-radius: 10px; font-size: 24px; font-weight: 600; cursor: pointer; color: var(--text-dark); box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; }
+    .calc-btn .fas { font-size: 24px; }
+    .calc-btn.operator { background: #f1f3f5; color: #495057; }
+    .calc-btn.delete { background: #ffe3e3; color: var(--expense-red); }
+</style>
+
+<div class="add-view-container">
+    <header class="add-header">
         <div class="type-selector-header">
-            <button class="type-btn-header expense active" id="expenseBtn" onclick="selectType('expense')"><i class="fas fa-minus-circle"></i><span>Pengeluaran</span></button>
-            <button class="type-btn-header income" id="incomeBtn" onclick="selectType('income')"><i class="fas fa-plus-circle"></i><span>Pemasukan</span></button>
+            <button class="type-btn-header expense active" id="expenseBtn"><i class="fas fa-minus-circle"></i><span>Pengeluaran</span></button>
+            <button class="type-btn-header income" id="incomeBtn"><i class="fas fa-plus-circle"></i><span>Pemasukan</span></button>
         </div>
         <a href="/" class="close-btn"><i class="fas fa-times"></i></a>
-    </div>
-    <div class="categories-section">
+    </header>
+    <main class="categories-section">
         <div class="category-group"><div class="group-title">Direkomendasikan</div><div class="category-grid" id="recommendedGrid"></div></div>
         <div class="category-group"><div class="group-title">Belum Dikelompokkan</div><div class="category-grid" id="uncategorizedGrid"></div></div>
-    </div>
-    <div class="calculator-section">
+    </main>
+    <footer class="calculator-section">
         <div class="amount-container">
-            <div class="account-card" onclick="selectAccount()"><i class="fas fa-credit-card"></i></div>
+            <div class="account-card"><i class="fas fa-credit-card"></i></div>
             <div class="amount-display" id="amountDisplay">0</div>
         </div>
         <div class="top-action-bar">
-            <button class="action-btn personal" onclick="selectMember()"><i class="fas fa-users"></i></button>
-            <button class="action-btn today" onclick="selectDate()"><i class="fas fa-calendar-day"></i></button>
-            <button class="action-btn add" onclick="addNewItem()"><i class="fas fa-plus"></i></button>
-            <button class="action-btn check" id="actionBtn" onclick="handleActionClick()"><i class="fas fa-check"></i></button>
+            <button class="action-btn personal"><i class="fas fa-users"></i></button>
+            <button class="action-btn today"><i class="fas fa-calendar-day"></i></button>
+            <button class="action-btn add"><i class="fas fa-plus"></i></button>
+            <button class="action-btn check" id="actionBtn"><i class="fas fa-check"></i></button>
         </div>
         <div class="calc-grid">
-            <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
-            <button class="calc-btn" onclick="appendToCalc('7')">7</button>
-            <button class="calc-btn" onclick="appendToCalc('8')">8</button>
-            <button class="calc-btn" onclick="appendToCalc('9')">9</button>
-            <button class="calc-btn operator" onclick="appendToCalc('/')">÷</button>
-            <button class="calc-btn" onclick="appendToCalc('4')">4</button>
-            <button class="calc-btn" onclick="appendToCalc('5')">5</button>
-            <button class="calc-btn" onclick="appendToCalc('6')">6</button>
-            <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
-            <button class="calc-btn" onclick="appendToCalc('1')">1</button>
-            <button class="calc-btn" onclick="appendToCalc('2')">2</button>
-            <button class="calc-btn" onclick="appendToCalc('3')">3</button>
-            <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
-            <button class="calc-btn" onclick="appendToCalc('.')">.</button>
-            <button class="calc-btn" onclick="appendToCalc('0')">0</button>
-            <button class="calc-btn delete" onclick="deleteLast()"><i class="fas fa-backspace"></i></button>
+            <button class="calc-btn operator" data-value="*">×</button>
+            <button class="calc-btn" data-value="7">7</button>
+            <button class="calc-btn" data-value="8">8</button>
+            <button class="calc-btn" data-value="9">9</button>
+            <button class="calc-btn operator" data-value="/">÷</button>
+            <button class="calc-btn" data-value="4">4</button>
+            <button class="calc-btn" data-value="5">5</button>
+            <button class="calc-btn" data-value="6">6</button>
+            <button class="calc-btn operator" data-value="-">-</button>
+            <button class="calc-btn" data-value="1">1</button>
+            <button class="calc-btn" data-value="2">2</button>
+            <button class="calc-btn" data-value="3">3</button>
+            <button class="calc-btn operator" data-value="+">+</button>
+            <button class="calc-btn" data-value=".">.</button>
+            <button class="calc-btn" data-value="0">0</button>
+            <button class="calc-btn delete"><i class="fas fa-backspace"></i></button>
         </div>
-    </div>
+    </footer>
 </div>
