@@ -101,6 +101,20 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- [PERBAIKAN KUNCI] ---
+            // Cek apakah sudah ada session token
+            const sessionToken = localStorage.getItem('sessionToken');
+            
+            if (sessionToken) {
+                // Jika sudah ada token, jangan tampilkan halaman ini.
+                // Langsung redirect ke dashboard aplikasi utama.
+                window.location.href = '/';
+                return; // Hentikan eksekusi sisa skrip di halaman ini
+            }
+            // --- [AKHIR PERBAIKAN] ---
+
+            // Sisa kode di bawah ini hanya akan berjalan jika tidak ada token
             const registerForm = document.getElementById('register-form');
             const googleBtn = document.getElementById('google-signin-btn');
             const apiUrl = 'https://api.casflo.id/api/v1'; // GANTI DENGAN URL API ANDA
