@@ -43,8 +43,7 @@ export default {
                 pageContent = analysisContent;
                 break;
             default:
-                // Redirect ke halaman utama jika halaman tidak ditemukan
-                return Response.redirect(new URL('/', request.url).toString(), 302);
+                  return Response.redirect(new URL('/login', request.url).toString(), 302);
         }
 
         // Untuk navigasi SPA, kirim hanya potongan kontennya
