@@ -28,7 +28,7 @@
                 <div class="w-full flex items-center justify-between">
                     <div class="flex items-center gap-x-2">
                         <a href="/" class="shrink-0 text-xl font-bold text-slate-700 dark:text-white">
-                           Casflo.id
+                           casfloapp
                         </a>
                     </div>
                     <ul class="flex items-center gap-x-3 lg:gap-x-5">
@@ -98,19 +98,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // [PERBAIKAN KUNCI] Cek apakah sudah ada session token
             const sessionToken = localStorage.getItem('sessionToken');
             if (sessionToken) {
-                // Jika sudah ada token, jangan tampilkan halaman login.
-                // Langsung redirect ke dashboard aplikasi utama.
                 window.location.href = '/';
-                return; // Hentikan eksekusi sisa skrip di halaman ini
+                return;
             }
 
-            // Sisa kode di bawah ini hanya akan berjalan jika tidak ada token (pengguna belum login)
             const loginForm = document.getElementById('login-form');
             const googleBtn = document.getElementById('google-signin-btn');
-            const apiUrl = 'https://api.casflo.id/api/v1'; // GANTI DENGAN URL API ANDA
+            const apiUrl = 'https://api.casflo.id/api/v1'; 
 
             const toggleLoading = (form, isLoading) => {
                 const button = form.querySelector('button[type="submit"]');
@@ -146,17 +142,21 @@
                     });
 
                     const result = await response.json();
+                    
+                    // [PERBAIKAN KUNCI] Tampilkan respons API di console untuk debugging
+                    console.log('Respons API:', result); 
 
                     if (!response.ok) {
                         throw new Error(result.error?.message || 'Email atau password salah.');
                     }
 
-                    // [PERBAIKAN KUNCI] Simpan token ke localStorage
-                    if (result.token) {
-                        localStorage.setItem('sessionToken', result.token);
-                        // Arahkan ke halaman utama aplikasi SPA
+                    // [PERBAIKAN KUNCI] Di sinilah Anda perlu mencocokkan nama key token Anda
+                    // Jika API Anda mengembalikan "accessToken", ganti "result.token" menjadi "result.accessToken"
+                    if (result.token) { 
+                        localStorage.setItem('sessionToken', result.token); 
                         window.location.href = '/'; 
                     } else {
+                        // Ini adalah error yang Anda lihat
                         throw new Error('Login berhasil tetapi tidak menerima token.');
                     }
 
