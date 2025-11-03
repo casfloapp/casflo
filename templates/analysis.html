@@ -36,6 +36,22 @@
         font-size: 18px;
     }
 
+    .header-top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        font-size: 20px;
+    }
+    .header-top-nav .center-title {
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .header-top-nav .nav-icons {
+        display: flex;
+        gap: 20px;
+    }
+
     /* [PERBAIKAN] Kontainer dibuat minimalis tanpa background */
     .header-tabs {
         display: flex;
@@ -112,7 +128,7 @@
 
 <div class="analysis-page-container">
     <header class="analysis-header">
-        <div class="header-main-nav">
+        <div class="header-top-nav">
             <div class="book-selector"><i class="fas fa-book"></i></div>
             <span class="title">Analisis</span>
             <div class="date-selector"><i class="fas fa-chevron-left"></i><span>10/2025</span><i class="fas fa-chevron-right"></i></div>
