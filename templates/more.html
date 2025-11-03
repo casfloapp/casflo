@@ -3,11 +3,10 @@
     .more-page-container {
         display: flex;
         flex-direction: column;
-        height: 100vh;
+        height: 100vh; /* Mengisi seluruh tinggi layar */
         height: 100svh;
         background-color: white;
-        max-width: 480px;
-        margin: 0 auto;
+        /* max-width dan margin dihapus, karena sudah diatur oleh layout.html */
     }
 
     .more-header {
@@ -22,7 +21,7 @@
         flex-shrink: 0; /* Mencegah header menyusut saat konten banyak */
         z-index: 10;
     }
-    .more-header .settings-icon {
+    .more-header .logout-icon {
         font-size: 22px;
         cursor: pointer;
     }
@@ -32,8 +31,9 @@
         flex-grow: 1; /* Mengambil sisa ruang yang tersedia */
         overflow-y: auto; /* Mengaktifkan scroll hanya untuk area ini */
         overscroll-behavior-y: contain; /* Mencegah 'bounce' effect */
-        padding: 20px; /* Padding samping untuk konsistensi */
+        padding: 20px; /* [PERBAIKAN] Menambahkan padding samping */
         padding-bottom: 100px; /* Memberi ruang agar tidak tertutup navigasi */
+        /* max-width dan margin dihapus */
     }
 
     /* [PERBAIKAN KUNCI] Menggunakan metode grid yang Anda sarankan */
@@ -101,7 +101,8 @@
 <div class="more-page-container">
     <header class="more-header">
         <span>Lebih</span>
-        <i class="fas fa-cog settings-icon"></i>
+        <!-- [PERBAIKAN] Ikon diubah menjadi logout dan diberi ID -->
+        <i id="logout-btn" class="fas fa-sign-out-alt logout-icon"></i>
     </header>
 
     <main class="more-content">
@@ -172,7 +173,7 @@
                 <div class="icon">💖</div>
                 <div class="label">Rekomendasi</div>
             </a>
-            <a href="#" class="grid-item">
+            <a href="#" class-="grid-item">
                 <div class="icon">ℹ️</div>
                 <div class="label">Tentang</div>
             </a>
@@ -189,5 +190,34 @@
         <a href="/analysis" class="nav-item"><i class="fas fa-chart-pie"></i><span>Analisis</span></a>
         <a href="/more" class="nav-item active"><i class="fas fa-ellipsis-h"></i><span>Lebih</span></a>
     </footer>
+
+    <!-- [DIHAPUS] HTML untuk Modal/Action Sheet Logout dihapus -->
 </div>
+
+<!-- [BARU] JavaScript khusus untuk halaman 'More' -->
+<script type="text/javascript-template">
+    // Fungsi ini akan dipanggil oleh layout.html
+    function initMorePageInternal() {
+        console.log("Logika Halaman Lebih (Internal) dijalankan.");
+        
+        const logoutButton = document.getElementById('logout-btn');
+        
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                console.log("Tombol Logout diklik.");
+                
+                // Tampilkan konfirmasi sederhana
+                // HATI-HATI: 'confirm' bawaan browser mungkin tidak berfungsi
+                // di beberapa lingkungan. Tapi kita coba dulu.
+                if (confirm("Apakah Anda yakin ingin logout?")) {
+                    // 1. Hapus session token dari localStorage
+                    localStorage.removeItem('sessionToken');
+                    
+                    // 2. Arahkan pengguna kembali ke halaman login (reload penuh)
+                    window.location.href = '/login';
+                }
+            });
+        }
+    }
+</script>
 
