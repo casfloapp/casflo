@@ -152,7 +152,14 @@
         {{PAGE_CONTENT}}
     </div>
 
+    
     <script>
+        const sessionToken = localStorage.getItem('sessionToken');
+        if (!sessionToken) {
+            window.location.href = '/login';
+        }
+
+
         // === BAGIAN 1: VARIABEL & FUNGSI GLOBAL ===
         let currentDate = new Date();
         let selectedDate = new Date();
