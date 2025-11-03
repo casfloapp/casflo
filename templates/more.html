@@ -3,10 +3,9 @@
     .more-page-container {
         display: flex;
         flex-direction: column;
-        height: 100vh; /* Mengisi seluruh tinggi layar */
+        height: 100vh;
         height: 100svh;
         background-color: white;
-        /* max-width dan margin dihapus, karena sudah diatur oleh layout.html */
     }
 
     .more-header {
@@ -18,32 +17,25 @@
         align-items: center;
         font-size: 18px;
         font-weight: 600;
-        flex-shrink: 0; /* Mencegah header menyusut saat konten banyak */
+        flex-shrink: 0;
         z-index: 10;
     }
-    /* [BARU] CSS untuk ikon logout */
     .more-header .logout-icon {
         font-size: 22px;
         cursor: pointer;
     }
 
-    /* [PERBAIKAN] Konten utama sekarang bisa di-scroll secara independen */
+    /* Konten utama sekarang bisa di-scroll secara independen */
     .more-content {
-        flex-grow: 1; /* Mengambil sisa ruang yang tersedia */
-        overflow-y: auto; /* Mengaktifkan scroll hanya untuk area ini */
-        overscroll-behavior-y: contain; /* Mencegah 'bounce' effect */
-        padding: 20px; /* [PERBAIKAN] Menambahkan padding samping */
-        padding-bottom: 100px; /* Memberi ruang agar tidak tertutup navigasi */
-        /* max-width dan margin dihapus */
+        flex-grow: 1;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        padding: 20px;
+        padding-bottom: 100px;
     }
 
-    /* [PERBAIKAN KUNCI] Menggunakan metode grid yang Anda sarankan */
     .more-grid {
         display: grid;
-        /* auto-fit: Buat kolom sebanyak mungkin.
-          minmax(95px, 1fr): Setiap kolom minimal 95px, 
-                           dan bisa melebar (1fr) untuk mengisi sisa ruang.
-        */
         grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
         gap: 15px;
     }
@@ -60,15 +52,12 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        aspect-ratio: 1 / 1; /* Menjaga kartu tetap persegi */
+        aspect-ratio: 1 / 1;
     }
-
-    /* Ikon diperbesar untuk tampilan yang lebih baik */
     .grid-item .icon {
         font-size: 36px;
         margin-bottom: 10px;
     }
-
     .grid-item .label {
         font-size: 13px;
         font-weight: 500;
@@ -98,7 +87,6 @@
     }
 </style>
 
-<!-- Menggunakan kontainer khusus untuk halaman ini agar scroll berfungsi benar -->
 <div class="more-page-container">
     <header class="more-header">
         <span>Lebih</span>
@@ -191,12 +179,11 @@
         <a href="/analysis" class="nav-item"><i class="fas fa-chart-pie"></i><span>Analisis</span></a>
         <a href="/more" class="nav-item active"><i class="fas fa-ellipsis-h"></i><span>Lebih</span></a>
     </footer>
-
-    <!-- [DIHAPUS] HTML untuk Modal/Action Sheet Logout dihapus -->
 </div>
 
 <!-- [BARU] JavaScript khusus untuk halaman 'More' -->
-<script>
+<script >
+    // Fungsi ini akan dipanggil oleh layout.html
     function initMorePageInternal() {
         console.log("Logika Halaman Lebih (Internal) dijalankan.");
         
@@ -207,8 +194,8 @@
                 console.log("Tombol Logout diklik.");
                 
                 // Tampilkan konfirmasi sederhana
-                // HATI-HATI: 'confirm' bawaan browser mungkin tidak berfungsi
-                // di beberapa lingkungan. Tapi kita coba dulu.
+                // NOTE: confirm() mungkin tidak berfungsi di beberapa lingkungan 'blob'
+                // Jika ini tidak muncul, kita harus membuat modal custom
                 if (confirm("Apakah Anda yakin ingin logout?")) {
                     // 1. Hapus session token dari localStorage
                     localStorage.removeItem('sessionToken');
