@@ -9,6 +9,8 @@ import analysisContent from './templates/analysis.html';
 import loginPage from './templates/login.html';
 import createAccountPage from './templates/create-account.html';
 import twoStepPage from './templates/two-step.html';
+import authCallbackPage from './templates/auth-callback.html'; // Untuk login Google
+
 
 export default {
     async fetch(request) {
@@ -23,6 +25,9 @@ export default {
         }
         if (path === '/two-step') {
             return new Response(twoStepPage, { headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
+        }
+        if (path === '/auth/callback') {
+            return new Response(authCallbackPage, { headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
         }
 
         let pageContent;
@@ -43,7 +48,8 @@ export default {
                 pageContent = analysisContent;
                 break;
             default:
-                  return Response.redirect(new URL('/login', request.url).toString(), 302);
+                pageContent = mainContent;
+                break;
         }
 
         // Untuk navigasi SPA, kirim hanya potongan kontennya
