@@ -91,12 +91,14 @@
             </div>
         </div>
         <div class="relative isolate border-t border-slate-200 px-6 py-4 dark:border-slate-800 dark:bg-slate-950">
-            </div>
+            <!-- Footer content -->
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loginForm = document.getElementById('login-form');
+            const googleBtn = document.getElementById('google-signin-btn');
             const apiUrl = 'https://api.casflo.id/api/v1'; // GANTI DENGAN URL API ANDA
 
             const toggleLoading = (form, isLoading) => {
@@ -138,7 +140,6 @@
                         throw new Error(result.error?.message || 'Email atau password salah.');
                     }
 
-                    // Asumsi API mengembalikan token dengan nama 'token'
                     if (result.token) {
                         localStorage.setItem('sessionToken', result.token);
                         // Arahkan ke halaman utama aplikasi SPA
@@ -154,9 +155,13 @@
                 }
             };
 
-            if (loginForm) {
-                loginForm.addEventListener('submit', handleLogin);
-            }
+            const handleGoogleLogin = () => {
+                // Arahkan pengguna ke endpoint API Anda untuk memulai alur Google OAuth
+                window.location.href = `${apiUrl}/auth/google`;
+            };
+
+            if (loginForm) loginForm.addEventListener('submit', handleLogin);
+            if (googleBtn) googleBtn.addEventListener('click', handleGoogleLogin);
         });
     </script>
 </body>

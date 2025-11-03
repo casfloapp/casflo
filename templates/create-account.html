@@ -95,12 +95,14 @@
             </div>
         </div>
         <div class="relative isolate border-t border-slate-200 px-6 py-4 dark:border-slate-800 dark:bg-slate-950">
-            </div>
+            <!-- Footer content -->
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const registerForm = document.getElementById('register-form');
+            const googleBtn = document.getElementById('google-signin-btn');
             const apiUrl = 'https://api.casflo.id/api/v1'; // GANTI DENGAN URL API ANDA
 
             const toggleLoading = (form, isLoading) => {
@@ -160,10 +162,13 @@
                     toggleLoading(registerForm, false);
                 }
             };
+            
+            const handleGoogleLogin = () => {
+                window.location.href = `${apiUrl}/auth/google`;
+            };
 
-            if (registerForm) {
-                registerForm.addEventListener('submit', handleRegister);
-            }
+            if (registerForm) registerForm.addEventListener('submit', handleRegister);
+            if (googleBtn) googleBtn.addEventListener('click', handleGoogleLogin);
         });
     </script>
 </body>
