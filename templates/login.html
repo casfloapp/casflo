@@ -91,23 +91,21 @@
             </div>
         </div>
         <div class="relative isolate border-t border-slate-200 px-6 py-4 dark:border-slate-800 dark:bg-slate-950">
-            </div>
+            <!-- Footer content -->
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- [PERBAIKAN KUNCI] ---
             // Cek apakah sudah ada session token
             const sessionToken = localStorage.getItem('sessionToken');
-            
             if (sessionToken) {
                 // Jika sudah ada token, jangan tampilkan halaman login.
                 // Langsung redirect ke dashboard aplikasi utama.
                 window.location.href = '/';
                 return; // Hentikan eksekusi sisa skrip di halaman ini
             }
-            // --- [AKHIR PERBAIKAN] ---
 
             // Sisa kode di bawah ini hanya akan berjalan jika tidak ada token (pengguna belum login)
             const loginForm = document.getElementById('login-form');
@@ -153,8 +151,8 @@
                         throw new Error(result.error?.message || 'Email atau password salah.');
                     }
 
+                    // [PERBAIKAN KUNCI] Simpan token ke localStorage
                     if (result.token) {
-                        // Simpan token di localStorage
                         localStorage.setItem('sessionToken', result.token);
                         // Arahkan ke halaman utama aplikasi SPA
                         window.location.href = '/'; 
@@ -179,3 +177,4 @@
     </script>
 </body>
 </html>
+
