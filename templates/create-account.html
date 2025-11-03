@@ -145,17 +145,12 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ name, email, password })
                     });
-
                     const result = await response.json();
-
                     if (!response.ok) {
                         throw new Error(result.error?.message || 'Pendaftaran gagal. Silakan coba lagi.');
                     }
-                    
-                    // Pendaftaran berhasil, arahkan ke verifikasi
                     localStorage.setItem('emailForVerification', email);
-                    window.location.href = '/two-step'; // Arahkan ke halaman verifikasi
-
+                    window.location.href = '/two-step';
                 } catch (error) {
                     displayMessage('register-error', error.message);
                 } finally {
@@ -164,6 +159,7 @@
             };
             
             const handleGoogleLogin = () => {
+                // Arahkan pengguna ke endpoint API Anda untuk memulai alur Google OAuth
                 window.location.href = `${apiUrl}/auth/google`;
             };
 
@@ -173,3 +169,4 @@
     </script>
 </body>
 </html>
+
