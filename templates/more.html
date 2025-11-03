@@ -21,6 +21,7 @@
         flex-shrink: 0; /* Mencegah header menyusut saat konten banyak */
         z-index: 10;
     }
+    /* [BARU] CSS untuk ikon logout */
     .more-header .logout-icon {
         font-size: 22px;
         cursor: pointer;
@@ -173,7 +174,7 @@
                 <div class="icon">💖</div>
                 <div class="label">Rekomendasi</div>
             </a>
-            <a href="#" class-="grid-item">
+            <a href="#" class="grid-item">
                 <div class="icon">ℹ️</div>
                 <div class="label">Tentang</div>
             </a>
@@ -195,8 +196,7 @@
 </div>
 
 <!-- [BARU] JavaScript khusus untuk halaman 'More' -->
-<script type="text/javascript-template">
-    // Fungsi ini akan dipanggil oleh layout.html
+<script>
     function initMorePageInternal() {
         console.log("Logika Halaman Lebih (Internal) dijalankan.");
         
