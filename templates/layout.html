@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Casflo</title>
     
-    <!-- [PERBAIKAN KUNCI] Skrip CDN Tailwind HARUS dimuat SEBELUM skrip konfigurasi -->
+    <!-- [PERBAIKAN KUNCI 1] Skrip CDN Tailwind HARUS dimuat SEBELUM skrip konfigurasi -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // Konfigurasi Tailwind
         tailwind.config = {
             darkMode: 'class' // Memberitahu Tailwind untuk mencari class="dark" di <html>
-        }; // <-- [PERBAIKAN KUNCI] TITIK KOMA DITAMBAHKAN DI SINI
+        }; // <-- [PERBAIKAN KUNCI 2] TITIK KOMA DITAMBAHKAN DI SINI
 
         // Skrip ini harus ada di <head> untuk mencegah layar putih berkedip (flickering)
         // saat mode gelap aktif.
@@ -151,21 +151,25 @@
         .dark .donut-chart-center .amount {
             color: white;
         }
+        /* [PERBAIKAN] CSS Mode Gelap untuk Halaman Create */
         .dark .add-view-container {
             background-color: #1f2937;
         }
         .dark .add-header, .dark .categories-section {
-            background-color: #374151;
+            background-color: #1f2937; /* Latar belakang lebih gelap */
             border-bottom-color: #4b5563;
         }
+        .dark .category-group .group-title {
+             color: #9ca3af;
+        }
         .dark .type-selector-header {
-            background: #1f2937;
+            background: #374151; /* Sedikit lebih terang */
         }
         .dark .type-btn-header {
-            color: #9ca3af;
+            color: #d1d5db;
         }
         .dark .type-btn-header.active {
-            background: #374151;
+            background: #1f2937; /* Latar belakang utama */
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .dark .type-btn-header.expense.active { color: var(--expense-red); }
@@ -208,16 +212,6 @@
         .card { background: white; border-radius: 18px; margin-bottom: 20px; margin-top: 20px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); padding: 18px; }
         .empty-transaction-list { text-align: center; color: #888; padding: 40px 0; }
         .view-hidden { display: none; }
-        .bottom-nav { position: fixed; max-width: 480px; margin: 0 auto; bottom: 0; left: 0; right: 0; width: 100%; background: white; height: 80px; display: flex; justify-content: space-around; align-items: center; padding-bottom: 0px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 10; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text-light); text-decoration: none; }
-        .nav-item i { font-size: 24px; }
-        .nav-item span { font-size: 11px; }
-        .nav-item.active { color: var(--primary-blue); }
-        
-        /* PERBAIKAN: Tata letak untuk view Detail & Kalender disederhanakan */
-        .view-hidden {
-            display: none;
-        }
         .overview-card .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .overview-card .card-header .icon { width: 40px; height: 40px; background: var(--light-purple); color: var(--primary-blue); display: flex; align-items: center; justify-content: center; border-radius: 8px; }
         .overview-card .date-selector { display: flex; align-items: center; gap: 12px; font-weight: 600; }
@@ -266,65 +260,11 @@
         .nav-item i { font-size: 24px; }
         .nav-item span { font-size: 11px; }
         .nav-item.active { color: var(--primary-blue); }
-        .add-view { display: flex; flex-direction: column; height: 100svh;display: flex;
-        flex-direction: column;
-        height: 100vh;
-        height: 100svh;
-        background-color: white;
-        max-width: 480px;
-        margin: 0 auto;}
-        .add-header { padding: 20px; border-bottom: 1px solid #e9ecef; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background-color: white; }
-        .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); text-decoration: none; }
-        .type-selector-header { display: flex; background: #f8f9fa; border-radius: 25px; padding: 3px; }
-        .type-btn-header { padding: 8px 16px; border: none; background: transparent; border-radius: 22px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; color: var(--text-light); }
-        .type-btn-header.active { background: white; color: var(--text-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .type-btn-header.expense.active { color: var(--expense-red); }
-        .type-btn-header.income.active { color: var(--income-green); }
-        .categories-section { flex-grow: 1; overflow-y: auto; padding: 20px; background-color: white; min-height: 0; }
-        .category-group { margin-bottom: 20px; }
-        .group-title { font-size: 12px; color: var(--text-light); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; }
-        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; }
-        .category-item { display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 10px; cursor: pointer; }
-        .category-item:hover { background: #f8f9fa; }
-        .category-item.selected { background: var(--primary-blue); color: white; }
-        .category-item.selected .category-icon { background: rgba(255,255,255,0.2) !important; color: white !important; }
-        .category-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; font-size: 20px; }
-        .category-name { font-size: 11px; text-align: center; }
-        .calculator-section { background: #f8f9fa; padding: 15px; border-top: 1px solid #e9ecef; flex-shrink: 0; display: grid; grid-template-rows: repeat(6, 1fr); gap: 8px; }
-        .amount-container { display: flex; gap: 8px; }
-        .account-card { aspect-ratio: 1 / 1; height: 100%; background: var(--primary-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(102, 102, 234, 0.3); }
-        .account-card i { color: white; font-size: 24px; }
-        .amount-display { flex-grow: 1; background: white; padding: 0 12px; border-radius: 10px; text-align: right; font-size: 28px; font-weight: 700; display: flex; align-items: center; justify-content: flex-end; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; }
-        .top-action-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .action-btn { background: white; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 24px; }
-        .action-btn.personal { background: #f8f9fa; color: #6c757d; }
-        .action-btn.today { background: #e3f2fd; color: #1976d2; }
-        .action-btn.add { background: var(--income-green); color: white; }
-        .action-btn.check { background: var(--income-green); color: white; }
-        .action-btn.equals { background: var(--primary-blue); color: white; }
-        .calc-grid { grid-row: 3 / 7; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; grid-auto-rows: 1fr; }
-        .calc-btn { background: white; border: none; border-radius: 10px; font-size: 24px; font-weight: 600; cursor: pointer; color: var(--text-dark); box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; }
-        .calc-btn .fas { font-size: 24px; }
-        .calc-btn.operator { background: #f1f3f5; color: #495057; }
-        .calc-btn.delete { background: #ffe3e3; color: var(--expense-red); }
-        .wallet-header { background: white; padding: 20px; font-size: 18px; font-weight: 600; text-align: center; border-bottom: 1px solid #eee; }
-        .total-balance-card .label { font-size: 14px; color: var(--text-light); margin-bottom: 5px; text-align: center; }
-        .total-balance-card .amount { font-size: 32px; font-weight: 700; text-align: center; color: var(--primary-blue); }
-        .account-list-card .card-title { font-weight: 600; margin-bottom: 15px; }
-        .wallet-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid var(--bg-gray); }
-        .wallet-item:last-child { border-bottom: none; }
-        .wallet-item .icon-wrapper { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .wallet-item .details { flex-grow: 1; font-weight: 500; }
-        .wallet-item .balance { font-weight: 600; }
 
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
             .app-container { max-width: 480px; margin: 0 auto; height: 100vh; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-            .add-view { max-width: 480px; }
-            .calculator-section { padding: 20px; gap: 12px; }
-            .amount-display { font-size: 36px; }
-            .calc-btn, .action-btn { font-size: 28px; min-height: 50px; border-radius: 12px; }
-            .calc-btn .fas { font-size: 28px; }
+            /* [BARU] Aturan mode gelap untuk desktop */
             .dark body { background-color: #111827; }
         }
     </style>
@@ -335,10 +275,6 @@
     </div>
 
     <script>
-        const sessionToken = localStorage.getItem('sessionToken');
-        if (!sessionToken) {
-            window.location.href = '/login';
-        }
         // === [BARU] BAGIAN 0: LOGIKA MODE GELAP/TERANG ===
         const settingsKey = 'casflo'; 
         const htmlEl = document.documentElement;
@@ -378,10 +314,6 @@
                 }
             }
         }
-
-        // Terapkan tema segera saat skrip ini dimuat
-        let currentSettings = getSettings();
-        applyTheme(currentSettings.theme);
         
         // Fungsi ini dipanggil oleh init...Page()
         function attachThemeToggle(selector) {
@@ -401,7 +333,8 @@
         // === BAGIAN 1: VARIABEL & FUNGSI GLOBAL ===
         let currentDate = new Date();
         let selectedDate = new Date();
-        let transactions = []; // Data dummy, ganti dengan API call
+        // [PERBAIKAN] Data transaksi disimpan di sini agar tidak hilang saat navigasi
+        let transactions = []; 
         let currentView = 'overview';
         let calendarFilter = 'expense';
         // Variabel global untuk 'create.html'
@@ -414,6 +347,7 @@
         const incomeCategories = [ { id: 101, name: 'Gaji', icon: '💰', color: '#D4EDDA' }, { id: 102, name: 'Bonus', icon: '🏆', color: '#D1ECF1' }, { id: 103, name: 'Investasi', icon: '📈', color: '#E2E3E5' }, { id: 104, name: 'Freelance', icon: '💻', color: '#FCF3CF' }, { id: 105, name: 'Hadiah', icon: '🎁', color: '#FDEBD0' }, { id: 106, name: 'Penjualan', icon: '🏷️', color: '#E8DAEF' }, { id: 107, name: 'Sewa', icon: '🔑', color: '#D6EAF8' }, { id: 108, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
+        // --- [PERBAIKAN] Fungsi Halaman Create ---
         function appendToCalc(value) { const operators = ['+', '-', '*', '/']; if (operators.includes(value)) { waitingForEquals = true; changeButtonToEquals(); } if (calcValue === '0' && !operators.includes(value)) calcValue = value; else { const lastChar = calcValue.slice(-1); if (operators.includes(lastChar) && operators.includes(value)) calcValue = calcValue.slice(0, -1) + value; else calcValue += value; } updateDisplay(); }
         function deleteLast() { calcValue = calcValue.slice(0, -1) || '0'; checkWaitingForEquals(); updateDisplay(); }
         function handleActionClick() { if (waitingForEquals) calculateResult(); else saveTransaction(); }
@@ -427,10 +361,23 @@
         function loadCategories() { const categories = currentType === 'expense' ? expenseCategories : incomeCategories; const recommendedGrid = document.getElementById('recommendedGrid'); const uncategorizedGrid = document.getElementById('uncategorizedGrid'); if(!recommendedGrid || !uncategorizedGrid) return; recommendedGrid.innerHTML = ''; uncategorizedGrid.innerHTML = ''; categories.slice(0, 4).forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat))); categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat))); }
         function createCategoryElement(category) { const div = document.createElement('div'); div.className = 'category-item'; div.onclick = () => selectCategory(category, div); div.innerHTML = `<div class="category-icon" style="background: ${category.color}">${category.icon}</div><div class="category-name">${category.name}</div>`; return div; }
         function selectCategory(category, element) { selectedCategory = category; document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); element.classList.add('selected'); }
-        function saveTransaction() { const amount = parseFloat(calcValue); if (isNaN(amount) || amount <= 0) return alert('Masukkan jumlah yang valid'); if (!selectedCategory) return alert('Pilih kategori terlebih dahulu'); const transaction = { id: Date.now(), type: currentType, amount, category: selectedCategory.name, notes: 'diri sendiri', account: 'akun bawaan', icon: selectedCategory.icon, color: selectedCategory.color, date: new Date() }; transactions.push(transaction); alert('Transaksi disimpan!'); navigate('/'); }
-        
+        function saveTransaction() { 
+            const amount = parseFloat(calcValue); 
+            if (isNaN(amount) || amount <= 0) {
+                alert('Masukkan jumlah yang valid'); // Gunakan modal custom di produksi
+                return;
+            }
+            if (!selectedCategory) {
+                alert('Pilih kategori terlebih dahulu'); // Gunakan modal custom di produksi
+                return;
+            }
+            const transaction = { id: Date.now(), type: currentType, amount, category: selectedCategory.name, notes: 'diri sendiri', account: 'akun bawaan', icon: selectedCategory.icon, color: selectedCategory.color, date: new Date().toISOString() }; 
+            transactions.push(transaction); // [PERBAIKAN] Menyimpan ke array global
+            console.log('Transaksi disimpan (sementara):', transactions);
+            navigate('/'); // Panggil fungsi navigate global
+        }
 
-        // --- [PERBAIKAN KALENDER] Fungsi Halaman Utama ---
+        // --- [PERBAIKAN] Fungsi Halaman Utama & Kalender ---
         function setView(viewName) {
             currentView = viewName;
             localStorage.setItem('preferredView', viewName);
@@ -477,7 +424,7 @@
         function renderCalendar() { 
             const calendarGrid = document.getElementById('calendarGrid');
             if (!calendarGrid) return;
-            console.log("Merender kalender..."); // Log untuk debugging
+            console.log("Merender kalender...");
             calendarGrid.innerHTML = '';
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -492,7 +439,24 @@
                 if (dayOfWeek === 0 || dayOfWeek === 6) dayEl.classList.add('weekend');
                 if (i === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()) dayEl.classList.add('selected');
                 dayEl.innerHTML = `<span class="date-number">${i}</span>`;
-                // ... (logika dummy summary)
+                
+                let dailyTransactions = transactions.filter(t => {
+                    const tDate = new Date(t.date);
+                    return tDate.getDate() === i && tDate.getMonth() === month && tDate.getFullYear() === year;
+                });
+                if (calendarFilter === 'expense') { dailyTransactions = dailyTransactions.filter(t => t.type === 'expense'); } 
+                else if (calendarFilter === 'income') { dailyTransactions = dailyTransactions.filter(t => t.type === 'income'); }
+                
+                const dailyTotal = dailyTransactions.reduce((sum, t) => sum + (t.type === 'expense' ? -t.amount : t.amount), 0);
+                
+                if(dailyTotal !== 0){ 
+                    const summaryEl = document.createElement('span'); 
+                    summaryEl.className = 'day-summary'; 
+                    summaryEl.style.backgroundColor = dailyTotal < 0 ? 'var(--expense-red)' : 'var(--income-green)'; 
+                    if (calendarFilter === 'total' && dailyTotal > 0) summaryEl.style.backgroundColor = 'var(--income-green)'; 
+                    summaryEl.textContent = `${dailyTotal < 0 ? '-' : ''}${Math.abs(dailyTotal/1000).toFixed(0)}k`; 
+                    dayEl.appendChild(summaryEl); 
+                }
                 calendarGrid.appendChild(dayEl);
             }
         }
@@ -500,23 +464,63 @@
             const transactionListEl = document.querySelector('.transaction-list');
             if (!transactionListEl) return;
             transactionListEl.innerHTML = '';
-            if (filteredTransactions.length === 0) {
+            
+            // [PERBAIKAN] Mengelompokkan transaksi berdasarkan tanggal
+            const grouped = filteredTransactions.reduce((acc, tx) => {
+                const dateKey = new Date(tx.date).toDateString();
+                if (!acc[dateKey]) {
+                    acc[dateKey] = [];
+                }
+                acc[dateKey].push(tx);
+                return acc;
+            }, {});
+
+            if (Object.keys(grouped).length === 0) {
                 transactionListEl.innerHTML = `<div class="empty-transaction-list">Belum ada transaksi di bulan ini</div>`;
                 return;
             }
-            // ... (logika dummy render)
-            const listHeader = document.createElement('div');
-            listHeader.className = 'list-header';
-            listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>04/11</span></div><div class="summary">Pengeluaran: Rp0</div>`;
-            transactionListEl.appendChild(listHeader);
+
+            // Urutkan grup tanggal
+            const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+            
+            for (const dateKey of sortedDates) {
+                const txsOnThisDate = grouped[dateKey];
+                const date = new Date(dateKey);
+                const totalExpense = txsOnThisDate
+                    .filter(t => t.type === 'expense')
+                    .reduce((sum, t) => sum + t.amount, 0);
+
+                const listHeader = document.createElement('div');
+                listHeader.className = 'list-header';
+                listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: Rp${totalExpense.toLocaleString('id-ID')}</div>`;
+                transactionListEl.appendChild(listHeader);
+
+                txsOnThisDate.forEach(t => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'transaction-item';
+                    itemEl.innerHTML = `
+                        <div class="icon" style="background-color: ${t.color};"><span>${t.icon}</span></div>
+                        <div class="details"><div class="category">${t.category}</div><div class="notes">${t.notes}</div></div>
+                        <div class="info">
+                            <div class="amount" style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}">
+                                ${t.type === 'expense' ? '-' : ''}Rp${t.amount.toLocaleString('id-ID')}
+                            </div>
+                            <div class="account">${t.account}</div>
+                        </div>`;
+                    transactionListEl.appendChild(itemEl);
+                });
+            }
         }
         function updateMainView() { 
             console.log("Memuat data untuk", currentDate.toISOString().slice(0, 7));
-            // Di sini Anda akan memanggil API...
-            // Untuk saat ini, kita gunakan data dummy:
-            const filteredTransactions = transactions.filter(t => new Date(t.date).getMonth() === currentDate.getMonth() && new Date(t.date).getFullYear() === currentDate.getFullYear());
-            const income = 0;
-            const expense = 0;
+            
+            const filteredTransactions = transactions.filter(t => {
+                const tDate = new Date(t.date);
+                return tDate.getMonth() === currentDate.getMonth() && tDate.getFullYear() === currentDate.getFullYear();
+            });
+
+            const income = filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+            const expense = filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
             const total = income - expense;
             const formatCurrency = (value) => { const sign = value < 0 ? '-' : ''; return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; };
             
@@ -527,10 +531,10 @@
             if(document.getElementById('calendarIncomeAmount')) document.getElementById('calendarIncomeAmount').textContent = formatCurrency(income);
             if(document.getElementById('calendarExpenseAmount')) document.getElementById('calendarExpenseAmount').textContent = formatCurrency(expense);
             
-            renderTransactionList(filteredTransactions.sort((a, b) => b.id - a.id));
+            renderTransactionList(filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date)));
             if(currentView === 'calendar') renderCalendar();
         }
-        // --- [AKHIR PERBAIKAN KALENDER] ---
+        // --- [AKHIR PERBAIKAN] ---
 
 
         // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
@@ -559,11 +563,18 @@
         }
         
         function initCreatePage() {
+            console.log("Halaman Create diinisialisasi.");
+            // Fungsi-fungsi ini perlu didefinisikan di scope global (di atas)
+            // agar bisa dipanggil oleh <script type="text/javascript-template">
             currentType = 'expense';
             selectedCategory = null;
             clearCalc();
             loadCategories();
-            console.log("Halaman Create dimuat.");
+
+            // Pasang event listener dari skrip internal
+            if (typeof initCreatePageInternal === 'function') {
+                initCreatePageInternal();
+            }
         }
 
         function initWalletPage() { 
@@ -572,117 +583,22 @@
             attachThemeToggle('.theme-toggle');
         }
         
-        function initAnalysisPage() {
-            console.log("Halaman Analisis dimuat.");
-
-            const activePill = document.querySelector('.header-tabs .active-pill');
-            const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
-            if (!activePill || !tabButtons.length) return;
-
-            function movePill(targetButton) {
-                requestAnimationFrame(() => {
-                    if (targetButton) {
-                        activePill.style.width = `${targetButton.offsetWidth}px`;
-                        activePill.style.left = `${targetButton.offsetLeft}px`;
-                    }
-                });
-            }
-
-            function handleTabClick(event) {
-                const clickedButton = event.currentTarget;
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                clickedButton.classList.add('active');
-                movePill(clickedButton);
-
-                const mode = clickedButton.dataset.mode;
-                if (mode === 'pengeluaran') {
-                    animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)');
-                } else if (mode === 'penghasilan') {
-                    animateChart(85, 850000000, 'Penghasilan', 'var(--income-green)');
-                } else {
-                    animateChart(0, 0, mode.charAt(0).toUpperCase() + mode.slice(1), '#ccc');
-                }
-            }
-
-            tabButtons.forEach(button => {
-                button.addEventListener('click', handleTabClick);
-            });
-
-            // [PERBAIKAN KUNCI] Beri jeda sesaat sebelum menghitung posisi awal.
-            // Ini memberi waktu bagi browser untuk menyelesaikan render animasi CSS.
-            const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
-            if (initialActiveTab) {
-                setTimeout(() => {
-                    movePill(initialActiveTab);
-                }, 50); // Jeda 50 milidetik biasanya sudah cukup.
-            }
-            
-            // Menambahkan listener untuk memperbaiki posisi saat layar dirotasi
-            window.addEventListener('resize', () => {
-                const currentActiveTab = document.querySelector('.header-tabs .tab-button.active');
-                if (currentActiveTab) {
-                    movePill(currentActiveTab);
-                }
-            });
-            
-                        function animateChart(percentage, totalAmount, label, color) {
-                const segment = document.getElementById('chart-segment');
-                const amountEl = document.getElementById('chart-total-amount');
-                const labelEl = document.getElementById('chart-center-label');
-                if (!segment || !amountEl || !labelEl) return;
-                labelEl.textContent = label;
-                segment.style.stroke = color;
-                const radius = segment.r.baseVal.value;
-                const circumference = 2 * Math.PI * radius;
-                segment.style.strokeDasharray = `${circumference} ${circumference}`;
-                const offset = circumference - (percentage / 100) * circumference;
-                segment.style.strokeDashoffset = offset;
-                let currentAmount = 0;
-                const steps = 100;
-                const increment = totalAmount / steps;
-                if(window.chartCounter) clearInterval(window.chartCounter);
-                window.chartCounter = setInterval(() => {
-                    currentAmount += increment;
-                    if (currentAmount >= totalAmount) {
-                        currentAmount = totalAmount;
-                        clearInterval(window.chartCounter);
-                    }
-                    amountEl.textContent = 'Rp' + Math.floor(currentAmount).toLocaleString('id-ID');
-                }, 10);
-            }
-
-
-            setTimeout(() => {
-                animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)'); 
-            }, 100);
-        }
-
         function initMorePage() {
-            currentType = 'expense';
-            selectedCategory = null;
-            clearCalc();
-            loadCategories();
-            console.log("Halaman More dimuat.");
-
-             const logoutButton = document.getElementById('logout-btn');
-        
-            if (logoutButton) {
-                logoutButton.addEventListener('click', () => {
-                    console.log("Tombol Logout diklik.");
-                    
-                    // Tampilkan konfirmasi sederhana
-                    // NOTE: confirm() mungkin tidak berfungsi di beberapa lingkungan 'blob'
-                    // Jika ini tidak muncul, kita harus membuat modal custom
-                    if (confirm("Apakah Anda yakin ingin logout?")) {
-                        // 1. Hapus session token dari localStorage
-                        localStorage.removeItem('sessionToken');
-                        
-                        // 2. Arahkan pengguna kembali ke halaman login (reload penuh)
-                        window.location.href = '/login';
-                    }
-                });
+             console.log("Halaman Lebih diinisialisasi.");
+             if (typeof initMorePageInternal === 'function') {
+                initMorePageInternal();
             }
-
+            // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
+            attachThemeToggle('.theme-toggle');
+        }
+        
+        function initAnalysisPage() {
+             console.log("Halaman Analisis diinisialisasi!");
+             if (typeof initAnalysisPageInternal === 'function') {
+                initAnalysisPageInternal();
+            }
+            // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
+            attachThemeToggle('.theme-toggle');
         }
 
         // === BAGIAN 3: LOGIKA SPA ROUTING (DENGAN PERBAIKAN) ===
