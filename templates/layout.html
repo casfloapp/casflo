@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Casflo</title>
     
-    <!-- [PERBAIKAN KUNCI 1] Skrip CDN Tailwind HARUS dimuat SEBELUM skrip konfigurasi -->
+    <!-- [PERBAIKAN KUNCI] Skrip CDN Tailwind HARUS dimuat SEBELUM skrip konfigurasi -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // Konfigurasi Tailwind
         tailwind.config = {
             darkMode: 'class' // Memberitahu Tailwind untuk mencari class="dark" di <html>
-        };
+        }; // <-- [PERBAIKAN KUNCI] TITIK KOMA DITAMBAHKAN DI SINI
 
         // Skrip ini harus ada di <head> untuk mencegah layar putih berkedip (flickering)
         // saat mode gelap aktif.
@@ -62,7 +62,7 @@
             width: 100%; 
             min-height: 100vh; 
             min-height: 100svh; 
-            background-color: var(--bg-gray);
+            background: white; 
             display: flex; 
             flex-direction: column; 
             position: relative; 
@@ -75,7 +75,7 @@
             color: #d1d5db; /* dark:text-gray-300 */
         }
         .dark .app-container {
-            background-color: #111827; /* dark:bg-gray-800 */
+            background-color: #1f2937; /* dark:bg-gray-800 */
         }
         .dark .card {
             background-color: #374151; /* dark:bg-gray-700 */
@@ -151,6 +151,44 @@
         .dark .donut-chart-center .amount {
             color: white;
         }
+        .dark .add-view-container {
+            background-color: #1f2937;
+        }
+        .dark .add-header, .dark .categories-section {
+            background-color: #374151;
+            border-bottom-color: #4b5563;
+        }
+        .dark .type-selector-header {
+            background: #1f2937;
+        }
+        .dark .type-btn-header {
+            color: #9ca3af;
+        }
+        .dark .type-btn-header.active {
+            background: #374151;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .dark .type-btn-header.expense.active { color: var(--expense-red); }
+        .dark .type-btn-header.income.active { color: var(--income-green); }
+        .dark .calculator-section {
+            background: #1f2937;
+            border-top-color: #4b5563;
+        }
+        .dark .amount-display, .dark .action-btn, .dark .calc-btn {
+            background: #374151;
+            color: #d1d5db;
+            box-shadow: none;
+        }
+        .dark .action-btn.personal {
+            background: #111827;
+        }
+        .dark .calc-btn.operator {
+            background: #4b5563;
+        }
+        .dark .category-item:hover {
+            background: #4b5563;
+        }
+
         /* ... Sisa CSS Global Anda ... */
         .main-header { background: var(--primary-blue); color: white; padding: 20px 20px 20px 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; flex-shrink: 0; z-index: 10; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
@@ -300,8 +338,8 @@
         let calcValue = '0';
         let waitingForEquals = false;
 
-        const expenseCategories = [ { id: 1, name: 'Makanan', icon: '🍔', color: '#FEF3E2' }, { id: 2, name: 'Kebutuhan', icon: '🪴', color: '#E6F3F2' }, /* ... data lainnya ... */ ];
-        const incomeCategories = [ { id: 101, name: 'Gaji', icon: '💰', color: '#D4EDDA' }, /* ... data lainnya ... */ ];
+        const expenseCategories = [ { id: 1, name: 'Makanan', icon: '🍔', color: '#FEF3E2' }, { id: 2, name: 'Kebutuhan', icon: '🪴', color: '#E6F3F2' }, { id: 3, name: 'Transport', icon: '🚗', color: '#EBE9F9' }, { id: 4, name: 'Belanja', icon: '🛍️', color: '#FCE8E7' }, { id: 5, name: 'Hiburan', icon: '🎮', color: '#D4EDDA' }, { id: 6, name: 'Kesehatan', icon: '❤️', color: '#F8D7DA' }, { id: 7, name: 'Pendidikan', icon: '🎓', color: '#D1ECF1' }, { id: 8, name: 'Tagihan', icon: '🧾', color: '#FADBD8' }, { id: 9, name: 'Cicilan', icon: '🏠', color: '#D6EAF8' }, { id: 10, name: 'Listrik', icon: '💡', color: '#FCF3CF' }, { id: 11, name: 'Air', icon: '💧', color: '#D4E6F1' }, { id: 12, name: 'Internet', icon: '🌐', color: '#E8DAEF' }, { id: 13, name: 'Pakaian', icon: '👕', color: '#D1F2EB' }, { id: 14, name: 'Langganan', icon: '🔁', color: '#FDEDEC' }, { id: 15, name: 'Hadiah', icon: '🎁', color: '#FDEBD0' }, { id: 16, name: 'Donasi', icon: '💖', color: '#E6F3F2' }, { id: 17, name: 'Liburan', icon: '✈️', color: '#EBE9F9' }, { id: 18, name: 'Anak', icon: '👶', color: '#FCE8E7' }, { id: 19, name: 'Pajak', icon: '🏛️', color: '#D5DBDB' }, { id: 20, name: 'Asuransi', icon: '🛡️', color: '#D6EAF8' }, { id: 21, name: 'Olahraga', icon: '⚽️', color: '#D4EDDA' }, { id: 22, name: 'Peliharaan', icon: '🐾', color: '#FEF3E2' }, { id: 23, name: 'Perawatan', icon: '💅', color: '#F8D7DA' }, { id: 24, name: 'Perabotan', icon: '🛋️', color: '#FDEBD0' }, { id: 25, name: 'Bensin', icon: '⛽️', color: '#FADBD8' }, { id: 26, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
+        const incomeCategories = [ { id: 101, name: 'Gaji', icon: '💰', color: '#D4EDDA' }, { id: 102, name: 'Bonus', icon: '🏆', color: '#D1ECF1' }, { id: 103, name: 'Investasi', icon: '📈', color: '#E2E3E5' }, { id: 104, name: 'Freelance', icon: '💻', color: '#FCF3CF' }, { id: 105, name: 'Hadiah', icon: '🎁', color: '#FDEBD0' }, { id: 106, name: 'Penjualan', icon: '🏷️', color: '#E8DAEF' }, { id: 107, name: 'Sewa', icon: '🔑', color: '#D6EAF8' }, { id: 108, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
         // --- [PERBAIKAN KALENDER] Fungsi Halaman Utama ---
@@ -386,9 +424,11 @@
         }
         function updateMainView() { 
             console.log("Memuat data untuk", currentDate.toISOString().slice(0, 7));
+            // Di sini Anda akan memanggil API...
+            // Untuk saat ini, kita gunakan data dummy:
             const filteredTransactions = transactions.filter(t => new Date(t.date).getMonth() === currentDate.getMonth() && new Date(t.date).getFullYear() === currentDate.getFullYear());
-            const income = 0; // Data dummy
-            const expense = 0; // Data dummy
+            const income = 0;
+            const expense = 0;
             const total = income - expense;
             const formatCurrency = (value) => { const sign = value < 0 ? '-' : ''; return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; };
             
