@@ -427,22 +427,109 @@
         function loadCategories() { const categories = currentType === 'expense' ? expenseCategories : incomeCategories; const recommendedGrid = document.getElementById('recommendedGrid'); const uncategorizedGrid = document.getElementById('uncategorizedGrid'); if(!recommendedGrid || !uncategorizedGrid) return; recommendedGrid.innerHTML = ''; uncategorizedGrid.innerHTML = ''; categories.slice(0, 4).forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat))); categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat))); }
         function createCategoryElement(category) { const div = document.createElement('div'); div.className = 'category-item'; div.onclick = () => selectCategory(category, div); div.innerHTML = `<div class="category-icon" style="background: ${category.color}">${category.icon}</div><div class="category-name">${category.name}</div>`; return div; }
         function selectCategory(category, element) { selectedCategory = category; document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); element.classList.add('selected'); }
-        function saveTransaction() { 
-            const amount = parseFloat(calcValue); 
-            if (isNaN(amount) || amount <= 0) {
-                alert('Masukkan jumlah yang valid'); // Gunakan modal custom di produksi
-                return;
-            }
-            if (!selectedCategory) {
-                alert('Pilih kategori terlebih dahulu'); // Gunakan modal custom di produksi
-                return;
-            }
-            const transaction = { id: Date.now(), type: currentType, amount, category: selectedCategory.name, notes: 'diri sendiri', account: 'akun bawaan', icon: selectedCategory.icon, color: selectedCategory.color, date: new Date().toISOString() }; 
-            transactions.push(transaction); // [PERBAIKAN] Menyimpan ke array global
-            console.log('Transaksi disimpan (sementara):', transactions);
-            navigate('/'); // Panggil fungsi navigate global
-        }
+        async function saveTransaction() {
+            try {
+                const amount = parseFloat(calcValue); 
+                if (isNaN(amount) || amount <= 0) {
+                    alert('Masukkan jumlah yang valid'); // Ganti dengan modal custom
+                    return;
+                }
+                if (!selectedCategory) {
+                    alert('Pilih kategori terlebih dahulu'); // Ganti dengan modal custom
+                    return;
+                }
 
+                // 1. Dapatkan Token & Data Penting dari localStorage
+                //    (Kita asumsikan data ini disimpan setelah login/saat memilih dompet)
+                const token = localStorage.getItem('sessionToken');
+                
+                // [PENTING] Anda perlu cara untuk menyimpan dan mengambil walletId dan accountId yang sedang aktif
+                // Untuk contoh ini, kita asumsikan ID-nya di-hardcode atau diambil dari localStorage
+                const walletId = localStorage.getItem('currentWalletId'); // GANTI INI: Anda harus implementasikan logika untuk ini
+                const accountId = localStorage.getItem('selectedAccountId'); // GANTI INI: Anda harus implementasikan logika untuk ini
+
+                if (!token) {
+                    alert('Sesi tidak ditemukan. Silakan login ulang.');
+                    navigate('/login');
+                    return;
+                }
+                if (!walletId || !accountId) {
+                    alert('Dompet atau akun aktif tidak ditemukan. Silakan muat ulang.');
+                    // Di aplikasi nyata, Anda akan mengambil data ini dari API terlebih dahulu
+                    // Untuk sementara, kita bisa hentikan di sini
+                    console.error("currentWalletId atau selectedAccountId tidak ditemukan di localStorage.");
+                    return; 
+                }
+
+                // 2. Siapkan Payload (Body) sesuai spesifikasi API Anda
+                // Endpoint mengharapkan format YYYY-MM-DD untuk tanggal
+                const transactionDate = new Date().toISOString().split('T')[0]; 
+                
+                const payload = {
+                    wallet_id: walletId,
+                    type: currentType.toUpperCase(), // API mengharapkan 'EXPENSE' atau 'INCOME'
+                    amount: amount, // API Anda di 'queries.js' sudah menangani konversi ke sen
+                    category_id: selectedCategory.id,
+                    description: selectedCategory.name, // Anda bisa tambahkan input deskripsi terpisah nanti
+                    transaction_date: transactionDate,
+                };
+
+                // API 'queries.js' Anda mengharapkan 'from_account_id' atau 'to_account_id'
+                if (currentType === 'expense') {
+                    payload.from_account_id = accountId;
+                } else {
+                    payload.to_account_id = accountId;
+                }
+
+                // (Opsional) Tampilkan loading state di tombol
+                changeButtonToLoading(true); // Anda perlu membuat fungsi ini
+
+                // 3. Kirim data ke API
+                const response = await fetch(`https://api.casflo.id/api/v1/wallets/${walletId}/transactions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` // [WAJIB] Kirim token otentikasi
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error?.message || 'Gagal menyimpan transaksi');
+                }
+
+                // 4. Sukses!
+                console.log('Transaksi berhasil disimpan:', result.data);
+                
+                // Reset kalkulator & navigasi kembali ke halaman utama
+                clearCalc(); 
+                navigate('/'); 
+
+            } catch (error) {
+                console.error('Error saving transaction:', error);
+                alert(`Terjadi kesalahan: ${error.message}`); // Tampilkan error ke user
+            } finally {
+                // (Opsional) Hilangkan loading state
+                changeButtonToLoading(false); // Anda perlu membuat fungsi ini
+            }
+        }
+        
+        // (Opsional) Fungsi helper untuk loading state
+        function changeButtonToLoading(isLoading) {
+            const actionBtn = document.getElementById('actionBtn');
+            if (!actionBtn) return;
+            
+            if (isLoading) {
+                actionBtn.disabled = true;
+                actionBtn.innerHTML = '<span class="loading-spinner-tombol"></span>'; // Anda perlu CSS untuk .loading-spinner-tombol
+            } else {
+                actionBtn.disabled = false;
+                // Kembalikan ke tombol 'check' atau 'equals'
+                checkWaitingForEquals(); 
+            }
+        }
         // --- [PERBAIKAN KALENDER] Fungsi Halaman Utama ---
         function setView(viewName) {
             currentView = viewName;
