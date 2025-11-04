@@ -207,37 +207,3 @@
     </footer>
 </div>
 
-<!-- JavaScript khusus untuk halaman 'More' -->
-<script type="text/javascript-template">
-    // Fungsi ini akan dipanggil oleh layout.html
-    function initMorePageInternal() {
-        console.log("Logika Halaman Lebih (Internal) dijalankan.");
-        
-        // Logika Logout (sudah ada)
-        const logoutButton = document.getElementById('logout-btn');
-        
-        if (logoutButton) {
-            logoutButton.addEventListener('click', () => {
-                console.log("Tombol Logout diklik.");
-                // Ganti confirm() dengan modal custom jika di produksi
-                if (confirm("Apakah Anda yakin ingin logout?")) {
-                    localStorage.removeItem('sessionToken');
-                    window.location.href = '/login';
-                }
-            });
-        }
-
-        // [BARU] Logika Animasi Grid Ikon
-        const gridItems = document.querySelectorAll('.more-grid .grid-item');
-        if (gridItems.length > 0) {
-            gridItems.forEach((item, index) => {
-                // Terapkan penundaan (delay) untuk setiap item
-                // 50ms * index = 0ms, 50ms, 100ms, dst.
-                setTimeout(() => {
-                    item.classList.add('visible');
-                }, index * 50); // Penundaan 50ms per item
-            });
-        }
-    }
-</script>
-

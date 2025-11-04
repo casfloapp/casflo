@@ -753,6 +753,17 @@
                 });
             }
 
+            const gridItems = document.querySelectorAll('.more-grid .grid-item');
+            if (gridItems.length > 0) {
+                gridItems.forEach((item, index) => {
+                    // Terapkan penundaan (delay) untuk setiap item
+                    // 50ms * index = 0ms, 50ms, 100ms, dst.
+                    setTimeout(() => {
+                        item.classList.add('visible');
+                    }, index * 50); // Penundaan 50ms per item
+                });
+            }
+
         }
 
         // === BAGIAN 3: LOGIKA SPA ROUTING (DENGAN PERBAIKAN) ===
