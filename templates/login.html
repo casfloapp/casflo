@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Login - Casflo.id</title>
+    <title>Login - casfloapp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -143,22 +143,23 @@
 
                     const result = await response.json();
                     
-                    // [PERBAIKAN KUNCI] Tampilkan respons API di console untuk debugging
+                    // Kita biarkan console.log ini untuk debugging di masa depan
                     console.log('Respons API:', result); 
 
                     if (!response.ok) {
                         throw new Error(result.error?.message || 'Email atau password salah.');
                     }
 
-                    // [PERBAIKAN KUNCI] Di sinilah Anda perlu mencocokkan nama key token Anda
-                    // Jika API Anda mengembalikan "accessToken", ganti "result.token" menjadi "result.accessToken"
-                    if (result.token) { 
-                        localStorage.setItem('sessionToken', result.token); 
+                    // --- [PERBAIKAN KUNCI] ---
+                    // Mengambil token dari result.data.sessionToken sesuai screenshot Anda
+                    if (result.data && result.data.sessionToken) { 
+                        localStorage.setItem('sessionToken', result.data.sessionToken); 
                         window.location.href = '/'; 
                     } else {
                         // Ini adalah error yang Anda lihat
-                        throw new Error('Login berhasil tetapi tidak menerima token.');
+                        throw new Error('Login berhasil tetapi tidak menerima token (format respons tidak terduga).');
                     }
+                    // --- [AKHIR PERBAIKAN] ---
 
                 } catch (error) {
                     displayMessage('login-error', error.message);
