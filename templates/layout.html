@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Casflo</title>
+    <script>
+        tailwind.config = {
+            darkMode: 'class' // Memberitahu Tailwind untuk mencari class="dark" di <html>
+        }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* CSS Global & Halaman Utama */
@@ -17,6 +23,53 @@
             --bg-gray: #f4f5f9;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        
+        .dark body {
+            background-color: #111827; /* dark:bg-gray-900 */
+            color: #d1d5db; /* dark:text-gray-300 */
+        }
+        .dark .app-container {
+            background-color: #1f2937; /* dark:bg-gray-800 */
+        }
+        .dark .card {
+            background-color: #374151; /* dark:bg-gray-700 */
+            border: 1px solid #4b5563; /* dark:border-gray-600 */
+            box-shadow: none;
+        }
+        .dark .main-content {
+            background-color: #111827; /* dark:bg-gray-900 */
+        }
+        .dark .transaction-list, .dark .empty-transaction-list, .dark .category-list-card {
+            color: #d1d5db;
+        }
+        .dark .transaction-item {
+            border-bottom-color: #374151; /* dark:border-gray-700 */
+        }
+        .dark .overview-card .stat-item .label, .dark .transaction-item .info .account, .dark .transaction-item .details .notes {
+            color: #9ca3af; /* dark:text-gray-400 */
+        }
+        .dark .overview-card .date-selector, .dark .header-title {
+            color: white;
+        }
+        .dark .calendar-card, .dark .calendar-summary-tabs .tab {
+            color: #d1d5db;
+            border-color: #4b5563;
+        }
+        .dark .calendar-summary-tabs .tab.active {
+            color: var(--primary-blue);
+            background-color: var(--light-purple);
+            border-color: var(--primary-blue);
+        }
+        .dark .bottom-nav {
+            background-color: #1f2937; /* dark:bg-gray-800 */
+            border-top: 1px solid #374151;
+        }
+        .dark .nav-item {
+            color: #9ca3af; /* dark:text-gray-400 */
+        }
+        .dark .nav-item.active {
+            color: white;
+        }
         html { height: -webkit-fill-available; }
         body { background: var(--bg-gray); color: var(--text-dark); width: 100%; min-height: 100vh; min-height: 100svh; touch-action: manipulation; }
         .app-container { width: 100%; min-height: 100vh; min-height: 100svh; background: white; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
@@ -29,6 +82,7 @@
         .toggle-btn span { display: inline-block; transition: max-width 0.3s ease-in-out, opacity 0.2s ease-in-out, margin-left 0.3s ease-in-out; max-width: 100px; opacity: 1; margin-left: 5px; overflow: hidden; }
         .toggle-btn:not(.active-view) span { max-width: 0; opacity: 0; margin-left: 0; }
         .toggle-btn:not(.active-view) { padding: 8px 10px; }
+
         .header-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; }
         .header-actions { display: flex; gap: 15px; }
         .action-box { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px; flex: 1; }
@@ -37,6 +91,12 @@
         .main-content { flex: 1; overflow-y: auto; padding: 0 20px; position: relative; z-index: 5; padding-bottom: 100px; background-color: var(--bg-gray); }
         .card { background: white; border-radius: 18px; margin-bottom: 20px; margin-top: 20px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); padding: 18px; }
         .empty-transaction-list { text-align: center; color: #888; padding: 40px 0; }
+        
+        .bottom-nav { position: fixed; max-width: 480px; margin: 0 auto; bottom: 0; left: 0; right: 0; width: 100%; background: white; height: 80px; display: flex; justify-content: space-around; align-items: center; padding-bottom: 0px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 10; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text-light); text-decoration: none; }
+        .nav-item i { font-size: 24px; }
+        .nav-item span { font-size: 11px; }
+        .nav-item.active { color: var(--primary-blue); }
         
         /* PERBAIKAN: Tata letak untuk view Detail & Kalender disederhanakan */
         .view-hidden {
@@ -144,6 +204,7 @@
             .amount-display { font-size: 36px; }
             .calc-btn, .action-btn { font-size: 28px; min-height: 50px; border-radius: 12px; }
             .calc-btn .fas { font-size: 28px; }
+            .dark body { background-color: #111827; }
         }
     </style>
 </head>
@@ -159,7 +220,60 @@
             window.location.href = '/login';
         }
 
+        // === [BARU] BAGIAN 0: LOGIKA MODE GELAP/TERANG ===
+        const settingsKey = 'casflo'; 
+        const htmlEl = document.documentElement;
 
+        function getSettings() {
+            try {
+                const settings = localStorage.getItem(settingsKey);
+                return settings ? JSON.parse(settings) : { theme: 'system' };
+            } catch (e) {
+                return { theme: 'system' }; 
+            }
+        }
+
+        function saveSettings(settingsObject) {
+            try {
+                const existingSettings = getSettings();
+                const newSettings = { ...existingSettings, ...settingsObject };
+                localStorage.setItem(settingsKey, JSON.stringify(newSettings));
+            } catch (e) {
+                console.error("Gagal menyimpan settings:", e);
+            }
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                htmlEl.classList.add('dark');
+            } else if (theme === 'light') {
+                htmlEl.classList.remove('dark');
+            } else {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    htmlEl.classList.add('dark');
+                } else {
+                    htmlEl.classList.remove('dark');
+                }
+            }
+        }
+        
+        // Terapkan tema segera saat skrip ini dimuat
+        let currentSettings = getSettings();
+        applyTheme(currentSettings.theme);
+        
+        // Fungsi untuk tombol (akan dipanggil oleh init...Page)
+        function attachThemeToggle(selector) {
+            const themeToggleBtn = document.querySelector(selector);
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    const isCurrentlyDark = htmlEl.classList.contains('dark');
+                    const newTheme = isCurrentlyDark ? 'light' : 'dark';
+                    applyTheme(newTheme); 
+                    saveSettings({ theme: newTheme });
+                });
+            }
+        }
+        // --- [AKHIR BAGIAN 0] ---
         // === BAGIAN 1: VARIABEL & FUNGSI GLOBAL ===
         let currentDate = new Date();
         let selectedDate = new Date();
