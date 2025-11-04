@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Tag <html> ini penting untuk mode gelap -->
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -32,6 +33,17 @@
                         </a>
                     </div>
                     <ul class="flex items-center gap-x-3 lg:gap-x-5">
+                            <!-- Tombol Mode Gelap/Terang -->
+                            <li class="relative inline-flex">
+                                <button class="theme-toggle inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-slate-400 transition-all *:pointer-events-none hover:bg-slate-200 hover:text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="hidden h-4 dark:block">
+                                        <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 dark:hidden">
+                                        <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"></path>
+                                    </svg>
+                                </button>
+                            </li>
                             <li class="relative inline-flex">
                                 <a href="/create-account" class="inline-flex rounded-xl bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800">
                                     <span>Buat Akun</span>
@@ -43,7 +55,7 @@
         </div>
         
         <div class="relative my-auto py-10">
-            <div class="container px-3 mx-auto">
+             <div class="container px-3 mx-auto">
                 <div class="-mx-3 flex justify-center">
                     <div class="w-full px-3 xs:w-4/5 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3">
                         <div class="w-full rounded-xl border border-slate-200 bg-white p-6 pt-5 dark:border-slate-800 dark:bg-slate-950">
@@ -58,14 +70,12 @@
                                 <div class="py-2">
                                     <label for="email-address" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Alamat Email </label>
                                     <div class="relative isolate flex w-full">
-                                        <!-- [PERBAIKAN] Mengganti bg-white py-2 menjadi bg-slate-100 py-3 px-4 -->
                                         <input class="z-10 w-full rounded-xl border-slate-200 bg-slate-100 py-3 px-4 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200" placeholder="contoh@email.com" id="email-address" type="email" required/>
                                     </div>
                                 </div>
                                 <div class="py-2">
                                     <label for="password" class="mb-2 inline-flex w-full cursor-pointer items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-200"> Password </label>
                                     <div class="relative isolate flex w-full">
-                                        <!-- [PERBAIKAN] Mengganti bg-white py-2 menjadi bg-slate-100 py-3 px-4 -->
                                         <input class="z-10 w-full rounded-xl border-slate-200 bg-slate-100 py-3 px-4 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200" id="password" type="password" required />
                                     </div>
                                 </div>
@@ -99,15 +109,82 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // ... (JavaScript tidak berubah) ...
+            
+            // --- [BARU] LOGIKA MODE GELAP/TERANG ---
+            
+            // [PERMINTAAN KUNCI] Kunci utama untuk semua settings
+            const settingsKey = 'casflo'; 
+            const htmlEl = document.documentElement;
+
+            // Fungsi bantuan untuk mengambil settings
+            function getSettings() {
+                try {
+                    const settings = localStorage.getItem(settingsKey);
+                    // Default jika tidak ada settings: { theme: 'system' }
+                    return settings ? JSON.parse(settings) : { theme: 'system' };
+                } catch (e) {
+                    return { theme: 'system' }; // Fallback jika JSON rusak
+                }
+            }
+
+            // Fungsi bantuan untuk menyimpan settings
+            function saveSettings(settingsObject) {
+                try {
+                    // Ambil settings yang ada, lalu gabungkan dengan yang baru
+                    const existingSettings = getSettings();
+                    const newSettings = { ...existingSettings, ...settingsObject };
+                    localStorage.setItem(settingsKey, JSON.stringify(newSettings));
+                } catch (e) {
+                    console.error("Gagal menyimpan settings:", e);
+                }
+            }
+
+            // Fungsi untuk menerapkan tema ke HTML
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    htmlEl.classList.add('dark');
+                } else if (theme === 'light') {
+                    htmlEl.classList.remove('dark');
+                } else {
+                    // Mode 'system' (default)
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        htmlEl.classList.add('dark');
+                    } else {
+                        htmlEl.classList.remove('dark');
+                    }
+                }
+            }
+
+            // 1. Terapkan tema saat halaman dimuat
+            let currentSettings = getSettings();
+            applyTheme(currentSettings.theme);
+
+            // 2. Pasang listener untuk tombol toggle
+            const themeToggleBtn = document.querySelector('.theme-toggle');
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    const isCurrentlyDark = htmlEl.classList.contains('dark');
+                    const newTheme = isCurrentlyDark ? 'light' : 'dark';
+                    applyTheme(newTheme); // Terapkan
+                    
+                    // [PERMINTAAN KUNCI] Simpan preferensi baru ke dalam objek 'casflo'
+                    saveSettings({ theme: newTheme });
+                });
+            }
+            // --- [AKHIR LOGIKA MODE GELAP/TERANG] ---
+
+
+            // --- LOGIKA LOGIN (Sudah ada & Diperbaiki) ---
             const sessionToken = localStorage.getItem('sessionToken');
             if (sessionToken) {
                 window.location.href = '/';
                 return;
             }
+
             const loginForm = document.getElementById('login-form');
             const googleBtn = document.getElementById('google-signin-btn');
             const apiUrl = 'https://api.casflo.id/api/v1'; 
+
             const toggleLoading = (form, isLoading) => {
                 const button = form.querySelector('button[type="submit"]');
                 if (!button) return;
@@ -117,6 +194,7 @@
                 spinner.classList.toggle('hidden', !isLoading);
                 buttonText.classList.toggle('hidden', isLoading);
             };
+
             const displayMessage = (containerId, message) => {
                 const container = document.getElementById(containerId);
                 if (container) {
@@ -124,23 +202,29 @@
                     container.classList.remove('hidden');
                 }
             };
+
             const handleLogin = async (e) => {
                 e.preventDefault();
                 document.getElementById('login-error').classList.add('hidden');
                 toggleLoading(loginForm, true);
+
                 const email = document.getElementById('email-address').value;
                 const password = document.getElementById('password').value;
+
                 try {
                     const response = await fetch(`${apiUrl}/auth/login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password })
                     });
+
                     const result = await response.json();
                     console.log('Respons API:', result); 
+
                     if (!response.ok) {
                         throw new Error(result.error?.message || 'Email atau password salah.');
                     }
+
                     if (result.data && result.data.sessionToken) { 
                         localStorage.setItem('sessionToken', result.data.sessionToken); 
                         window.location.href = '/'; 
@@ -153,9 +237,11 @@
                     toggleLoading(loginForm, false);
                 }
             };
+
             const handleGoogleLogin = () => {
                 window.location.href = `${apiUrl}/auth/google`;
             };
+
             if (loginForm) loginForm.addEventListener('submit', handleLogin);
             if (googleBtn) googleBtn.addEventListener('click', handleGoogleLogin);
         });
