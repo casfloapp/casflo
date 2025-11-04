@@ -58,17 +58,19 @@
                                 <div class="py-2">
                                     <label for="email-address" class="mb-2 inline-flex cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-200"> Alamat Email </label>
                                     <div class="relative isolate flex w-full">
-                                        <input class="z-10 w-full rounded-xl border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200" placeholder="contoh@email.com" id="email-address" type="email" required/>
+                                        <!-- [PERBAIKAN] Mengganti bg-white py-2 menjadi bg-slate-100 py-3 px-4 -->
+                                        <input class="z-10 w-full rounded-xl border-slate-200 bg-slate-100 py-3 px-4 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200" placeholder="contoh@email.com" id="email-address" type="email" required/>
                                     </div>
                                 </div>
                                 <div class="py-2">
                                     <label for="password" class="mb-2 inline-flex w-full cursor-pointer items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-200"> Password </label>
                                     <div class="relative isolate flex w-full">
-                                        <input class="z-10 w-full rounded-xl border-slate-200 bg-white py-2 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200" id="password" type="password" required />
+                                        <!-- [PERBAIKAN] Mengganti bg-white py-2 menjadi bg-slate-100 py-3 px-4 -->
+                                        <input class="z-10 w-full rounded-xl border-slate-200 bg-slate-100 py-3 px-4 text-sm/[1.125rem] text-slate-600 placeholder:text-slate-400 focus:border-slate-200 focus:shadow-none focus:outline-hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200" id="password" type="password" required />
                                     </div>
                                 </div>
                                 <div class="pt-3">
-                                    <button type="submit" class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-800">
+                                    <button type="submit" class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-blue-800">
                                         <span class="loading-spinner hidden"></span>
                                         <span>Login ke Akun</span>
                                     </button>
@@ -79,7 +81,7 @@
                             </div>
                             <div class="-mx-3 flex flex-wrap">
                                 <div class="w-full px-3">
-                                    <button id="google-signin-btn" class="inline-flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-blue-100 hover:text-blue-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                                    <button id="google-signin-btn" class="inline-flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition-all hover:bg-blue-100 hover:text-blue-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
                                         <svg class="h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" /></svg>
                                         <span>Google</span>
                                     </button>
@@ -97,17 +99,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
+            // ... (JavaScript tidak berubah) ...
             const sessionToken = localStorage.getItem('sessionToken');
             if (sessionToken) {
                 window.location.href = '/';
                 return;
             }
-
             const loginForm = document.getElementById('login-form');
             const googleBtn = document.getElementById('google-signin-btn');
             const apiUrl = 'https://api.casflo.id/api/v1'; 
-
             const toggleLoading = (form, isLoading) => {
                 const button = form.querySelector('button[type="submit"]');
                 if (!button) return;
@@ -117,7 +117,6 @@
                 spinner.classList.toggle('hidden', !isLoading);
                 buttonText.classList.toggle('hidden', isLoading);
             };
-
             const displayMessage = (containerId, message) => {
                 const container = document.getElementById(containerId);
                 if (container) {
@@ -125,53 +124,38 @@
                     container.classList.remove('hidden');
                 }
             };
-
             const handleLogin = async (e) => {
                 e.preventDefault();
                 document.getElementById('login-error').classList.add('hidden');
                 toggleLoading(loginForm, true);
-
                 const email = document.getElementById('email-address').value;
                 const password = document.getElementById('password').value;
-
                 try {
                     const response = await fetch(`${apiUrl}/auth/login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password })
                     });
-
                     const result = await response.json();
-                    
-                    // Kita biarkan console.log ini untuk debugging di masa depan
                     console.log('Respons API:', result); 
-
                     if (!response.ok) {
                         throw new Error(result.error?.message || 'Email atau password salah.');
                     }
-
-                    // --- [PERBAIKAN KUNCI] ---
-                    // Mengambil token dari result.data.sessionToken sesuai screenshot Anda
                     if (result.data && result.data.sessionToken) { 
                         localStorage.setItem('sessionToken', result.data.sessionToken); 
                         window.location.href = '/'; 
                     } else {
-                        // Ini adalah error yang Anda lihat
                         throw new Error('Login berhasil tetapi tidak menerima token (format respons tidak terduga).');
                     }
-                    // --- [AKHIR PERBAIKAN] ---
-
                 } catch (error) {
                     displayMessage('login-error', error.message);
                 } finally {
                     toggleLoading(loginForm, false);
                 }
             };
-
             const handleGoogleLogin = () => {
                 window.location.href = `${apiUrl}/auth/google`;
             };
-
             if (loginForm) loginForm.addEventListener('submit', handleLogin);
             if (googleBtn) googleBtn.addEventListener('click', handleGoogleLogin);
         });
