@@ -427,8 +427,21 @@
         function loadCategories() { const categories = currentType === 'expense' ? expenseCategories : incomeCategories; const recommendedGrid = document.getElementById('recommendedGrid'); const uncategorizedGrid = document.getElementById('uncategorizedGrid'); if(!recommendedGrid || !uncategorizedGrid) return; recommendedGrid.innerHTML = ''; uncategorizedGrid.innerHTML = ''; categories.slice(0, 4).forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat))); categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat))); }
         function createCategoryElement(category) { const div = document.createElement('div'); div.className = 'category-item'; div.onclick = () => selectCategory(category, div); div.innerHTML = `<div class="category-icon" style="background: ${category.color}">${category.icon}</div><div class="category-name">${category.name}</div>`; return div; }
         function selectCategory(category, element) { selectedCategory = category; document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); element.classList.add('selected'); }
-        function saveTransaction() { const amount = parseFloat(calcValue); if (isNaN(amount) || amount <= 0) return alert('Masukkan jumlah yang valid'); if (!selectedCategory) return alert('Pilih kategori terlebih dahulu'); const transaction = { id: Date.now(), type: currentType, amount, category: selectedCategory.name, notes: 'diri sendiri', account: 'akun bawaan', icon: selectedCategory.icon, color: selectedCategory.color, date: new Date() }; transactions.push(transaction); alert('Transaksi disimpan!'); navigate('/'); }
-        
+        function saveTransaction() { 
+            const amount = parseFloat(calcValue); 
+            if (isNaN(amount) || amount <= 0) {
+                alert('Masukkan jumlah yang valid'); // Gunakan modal custom di produksi
+                return;
+            }
+            if (!selectedCategory) {
+                alert('Pilih kategori terlebih dahulu'); // Gunakan modal custom di produksi
+                return;
+            }
+            const transaction = { id: Date.now(), type: currentType, amount, category: selectedCategory.name, notes: 'diri sendiri', account: 'akun bawaan', icon: selectedCategory.icon, color: selectedCategory.color, date: new Date().toISOString() }; 
+            transactions.push(transaction); // [PERBAIKAN] Menyimpan ke array global
+            console.log('Transaksi disimpan (sementara):', transactions);
+            navigate('/'); // Panggil fungsi navigate global
+        }
 
         // --- [PERBAIKAN KALENDER] Fungsi Halaman Utama ---
         function setView(viewName) {
@@ -477,7 +490,7 @@
         function renderCalendar() { 
             const calendarGrid = document.getElementById('calendarGrid');
             if (!calendarGrid) return;
-            console.log("Merender kalender..."); // Log untuk debugging
+            console.log("Merender kalender...");
             calendarGrid.innerHTML = '';
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -492,31 +505,88 @@
                 if (dayOfWeek === 0 || dayOfWeek === 6) dayEl.classList.add('weekend');
                 if (i === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()) dayEl.classList.add('selected');
                 dayEl.innerHTML = `<span class="date-number">${i}</span>`;
-                // ... (logika dummy summary)
+                
+                let dailyTransactions = transactions.filter(t => {
+                    const tDate = new Date(t.date);
+                    return tDate.getDate() === i && tDate.getMonth() === month && tDate.getFullYear() === year;
+                });
+                if (calendarFilter === 'expense') { dailyTransactions = dailyTransactions.filter(t => t.type === 'expense'); } 
+                else if (calendarFilter === 'income') { dailyTransactions = dailyTransactions.filter(t => t.type === 'income'); }
+                
+                const dailyTotal = dailyTransactions.reduce((sum, t) => sum + (t.type === 'expense' ? -t.amount : t.amount), 0);
+                
+                if(dailyTotal !== 0){ 
+                    const summaryEl = document.createElement('span'); 
+                    summaryEl.className = 'day-summary'; 
+                    summaryEl.style.backgroundColor = dailyTotal < 0 ? 'var(--expense-red)' : 'var(--income-green)'; 
+                    if (calendarFilter === 'total' && dailyTotal > 0) summaryEl.style.backgroundColor = 'var(--income-green)'; 
+                    summaryEl.textContent = `${dailyTotal < 0 ? '-' : ''}${Math.abs(dailyTotal/1000).toFixed(0)}k`; 
+                    dayEl.appendChild(summaryEl); 
+                }
                 calendarGrid.appendChild(dayEl);
             }
         }
-        function renderTransactionList(filteredTransactions) { 
+         function renderTransactionList(filteredTransactions) { 
             const transactionListEl = document.querySelector('.transaction-list');
             if (!transactionListEl) return;
             transactionListEl.innerHTML = '';
-            if (filteredTransactions.length === 0) {
+            
+            // [PERBAIKAN] Mengelompokkan transaksi berdasarkan tanggal
+            const grouped = filteredTransactions.reduce((acc, tx) => {
+                const dateKey = new Date(tx.date).toDateString();
+                if (!acc[dateKey]) {
+                    acc[dateKey] = [];
+                }
+                acc[dateKey].push(tx);
+                return acc;
+            }, {});
+
+            if (Object.keys(grouped).length === 0) {
                 transactionListEl.innerHTML = `<div class="empty-transaction-list">Belum ada transaksi di bulan ini</div>`;
                 return;
             }
-            // ... (logika dummy render)
-            const listHeader = document.createElement('div');
-            listHeader.className = 'list-header';
-            listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>04/11</span></div><div class="summary">Pengeluaran: Rp0</div>`;
-            transactionListEl.appendChild(listHeader);
+
+            // Urutkan grup tanggal
+            const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+            
+            for (const dateKey of sortedDates) {
+                const txsOnThisDate = grouped[dateKey];
+                const date = new Date(dateKey);
+                const totalExpense = txsOnThisDate
+                    .filter(t => t.type === 'expense')
+                    .reduce((sum, t) => sum + t.amount, 0);
+
+                const listHeader = document.createElement('div');
+                listHeader.className = 'list-header';
+                listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: Rp${totalExpense.toLocaleString('id-ID')}</div>`;
+                transactionListEl.appendChild(listHeader);
+
+                txsOnThisDate.forEach(t => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'transaction-item';
+                    itemEl.innerHTML = `
+                        <div class="icon" style="background-color: ${t.color};"><span>${t.icon}</span></div>
+                        <div class="details"><div class="category">${t.category}</div><div class="notes">${t.notes}</div></div>
+                        <div class="info">
+                            <div class="amount" style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}">
+                                ${t.type === 'expense' ? '-' : ''}Rp${t.amount.toLocaleString('id-ID')}
+                            </div>
+                            <div class="account">${t.account}</div>
+                        </div>`;
+                    transactionListEl.appendChild(itemEl);
+                });
+            }
         }
         function updateMainView() { 
             console.log("Memuat data untuk", currentDate.toISOString().slice(0, 7));
-            // Di sini Anda akan memanggil API...
-            // Untuk saat ini, kita gunakan data dummy:
-            const filteredTransactions = transactions.filter(t => new Date(t.date).getMonth() === currentDate.getMonth() && new Date(t.date).getFullYear() === currentDate.getFullYear());
-            const income = 0;
-            const expense = 0;
+            
+            const filteredTransactions = transactions.filter(t => {
+                const tDate = new Date(t.date);
+                return tDate.getMonth() === currentDate.getMonth() && tDate.getFullYear() === currentDate.getFullYear();
+            });
+
+            const income = filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+            const expense = filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
             const total = income - expense;
             const formatCurrency = (value) => { const sign = value < 0 ? '-' : ''; return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; };
             
@@ -527,7 +597,7 @@
             if(document.getElementById('calendarIncomeAmount')) document.getElementById('calendarIncomeAmount').textContent = formatCurrency(income);
             if(document.getElementById('calendarExpenseAmount')) document.getElementById('calendarExpenseAmount').textContent = formatCurrency(expense);
             
-            renderTransactionList(filteredTransactions.sort((a, b) => b.id - a.id));
+            renderTransactionList(filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date)));
             if(currentView === 'calendar') renderCalendar();
         }
         // --- [AKHIR PERBAIKAN KALENDER] ---
