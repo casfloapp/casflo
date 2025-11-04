@@ -6,8 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Casflo</title>
     
-    <!-- [BARU] Konfigurasi Tailwind & Skrip Anti-Kedip -->
+    <!-- [PERBAIKAN KUNCI 1] Skrip CDN Tailwind HARUS dimuat SEBELUM skrip konfigurasi -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // Konfigurasi Tailwind
+        tailwind.config = {
+            darkMode: 'class' // Memberitahu Tailwind untuk mencari class="dark" di <html>
+        }
+
         // Skrip ini harus ada di <head> untuk mencegah layar putih berkedip (flickering)
         // saat mode gelap aktif.
         (function() {
@@ -28,13 +34,7 @@
                 document.documentElement.classList.remove('dark');
             }
         })();
-
-        // Konfigurasi Tailwind
-        tailwind.config = {
-            darkMode: 'class' // Memberitahu Tailwind untuk mencari class="dark" di <html>
-        }
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
