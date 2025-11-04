@@ -102,16 +102,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- [PERBAIKAN 1] ---
-            // Cek apakah sudah ada session token
             const sessionToken = localStorage.getItem('sessionToken');
             if (sessionToken) {
-                // Jika sudah ada token, jangan tampilkan halaman ini.
-                // Langsung redirect ke dashboard aplikasi utama.
                 window.location.href = '/';
-                return; // Hentikan eksekusi sisa skrip
+                return;
             }
-            // --- [AKHIR PERBAIKAN 1] ---
 
             const registerForm = document.getElementById('register-form');
             const googleBtn = document.getElementById('google-signin-btn');
@@ -140,35 +135,31 @@
                 document.getElementById('register-error').classList.add('hidden');
                 toggleLoading(registerForm, true);
 
-                const name = document.getElementById('full-name').value;
+                // [PERBAIKAN 1] Ambil nilai dengan benar
+                const fullName = document.getElementById('full-name').value;
                 const email = document.getElementById('email-address').value;
                 const password = document.getElementById('password').value;
-                const repeatPassword = document.getElementById('repeat-password').value;
+                const confirmPassword = document.getElementById('repeat-password').value; // [PERBAIKAN 2] Ganti nama variabel
 
-                // --- [PERBAIKAN 2] ---
-                // Lakukan pengecekan password di sisi klien (browser) TERLEBIH DAHULU
-                if (password !== repeatPassword) {
+                if (password !== confirmPassword) {
                     displayMessage('register-error', 'Password dan konfirmasi password tidak cocok.');
                     toggleLoading(registerForm, false);
-                    return; // Hentikan fungsi, jangan panggil API
+                    return;
                 }
-                // --- [AKHIR PERBAIKAN 2] ---
 
                 try {
-                    // Panggil API hanya jika password sudah cocok
                     const response = await fetch(`${apiUrl}/auth/register`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name, email, password })
+                        // [PERBAIKAN 3] Kirim payload yang benar sesuai API
+                        body: JSON.stringify({ fullName, email, password, confirmPassword }) 
                     });
 
                     const result = await response.json();
-
-                    // [PERBAIKAN 3] Log respons server untuk debugging
-                    console.log('Respons Server:', result);
+                    console.log('Respons Server:', result); // Untuk debugging
 
                     if (!response.ok) {
-                        // Tampilkan pesan error YANG SEBENARNYA dari server
+                        // [PERBAIKAN 4] Tampilkan pesan error dari server
                         throw new Error(result.error?.message || result.message || 'Pendaftaran gagal. Silakan coba lagi.');
                     }
                     
@@ -176,7 +167,6 @@
                     window.location.href = '/two-step';
 
                 } catch (error) {
-                    // Tampilkan error (baik dari server atau dari 'throw new Error' di atas)
                     displayMessage('register-error', error.message);
                 } finally {
                     toggleLoading(registerForm, false);
