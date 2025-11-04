@@ -227,7 +227,7 @@
         }
     </style>
 </head>
-<body class="dark:bg-slate-900"> <!-- [PERBAIKAN] Menghapus class 'dark' dari sini, JS yg akan mengontrol -->
+<body>
     <div id="app-container">
         {{PAGE_CONTENT}}
     </div>
@@ -304,7 +304,7 @@
         const incomeCategories = [ { id: 101, name: 'Gaji', icon: '💰', color: '#D4EDDA' }, /* ... data lainnya ... */ ];
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-        // --- Fungsi Halaman Utama ---
+        // --- [PERBAIKAN KALENDER] Fungsi Halaman Utama ---
         function setView(viewName) {
             currentView = viewName;
             localStorage.setItem('preferredView', viewName);
@@ -351,6 +351,7 @@
         function renderCalendar() { 
             const calendarGrid = document.getElementById('calendarGrid');
             if (!calendarGrid) return;
+            console.log("Merender kalender..."); // Log untuk debugging
             calendarGrid.innerHTML = '';
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -377,13 +378,17 @@
                 transactionListEl.innerHTML = `<div class="empty-transaction-list">Belum ada transaksi di bulan ini</div>`;
                 return;
             }
-             // ... (logika dummy render)
+            // ... (logika dummy render)
+            const listHeader = document.createElement('div');
+            listHeader.className = 'list-header';
+            listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>04/11</span></div><div class="summary">Pengeluaran: Rp0</div>`;
+            transactionListEl.appendChild(listHeader);
         }
         function updateMainView() { 
             console.log("Memuat data untuk", currentDate.toISOString().slice(0, 7));
             const filteredTransactions = transactions.filter(t => new Date(t.date).getMonth() === currentDate.getMonth() && new Date(t.date).getFullYear() === currentDate.getFullYear());
-            const income = filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-            const expense = filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+            const income = 0; // Data dummy
+            const expense = 0; // Data dummy
             const total = income - expense;
             const formatCurrency = (value) => { const sign = value < 0 ? '-' : ''; return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; };
             
@@ -397,6 +402,7 @@
             renderTransactionList(filteredTransactions.sort((a, b) => b.id - a.id));
             if(currentView === 'calendar') renderCalendar();
         }
+        // --- [AKHIR PERBAIKAN KALENDER] ---
 
 
         // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
