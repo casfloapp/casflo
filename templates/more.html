@@ -5,8 +5,8 @@
         flex-direction: column;
         height: 100vh;
         height: 100svh;
-        max-width: 480px;
-        margin: 0 auto;
+        background-color: var(--bg-gray);
+        overflow: hidden; /* Mencegah seluruh halaman bisa di-scroll */
     }
 
     .more-header {
@@ -20,16 +20,17 @@
         font-weight: 600;
         flex-shrink: 0; /* Mencegah header menyusut saat konten banyak */
         z-index: 10;
-        cursor: pointer;
-        border-bottom-left-radius: 25px;
-        border-bottom-right-radius: 25px;
     }
-    .more-header .settings-icon {
+    .more-header .header-icons {
+        display: flex;
+        align-items: center;
+        gap: 20px; /* Jarak antara ikon tema dan ikon logout */
+    }
+    .more-header .logout-icon {
         font-size: 22px;
         cursor: pointer;
     }
 
-    /* [PERBAIKAN] Konten utama sekarang bisa di-scroll secara independen */
     .more-content {
         flex-grow: 1; /* Mengambil sisa ruang yang tersedia */
         overflow-y: auto; /* Mengaktifkan scroll hanya untuk area ini */
@@ -38,13 +39,8 @@
         padding-bottom: 100px; /* Memberi ruang agar tidak tertutup navigasi */
     }
 
-    /* [PERBAIKAN KUNCI] Menggunakan metode grid yang Anda sarankan */
     .more-grid {
         display: grid;
-        /* auto-fit: Buat kolom sebanyak mungkin.
-          minmax(95px, 1fr): Setiap kolom minimal 95px, 
-                           dan bisa melebar (1fr) untuk mengisi sisa ruang.
-        */
         grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
         gap: 15px;
     }
@@ -62,16 +58,27 @@
         align-items: center;
         justify-content: center;
         aspect-ratio: 1 / 1; /* Menjaga kartu tetap persegi */
+        
+        /* [BARU] Properti Awal Animasi */
+        opacity: 0;
+        transform: translateY(20px);
+        /* [PERBAIKAN] Menggunakan transisi CSS, bukan keyframes */
+        transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    }
+    
+    /* [BARU] Kelas untuk memicu animasi */
+    .grid-item.visible {
+        opacity: 1;
+        transform: translateY(0);
     }
 
-    /* Ikon diperbesar untuk tampilan yang lebih baik */
     .grid-item .icon {
         font-size: 36px;
         margin-bottom: 10px;
     }
 
     .grid-item .label {
-        font-size: 10px;
+        font-size: 13px;
         font-weight: 500;
     }
     .grid-item .badge {
@@ -103,7 +110,14 @@
 <div class="more-page-container">
     <header class="more-header">
         <span>Lebih</span>
-        <i id="logout-btn" class="fas fa-sign-out-alt logout-icon"></i>
+        <div class="header-icons">
+            <!-- Tombol Mode Gelap/Terang -->
+            <button class="theme-toggle inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-white transition-all *:pointer-events-none" style="background: rgba(0,0,0,0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 dark:hidden"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="hidden h-5 dark:block"><path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"></path></svg>
+            </button>
+            <i id="logout-btn" class="fas fa-sign-out-alt logout-icon"></i>
+        </div>
     </header>
 
     <main class="more-content">
@@ -162,7 +176,7 @@
                 <div class="icon">☁️</div>
                 <div class="label">Cadangan</div>
             </a>
-            <a href="#" class="grid-item">
+            <a href="#" class-="grid-item">
                 <div class="icon">📄</div>
                 <div class="label">Ekspor</div>
             </a>
@@ -192,4 +206,38 @@
         <a href="/more" class="nav-item active"><i class="fas fa-ellipsis-h"></i><span>Lebih</span></a>
     </footer>
 </div>
+
+<!-- JavaScript khusus untuk halaman 'More' -->
+<script type="text/javascript-template">
+    // Fungsi ini akan dipanggil oleh layout.html
+    function initMorePageInternal() {
+        console.log("Logika Halaman Lebih (Internal) dijalankan.");
+        
+        // Logika Logout (sudah ada)
+        const logoutButton = document.getElementById('logout-btn');
+        
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                console.log("Tombol Logout diklik.");
+                // Ganti confirm() dengan modal custom jika di produksi
+                if (confirm("Apakah Anda yakin ingin logout?")) {
+                    localStorage.removeItem('sessionToken');
+                    window.location.href = '/login';
+                }
+            });
+        }
+
+        // [BARU] Logika Animasi Grid Ikon
+        const gridItems = document.querySelectorAll('.more-grid .grid-item');
+        if (gridItems.length > 0) {
+            gridItems.forEach((item, index) => {
+                // Terapkan penundaan (delay) untuk setiap item
+                // 50ms * index = 0ms, 50ms, 100ms, dst.
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, index * 50); // Penundaan 50ms per item
+            });
+        }
+    }
+</script>
 
