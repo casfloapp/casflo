@@ -343,6 +343,91 @@
         const settingsKey = 'casflo'; 
         const htmlEl = document.documentElement;
 
+        // === [BARU] BAGIAN 0.5: API HELPER ===
+        /**
+         * Fungsi helper untuk memanggil API Anda dengan otentikasi.
+         * @param {string} endpoint - Path API (cth: '/wallets')
+         * @param {object} options - Opsi 'fetch' (method, body, dll.)
+         * @returns {Promise<any>} - Properti 'data' dari respons JSON
+         */
+        async function fetchApi(endpoint, options = {}) {
+            const token = localStorage.getItem('sessionToken');
+            if (!token) {
+                console.log("Token tidak ditemukan, mengarahkan ke login.");
+                navigate('/login');
+                throw new Error('Sesi tidak valid');
+            }
+
+            const defaultHeaders = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // [PENTING] Sesuai middleware 'protect'
+            };
+
+            const config = {
+                ...options,
+                headers: { ...defaultHeaders, ...options.headers }
+            };
+
+            // Ganti 'https://api.casflo.id' dengan URL API Anda jika berbeda
+            const response = await fetch(`https://api.casflo.id/api/v1${endpoint}`, config);
+
+            if (response.status === 401) { // Token expired atau invalid
+                localStorage.removeItem('sessionToken');
+                console.log("Sesi 401, token dihapus.");
+                navigate('/login');
+                throw new Error('Sesi kedaluwarsa');
+            }
+
+            if (!response.ok) {
+                const errorResult = await response.json();
+                console.error("API Error:", errorResult);
+                throw new Error(errorResult.error?.message || 'Gagal mengambil data dari API');
+            }
+            
+            // API Anda selalu mengembalikan { success: true, data: ... }
+            const result = await response.json(); 
+            return result.data; 
+        }
+        // --- [AKHIR BAGIAN 0.5] ---
+
+        // [BARU] Fungsi untuk mengambil data awal (dompet & akun) saat aplikasi dimuat
+        async function initializeAppData() {
+            try {
+                // 1. Ambil daftar dompet
+                // [MEMANGGIL API] GET /api/v1/wallets
+                const wallets = await fetchApi('/wallets');
+                if (!wallets || wallets.length === 0) {
+                    console.warn('User tidak punya dompet. (Anda bisa arahkan ke halaman "Buat Dompet")');
+                    // TODO: Arahkan ke halaman "buat dompet"
+                    return;
+                }
+                
+                // 2. Simpan dompet pertama sebagai dompet aktif
+                const activeWallet = wallets[0];
+                localStorage.setItem('currentWalletId', activeWallet.id);
+                console.log(`Dompet aktif diatur: ${activeWallet.name} (${activeWallet.id})`);
+
+                // 3. Ambil akun untuk dompet tersebut
+                // [MEMANGGIL API] GET /api/v1/wallets/:walletId/accounts
+                const accounts = await fetchApi(`/wallets/${activeWallet.id}/accounts`);
+                if (!accounts || accounts.length === 0) {
+                    console.error('ERROR: Dompet ini tidak memiliki akun!');
+                    return;
+                }
+
+                // 4. Simpan akun ASSET pertama (default 'Kas Tunai') sebagai akun terpilih
+                const defaultAccount = accounts.find(a => a.type === 'ASSET') || accounts[0];
+                localStorage.setItem('selectedAccountId', defaultAccount.id);
+                console.log(`Akun aktif diatur: ${defaultAccount.name} (${defaultAccount.id})`);
+
+                // 5. [PENTING] Sekarang panggil 'runPageInit' SETELAH data penting siap
+                runPageInit(location.pathname);
+
+            } catch (error) {
+                console.error("Gagal inisialisasi data aplikasi:", error);
+            }
+        }
+
         function getSettings() {
             try {
                 const settings = localStorage.getItem(settingsKey);
@@ -664,32 +749,68 @@
                 });
             }
         }
-        function updateMainView() { 
-            console.log("Memuat data untuk", currentDate.toISOString().slice(0, 7));
+       // [PERBAIKAN] Fungsi diubah menjadi async untuk mengambil data dari API
+        async function updateMainView() { 
+            console.log("Memuat data API untuk", currentDate.toISOString().slice(0, 7));
             
-            const filteredTransactions = transactions.filter(t => {
-                const tDate = new Date(t.date);
-                return tDate.getMonth() === currentDate.getMonth() && tDate.getFullYear() === currentDate.getFullYear();
-            });
+            const walletId = localStorage.getItem('currentWalletId');
+            if (!walletId) {
+                console.warn("updateMainView: Menunggu walletId...");
+                return; // Berhenti jika data awal (dari initializeAppData) belum dimuat
+            }
 
-            const income = filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-            const expense = filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-            const total = income - expense;
-            const formatCurrency = (value) => { const sign = value < 0 ? '-' : ''; return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; };
+            // Tentukan rentang tanggal untuk filter API
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            // Format YYYY-MM-DD
+            const startDate = new Date(year, month, 1).toISOString().split('T')[0];
+            const endDate = new Date(year, month + 1, 0).toISOString().split('T')[0];
+
+            try {
+                // Ambil transaksi dari API, BUKAN dari array global
+                // [MEMANGGIL API] GET /api/v1/wallets/:walletId/transactions
+                const fetchedTransactions = await fetchApi(
+                    `/wallets/${walletId}/transactions?startDate=${startDate}&endDate=${endDate}`
+                );
+                
+                // [PENTING] Konversi data API ke format yang diharapkan oleh renderTransactionList()
+                transactions = fetchedTransactions.map(tx => ({
+                    id: tx.id,
+                    // Query Anda mengembalikan 'amount' positif untuk income dan 'amount' negatif untuk transfer/expense
+                    // Kita perlu perbaiki query API nanti, untuk saat ini:
+                    type: tx.category_type === 'INCOME' ? 'income' : 'expense',
+                    amount: tx.amount, // API Anda sudah mengembalikan dalam Rupiah (bukan sen)
+                    category: tx.category_name || 'Transfer',
+                    notes: tx.description || 'Tanpa catatan',
+                    account: 'Akun (perlu perbaikan API)', // Query API 'transactions' Anda belum JOIN ke 'accounts'
+                    icon: '...?', // Data ini tidak ada di API, perlu disesuaikan
+                    color: '#E6E6FA', // Data ini tidak ada di API, perlu disesuaikan
+                    date: tx.transaction_date // API mengembalikan YYYY-MM-DD
+                }));
+
+                // Sisa fungsi ini SAMA seperti sebelumnya
+                const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+                const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+                const total = income - expense;
+                const formatCurrency = (value) => { const sign = value < 0 ? '-' : ''; return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; };
+                
+                if(document.getElementById('totalAmount')) document.getElementById('totalAmount').textContent = formatCurrency(total);
+                if(document.getElementById('incomeAmount')) document.getElementById('incomeAmount').textContent = formatCurrency(income);
+                if(document.getElementById('expenseAmount')) document.getElementById('expenseAmount').textContent = formatCurrency(expense);
+                if(document.getElementById('calendarTotalAmount')) document.getElementById('calendarTotalAmount').textContent = formatCurrency(total);
+                if(document.getElementById('calendarIncomeAmount')) document.getElementById('calendarIncomeAmount').textContent = formatCurrency(income);
+                if(document.getElementById('calendarExpenseAmount')) document.getElementById('calendarExpenseAmount').textContent = formatCurrency(expense);
+                
+                renderTransactionList(transactions.sort((a, b) => new Date(b.date) - new Date(a.date)));
+                if(currentView === 'calendar') renderCalendar();
             
-            if(document.getElementById('totalAmount')) document.getElementById('totalAmount').textContent = formatCurrency(total);
-            if(document.getElementById('incomeAmount')) document.getElementById('incomeAmount').textContent = formatCurrency(income);
-            if(document.getElementById('expenseAmount')) document.getElementById('expenseAmount').textContent = formatCurrency(expense);
-            if(document.getElementById('calendarTotalAmount')) document.getElementById('calendarTotalAmount').textContent = formatCurrency(total);
-            if(document.getElementById('calendarIncomeAmount')) document.getElementById('calendarIncomeAmount').textContent = formatCurrency(income);
-            if(document.getElementById('calendarExpenseAmount')) document.getElementById('calendarExpenseAmount').textContent = formatCurrency(expense);
-            
-            renderTransactionList(filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date)));
-            if(currentView === 'calendar') renderCalendar();
+            } catch (error) {
+                console.error("Gagal memuat transaksi:", error);
+                if (error.message !== 'Sesi kedaluwarsa') {
+                   alert("Gagal memuat transaksi: " + error.message);
+                }
+            }
         }
-        // --- [AKHIR PERBAIKAN KALENDER] ---
-
-
         // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
         
         function initMainPage() {
@@ -963,10 +1084,21 @@
                 history.replaceState({ path: location.pathname }, '', location.pathname);
             }
             
-            // [PERBAIKAN] Terapkan tema saat halaman pertama kali dimuat
             applyTheme(getSettings().theme);
             executePageScript(pageContainer); 
-            runPageInit(location.pathname);
+
+            // [PERBAIKAN KUNCI]
+            // Jika kita di halaman aplikasi (bukan login/register),
+            // kita panggil 'initializeAppData' yang akan mengambil data
+            // DAN BARU memanggil 'runPageInit' setelahnya.
+            if (!isAuthPage) {
+                initializeAppData(); // <-- PANGGIL FUNGSI BARU INI
+            } else {
+                runPageInit(location.pathname); // Halaman auth (login, dll) bisa langsung jalan
+            }
+        });
+
+
         });
     </script>
 </body>
