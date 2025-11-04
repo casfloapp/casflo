@@ -118,7 +118,7 @@
             color: #9ca3af; /* dark:text-gray-400 */
         }
         .dark .nav-item.active {
-            color: white;
+            color: var(--primary-blue); /* Tetap biru agar menonjol */
         }
         .dark .fab {
             background-color: #374151;
@@ -141,7 +141,8 @@
         .dark .stats-container .main-balance .amount {
              color: white;
         }
-        .dark .account-item .balance-info .amount.expense {
+        .dark .account-item .balance-info .amount.expense,
+        .dark .overview-card .stat-item .amount.expense {
             color: var(--expense-red);
         }
         .dark .donut-chart-card, .dark .category-list-card {
@@ -330,7 +331,7 @@
                 const year = currentDate.getFullYear();
                 display.textContent = `${String(month).padStart(2, '0')}/${year}`;
             }
-            // updateMainView(); // panggil API di sini
+            updateMainView(); 
         }
         function goToPrevMonth() { currentDate.setMonth(currentDate.getMonth() - 1); if(currentView === 'calendar') { /* renderCalendar(); */ } updateMonthDisplay(); }
         function goToNextMonth() { currentDate.setMonth(currentDate.getMonth() + 1); if(currentView === 'calendar') { /* renderCalendar(); */ } updateMonthDisplay(); }
@@ -512,6 +513,8 @@
                 history.replaceState({ path: location.pathname }, '', location.pathname);
             }
             
+            // [PERBAIKAN] Terapkan tema saat halaman pertama kali dimuat
+            applyTheme(getSettings().theme);
             executePageScript(pageContainer); 
             runPageInit(location.pathname);
         });
