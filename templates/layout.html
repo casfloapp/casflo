@@ -208,6 +208,16 @@
         .card { background: white; border-radius: 18px; margin-bottom: 20px; margin-top: 20px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); padding: 18px; }
         .empty-transaction-list { text-align: center; color: #888; padding: 40px 0; }
         .view-hidden { display: none; }
+        .bottom-nav { position: fixed; max-width: 480px; margin: 0 auto; bottom: 0; left: 0; right: 0; width: 100%; background: white; height: 80px; display: flex; justify-content: space-around; align-items: center; padding-bottom: 0px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 10; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text-light); text-decoration: none; }
+        .nav-item i { font-size: 24px; }
+        .nav-item span { font-size: 11px; }
+        .nav-item.active { color: var(--primary-blue); }
+        
+        /* PERBAIKAN: Tata letak untuk view Detail & Kalender disederhanakan */
+        .view-hidden {
+            display: none;
+        }
         .overview-card .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .overview-card .card-header .icon { width: 40px; height: 40px; background: var(--light-purple); color: var(--primary-blue); display: flex; align-items: center; justify-content: center; border-radius: 8px; }
         .overview-card .date-selector { display: flex; align-items: center; gap: 12px; font-weight: 600; }
@@ -256,11 +266,59 @@
         .nav-item i { font-size: 24px; }
         .nav-item span { font-size: 11px; }
         .nav-item.active { color: var(--primary-blue); }
+        .add-view { display: flex; flex-direction: column; height: 100svh; }
+        .add-header { padding: 20px; border-bottom: 1px solid #e9ecef; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background-color: white; }
+        .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); text-decoration: none; }
+        .type-selector-header { display: flex; background: #f8f9fa; border-radius: 25px; padding: 3px; }
+        .type-btn-header { padding: 8px 16px; border: none; background: transparent; border-radius: 22px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; color: var(--text-light); }
+        .type-btn-header.active { background: white; color: var(--text-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .type-btn-header.expense.active { color: var(--expense-red); }
+        .type-btn-header.income.active { color: var(--income-green); }
+        .categories-section { flex-grow: 1; overflow-y: auto; padding: 20px; background-color: white; min-height: 0; }
+        .category-group { margin-bottom: 20px; }
+        .group-title { font-size: 12px; color: var(--text-light); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; }
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; }
+        .category-item { display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 10px; cursor: pointer; }
+        .category-item:hover { background: #f8f9fa; }
+        .category-item.selected { background: var(--primary-blue); color: white; }
+        .category-item.selected .category-icon { background: rgba(255,255,255,0.2) !important; color: white !important; }
+        .category-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; font-size: 20px; }
+        .category-name { font-size: 11px; text-align: center; }
+        .calculator-section { background: #f8f9fa; padding: 15px; border-top: 1px solid #e9ecef; flex-shrink: 0; display: grid; grid-template-rows: repeat(6, 1fr); gap: 8px; }
+        .amount-container { display: flex; gap: 8px; }
+        .account-card { aspect-ratio: 1 / 1; height: 100%; background: var(--primary-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(102, 102, 234, 0.3); }
+        .account-card i { color: white; font-size: 24px; }
+        .amount-display { flex-grow: 1; background: white; padding: 0 12px; border-radius: 10px; text-align: right; font-size: 28px; font-weight: 700; display: flex; align-items: center; justify-content: flex-end; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; }
+        .top-action-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .action-btn { background: white; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 24px; }
+        .action-btn.personal { background: #f8f9fa; color: #6c757d; }
+        .action-btn.today { background: #e3f2fd; color: #1976d2; }
+        .action-btn.add { background: var(--income-green); color: white; }
+        .action-btn.check { background: var(--income-green); color: white; }
+        .action-btn.equals { background: var(--primary-blue); color: white; }
+        .calc-grid { grid-row: 3 / 7; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; grid-auto-rows: 1fr; }
+        .calc-btn { background: white; border: none; border-radius: 10px; font-size: 24px; font-weight: 600; cursor: pointer; color: var(--text-dark); box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; }
+        .calc-btn .fas { font-size: 24px; }
+        .calc-btn.operator { background: #f1f3f5; color: #495057; }
+        .calc-btn.delete { background: #ffe3e3; color: var(--expense-red); }
+        .wallet-header { background: white; padding: 20px; font-size: 18px; font-weight: 600; text-align: center; border-bottom: 1px solid #eee; }
+        .total-balance-card .label { font-size: 14px; color: var(--text-light); margin-bottom: 5px; text-align: center; }
+        .total-balance-card .amount { font-size: 32px; font-weight: 700; text-align: center; color: var(--primary-blue); }
+        .account-list-card .card-title { font-weight: 600; margin-bottom: 15px; }
+        .wallet-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid var(--bg-gray); }
+        .wallet-item:last-child { border-bottom: none; }
+        .wallet-item .icon-wrapper { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .wallet-item .details { flex-grow: 1; font-weight: 500; }
+        .wallet-item .balance { font-weight: 600; }
 
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
             .app-container { max-width: 480px; margin: 0 auto; height: 100vh; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-            /* [BARU] Aturan mode gelap untuk desktop */
+            .add-view { max-width: 480px; }
+            .calculator-section { padding: 20px; gap: 12px; }
+            .amount-display { font-size: 36px; }
+            .calc-btn, .action-btn { font-size: 28px; min-height: 50px; border-radius: 12px; }
+            .calc-btn .fas { font-size: 28px; }
             .dark body { background-color: #111827; }
         }
     </style>
@@ -271,6 +329,10 @@
     </div>
 
     <script>
+        const sessionToken = localStorage.getItem('sessionToken');
+        if (!sessionToken) {
+            window.location.href = '/login';
+        }
         // === [BARU] BAGIAN 0: LOGIKA MODE GELAP/TERANG ===
         const settingsKey = 'casflo'; 
         const htmlEl = document.documentElement;
@@ -310,6 +372,10 @@
                 }
             }
         }
+
+        // Terapkan tema segera saat skrip ini dimuat
+        let currentSettings = getSettings();
+        applyTheme(currentSettings.theme);
         
         // Fungsi ini dipanggil oleh init...Page()
         function attachThemeToggle(selector) {
@@ -341,6 +407,22 @@
         const expenseCategories = [ { id: 1, name: 'Makanan', icon: '🍔', color: '#FEF3E2' }, { id: 2, name: 'Kebutuhan', icon: '🪴', color: '#E6F3F2' }, { id: 3, name: 'Transport', icon: '🚗', color: '#EBE9F9' }, { id: 4, name: 'Belanja', icon: '🛍️', color: '#FCE8E7' }, { id: 5, name: 'Hiburan', icon: '🎮', color: '#D4EDDA' }, { id: 6, name: 'Kesehatan', icon: '❤️', color: '#F8D7DA' }, { id: 7, name: 'Pendidikan', icon: '🎓', color: '#D1ECF1' }, { id: 8, name: 'Tagihan', icon: '🧾', color: '#FADBD8' }, { id: 9, name: 'Cicilan', icon: '🏠', color: '#D6EAF8' }, { id: 10, name: 'Listrik', icon: '💡', color: '#FCF3CF' }, { id: 11, name: 'Air', icon: '💧', color: '#D4E6F1' }, { id: 12, name: 'Internet', icon: '🌐', color: '#E8DAEF' }, { id: 13, name: 'Pakaian', icon: '👕', color: '#D1F2EB' }, { id: 14, name: 'Langganan', icon: '🔁', color: '#FDEDEC' }, { id: 15, name: 'Hadiah', icon: '🎁', color: '#FDEBD0' }, { id: 16, name: 'Donasi', icon: '💖', color: '#E6F3F2' }, { id: 17, name: 'Liburan', icon: '✈️', color: '#EBE9F9' }, { id: 18, name: 'Anak', icon: '👶', color: '#FCE8E7' }, { id: 19, name: 'Pajak', icon: '🏛️', color: '#D5DBDB' }, { id: 20, name: 'Asuransi', icon: '🛡️', color: '#D6EAF8' }, { id: 21, name: 'Olahraga', icon: '⚽️', color: '#D4EDDA' }, { id: 22, name: 'Peliharaan', icon: '🐾', color: '#FEF3E2' }, { id: 23, name: 'Perawatan', icon: '💅', color: '#F8D7DA' }, { id: 24, name: 'Perabotan', icon: '🛋️', color: '#FDEBD0' }, { id: 25, name: 'Bensin', icon: '⛽️', color: '#FADBD8' }, { id: 26, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
         const incomeCategories = [ { id: 101, name: 'Gaji', icon: '💰', color: '#D4EDDA' }, { id: 102, name: 'Bonus', icon: '🏆', color: '#D1ECF1' }, { id: 103, name: 'Investasi', icon: '📈', color: '#E2E3E5' }, { id: 104, name: 'Freelance', icon: '💻', color: '#FCF3CF' }, { id: 105, name: 'Hadiah', icon: '🎁', color: '#FDEBD0' }, { id: 106, name: 'Penjualan', icon: '🏷️', color: '#E8DAEF' }, { id: 107, name: 'Sewa', icon: '🔑', color: '#D6EAF8' }, { id: 108, name: 'Lainnya', icon: '...', color: '#F8F9FA' } ];
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        function appendToCalc(value) { const operators = ['+', '-', '*', '/']; if (operators.includes(value)) { waitingForEquals = true; changeButtonToEquals(); } if (calcValue === '0' && !operators.includes(value)) calcValue = value; else { const lastChar = calcValue.slice(-1); if (operators.includes(lastChar) && operators.includes(value)) calcValue = calcValue.slice(0, -1) + value; else calcValue += value; } updateDisplay(); }
+        function deleteLast() { calcValue = calcValue.slice(0, -1) || '0'; checkWaitingForEquals(); updateDisplay(); }
+        function handleActionClick() { if (waitingForEquals) calculateResult(); else saveTransaction(); }
+        function selectType(type) { currentType = type; document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); document.getElementById(type + 'Btn').classList.add('active'); selectedCategory = null; loadCategories(); }
+        function updateDisplay() { const amountDisplay = document.getElementById('amountDisplay'); if(amountDisplay) amountDisplay.textContent = calcValue.replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+        function checkWaitingForEquals() { const hasOperator = ['+', '-', '*', '/'].some(op => calcValue.includes(op)); if (!hasOperator) { waitingForEquals = false; changeButtonToCheck(); } }
+        function changeButtonToEquals() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn equals'; actionBtn.innerHTML = '<i class="fas fa-equals"></i>'; }}
+        function changeButtonToCheck() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn check'; actionBtn.innerHTML = '<i class="fas fa-check"></i>'; }}
+        function calculateResult() { try { let expression = calcValue.replace(/×/g, '*').replace(/÷/g, '/'); const result = eval(expression); calcValue = String(result); waitingForEquals = false; changeButtonToCheck(); updateDisplay(); } catch (e) { calcValue = '0'; updateDisplay(); } }
+        function clearCalc() { calcValue = '0'; waitingForEquals = false; changeButtonToCheck(); updateDisplay(); }
+        function loadCategories() { const categories = currentType === 'expense' ? expenseCategories : incomeCategories; const recommendedGrid = document.getElementById('recommendedGrid'); const uncategorizedGrid = document.getElementById('uncategorizedGrid'); if(!recommendedGrid || !uncategorizedGrid) return; recommendedGrid.innerHTML = ''; uncategorizedGrid.innerHTML = ''; categories.slice(0, 4).forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat))); categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat))); }
+        function createCategoryElement(category) { const div = document.createElement('div'); div.className = 'category-item'; div.onclick = () => selectCategory(category, div); div.innerHTML = `<div class="category-icon" style="background: ${category.color}">${category.icon}</div><div class="category-name">${category.name}</div>`; return div; }
+        function selectCategory(category, element) { selectedCategory = category; document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); element.classList.add('selected'); }
+        function saveTransaction() { const amount = parseFloat(calcValue); if (isNaN(amount) || amount <= 0) return alert('Masukkan jumlah yang valid'); if (!selectedCategory) return alert('Pilih kategori terlebih dahulu'); const transaction = { id: Date.now(), type: currentType, amount, category: selectedCategory.name, notes: 'diri sendiri', account: 'akun bawaan', icon: selectedCategory.icon, color: selectedCategory.color, date: new Date() }; transactions.push(transaction); alert('Transaksi disimpan!'); navigate('/'); }
+        
 
         // --- [PERBAIKAN KALENDER] Fungsi Halaman Utama ---
         function setView(viewName) {
@@ -471,10 +553,11 @@
         }
         
         function initCreatePage() {
-            console.log("Halaman Create diinisialisasi.");
-            if (typeof initCreatePageInternal === 'function') {
-                initCreatePageInternal();
-            }
+            currentType = 'expense';
+            selectedCategory = null;
+            clearCalc();
+            loadCategories();
+            console.log("Halaman Create dimuat.");
         }
 
         function initWalletPage() { 
@@ -483,22 +566,117 @@
             attachThemeToggle('.theme-toggle');
         }
         
-        function initMorePage() {
-             console.log("Halaman Lebih diinisialisasi.");
-             if (typeof initMorePageInternal === 'function') {
-                initMorePageInternal();
-            }
-            // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
-            attachThemeToggle('.theme-toggle');
-        }
-        
         function initAnalysisPage() {
-             console.log("Halaman Analisis diinisialisasi!");
-             if (typeof initAnalysisPageInternal === 'function') {
-                initAnalysisPageInternal();
+            console.log("Halaman Analisis dimuat.");
+
+            const activePill = document.querySelector('.header-tabs .active-pill');
+            const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
+            if (!activePill || !tabButtons.length) return;
+
+            function movePill(targetButton) {
+                requestAnimationFrame(() => {
+                    if (targetButton) {
+                        activePill.style.width = `${targetButton.offsetWidth}px`;
+                        activePill.style.left = `${targetButton.offsetLeft}px`;
+                    }
+                });
             }
-            // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
-            attachThemeToggle('.theme-toggle');
+
+            function handleTabClick(event) {
+                const clickedButton = event.currentTarget;
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                clickedButton.classList.add('active');
+                movePill(clickedButton);
+
+                const mode = clickedButton.dataset.mode;
+                if (mode === 'pengeluaran') {
+                    animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)');
+                } else if (mode === 'penghasilan') {
+                    animateChart(85, 850000000, 'Penghasilan', 'var(--income-green)');
+                } else {
+                    animateChart(0, 0, mode.charAt(0).toUpperCase() + mode.slice(1), '#ccc');
+                }
+            }
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', handleTabClick);
+            });
+
+            // [PERBAIKAN KUNCI] Beri jeda sesaat sebelum menghitung posisi awal.
+            // Ini memberi waktu bagi browser untuk menyelesaikan render animasi CSS.
+            const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
+            if (initialActiveTab) {
+                setTimeout(() => {
+                    movePill(initialActiveTab);
+                }, 50); // Jeda 50 milidetik biasanya sudah cukup.
+            }
+            
+            // Menambahkan listener untuk memperbaiki posisi saat layar dirotasi
+            window.addEventListener('resize', () => {
+                const currentActiveTab = document.querySelector('.header-tabs .tab-button.active');
+                if (currentActiveTab) {
+                    movePill(currentActiveTab);
+                }
+            });
+            
+                        function animateChart(percentage, totalAmount, label, color) {
+                const segment = document.getElementById('chart-segment');
+                const amountEl = document.getElementById('chart-total-amount');
+                const labelEl = document.getElementById('chart-center-label');
+                if (!segment || !amountEl || !labelEl) return;
+                labelEl.textContent = label;
+                segment.style.stroke = color;
+                const radius = segment.r.baseVal.value;
+                const circumference = 2 * Math.PI * radius;
+                segment.style.strokeDasharray = `${circumference} ${circumference}`;
+                const offset = circumference - (percentage / 100) * circumference;
+                segment.style.strokeDashoffset = offset;
+                let currentAmount = 0;
+                const steps = 100;
+                const increment = totalAmount / steps;
+                if(window.chartCounter) clearInterval(window.chartCounter);
+                window.chartCounter = setInterval(() => {
+                    currentAmount += increment;
+                    if (currentAmount >= totalAmount) {
+                        currentAmount = totalAmount;
+                        clearInterval(window.chartCounter);
+                    }
+                    amountEl.textContent = 'Rp' + Math.floor(currentAmount).toLocaleString('id-ID');
+                }, 10);
+            }
+
+
+            setTimeout(() => {
+                animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)'); 
+            }, 100);
+        }
+
+        function initMorePage() {
+            currentType = 'expense';
+            selectedCategory = null;
+            clearCalc();
+            loadCategories();
+            console.log("Halaman More dimuat.");
+
+             const logoutButton = document.getElementById('logout-btn');
+        
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    console.log("Tombol Logout diklik.");
+                    
+                    // Tampilkan konfirmasi sederhana
+                    // NOTE: confirm() mungkin tidak berfungsi di beberapa lingkungan 'blob'
+                    // Jika ini tidak muncul, kita harus membuat modal custom
+                    if (confirm("Apakah Anda yakin ingin logout?")) {
+                        // 1. Hapus session token dari localStorage
+                        localStorage.removeItem('sessionToken');
+                        
+                        // 2. Arahkan pengguna kembali ke halaman login (reload penuh)
+                        window.location.href = '/login';
+                    }
+                });
+            }
+
         }
 
         // === BAGIAN 3: LOGIKA SPA ROUTING (DENGAN PERBAIKAN) ===
