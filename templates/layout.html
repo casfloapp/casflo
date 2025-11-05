@@ -1199,7 +1199,27 @@
         function initCreatePage() { const txToEditJSON = sessionStorage.getItem('tx_for_edit'); if (txToEditJSON) { const tx = JSON.parse(txToEditJSON); currentTransactionId = tx.id; currentType = tx.type; calcValue = String(tx.amount); selectedAccountId = tx.account_id; selectedCategory = allCategories.find(c => c.id === tx.category_id); document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); document.getElementById(currentType + 'Btn').classList.add('active'); loadCategories(); updateDisplay(); updateAccountIcon(selectedAccountId); sessionStorage.removeItem('tx_for_edit'); } else { currentTransactionId = null; currentType = 'expense'; selectedCategory = null; clearCalc(); loadCategories(); updateAccountIcon(selectedAccountId); } console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`); }
         function initWalletPage() { console.log("Halaman dompet dimuat."); attachThemeToggle('.theme-toggle'); /* ... (Logika load data dompet Anda) ... */ }
         function initAnalysisPage() { console.log("Halaman Analisis dimuat."); /* ... (Logika halaman analisis Anda) ... */ }
-        function initMorePage() { console.log("Halaman More dimuat."); document.getElementById('logout-btn')?.addEventListener('click', () => { if (confirm("Apakah Anda yakin ingin logout?")) { localStorage.removeItem('sessionToken'); window.location.href = '/login'; } }); /* ... (Logika animasi grid) ... */ }
+        function initMorePage() { 
+            console.log("Halaman More dimuat."); 
+            document.getElementById('logout-btn')?.addEventListener('click', () => { 
+                if (confirm("Apakah Anda yakin ingin logout?")) { 
+                    localStorage.removeItem('sessionToken'); 
+                    window.location.href = '/login'; 
+                } 
+            }); 
+            // Pasang listener untuk tombol mode gelap/terang
+            attachThemeToggle('.theme-toggle'); 
+            
+            // Logika animasi grid
+            const gridItems = document.querySelectorAll('.more-grid .grid-item');
+            if (gridItems.length > 0) {
+                gridItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('visible');
+                    }, index * 50);
+                });
+            }
+        }
         
         // [Fungsi Routing SPA]
         const pageContainer = document.getElementById('app-container');
