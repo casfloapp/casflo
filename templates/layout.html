@@ -813,19 +813,22 @@
                 );
                 
                 // [PENTING] Konversi data API ke format yang diharapkan oleh renderTransactionList()
-                transactions = fetchedTransactions.map(tx => ({
-                    id: tx.id,
-                    // Query Anda mengembalikan 'amount' positif untuk income dan 'amount' negatif untuk transfer/expense
-                    // Kita perlu perbaiki query API nanti, untuk saat ini:
-                    type: tx.category_type === 'INCOME' ? 'income' : 'expense',
-                    amount: tx.amount, // API Anda sudah mengembalikan dalam Rupiah (bukan sen)
-                    category: tx.category_name || 'Transfer',
-                    notes: tx.description || 'Tanpa catatan',
-                    account: 'Akun (perlu perbaikan API)', // Query API 'transactions' Anda belum JOIN ke 'accounts'
-                    icon: '...?', // Data ini tidak ada di API, perlu disesuaikan
-                    color: '#E6E6FA', // Data ini tidak ada di API, perlu disesuaikan
-                    date: tx.transaction_date // API mengembalikan YYYY-MM-DD
-                }));
+                transactions = fetchedTransactions.map(tx => {
+                    // API mengembalikan 'EXPENSE' (amount positif) atau 'INCOME' (amount negatif)
+                    const isExpense = tx.category_type === 'EXPENSE'; 
+                    return {
+                        id: tx.id,
+                        type: isExpense ? 'expense' : 'income',
+                        // API mengembalikan sen, jadi kita bagi 100 dan ambil nilai absolutnya
+                        amount: Math.abs(tx.amount / 100), 
+                        category: tx.category_name,
+                        notes: tx.description || 'Tanpa catatan',
+                        account: tx.account_name, // <-- [PERBAIKAN] Ambil dari API
+                        icon: tx.category_name.charAt(0).toUpperCase(), // [PERBAIKAN] Ganti '...?' dengan inisial
+                        color: 'var(--light-purple)', // Warna default
+                        date: tx.transaction_date
+                    };
+                });
 
                 // Sisa fungsi ini SAMA seperti sebelumnya
                 const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
