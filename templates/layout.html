@@ -491,6 +491,128 @@
         .dark .balance-masked .transaction-item .info .amount[data-masked-color="expense"]::before {
             color: var(--expense-red);
         }
+        /* [BARU] CSS untuk Modal Detail Transaksi */
+        .tx-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none; /* Sembunyi secara default */
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            animation: fadeIn 0.3s ease;
+            padding: 20px;
+        }
+        .tx-modal-overlay.visible {
+            display: flex;
+        }
+        .tx-modal-content {
+            background: white;
+            color: var(--text-dark);
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            animation: slideUp 0.3s ease-out;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .tx-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8f9fa;
+        }
+        .tx-modal-header button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-light);
+            padding: 5px;
+        }
+        .tx-modal-header .tx-modal-actions {
+            display: flex;
+            gap: 20px;
+        }
+        .tx-modal-header .tx-modal-actions button {
+            color: var(--primary-blue);
+        }
+        .tx-modal-header .tx-modal-actions #tx-modal-delete-btn {
+            color: var(--expense-red);
+        }
+        .tx-modal-body {
+            padding: 20px 25px 30px 25px;
+        }
+        .tx-modal-category {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+        /* Gunakan style .category-icon yang sudah ada */
+        .tx-modal-category #tx-modal-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+        }
+        .tx-modal-category #tx-modal-category-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .tx-modal-amount {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .tx-modal-details .detail-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--bg-gray);
+        }
+        .tx-modal-details .detail-item span:first-child {
+            color: var(--text-light);
+        }
+        .tx-modal-details .detail-item span:last-child {
+            font-weight: 500;
+        }
+        .tx-modal-details .detail-item.notes {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+            border-bottom: none;
+        }
+        
+        /* Mode Gelap untuk Modal Detail */
+        .dark .tx-modal-content {
+            background-color: #374151;
+            color: #d1d5db;
+        }
+        .dark .tx-modal-header {
+            background-color: #1f2937;
+        }
+        .dark .tx-modal-category #tx-modal-category-name {
+            color: white;
+        }
+        .dark .tx-modal-details .detail-item {
+            border-bottom-color: #4b5563;
+        }
+        .dark .tx-modal-details .detail-item span:first-child {
+            color: #9ca3af;
+        }
+        .dark .tx-modal-details .detail-item.notes span:first-child {
+            color: #9ca3af;
+        }
+        .dark .tx-modal-details .detail-item.notes span:last-child {
+            color: #d1d5db;
+        }
+        /* [AKHIR BARU] */
 
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
@@ -517,6 +639,42 @@
             </div>
             <div id="wallet-list-container">
                 </div>
+        </div>
+    </div>
+    <div id="tx-modal-overlay" class="tx-modal-overlay" onclick="closeTransactionModal()">
+        <div class="tx-modal-content" onclick="event.stopPropagation()">
+            <div class="tx-modal-header">
+                <button class="tx-modal-close" onclick="closeTransactionModal()"><i class="fas fa-times"></i></button>
+                <div class="tx-modal-actions">
+                    <button id="tx-modal-delete-btn"><i class="fas fa-trash"></i></button>
+                    <button id="tx-modal-edit-btn"><i class="fas fa-edit"></i></button>
+                </div>
+            </div>
+            <div class="tx-modal-body">
+                <div class="tx-modal-category">
+                    <span id="tx-modal-icon" class="category-icon" style="background: var(--light-purple);">🍔</span>
+                    <span id="tx-modal-category-name">Nama Kategori</span>
+                </div>
+                <div class="tx-modal-amount" id="tx-modal-amount">-Rp8.000</div>
+                <div class="tx-modal-details">
+                    <div class="detail-item">
+                        <span>Tanggal:</span>
+                        <span id="tx-modal-date">5/11/2025 15.40.19</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Akun:</span>
+                        <span id="tx-modal-account">akun bawaan</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Buku:</span>
+                        <span id="tx-modal-wallet">Manda</span>
+                    </div>
+                    <div class="detail-item notes">
+                        <span>Catatan:</span>
+                        <span id="tx-modal-notes">Belanja</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -673,8 +831,85 @@
             }
             saveCollapsedGroups(collapsedGroups);
         }
-        // [AKHIR BARU]
+        // [BARU] Fungsi-fungsi untuk Modal Detail Transaksi
+        const txModal = document.getElementById('tx-modal-overlay');
 
+        function openTransactionModal(tx) {
+            if (!txModal) return;
+
+            // 1. Simpan ID untuk aksi (delete/edit)
+            currentTransactionId = tx.id;
+
+            // 2. Isi data modal
+            document.getElementById('tx-modal-icon').textContent = tx.icon || tx.category.charAt(0);
+            document.getElementById('tx-modal-category-name').textContent = tx.category;
+            
+            const amountEl = document.getElementById('tx-modal-amount');
+            // Pastikan amount adalah angka sebelum toLocaleString
+            const amount = Number(tx.amount) || 0;
+            const amountString = `${tx.type === 'expense' ? '-' : ''}Rp${amount.toLocaleString('id-ID')}`;
+            amountEl.textContent = amountString;
+            amountEl.style.color = tx.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)';
+
+            // Format tanggal dari "YYYY-MM-DD"
+            const date = new Date(tx.date + 'T00:00:00'); // Tambahkan T00:00 untuk menghindari masalah zona waktu
+            document.getElementById('tx-modal-date').textContent = date.toLocaleDateString('id-ID', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            });
+            
+            document.getElementById('tx-modal-account').textContent = tx.account;
+            document.getElementById('tx-modal-notes').textContent = tx.notes;
+            document.getElementById('tx-modal-wallet').textContent = localStorage.getItem('currentWalletName') || '...';
+            
+            // 3. Tampilkan modal
+            txModal.classList.add('visible');
+        }
+
+        function closeTransactionModal() {
+            if (txModal) {
+                txModal.classList.remove('visible');
+                currentTransactionId = null; // Hapus ID saat modal ditutup
+            }
+        }
+
+        async function handleDeleteTransaction() {
+            if (!currentTransactionId) return;
+
+            // 1. Tampilkan konfirmasi
+            if (!confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
+                return;
+            }
+
+            const walletId = localStorage.getItem('currentWalletId');
+            
+            try {
+                // Tampilkan loading (jika ada)
+                console.log(`Menghapus transaksi: ${currentTransactionId}...`);
+
+                // 2. Panggil API DELETE
+                await fetchApi(`/wallets/${walletId}/transactions/${currentTransactionId}`, {
+                    method: 'DELETE'
+                });
+
+                // 3. Sukses
+                console.log('Transaksi berhasil dihapus.');
+                closeTransactionModal();
+                updateMainView(); // Muat ulang daftar transaksi
+                
+            } catch (error) {
+                console.error('Gagal menghapus transaksi:', error);
+                alert('Gagal menghapus: ' + error.message);
+            }
+        }
+
+        function handleEditTransaction() {
+            // Untuk saat ini, kita hanya tampilkan alert
+            alert('Fitur "Edit" belum tersedia.');
+            console.log(`Edit diminta untuk tx: ${currentTransactionId}`);
+            // Nanti, ini akan mengarahkan ke /create dengan data tx
+            // closeTransactionModal();
+            // navigate('/create', currentTransaction); // (Contoh)
+        }
         // [AKHIR BARU]
 
         // [BARU] Fungsi untuk mengambil data awal (dompet & akun) saat aplikasi dimuat
@@ -843,6 +1078,7 @@
         let allCategories = [];
         let allAccounts = [];
         let selectedAccountId = null; // Kita akan kelola ini secara global
+        let currentTransactionId = null; // [BARU] Untuk modal detail
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
         function appendToCalc(value) {
@@ -1183,9 +1419,14 @@
                 txsOnThisDate.forEach(t => {
                     const itemEl = document.createElement('div');
                     itemEl.className = 'transaction-item';
+                    itemEl.style.cursor = 'pointer'; // [BARU] Tunjukkan bisa diklik
                     
                     // [PERBAIKAN] Gunakan t.icon, fallback ke huruf pertama
                     const icon = t.icon || t.category.charAt(0).toUpperCase();
+                    
+                    // [PENTING] Kita harus mem-pass objek 't' ke listener.
+                    // Karena 't' adalah objek, kita tidak bisa pass di innerHTML.
+                    // Kita harus set innerHTML DULU, BARU tambahkan listener.
                     itemEl.innerHTML = `
                         <div class="icon" style="background-color: ${t.color};"><span>${icon}</span></div>
                         <div class="details"><div class="category">${t.category}</div><div class="notes">${t.notes}</div></div>
@@ -1197,6 +1438,9 @@
                             </div>
                             <div class="account">${t.account}</div>
                         </div>`;
+                    
+                    // [BARU] Tambahkan listener klik di sini
+                    itemEl.onclick = () => openTransactionModal(t);
                     
                     // [DIUBAH] Append item ke kontainer, BUKAN ke list utama
                     itemsContainer.appendChild(itemEl);
@@ -1638,7 +1882,8 @@
                 return;
             }
             // --- [Akhir Perbaikan Keamanan] ---
-
+            document.getElementById('tx-modal-delete-btn')?.addEventListener('click', handleDeleteTransaction);
+            document.getElementById('tx-modal-edit-btn')?.addEventListener('click', handleEditTransaction);
 
             if (!isBlobEnvironment) {
                 history.replaceState({ path: location.pathname }, '', location.pathname);
