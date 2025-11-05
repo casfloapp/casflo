@@ -544,6 +544,7 @@
        // [PERBAIKAN] Fungsi ini sekarang memprioritaskan dompet di localStorage
  
 
+       // [PERBAIKAN KATEGORI] Ganti total fungsi ini
        async function initializeAppData() {
             try {
                 // 1. Cek apakah sudah ada dompet yang dipilih sebelumnya
@@ -574,11 +575,38 @@
                 localStorage.setItem('currentWalletName', activeWallet.name); 
                 console.log(`Dompet aktif diatur: ${activeWallet.name} (${activeWallet.id})`);
 
-                // 5. Panggil 'runPageInit' SETELAH semua data siap
+                // 5. [INI BAGIAN KUNCINYA] Ambil akun dan kategori untuk dompet aktif
+                const [accounts, categories] = await Promise.all([
+                    fetchApi(`/wallets/${activeWallet.id}/accounts`),
+                    fetchApi(`/wallets/${activeWallet.id}/categories`)
+                ]);
+
+                // 6. Simpan Akun ke Global
+                allAccounts = accounts;
+                if (!accounts || accounts.length === 0) {
+                    console.error('ERROR: Dompet ini tidak memiliki akun!');
+                    // Di aplikasi nyata, ini idealnya tidak terjadi
+                } else {
+                    // Tetapkan akun default (utamakan ASET)
+                    const defaultAccount = accounts.find(a => a.type === 'ASSET') || accounts[0];
+                    selectedAccountId = defaultAccount.id; // Set var global
+                    console.log(`Akun aktif diatur: ${defaultAccount.name} (${defaultAccount.id})`);
+                }
+
+                // 7. Simpan Kategori ke Global
+                allCategories = categories; // <--- INI AKAN MENGISI ARRAY
+                console.log(`Berhasil memuat ${allCategories.length} kategori.`);
+                // [AKHIR BAGIAN KUNCI]
+
+
+                // 8. Panggil 'runPageInit' SETELAH semua data siap
                 runPageInit(location.pathname);
 
             } catch (error) {
                 console.error("Gagal inisialisasi data aplikasi:", error);
+                if (error.message !== 'Sesi kedaluwarsa') {
+                    alert("Gagal inisialisasi data: " + error.message);
+                }
             }
         }
         function getSettings() {
