@@ -505,11 +505,55 @@
         let selectedAccountId = null; // Kita akan kelola ini secara global
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-        function appendToCalc(value) { const operators = ['+', '-', '*', '/']; if (operators.includes(value)) { waitingForEquals = true; changeButtonToEquals(); } if (calcValue === '0' && !operators.includes(value)) calcValue = value; else { const lastChar = calcValue.slice(-1); if (operators.includes(lastChar) && operators.includes(value)) calcValue = calcValue.slice(0, -1) + value; else calcValue += value; } updateDisplay(); }
+        function appendToCalc(value) {
+            const operators = ['+', '-', '*', '/'];
+            
+            if (operators.includes(value)) {
+                waitingForEquals = true;
+                changeButtonToEquals();
+            }
+            
+            // [PERBAIKAN] Mencegah duplikat titik/koma
+            if (value === '.' && calcValue.includes('.')) {
+                return; // Jangan lakukan apa-apa jika sudah ada titik
+            }
+
+            if (calcValue === '0' && !operators.includes(value) && value !== '.') {
+                calcValue = value;
+            } else {
+                const lastChar = calcValue.slice(-1);
+                if (operators.includes(lastChar) && operators.includes(value)) {
+                    calcValue = calcValue.slice(0, -1) + value;
+                } else {
+                    calcValue += value;
+                }
+            }
+            updateDisplay();
+        }
         function deleteLast() { calcValue = calcValue.slice(0, -1) || '0'; checkWaitingForEquals(); updateDisplay(); }
         function handleActionClick() { if (waitingForEquals) calculateResult(); else saveTransaction(); }
         function selectType(type) { currentType = type; document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); document.getElementById(type + 'Btn').classList.add('active'); selectedCategory = null; loadCategories(); }
-        function updateDisplay() { const amountDisplay = document.getElementById('amountDisplay'); if(amountDisplay) amountDisplay.textContent = calcValue; }
+        function updateDisplay() {
+            const amountDisplay = document.getElementById('amountDisplay');
+            if (!amountDisplay) return;
+
+            // Pisahkan bagian integer dan desimal
+            let parts = calcValue.split('.');
+            
+            // Format bagian integer (sebelum koma) dengan titik pemisah ribuan
+            let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            
+            let displayValue;
+            if (parts.length > 1) {
+                // Jika ada desimal, gabungkan dengan KOMA
+                displayValue = integerPart + ',' + (parts[1] || '');
+            } else {
+                // Jika tidak ada desimal
+                displayValue = integerPart;
+            }
+            
+            amountDisplay.textContent = displayValue;
+        }
         function checkWaitingForEquals() { const hasOperator = ['+', '-', '*', '/'].some(op => calcValue.includes(op)); if (!hasOperator) { waitingForEquals = false; changeButtonToCheck(); } }
         function changeButtonToEquals() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn equals'; actionBtn.innerHTML = '<i class="fas fa-equals"></i>'; }}
         function changeButtonToCheck() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn check'; actionBtn.innerHTML = '<i class="fas fa-check"></i>'; }}
