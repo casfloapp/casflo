@@ -509,7 +509,7 @@
         function deleteLast() { calcValue = calcValue.slice(0, -1) || '0'; checkWaitingForEquals(); updateDisplay(); }
         function handleActionClick() { if (waitingForEquals) calculateResult(); else saveTransaction(); }
         function selectType(type) { currentType = type; document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); document.getElementById(type + 'Btn').classList.add('active'); selectedCategory = null; loadCategories(); }
-        function updateDisplay() { const amountDisplay = document.getElementById('amountDisplay'); if(amountDisplay) amountDisplay.textContent = calcValue.replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+        function updateDisplay() { const amountDisplay = document.getElementById('amountDisplay'); if(amountDisplay) amountDisplay.textContent = calcValue; }
         function checkWaitingForEquals() { const hasOperator = ['+', '-', '*', '/'].some(op => calcValue.includes(op)); if (!hasOperator) { waitingForEquals = false; changeButtonToCheck(); } }
         function changeButtonToEquals() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn equals'; actionBtn.innerHTML = '<i class="fas fa-equals"></i>'; }}
         function changeButtonToCheck() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn check'; actionBtn.innerHTML = '<i class="fas fa-check"></i>'; }}
