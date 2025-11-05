@@ -10,6 +10,7 @@ import loginPage from './templates/login.html';
 import createAccountPage from './templates/create-account.html';
 import twoStepPage from './templates/two-step.html';
 import authCallbackPage from './templates/auth-callback.html'; // Untuk login Google
+import createWalletPage from './templates/create-wallet.html'; // <-- [BARU] Impor ini
 
 
 export default {
@@ -28,6 +29,9 @@ export default {
         }
         if (path === '/auth/callback') {
             return new Response(authCallbackPage, { headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
+        }
+        if (path === '/create-wallet') {
+            return new Response(createWalletPage, { headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
         }
 
         let pageContent;

@@ -397,9 +397,10 @@
                 // [MEMANGGIL API] GET /api/v1/wallets
                 const wallets = await fetchApi('/wallets');
                 if (!wallets || wallets.length === 0) {
-                    console.warn('User tidak punya dompet. (Anda bisa arahkan ke halaman "Buat Dompet")');
-                    // TODO: Arahkan ke halaman "buat dompet"
-                    return;
+                    console.warn('User tidak punya dompet. Mengarahkan ke /create-wallet');
+                    // Ganti URL ke halaman buat dompet
+                    window.location.href = '/create-wallet'; 
+                    return; // Hentikan eksekusi sisa skrip
                 }
                 
                 // 2. Simpan dompet pertama sebagai dompet aktif
