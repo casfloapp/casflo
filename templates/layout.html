@@ -1575,17 +1575,15 @@
                 calendarGrid.appendChild(dayEl);
             }
         }
-        function renderTransactionList(filteredTransactions) { 
+function renderTransactionList(filteredTransactions) { 
             const transactionListEl = document.querySelector('.transaction-list');
             if (!transactionListEl) return;
             transactionListEl.innerHTML = '';
             
-            // [BARU] Ambil status collapsed dari localStorage
             const collapsedGroups = getCollapsedGroups();
             
-            // [SAMA] Mengelompokkan transaksi berdasarkan tanggal
             const grouped = filteredTransactions.reduce((acc, tx) => {
-                const dateKey = new Date(tx.date).toDateString(); // Ini akan jadi ID unik kita
+                const dateKey = new Date(tx.date).toDateString();
                 if (!acc[dateKey]) {
                     acc[dateKey] = [];
                 }
@@ -1598,7 +1596,6 @@
                 return;
             }
 
-            // [SAMA] Urutkan grup tanggal
             const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
             
             for (const dateKey of sortedDates) {
@@ -1627,9 +1624,8 @@
                 
                 groupEl.appendChild(listHeader);
 
+                // [PERBAIKAN DIMULAI DI SINI]
                 txsOnThisDate.forEach(t => {
-                    // [PERBAIKAN UTAMA] Buat wrapper, content, dan actions
-                    
                     // 1. Buat Wrapper Utama
                     const itemWrapper = document.createElement('div');
                     itemWrapper.className = 'transaction-item-wrapper';
@@ -1640,11 +1636,15 @@
                     itemActions.innerHTML = `
                         <button class="delete-btn"><i class="fas fa-trash"></i></button>
                     `;
+                    
+                    // [INI YANG HILANG DARI FILE ANDA]
                     // Tambahkan listener ke tombol (passing t.id)
                     itemActions.querySelector('.delete-btn').onclick = (e) => {
                         e.stopPropagation(); // Hentikan event agar tidak menutup swipe
-                        handleDeleteTransaction(t.id);
+                        handleDeleteTransaction(t.id); // Panggil fungsi yang sudah ada
                     };
+                    // [AKHIR BAGIAN HILANG]
+
 
                     // 3. Buat Konten yang Terlihat (yang akan digeser)
                     const itemContent = document.createElement('div');
@@ -1663,17 +1663,16 @@
                             <div class="account">${t.account}</div>
                         </div>`;
 
-                    // [BARU] Tambahkan listener swipe ke item KONTEN
+                    // [INI JUGA HILANG DARI FILE ANDA]
+                    // Tambahkan listener swipe ke item KONTEN
                     itemContent.addEventListener('touchstart', handleTouchStart, { passive: true });
                     itemContent.addEventListener('touchmove', handleTouchMove, { passive: false }); // false untuk izinkan preventDefault
                     itemContent.addEventListener('touchend', handleTouchEnd);
                     itemContent.addEventListener('touchcancel', handleTouchEnd);
                     
-                    // [PENTING] Klik (Tap) akan membuka modal
+                    // (Opsional) Klik (Tap) akan membuka modal
                     itemContent.onclick = () => {
                         // Hanya panggil modal jika item tidak digeser
-                        // 'isSwiping' akan di-reset ke false di handleTouchEnd
-                        // tapi jika snap terbuka, activeSwipeElement akan ada
                         if (!isSwiping && !activeSwipeElement) {
                              openTransactionModal(t);
                         } else if (activeSwipeElement) {
@@ -1681,6 +1680,7 @@
                             closeActiveSwipe();
                         }
                     };
+                    // [AKHIR BAGIAN HILANG]
 
                     // 4. Susun elemen
                     itemWrapper.appendChild(itemActions);
@@ -1689,12 +1689,12 @@
                     // 5. Append wrapper ke kontainer
                     itemsContainer.appendChild(itemWrapper);
                 });
+                // [PERBAIKAN SELESAI]
                 
                 groupEl.appendChild(itemsContainer);
                 transactionListEl.appendChild(groupEl);
             }
         }
-
        // [PERBAIKAN] Fungsi diubah menjadi async untuk mengambil data dari API
         async function updateMainView() { 
             console.log("Memuat data API untuk", currentDate.toISOString().slice(0, 7));
