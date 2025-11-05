@@ -317,6 +317,85 @@
         .wallet-item .details { flex-grow: 1; font-weight: 500; }
         .wallet-item .balance { font-weight: 600; }
 
+        /* [BARU] CSS untuk Modal Pengganti Dompet */
+        .wallet-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none; /* Sembunyi secara default */
+            align-items: flex-end; /* Muncul dari bawah */
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        .wallet-modal-overlay.visible {
+            display: flex;
+        }
+        .wallet-modal-content {
+            background: white;
+            color: #333;
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            animation: slideUp 0.3s ease-out;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+        .wallet-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .wallet-modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .wallet-modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+        }
+        .wallet-list-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .wallet-list-item:hover {
+            background-color: #f4f5f9;
+        }
+        .wallet-list-item.active {
+            background-color: var(--light-purple);
+            color: var(--primary-blue);
+            font-weight: 700;
+        }
+        /* Mode Gelap untuk Modal */
+        .dark .wallet-modal-content {
+            background-color: #374151; /* dark:bg-gray-700 */
+            color: #d1d5db;
+        }
+        .dark .wallet-list-item:hover {
+            background-color: #4b5563; /* dark:border-gray-600 */
+        }
+        .dark .wallet-list-item.active {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        /* [AKHIR BARU] */
+
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
             .app-container { max-width: 480px; margin: 0 auto; height: 100vh; }
@@ -332,6 +411,17 @@
 <body>
     <div id="app-container">
         {{PAGE_CONTENT}}
+    </div>
+
+    <div id="wallet-modal-overlay" class="wallet-modal-overlay" onclick="closeWalletSwitcher()">
+        <div class="wallet-modal-content" onclick="event.stopPropagation()">
+            <div class="wallet-modal-header">
+                <h3>Pilih Dompet</h3>
+                <button class="wallet-modal-close" onclick="closeWalletSwitcher()">&times;</button>
+            </div>
+            <div id="wallet-list-container">
+                </div>
+        </div>
     </div>
 
     <script>
@@ -389,43 +479,100 @@
             return result.data; 
         }
         // --- [AKHIR BAGIAN 0.5] ---
+// --- [AKHIR BAGIAN 0.5] ---
+
+        // [BARU] Fungsi-fungsi untuk Modal Pengganti Dompet
+        const walletModal = document.getElementById('wallet-modal-overlay');
+        const walletListContainer = document.getElementById('wallet-list-container');
+        
+        async function openWalletSwitcher() {
+            if (!walletModal || !walletListContainer) return;
+
+            try {
+                const currentWalletId = localStorage.getItem('currentWalletId');
+                // 1. Ambil daftar dompet terbaru dari API
+                const wallets = await fetchApi('/wallets');
+                
+                // 2. Bersihkan daftar sebelumnya
+                walletListContainer.innerHTML = ''; 
+
+                // 3. Isi daftar dengan dompet yang ada
+                wallets.forEach(wallet => {
+                    const item = document.createElement('div');
+                    item.className = 'wallet-list-item';
+                    item.textContent = wallet.name;
+                    // Tandai dompet yang sedang aktif
+                    if (wallet.id === currentWalletId) {
+                        item.classList.add('active');
+                    }
+                    // Tambahkan aksi klik
+                    item.onclick = () => selectWallet(wallet.id, wallet.name);
+                    walletListContainer.appendChild(item);
+                });
+                
+                // 4. Tampilkan modal
+                walletModal.classList.add('visible');
+
+            } catch (error) {
+                console.error("Gagal membuka pengganti dompet:", error);
+                alert("Gagal memuat daftar dompet.");
+            }
+        }
+
+        function closeWalletSwitcher() {
+            if (walletModal) {
+                walletModal.classList.remove('visible');
+            }
+        }
+
+        function selectWallet(walletId, walletName) {
+            // 1. Simpan pilihan baru ke localStorage
+            localStorage.setItem('currentWalletId', walletId);
+            localStorage.setItem('currentWalletName', walletName);
+            
+            // 2. Tutup modal
+            closeWalletSwitcher();
+            
+            // 3. Muat ulang halaman agar semua data (transaksi, akun, dll)
+            //    diambil ulang untuk dompet yang baru dipilih.
+            //    Ini adalah cara paling aman untuk memastikan data konsisten.
+            window.location.href = '/';
+        }
+        // [AKHIR BARU]
 
         // [BARU] Fungsi untuk mengambil data awal (dompet & akun) saat aplikasi dimuat
+       // [PERBAIKAN] Fungsi ini sekarang memprioritaskan dompet di localStorage
+ 
+
        async function initializeAppData() {
             try {
-                // 1. Ambil daftar dompet
+                // 1. Cek apakah sudah ada dompet yang dipilih sebelumnya
+                const preferredWalletId = localStorage.getItem('currentWalletId');
+
+                // 2. Ambil semua dompet milik user
                 const wallets = await fetchApi('/wallets');
                 if (!wallets || wallets.length === 0) {
                     console.warn('User tidak punya dompet. Mengarahkan ke /create-wallet');
                     window.location.href = '/create-wallet'; 
                     return;
                 }
-                
-                const activeWallet = wallets[0];
-                localStorage.setItem('currentWalletId', activeWallet.id);
-                localStorage.setItem('currentWalletName', activeWallet.name); // <-- [TAMBAHKAN BARIS INI]
-                console.log(`Dompet aktif diatur: ${activeWallet.name} (${activeWallet.id})`);
 
-                // 2. Ambil akun dan kategori secara paralel
-                const [accounts, categories] = await Promise.all([
-                    fetchApi(`/wallets/${activeWallet.id}/accounts`),
-                    fetchApi(`/wallets/${activeWallet.id}/categories`)
-                ]);
-
-                // 3. Simpan Akun ke Global
-                allAccounts = accounts; // Simpan daftar lengkap
-                if (!accounts || accounts.length === 0) {
-                    console.error('ERROR: Dompet ini tidak memiliki akun!');
-                    return;
+                // 3. Tentukan dompet aktif
+                let activeWallet;
+                if (preferredWalletId) {
+                    // Cari dompet yang tersimpan di localStorage dari daftar API
+                    activeWallet = wallets.find(w => w.id === preferredWalletId);
                 }
-                // Tetapkan akun default
-                const defaultAccount = accounts.find(a => a.type === 'ASSET') || accounts[0];
-                selectedAccountId = defaultAccount.id; // Set var global
-                console.log(`Akun aktif diatur: ${defaultAccount.name} (${defaultAccount.id})`);
 
-                // 4. Simpan Kategori ke Global
-                allCategories = categories;
-                console.log(`Berhasil memuat ${allCategories.length} kategori.`);
+                // Jika tidak ada dompet yang tersimpan (atau tidak valid), gunakan dompet pertama
+                if (!activeWallet) {
+                    activeWallet = wallets[0];
+                }
+                
+                // 4. Simpan dompet aktif yang valid ke localStorage
+                localStorage.setItem('currentWalletId', activeWallet.id);
+                localStorage.setItem('currentWalletName', activeWallet.name); 
+                console.log(`Dompet aktif diatur: ${activeWallet.name} (${activeWallet.id})`);
 
                 // 5. Panggil 'runPageInit' SETELAH semua data siap
                 runPageInit(location.pathname);
@@ -1001,7 +1148,9 @@
                     walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
                 }
             }
-
+            // [PERBAIKAN] Tambahkan listener untuk tombol pengganti dompet
+            document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
+            
             // [PERBAIKAN] Fungsikan tombol "Baru B..."
             document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
                 navigate('/create-wallet');
