@@ -1091,7 +1091,7 @@
                         <div class="details"><div class="category">${t.category}</div><div class="notes">${t.notes}</div></div>
                         <div class="info">
                             <div class="amount" style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}">
-                                ${t.type === 'expense' ? '-' : ''}Rp${(t.amount / 100).toLocaleString('id-ID')}
+                                ${t.type === 'expense' ? '-' : ''}Rp${(t.amount).toLocaleString('id-ID')}
                             </div>
                             <div class="account">${t.account}</div>
                         </div>`;
