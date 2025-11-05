@@ -613,6 +613,58 @@
             color: #d1d5db;
         }
         /* [AKHIR BARU] */
+        /* [AKHIR CSS MODAL] */
+
+        /* [BARU] CSS untuk Aksi Geser (Swipe) */
+        .transaction-group {
+            /* Mencegah item swipe "bocor" saat grup ditutup */
+            overflow: hidden; 
+        }
+        .transaction-item-wrapper {
+            position: relative;
+            background-color: var(--expense-red); /* Warna latar belakang aksi */
+            border-radius: 12px; /* Sesuai radius item */
+            margin-bottom: 1px; /* Pemisah antar item */
+        }
+        .dark .transaction-item-wrapper {
+             background-color: var(--expense-red);
+        }
+        .transaction-item-actions {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            width: 80px; /* Lebar tombol hapus */
+        }
+        .transaction-item-actions .delete-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        /* Ini adalah item yang bergerak */
+        .transaction-item-content {
+            position: relative;
+            background-color: white;
+            border-radius: 12px; 
+            transition: transform 0.3s ease-out; 
+            z-index: 2; /* Di atas tombol aksi */
+            cursor: pointer; /* Menandakan bisa diklik */
+        }
+        .dark .transaction-item-content {
+            background-color: #374151;
+        }
+        /* [AKHIR BARU] */
+
+        @media (min-width: 768px) {
+        /* ... (sisa media query Anda) ... */
 
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
@@ -831,7 +883,91 @@
             }
             saveCollapsedGroups(collapsedGroups);
         }
-        // [BARU] Fungsi-fungsi untuk Modal Detail Transaksi
+        // [AKHIR FUNGSI COLLAPSE]
+
+        // [BARU] Fungsi-fungsi untuk Swipe
+        
+        /**
+         * Menutup item swipe yang sedang aktif
+         */
+        function closeActiveSwipe() {
+            if (activeSwipeElement) {
+                activeSwipeElement.style.transform = 'translateX(0)';
+                activeSwipeElement = null;
+            }
+        }
+
+        function handleTouchStart(e) {
+            const targetContent = e.currentTarget;
+            // Tutup item lain yang mungkin terbuka
+            if (targetContent !== activeSwipeElement) {
+                closeActiveSwipe();
+            }
+
+            touchStartX = e.touches[0].clientX;
+            touchCurrentX = touchStartX;
+            touchStartY = e.touches[0].clientY; 
+            isSwiping = false; // Reset status swipe
+            
+            targetContent.style.transition = 'none'; // Hapus transisi agar menempel di jari
+        }
+
+        function handleTouchMove(e) {
+            if (e.touches.length > 1) return; // Abaikan multi-touch
+
+            touchCurrentX = e.touches[0].clientX;
+            const deltaX = touchCurrentX - touchStartX;
+
+            // [PENTING] Cek apakah ini scroll vertikal
+            if (!isSwiping) {
+                const deltaY = e.touches[0].clientY - touchStartY;
+                if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) {
+                    // Ini adalah scroll vertikal, abaikan
+                    return;
+                }
+            }
+            
+            // Ini adalah swipe horizontal
+            isSwiping = true;
+            e.preventDefault(); // Hentikan browser dari scrolling
+
+            let newTransform = deltaX;
+            if (deltaX > 0) newTransform = 0; // Jangan geser ke kanan
+            if (deltaX < -100) newTransform = -100; // Batasi geseran (lebar tombol 80 + 20 buffer)
+
+            e.currentTarget.style.transform = `translateX(${newTransform}px)`;
+        }
+
+        function handleTouchEnd(e) {
+            const targetContent = e.currentTarget;
+            const actionWidth = 80; // Lebar tombol hapus
+
+            // Tambahkan transisi lagi untuk "snap"
+            targetContent.style.transition = 'transform 0.3s ease-out';
+
+            if (isSwiping) {
+                // Ini adalah swipe
+                const deltaX = touchCurrentX - touchStartX;
+                
+                if (deltaX < swipeThreshold) {
+                    // Snap Buka
+                    targetContent.style.transform = `translateX(-${actionWidth}px)`;
+                    activeSwipeElement = targetContent;
+                } else {
+                    // Snap Tutup
+                    targetContent.style.transform = 'translateX(0)';
+                    if (targetContent === activeSwipeElement) {
+                        activeSwipeElement = null;
+                    }
+                }
+            }
+            
+            // 'isSwiping' akan tetap false jika ini adalah tap,
+            // sehingga event click asli (openTransactionModal) akan ter-trigger.
+            // Kita tidak perlu memanggilnya secara manual.
+        }
+        // [AKHIR BARU]
+
         const txModal = document.getElementById('tx-modal-overlay');
 
         function openTransactionModal(tx) {
@@ -872,33 +1008,17 @@
             }
         }
 
-        async function handleDeleteTransaction() {
-            if (!currentTransactionId) return;
-
-            // 1. Tampilkan konfirmasi
-            if (!confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
-                return;
-            }
-
-            const walletId = localStorage.getItem('currentWalletId');
+        function handleEditTransaction(txId) { // [UBAH] Tambahkan parameter txId
+            const transactionIdToEdit = txId || currentTransactionId;
+            const tx = transactions.find(t => t.id === transactionIdToEdit);
             
-            try {
-                // Tampilkan loading (jika ada)
-                console.log(`Menghapus transaksi: ${currentTransactionId}...`);
-
-                // 2. Panggil API DELETE
-                await fetchApi(`/wallets/${walletId}/transactions/${currentTransactionId}`, {
-                    method: 'DELETE'
-                });
-
-                // 3. Sukses
-                console.log('Transaksi berhasil dihapus.');
-                closeTransactionModal();
-                updateMainView(); // Muat ulang daftar transaksi
-                
-            } catch (error) {
-                console.error('Gagal menghapus transaksi:', error);
-                alert('Gagal menghapus: ' + error.message);
+            if (tx) {
+                sessionStorage.setItem('tx_for_edit', JSON.stringify(tx));
+                closeTransactionModal(); // Tutup modal (jika terbuka)
+                closeActiveSwipe();    // Tutup swipe (jika terbuka)
+                navigate('/create');
+            } else {
+                alert('Gagal menemukan data transaksi untuk diedit.');
             }
         }
 
@@ -1084,6 +1204,13 @@
         let allAccounts = [];
         let selectedAccountId = null; // Kita akan kelola ini secara global
         let currentTransactionId = null; // [BARU] Untuk modal detail
+        let activeSwipeElement = null; // Menyimpan elemen .transaction-item-content yang sedang terbuka
+        let touchStartX = 0;
+        let touchCurrentX = 0;
+        let touchStartY = 0; // Untuk deteksi scroll
+        let isSwiping = false; // Flag untuk membedakan swipe dari click
+        let swipeThreshold = -60; // Geser minimal 60px ke kiri
+
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
         function appendToCalc(value) {
@@ -1478,47 +1605,53 @@
                 const txsOnThisDate = grouped[dateKey];
                 const date = new Date(dateKey);
                 
-                // [DIUBAH] Hitung total pengeluaran (sekarang dalam Rupiah)
                 const totalExpenseOnDate = txsOnThisDate
                     .filter(t => t.type === 'expense')
                     .reduce((sum, t) => sum + t.amount, 0);
 
-                // [BARU] 1. Buat wrapper grup
                 const groupEl = document.createElement('div');
                 groupEl.className = 'transaction-group';
 
-                // [BARU] 2. Buat header dan tambahkan event listener
                 const listHeader = document.createElement('div');
                 listHeader.className = 'list-header';
                 
-                // [PERBAIKAN] Tampilkan total Rupiah (tanpa / 100)
                 listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: Rp${(totalExpenseOnDate).toLocaleString('id-ID')}</div>`;
                 listHeader.onclick = () => toggleGroupCollapse(dateKey, listHeader);
                 
-                // [BARU] 3. Buat kontainer untuk item
                 const itemsContainer = document.createElement('div');
                 itemsContainer.className = 'transaction-items-container';
 
-                // [BARU] 4. Cek apakah grup ini harus ditutup saat render
                 if (collapsedGroups.includes(dateKey)) {
                     groupEl.classList.add('collapsed');
                 }
                 
-                // [BARU] 5. Append header ke grup
                 groupEl.appendChild(listHeader);
 
                 txsOnThisDate.forEach(t => {
-                    const itemEl = document.createElement('div');
-                    itemEl.className = 'transaction-item';
-                    itemEl.style.cursor = 'pointer'; // [BARU] Tunjukkan bisa diklik
+                    // [PERBAIKAN UTAMA] Buat wrapper, content, dan actions
                     
-                    // [PERBAIKAN] Gunakan t.icon, fallback ke huruf pertama
+                    // 1. Buat Wrapper Utama
+                    const itemWrapper = document.createElement('div');
+                    itemWrapper.className = 'transaction-item-wrapper';
+
+                    // 2. Buat Tombol Aksi (tersembunyi)
+                    const itemActions = document.createElement('div');
+                    itemActions.className = 'transaction-item-actions';
+                    itemActions.innerHTML = `
+                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                    `;
+                    // Tambahkan listener ke tombol (passing t.id)
+                    itemActions.querySelector('.delete-btn').onclick = (e) => {
+                        e.stopPropagation(); // Hentikan event agar tidak menutup swipe
+                        handleDeleteTransaction(t.id);
+                    };
+
+                    // 3. Buat Konten yang Terlihat (yang akan digeser)
+                    const itemContent = document.createElement('div');
+                    itemContent.className = 'transaction-item-content transaction-item'; // Gabungkan kelas
+                    
                     const icon = t.icon || t.category.charAt(0).toUpperCase();
-                    
-                    // [PENTING] Kita harus mem-pass objek 't' ke listener.
-                    // Karena 't' adalah objek, kita tidak bisa pass di innerHTML.
-                    // Kita harus set innerHTML DULU, BARU tambahkan listener.
-                    itemEl.innerHTML = `
+                    itemContent.innerHTML = `
                         <div class="icon" style="background-color: ${t.color};"><span>${icon}</span></div>
                         <div class="details"><div class="category">${t.category}</div><div class="notes">${t.notes}</div></div>
                         <div class="info">
@@ -1529,18 +1662,35 @@
                             </div>
                             <div class="account">${t.account}</div>
                         </div>`;
+
+                    // [BARU] Tambahkan listener swipe ke item KONTEN
+                    itemContent.addEventListener('touchstart', handleTouchStart, { passive: true });
+                    itemContent.addEventListener('touchmove', handleTouchMove, { passive: false }); // false untuk izinkan preventDefault
+                    itemContent.addEventListener('touchend', handleTouchEnd);
+                    itemContent.addEventListener('touchcancel', handleTouchEnd);
                     
-                    // [BARU] Tambahkan listener klik di sini
-                    itemEl.onclick = () => openTransactionModal(t);
+                    // [PENTING] Klik (Tap) akan membuka modal
+                    itemContent.onclick = () => {
+                        // Hanya panggil modal jika item tidak digeser
+                        // 'isSwiping' akan di-reset ke false di handleTouchEnd
+                        // tapi jika snap terbuka, activeSwipeElement akan ada
+                        if (!isSwiping && !activeSwipeElement) {
+                             openTransactionModal(t);
+                        } else if (activeSwipeElement) {
+                            // Jika item sudah terbuka, klik lagi akan menutupnya
+                            closeActiveSwipe();
+                        }
+                    };
+
+                    // 4. Susun elemen
+                    itemWrapper.appendChild(itemActions);
+                    itemWrapper.appendChild(itemContent);
                     
-                    // [DIUBAH] Append item ke kontainer, BUKAN ke list utama
-                    itemsContainer.appendChild(itemEl);
+                    // 5. Append wrapper ke kontainer
+                    itemsContainer.appendChild(itemWrapper);
                 });
                 
-                // [BARU] 6. Append kontainer item ke grup
                 groupEl.appendChild(itemsContainer);
-
-                // [BARU] 7. Append grup ke list utama
                 transactionListEl.appendChild(groupEl);
             }
         }
@@ -2000,9 +2150,8 @@
                 window.location.href = '/login';
                 return;
             }
-            // --- [Akhir Perbaikan Keamanan] ---
-            document.getElementById('tx-modal-delete-btn')?.addEventListener('click', handleDeleteTransaction);
-            document.getElementById('tx-modal-edit-btn')?.addEventListener('click', handleEditTransaction);
+            document.getElementById('tx-modal-delete-btn')?.addEventListener('click', () => handleDeleteTransaction());
+            document.getElementById('tx-modal-edit-btn')?.addEventListener('click', () => handleEditTransaction());
 
             if (!isBlobEnvironment) {
                 history.replaceState({ path: location.pathname }, '', location.pathname);
