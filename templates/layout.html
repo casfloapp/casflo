@@ -316,7 +316,30 @@
         .wallet-item .icon-wrapper { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .wallet-item .details { flex-grow: 1; font-weight: 500; }
         .wallet-item .balance { font-weight: 600; }
-
+        /* [BARU] CSS untuk Grup Transaksi yang Bisa Di-collapse */
+        .transaction-list .list-header {
+            cursor: pointer;
+            user-select: none; /* Mencegah teks terseleksi saat diklik */
+        }
+        .transaction-list .list-header .date-info i {
+            transition: transform 0.2s ease-in-out;
+        }
+        .transaction-group.collapsed .list-header .date-info i {
+            transform: rotate(-90deg); /* Putar ikon chevron saat ditutup */
+        }
+        .transaction-items-container {
+            max-height: 1000px; /* Tinggi maks untuk animasi (bisa angka berapa saja) */
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out, transform 0.3s ease-out;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .transaction-group.collapsed .transaction-items-container {
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        /* [AKHIR BARU] */
         /* [BARU] CSS untuk Modal Pengganti Dompet */
         .wallet-modal-overlay {
             position: fixed;
@@ -538,6 +561,47 @@
             //    Ini adalah cara paling aman untuk memastikan data konsisten.
             window.location.href = '/';
         }
+        // ... (setelah fungsi selectWallet)
+
+        // [BARU] Helper untuk Collapsible Groups
+        const COLLAPSED_KEY = 'casflo_collapsed_groups';
+        function getCollapsedGroups() {
+            try {
+                const collapsed = localStorage.getItem(COLLAPSED_KEY);
+                return collapsed ? JSON.parse(collapsed) : [];
+            } catch (e) {
+                return []; // Jika JSON rusak, reset
+            }
+        }
+        function saveCollapsedGroups(groups) {
+            localStorage.setItem(COLLAPSED_KEY, JSON.stringify(groups));
+        }
+        
+        /**
+         * Dipanggil saat header tanggal diklik
+         * @param {string} dateKey - Kunci unik untuk grup tanggal (misal: "Tue Nov 05 2025")
+         * @param {HTMLElement} headerElement - Elemen .list-header yang diklik
+         */
+        function toggleGroupCollapse(dateKey, headerElement) {
+            const group = headerElement.closest('.transaction-group');
+            if (!group) return;
+
+            const isCollapsed = group.classList.toggle('collapsed');
+            let collapsedGroups = getCollapsedGroups();
+            
+            if (isCollapsed) {
+                // Baru saja DITUTUP, tambahkan ke daftar
+                if (!collapsedGroups.includes(dateKey)) {
+                    collapsedGroups.push(dateKey);
+                }
+            } else {
+                // Baru saja DIBUKA, hapus dari daftar
+                collapsedGroups = collapsedGroups.filter(key => key !== dateKey);
+            }
+            saveCollapsedGroups(collapsedGroups);
+        }
+        // [AKHIR BARU]
+
         // [AKHIR BARU]
 
         // [BARU] Fungsi untuk mengambil data awal (dompet & akun) saat aplikasi dimuat
@@ -957,14 +1021,17 @@
                 calendarGrid.appendChild(dayEl);
             }
         }
-         function renderTransactionList(filteredTransactions) { 
+        function renderTransactionList(filteredTransactions) { 
             const transactionListEl = document.querySelector('.transaction-list');
             if (!transactionListEl) return;
             transactionListEl.innerHTML = '';
             
-            // [PERBAIKAN] Mengelompokkan transaksi berdasarkan tanggal
+            // [BARU] Ambil status collapsed dari localStorage
+            const collapsedGroups = getCollapsedGroups();
+            
+            // [SAMA] Mengelompokkan transaksi berdasarkan tanggal
             const grouped = filteredTransactions.reduce((acc, tx) => {
-                const dateKey = new Date(tx.date).toDateString();
+                const dateKey = new Date(tx.date).toDateString(); // Ini akan jadi ID unik kita
                 if (!acc[dateKey]) {
                     acc[dateKey] = [];
                 }
@@ -977,37 +1044,70 @@
                 return;
             }
 
-            // Urutkan grup tanggal
+            // [SAMA] Urutkan grup tanggal
             const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
             
             for (const dateKey of sortedDates) {
                 const txsOnThisDate = grouped[dateKey];
                 const date = new Date(dateKey);
-                const totalExpense = txsOnThisDate
+                
+                // [DIUBAH] Hitung total pengeluaran (dalam sen)
+                const totalExpenseOnDate = txsOnThisDate
                     .filter(t => t.type === 'expense')
                     .reduce((sum, t) => sum + t.amount, 0);
 
+                // [BARU] 1. Buat wrapper grup
+                const groupEl = document.createElement('div');
+                groupEl.className = 'transaction-group';
+
+                // [BARU] 2. Buat header dan tambahkan event listener
                 const listHeader = document.createElement('div');
                 listHeader.className = 'list-header';
-                listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: Rp${totalExpense.toLocaleString('id-ID')}</div>`;
-                transactionListEl.appendChild(listHeader);
+                
+                // [DIUBAH] Tampilkan total (dibagi 100) dan tambahkan onclick
+                listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: Rp${(totalExpenseOnDate / 100).toLocaleString('id-ID')}</div>`;
+                listHeader.onclick = () => toggleGroupCollapse(dateKey, listHeader);
+                
+                // [BARU] 3. Buat kontainer untuk item
+                const itemsContainer = document.createElement('div');
+                itemsContainer.className = 'transaction-items-container';
+
+                // [BARU] 4. Cek apakah grup ini harus ditutup saat render
+                if (collapsedGroups.includes(dateKey)) {
+                    groupEl.classList.add('collapsed');
+                }
+                
+                // [BARU] 5. Append header ke grup
+                groupEl.appendChild(listHeader);
 
                 txsOnThisDate.forEach(t => {
                     const itemEl = document.createElement('div');
                     itemEl.className = 'transaction-item';
+                    
+                    // [DIUBAH] Ambil ikon dari data (tx.icon) dan bagi amount dengan 100
+                    const icon = t.icon || t.category.charAt(0);
                     itemEl.innerHTML = `
-                        <div class="icon" style="background-color: ${t.color};"><span>${t.icon}</span></div>
+                        <div class="icon" style="background-color: ${t.color};"><span>${icon}</span></div>
                         <div class="details"><div class="category">${t.category}</div><div class="notes">${t.notes}</div></div>
                         <div class="info">
                             <div class="amount" style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}">
-                                ${t.type === 'expense' ? '-' : ''}Rp${t.amount.toLocaleString('id-ID')}
+                                ${t.type === 'expense' ? '-' : ''}Rp${(t.amount / 100).toLocaleString('id-ID')}
                             </div>
                             <div class="account">${t.account}</div>
                         </div>`;
-                    transactionListEl.appendChild(itemEl);
+                    
+                    // [DIUBAH] Append item ke kontainer, BUKAN ke list utama
+                    itemsContainer.appendChild(itemEl);
                 });
+                
+                // [BARU] 6. Append kontainer item ke grup
+                groupEl.appendChild(itemsContainer);
+
+                // [BARU] 7. Append grup ke list utama
+                transactionListEl.appendChild(groupEl);
             }
         }
+
        // [PERBAIKAN] Fungsi diubah menjadi async untuk mengambil data dari API
         async function updateMainView() { 
             console.log("Memuat data API untuk", currentDate.toISOString().slice(0, 7));
