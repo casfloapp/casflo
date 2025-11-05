@@ -403,6 +403,7 @@
                 
                 const activeWallet = wallets[0];
                 localStorage.setItem('currentWalletId', activeWallet.id);
+                localStorage.setItem('currentWalletName', activeWallet.name); // <-- [TAMBAHKAN BARIS INI]
                 console.log(`Dompet aktif diatur: ${activeWallet.name} (${activeWallet.id})`);
 
                 // 2. Ambil akun dan kategori secara paralel
@@ -975,15 +976,38 @@
             document.getElementById('tabPengeluaran')?.addEventListener('click', () => setCalendarFilter('expense'));
             document.getElementById('tabPenghasilan')?.addEventListener('click', () => setCalendarFilter('income'));
             document.getElementById('tabTotal')?.addEventListener('click', () => setCalendarFilter('total'));
-            
+
             const savedView = localStorage.getItem('preferredView');
             if (document.getElementById('detailToggleBtn')) { 
-                 setView(savedView || 'overview');
+                setView(savedView || 'overview');
             }
             if (document.getElementById('currentMonthDisplay')) {
-                updateMonthDisplay();
+                updateMainView(); // Ini akan memanggil API untuk transaksi
             }
-            // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
+
+            // [PERBAIKAN] Ambil nama dompet dari localStorage
+            const walletName = localStorage.getItem('currentWalletName');
+            if (walletName) {
+                // 1. Update header utama
+                const walletNameEl = document.getElementById('currentWalletNameDisplay');
+                if (walletNameEl) {
+                    walletNameEl.textContent = walletName;
+                }
+
+                // 2. Update kotak aksi
+                const walletShortNameEl = document.getElementById('currentWalletNameShort');
+                if (walletShortNameEl) {
+                    // Tampilkan 6 karakter pertama + ...
+                    walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
+                }
+            }
+
+            // [PERBAIKAN] Fungsikan tombol "Baru B..."
+            document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
+                navigate('/create-wallet');
+            });
+
+            // Pasang listener untuk tombol mode gelap/terang
             attachThemeToggle('.theme-toggle'); 
         }
         
