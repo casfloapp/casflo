@@ -20,14 +20,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         /* Skrip tema gelap mini */
-        (function() {
-            try {
-                const s = localStorage.getItem('casflo');
-                if (s && JSON.parse(s).theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                }
-            } catch (e) {}
-        })();
     </style>
 </head>
 <body class="bg-slate-200 dark:bg-slate-900">
