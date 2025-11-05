@@ -865,7 +865,7 @@
                         id: tx.id,
                         type: isExpense ? 'expense' : 'income',
                         // [FIX 1] Ambil nilai absolut dan bagi 100 (karena API kirim sen)
-                        amount: Math.abs(tx.amount / 100), 
+                        amount: Math.abs(tx.amount),
                         category: tx.category_name,
                         notes: tx.description || 'Tanpa catatan',
                         // [FIX 2] Ambil account_name dari API
