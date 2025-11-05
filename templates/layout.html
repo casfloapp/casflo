@@ -1,16 +1,21 @@
 <!DOCTYPE html>
+<!-- [PERBAIKAN] Tag <html> ditambahkan untuk mode gelap -->
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Casflo</title>
     
+    <!-- [PERBAIKAN KUNCI] Skrip CDN Tailwind HARUS dimuat SEBELUM skrip konfigurasi -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // Konfigurasi Tailwind
         tailwind.config = {
-            darkMode: 'class'
-        };
+            darkMode: 'class' // Memberitahu Tailwind untuk mencari class="dark" di <html>
+        }; // <-- [PERBAIKAN KUNCI] TITIK KOMA DITAMBAHKAN DI SINI
 
+        // Skrip ini harus ada di <head> untuk mencegah layar putih berkedip (flickering)
+        // saat mode gelap aktif.
         (function() {
             const settingsKey = 'casflo';
             let theme = 'system';
@@ -19,7 +24,9 @@
                 if (settings) {
                     theme = JSON.parse(settings).theme || 'system';
                 }
-            } catch (e) {}
+            } catch (e) {
+                // Biarkan default 'system'
+            }
             
             if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -31,7 +38,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* === CSS GLOBAL (TIDAK BERUBAH) === */
+        /* CSS Global & Halaman Utama */
         :root {
             --primary-blue: #4A47A3;
             --light-purple: #E6E6FA;
@@ -60,8 +67,130 @@
             position: relative; 
             overflow-x: hidden; 
         }
-        /* ... (sisa CSS global Anda dari file asli) ... */
-        .main-header { background: var(--primary-blue); color: white; padding: 20px 20px 20px 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; flex-shrink: 0; z-index: 10; margin-bottom: -20px; }
+
+        /* [BARU] Aturan CSS untuk Mode Gelap */
+        .dark body {
+            background-color: #111827; /* dark:bg-gray-900 */
+            color: #d1d5db; /* dark:text-gray-300 */
+        }
+        .dark .app-container {
+            background-color: #111827; /* dark:bg-gray-800 */
+        }
+        .dark .card {
+            background-color: #374151; /* dark:bg-gray-700 */
+            border: 1px solid #4b5563; /* dark:border-gray-600 */
+            box-shadow: none;
+        }
+        .dark .main-content {
+            background-color: #111827; /* dark:bg-gray-900 */
+        }
+        .dark .transaction-list, .dark .empty-transaction-list, .dark .category-list-card,
+        .dark .account-list {
+            background-color: #374151; /* dark:bg-gray-700 */
+            color: #d1d5db;
+        }
+        .dark .transaction-item, .dark .account-item {
+            border-bottom-color: #4b5563; /* dark:border-gray-600 */
+        }
+        .dark .overview-card .stat-item .label, .dark .transaction-item .info .account, 
+        .dark .transaction-item .details .notes, .dark .account-section-header,
+        .dark .account-item .balance-info .currency, .dark .filter-bar {
+            color: #9ca3af; /* dark:text-gray-400 */
+        }
+        .dark .overview-card .date-selector, .dark .header-title, .dark .header-top .left .fa-search {
+            color: white;
+        }
+        .dark .calendar-card, .dark .calendar-summary-tabs .tab {
+            color: #d1d5db;
+            border-color: #4b5563;
+        }
+        .dark .calendar-summary-tabs .tab.active {
+            color: var(--primary-blue);
+            background-color: var(--light-purple);
+            border-color: var(--primary-blue);
+        }
+        .dark .bottom-nav {
+            background-color: #1f2937; /* dark:bg-gray-800 */
+            border-top: 1px solid #374151;
+        }
+        .dark .nav-item {
+            color: #9ca3af; /* dark:text-gray-400 */
+        }
+        .dark .nav-item.active {
+            color: #ffffff; /* Tetap biru agar menonjol */
+        }
+        .dark .fab {
+            background-color: #374151;
+            color: #ffffff;
+            border: 1px solid #4b5563;
+        }
+        .dark .more-grid .grid-item {
+            background-color: #374151; /* dark:bg-gray-700 */
+            color: #d1d5db;
+        }
+        .dark .wallet-header, .dark .analysis-header, .dark .more-header {
+             background: var(--primary-blue); /* Tetap biru */
+             cursor: pointer;
+        }
+        .dark .account-list {
+             background-color: #374151;
+        }
+        .dark .stats-container .amount, .dark .account-item .details, .dark .account-item .balance-info .amount {
+            color: white;
+        }
+        .dark .stats-container .main-balance .amount {
+             color: white;
+        }
+        .dark .account-item .balance-info .amount.expense,
+        .dark .overview-card .stat-item .amount.expense {
+            color: var(--expense-red);
+        }
+        .dark .donut-chart-card, .dark .category-list-card {
+            background-color: #374151;
+        }
+        .dark .donut-chart-center .amount {
+            color: white;
+        }
+        .dark .add-view-container {
+            background-color: #1f2937;
+        }
+        .dark .add-header, .dark .categories-section {
+            background-color: #374151;
+            border-bottom-color: #4b5563;
+        }
+        .dark .type-selector-header {
+            background: #1f2937;
+        }
+        .dark .type-btn-header {
+            color: #9ca3af;
+        }
+        .dark .type-btn-header.active {
+            background: #374151;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .dark .type-btn-header.expense.active { color: var(--expense-red); }
+        .dark .type-btn-header.income.active { color: var(--income-green); }
+        .dark .calculator-section {
+            background: #1f2937;
+            border-top-color: #4b5563;
+        }
+        .dark .amount-display, .dark .action-btn, .dark .calc-btn {
+            background: #374151;
+            color: #d1d5db;
+            box-shadow: none;
+        }
+        .dark .action-btn.personal {
+            background: #111827;
+        }
+        .dark .calc-btn.operator {
+            background: #ccc;
+        }
+        .dark .category-item:hover {
+            background: #4b5563;
+        }
+
+        /* ... Sisa CSS Global Anda ... */
+        .main-header { background: var(--primary-blue); color: white; padding: 20px 20px 20px 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; flex-shrink: 0; z-index: 10; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .header-top .left { display: flex; align-items: center; gap: 18px; }
         .view-toggle-group { display: flex; align-items: center; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px; }
@@ -84,6 +213,11 @@
         .nav-item i { font-size: 24px; }
         .nav-item span { font-size: 11px; }
         .nav-item.active { color: var(--primary-blue); }
+        
+        /* PERBAIKAN: Tata letak untuk view Detail & Kalender disederhanakan */
+        .view-hidden {
+            display: none;
+        }
         .overview-card .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .overview-card .card-header .icon { width: 40px; height: 40px; background: var(--light-purple); color: var(--primary-blue); display: flex; align-items: center; justify-content: center; border-radius: 8px; }
         .overview-card .date-selector { display: flex; align-items: center; gap: 12px; font-weight: 600; }
@@ -112,7 +246,7 @@
         .calendar-summary-amounts .label { font-size: 12px; color: var(--text-light); margin-bottom: 5px; }
         .calendar-summary-amounts .amount { font-size: 16px; font-weight: 700; }
         .calendar-summary-amounts .amount.expense { color: var(--expense-red); }
-        .transaction-list .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; user-select: none; }
+        .transaction-list .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .transaction-list .list-header .date-info { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
         .transaction-list .list-header .summary { font-size: 13px; color: var(--text-light); }
         .transaction-item { display: flex; align-items: center; gap: 15px; padding: 12px 0; border-bottom: 1px solid var(--bg-gray); }
@@ -127,9 +261,18 @@
         .transaction-item .info .account { font-size: 12px; color: var(--text-light); }
         .fab { position: fixed; bottom: 100px; right: 20px; width: 56px; height: 56px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-blue); z-index: 15; text-decoration: none; }
         .fab i { font-size: 22px; }
-        .add-view-container { background-color: #f8f9fa; }
-        /* ... (sisa CSS Halaman Create) ... */
-        .add-view { display: flex; flex-direction: column; height: 100svh;display: flex; flex-direction: column; height: 100vh; height: 100svh; background-color: white; max-width: 480px; margin: 0 auto;}
+        .bottom-nav { position: fixed; max-width: 480px; margin: 0 auto; bottom: 0; left: 0; right: 0; width: 100%; background: white; height: 80px; display: flex; justify-content: space-around; align-items: center; padding-bottom: 0px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 10; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text-light); text-decoration: none; }
+        .nav-item i { font-size: 24px; }
+        .nav-item span { font-size: 11px; }
+        .nav-item.active { color: var(--primary-blue); }
+        .add-view { display: flex; flex-direction: column; height: 100svh;display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100svh;
+        background-color: white;
+        max-width: 480px;
+        margin: 0 auto;}
         .add-header { padding: 20px; border-bottom: 1px solid #e9ecef; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background-color: white; }
         .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); text-decoration: none; }
         .type-selector-header { display: flex; background: #f8f9fa; border-radius: 25px; padding: 3px; }
@@ -164,254 +307,365 @@
         .calc-btn .fas { font-size: 24px; }
         .calc-btn.operator { background: #f1f3f5; color: #495057; }
         .calc-btn.delete { background: #ffe3e3; color: var(--expense-red); }
-        /* ... (sisa CSS Halaman Wallet, Analysis, More) ... */
-        /* ... (CSS Modal & Swipe) ... */
-        .transaction-list .list-header .date-info i { transition: transform 0.2s ease-in-out; }
-        .transaction-group.collapsed .list-header .date-info i { transform: rotate(-90deg); }
-        .transaction-items-container { max-height: 1000px; overflow: hidden; transition: max-height 0.3s ease-out, opacity 0.2s ease-out, transform 0.3s ease-out; opacity: 1; transform: translateY(0); }
-        .transaction-group.collapsed .transaction-items-container { max-height: 0; opacity: 0; transform: translateY(-10px); }
-        .wallet-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: none; align-items: flex-end; justify-content: center; z-index: 1000; animation: fadeIn 0.3s ease; }
-        .wallet-modal-overlay.visible { display: flex; }
-        .wallet-modal-content { background: white; color: #333; width: 100%; max-width: 480px; padding: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; animation: slideUp 0.3s ease-out; max-height: 50vh; overflow-y: auto; }
-        .wallet-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .wallet-modal-header h3 { font-size: 18px; font-weight: 600; }
-        .wallet-modal-close { background: none; border: none; font-size: 28px; cursor: pointer; color: #888; }
-        .wallet-list-item { display: flex; align-items: center; padding: 15px 10px; border-radius: 12px; cursor: pointer; font-weight: 500; }
-        .wallet-list-item:hover { background-color: #f4f5f9; }
-        .wallet-list-item.active { background-color: var(--light-purple); color: var(--primary-blue); font-weight: 700; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        #toggleMaskBtn { transition: background-color 0.2s, opacity 0.2s; border-radius: 50%; }
-        #toggleMaskBtn:hover { opacity: 0.7; }
-        .balance-masked #toggleMaskBtn { background-color: rgba(0,0,0,0.2); }
-        .icon-eye-closed, .balance-masked .icon-eye-open { display: none; }
-        .balance-masked .icon-eye-closed { display: inline-block; }
-        .balance-masked .data-maskable-amount { color: transparent !important; position: relative; transition: all 0.1s; }
-        .balance-masked .data-maskable-amount::before { content: "Rp******"; color: var(--text-dark); position: absolute; left: 0; right: 0; }
-        .balance-masked .data-maskable-amount.expense::before { color: var(--expense-red); }
-        .balance-masked .transaction-item .info .amount { color: transparent !important; position: relative; }
-        .balance-masked .transaction-item .info .amount::before { content: "Rp******"; position: absolute; right: 0; }
-        .balance-masked .transaction-item .info .amount[data-masked-color="income"]::before { color: var(--income-green); }
-        .balance-masked .transaction-item .info .amount[data-masked-color="expense"]::before { color: var(--expense-red); }
-        .tx-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 1001; animation: fadeIn 0.3s ease; padding: 20px; }
-        .tx-modal-overlay.visible { display: flex; }
-        .tx-modal-content { background: white; color: var(--text-dark); width: 100%; max-width: 400px; border-radius: 20px; animation: slideUp 0.3s ease-out; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .tx-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #f8f9fa; }
-        .tx-modal-header button { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-light); padding: 5px; }
-        .tx-modal-header .tx-modal-actions { display: flex; gap: 20px; }
-        .tx-modal-header .tx-modal-actions button { color: var(--primary-blue); }
-        .tx-modal-header .tx-modal-actions #tx-modal-delete-btn { color: var(--expense-red); }
-        .tx-modal-body { padding: 20px 25px 30px 25px; }
-        .tx-modal-category { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
-        .tx-modal-category #tx-modal-icon { width: 50px; height: 50px; font-size: 24px; }
-        .tx-modal-category #tx-modal-category-name { font-size: 20px; font-weight: 600; color: var(--text-dark); }
-        .tx-modal-amount { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
-        .tx-modal-details .detail-item { display: flex; justify-content: space-between; font-size: 14px; padding: 10px 0; border-bottom: 1px solid var(--bg-gray); }
-        .tx-modal-details .detail-item span:first-child { color: var(--text-light); }
-        .tx-modal-details .detail-item span:last-child { font-weight: 500; }
-        .tx-modal-details .detail-item.notes { flex-direction: column; align-items: flex-start; gap: 5px; border-bottom: none; }
-        .transaction-group { overflow: hidden; }
-        .transaction-item-wrapper { position: relative; background-color: var(--expense-red); border-radius: 12px; margin-bottom: 1px; }
-        .transaction-item-actions { position: absolute; top: 0; right: 0; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1; width: 80px; }
-        .transaction-item-actions .delete-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; width: 100%; height: 100%; }
-        .transaction-item-content { position: relative; background-color: white; border-radius: 12px; transition: transform 0.3s ease-out; z-index: 2; cursor: pointer; }
-        
-        /* === [BARU] CSS UNTUK SKELETON LOADER === */
-        /* 1. Base style untuk SEMUA bar skeleton */
-        .skeleton-bar {
-            background-color: #e0e0e0;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
+        .wallet-header { background: white; padding: 20px; font-size: 18px; font-weight: 600; text-align: center;}
+        .total-balance-card .label { font-size: 14px; color: var(--text-light); margin-bottom: 5px; text-align: center; }
+        .total-balance-card .amount { font-size: 32px; font-weight: 700; text-align: center; color: var(--primary-blue); }
+        .account-list-card .card-title { font-weight: 600; margin-bottom: 15px; }
+        .wallet-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid var(--bg-gray); }
+        .wallet-item:last-child { border-bottom: none; }
+        .wallet-item .icon-wrapper { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .wallet-item .details { flex-grow: 1; font-weight: 500; }
+        .wallet-item .balance { font-weight: 600; }
+        /* [BARU] CSS untuk Grup Transaksi yang Bisa Di-collapse */
+        .transaction-list .list-header {
+            cursor: pointer;
+            user-select: none; /* Mencegah teks terseleksi saat diklik */
         }
-        /* 2. Animasi Shimmer (Kilap) */
-        .skeleton-bar::before {
-            content: '';
-            position: absolute;
+        .transaction-list .list-header .date-info i {
+            transition: transform 0.2s ease-in-out;
+        }
+        .transaction-group.collapsed .list-header .date-info i {
+            transform: rotate(-90deg); /* Putar ikon chevron saat ditutup */
+        }
+        .transaction-items-container {
+            max-height: 1000px; /* Tinggi maks untuk animasi (bisa angka berapa saja) */
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out, transform 0.3s ease-out;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .transaction-group.collapsed .transaction-items-container {
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        /* [AKHIR BARU] */
+        /* [BARU] CSS untuk Modal Pengganti Dompet */
+        .wallet-modal-overlay {
+            position: fixed;
             top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none; /* Sembunyi secara default */
+            align-items: flex-end; /* Muncul dari bawah */
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        .wallet-modal-overlay.visible {
+            display: flex;
+        }
+        .wallet-modal-content {
+            background: white;
+            color: #333;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.6),
-                transparent
-            );
-            animation: shimmer 1.5s infinite linear;
-        }
-        /* 3. Keyframes untuk animasi */
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        /* 4. Ukuran Teks (untuk konsistensi) */
-        .skeleton-text-kecil { height: 14px; margin-top: 6px; }
-        .skeleton-text-sedang { height: 18px; }
-        .skeleton-text-besar { height: 24px; }
-        /* 5. SKELETON HEADER ("Manda") */
-        .skeleton-header-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 480px;
             padding: 20px;
-            background-color: var(--primary-blue);
-            gap: 18px;
-            border-bottom-left-radius: 25px;
-            border-bottom-right-radius: 25px;
-            margin-bottom: -20px; /* Menarik konten ke atas */
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            animation: slideUp 0.3s ease-out;
+            max-height: 50vh;
+            overflow-y: auto;
         }
-        .skeleton-header-left { display: flex; align-items: center; gap: 18px; }
-        .skeleton-icon-small { width: 20px; height: 20px; }
-        .skeleton-header-title { width: 100px; height: 20px; }
-        .skeleton-header-right { display: flex; align-items: center; gap: 10px; }
-        .skeleton-toggle-btn { width: 150px; height: 36px; border-radius: 20px; }
-        .skeleton-theme-btn { width: 32px; height: 32px; border-radius: 50%; }
-        .skeleton-header-wrapper .skeleton-bar {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .skeleton-header-wrapper .skeleton-bar::before {
-            background: linear-gradient(
-                90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.3), 
-                transparent
-            );
-        }
-        /* 6. SKELETON RINGKASAN (Total, Pemasukan, dll) */
-        .skeleton-ringkasan-wrapper {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            text-align: center;
-            padding: 18px;
-            background-color: #ffffff;
-            border-radius: 18px;
-            margin-top: 20px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.06);
-        }
-        .skeleton-ringkasan-kolom {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        /* 7. SKELETON DAFTAR TRANSAKSI (Pendidikan, Makan) */
-        .skeleton-transaksi-wrapper {
-            background-color: #ffffff;
-            border-radius: 18px;
-            padding: 18px;
-            margin-top: 20px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.06);
-        }
-        .skeleton-list-header {
+        .wallet-modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f0f0f0;
         }
-        .skeleton-list-item {
+        .wallet-modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .wallet-modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+        }
+        .wallet-list-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .wallet-list-item:hover {
+            background-color: #f4f5f9;
+        }
+        .wallet-list-item.active {
+            background-color: var(--light-purple);
+            color: var(--primary-blue);
+            font-weight: 700;
+        }
+        /* Mode Gelap untuk Modal */
+        .dark .wallet-modal-content {
+            background-color: #374151; /* dark:bg-gray-700 */
+            color: #d1d5db;
+        }
+        .dark .wallet-list-item:hover {
+            background-color: #4b5563; /* dark:border-gray-600 */
+        }
+        .dark .wallet-list-item.active {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        /* [AKHIR BARU] */
+        /* [BARU] CSS untuk Masking Saldo (Mata) */
+        #toggleMaskBtn {
+            transition: background-color 0.2s, opacity 0.2s;
+            border-radius: 50%; /* Bulatkan hover */
+        }
+        #toggleMaskBtn:hover {
+            opacity: 0.7;
+        }
+        /* Status 'Aktif' saat masking menyala */
+        .balance-masked #toggleMaskBtn {
+            background-color: rgba(0,0,0,0.2); 
+        }
+
+        /* Logika untuk menukar ikon mata */
+        .icon-eye-closed,
+        .balance-masked .icon-eye-open {
+            display: none;
+        }
+        .balance-masked .icon-eye-closed {
+            display: inline-block;
+        }
+
+       /* Logika untuk menyembunyikan nominal */
+        .balance-masked .data-maskable-amount {
+            color: transparent !important; /* Sembunyikan teks asli, biarkan spasinya */
+            position: relative; /* Konteks untuk pseudo-element */
+            transition: all 0.1s;
+            /* Ukuran font asli (dihapus dari sini, biarkan inherit) */
+        }
+        .balance-masked .data-maskable-amount::before {
+            content: "Rp******"; /* Tampilkan teks masking */
+            color: var(--text-dark); /* Tampilkan lagi teks masking */
+            position: absolute;
+            left: 0;
+            right: 0;
+            /* Biarkan text-align di-inherit dari parent (center di card, right di list) */
+        }
+        /* Jaga warna merah untuk nominal pengeluaran */
+        .balance-masked .data-maskable-amount.expense::before {
+            color: var(--expense-red);
+        }
+        
+        /* Aturan untuk mode gelap */
+        .dark .balance-masked .data-maskable-amount::before {
+            color: #d1d5db;
+        }
+        .dark .balance-masked .data-maskable-amount.expense::before {
+            color: var(--expense-red);
+        }
+        
+        /* Aturan masking untuk daftar transaksi dinamis */
+        .balance-masked .transaction-item .info .amount {
+            color: transparent !important;
+            position: relative;
+        }
+        .balance-masked .transaction-item .info .amount::before {
+            content: "Rp******";
+            position: absolute;
+            right: 0; /* Hanya perlu 'right' untuk daftar */
+        }
+        /* Jaga warna hijau/merah di daftar transaksi */
+        .balance-masked .transaction-item .info .amount[data-masked-color="income"]::before {
+            color: var(--income-green);
+        }
+        .balance-masked .transaction-item .info .amount[data-masked-color="expense"]::before {
+            color: var(--expense-red);
+        }
+        .dark .balance-masked .transaction-item .info .amount[data-masked-color="income"]::before {
+            color: var(--income-green);
+        }
+        .dark .balance-masked .transaction-item .info .amount[data-masked-color="expense"]::before {
+            color: var(--expense-red);
+        }
+        /* [BARU] CSS untuk Modal Detail Transaksi */
+        .tx-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none; /* Sembunyi secara default */
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            animation: fadeIn 0.3s ease;
+            padding: 20px;
+        }
+        .tx-modal-overlay.visible {
+            display: flex;
+        }
+        .tx-modal-content {
+            background: white;
+            color: var(--text-dark);
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            animation: slideUp 0.3s ease-out;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .tx-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8f9fa;
+        }
+        .tx-modal-header button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-light);
+            padding: 5px;
+        }
+        .tx-modal-header .tx-modal-actions {
+            display: flex;
+            gap: 20px;
+        }
+        .tx-modal-header .tx-modal-actions button {
+            color: var(--primary-blue);
+        }
+        .tx-modal-header .tx-modal-actions #tx-modal-delete-btn {
+            color: var(--expense-red);
+        }
+        .tx-modal-body {
+            padding: 20px 25px 30px 25px;
+        }
+        .tx-modal-category {
             display: flex;
             align-items: center;
             gap: 15px;
+            margin-bottom: 5px;
+        }
+        /* Gunakan style .category-icon yang sudah ada */
+        .tx-modal-category #tx-modal-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+        }
+        .tx-modal-category #tx-modal-category-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .tx-modal-amount {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .tx-modal-details .detail-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
             padding: 10px 0;
-            border-bottom: 1px solid #f8f9fa;
+            border-bottom: 1px solid var(--bg-gray);
         }
-        .skeleton-list-item:last-child { border-bottom: none; }
-        .skeleton-icon-kategori {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            flex-shrink: 0;
+        .tx-modal-details .detail-item span:first-child {
+            color: var(--text-light);
         }
-        .skeleton-item-details {
-            flex-grow: 1;
-            display: flex;
+        .tx-modal-details .detail-item span:last-child {
+            font-weight: 500;
+        }
+        .tx-modal-details .detail-item.notes {
             flex-direction: column;
-            gap: 8px;
-        }
-        .skeleton-item-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px;
-            flex-shrink: 0;
+            align-items: flex-start;
+            gap: 5px;
+            border-bottom: none;
         }
         
-        /* === [BARU] CSS MODE GELAP UNTUK SEMUA === */
-        .dark body { background-color: #111827; color: #d1d5db; }
-        .dark .app-container { background-color: #111827; }
-        .dark .card { background-color: #374151; border: 1px solid #4b5563; box-shadow: none; }
-        .dark .main-content { background-color: #111827; }
-        .dark .transaction-list, .dark .empty-transaction-list { background-color: #374151; color: #d1d5db; }
-        .dark .transaction-item { border-bottom-color: #4b5563; }
-        .dark .overview-card .stat-item .label, .dark .transaction-item .info .account, .dark .transaction-item .details .notes { color: #9ca3af; }
-        .dark .overview-card .date-selector, .dark .header-title, .dark .header-top .left .fa-search { color: white; }
-        .dark .calendar-card, .dark .calendar-summary-tabs .tab { color: #d1d5db; border-color: #4b5563; }
-        .dark .calendar-summary-tabs .tab.active { color: var(--primary-blue); background-color: var(--light-purple); border-color: var(--primary-blue); }
-        .dark .bottom-nav { background-color: #1f2937; border-top: 1px solid #374151; }
-        .dark .nav-item { color: #9ca3af; }
-        .dark .nav-item.active { color: #ffffff; }
-        .dark .fab { background-color: #374151; color: #ffffff; border: 1px solid #4b5563; }
-        .dark .overview-card .stat-item .amount, .dark .transaction-item .details .category { color: white; }
-        .dark .overview-card .stat-item .amount.expense { color: var(--expense-red); }
-        .dark .add-view-container { background-color: #1f2937; }
-        .dark .add-header, .dark .categories-section { background-color: #374151; border-bottom-color: #4b5563; }
-        .dark .type-selector-header { background: #1f2937; }
-        .dark .type-btn-header { color: #9ca3af; }
-        .dark .type-btn-header.active { background: #374151; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .dark .type-btn-header.expense.active { color: var(--expense-red); }
-        .dark .type-btn-header.income.active { color: var(--income-green); }
-        .dark .calculator-section { background: #1f2937; border-top-color: #4b5563; }
-        .dark .amount-display, .dark .action-btn, .dark .calc-btn { background: #374151; color: #d1d5db; box-shadow: none; }
-        .dark .action-btn.personal { background: #111827; }
-        .dark .calc-btn.operator { background: #4b5563; color: #d1d5db; }
-        .dark .calc-btn.delete { background: #5a2a2a; color: var(--expense-red); }
-        .dark .category-item:hover { background: #4b5563; }
-        .dark .wallet-modal-content { background-color: #374151; color: #d1d5db; }
-        .dark .wallet-list-item:hover { background-color: #4b5563; }
-        .dark .wallet-list-item.active { background-color: var(--primary-blue); color: white; }
-        .dark .balance-masked .data-maskable-amount::before { color: #d1d5db; }
-        .dark .balance-masked .data-maskable-amount.expense::before { color: var(--expense-red); }
-        .dark .balance-masked .transaction-item .info .amount[data-masked-color="income"]::before { color: var(--income-green); }
-        .dark .balance-masked .transaction-item .info .amount[data-masked-color="expense"]::before { color: var(--expense-red); }
-        .dark .tx-modal-content { background-color: #374151; color: #d1d5db; }
-        .dark .tx-modal-header { background-color: #1f2937; }
-        .dark .tx-modal-category #tx-modal-category-name { color: white; }
-        .dark .tx-modal-details .detail-item { border-bottom-color: #4b5563; }
-        .dark .tx-modal-details .detail-item span:first-child { color: #9ca3af; }
-        .dark .tx-modal-details .detail-item.notes span:first-child { color: #9ca3af; }
-        .dark .tx-modal-details .detail-item.notes span:last-child { color: #d1d5db; }
-        .dark .transaction-item-wrapper { background-color: var(--expense-red); }
-        .dark .transaction-item-content { background-color: #374151; }
-        
-        /* [BARU] CSS Mode Gelap untuk SKELETON */
-        .dark .skeleton-bar {
-            background-color: #4b5563; /* dark:bg-gray-600 */
+        /* Mode Gelap untuk Modal Detail */
+        .dark .tx-modal-content {
+            background-color: #374151;
+            color: #d1d5db;
         }
-        .dark .skeleton-bar::before {
-            background: linear-gradient(
-                90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.1), /* Shimmer lebih gelap */
-                transparent
-            );
+        .dark .tx-modal-header {
+            background-color: #1f2937;
         }
-        .dark .skeleton-ringkasan-wrapper,
-        .dark .skeleton-transaksi-wrapper {
-            background-color: #374151; /* dark:bg-gray-700 */
-            border-color: #4b5563;
+        .dark .tx-modal-category #tx-modal-category-name {
+            color: white;
         }
-        .dark .skeleton-list-header {
+        .dark .tx-modal-details .detail-item {
             border-bottom-color: #4b5563;
         }
-        .dark .skeleton-list-item {
-            border-bottom-color: #4b5563;
+        .dark .tx-modal-details .detail-item span:first-child {
+            color: #9ca3af;
         }
+        .dark .tx-modal-details .detail-item.notes span:first-child {
+            color: #9ca3af;
+        }
+        .dark .tx-modal-details .detail-item.notes span:last-child {
+            color: #d1d5db;
+        }
+        /* [AKHIR BARU] */
+        /* [AKHIR CSS MODAL] */
 
-        /* CSS Media Query (Tidak Berubah) */
+        /* [BARU] CSS untuk Aksi Geser (Swipe) */
+        .transaction-group {
+            /* Mencegah item swipe "bocor" saat grup ditutup */
+            overflow: hidden; 
+        }
+        .transaction-item-wrapper {
+            position: relative;
+            background-color: var(--expense-red); /* Warna latar belakang aksi */
+            border-radius: 12px; /* Sesuai radius item */
+            margin-bottom: 1px; /* Pemisah antar item */
+        }
+        .dark .transaction-item-wrapper {
+             background-color: var(--expense-red);
+        }
+        .transaction-item-actions {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            width: 80px; /* Lebar tombol hapus */
+        }
+        .transaction-item-actions .delete-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        /* Ini adalah item yang bergerak */
+        .transaction-item-content {
+            position: relative;
+            background-color: white;
+            border-radius: 12px; 
+            transition: transform 0.3s ease-out; 
+            z-index: 2; /* Di atas tombol aksi */
+            cursor: pointer; /* Menandakan bisa diklik */
+        }
+        .dark .transaction-item-content {
+            background-color: #374151;
+        }
+        /* [AKHIR BARU] */
+
+        @media (min-width: 768px) {
+        /* ... (sisa media query Anda) ... */
+
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
             .app-container { max-width: 480px; margin: 0 auto; height: 100vh; }
@@ -435,7 +689,8 @@
                 <h3>Pilih Dompet</h3>
                 <button class="wallet-modal-close" onclick="closeWalletSwitcher()">&times;</button>
             </div>
-            <div id="wallet-list-container"></div>
+            <div id="wallet-list-container">
+                </div>
         </div>
     </div>
     <div id="tx-modal-overlay" class="tx-modal-overlay" onclick="closeTransactionModal()">
@@ -475,48 +730,21 @@
         </div>
     </div>
 
-
     <script>
-        // Cek token di awal
         const sessionToken = localStorage.getItem('sessionToken');
         if (!sessionToken) {
             window.location.href = '/login';
         }
-        
-        // === BAGIAN 0: LOGIKA MODE GELAP & PENGATURAN ===
+        // === [BARU] BAGIAN 0: LOGIKA MODE GELAP/TERANG ===
         const settingsKey = 'casflo'; 
         const htmlEl = document.documentElement;
-        
-        function getSettings() { try { const settings = localStorage.getItem(settingsKey); return settings ? JSON.parse(settings) : { theme: 'system' }; } catch (e) { return { theme: 'system' }; } }
-        function saveSettings(settingsObject) { try { const existingSettings = getSettings(); const newSettings = { ...existingSettings, ...settingsObject }; localStorage.setItem(settingsKey, JSON.stringify(newSettings)); } catch (e) { console.error("Gagal menyimpan settings:", e); } }
-        function applyTheme(theme) { if (theme === 'dark') { htmlEl.classList.add('dark'); } else if (theme === 'light') { htmlEl.classList.remove('dark'); } else { if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { htmlEl.classList.add('dark'); } else { htmlEl.classList.remove('dark'); } } }
-        function applyMaskingState(isMasked) { const container = document.getElementById('app-container'); if (container) { container.classList.toggle('balance-masked', isMasked); } }
-        function toggleBalanceMasking() { let settings = getSettings(); const newMaskedState = !settings.isBalanceMasked; saveSettings({ isBalanceMasked: newMaskedState }); applyMaskingState(newMaskedState); console.log(`Masking saldo: ${newMaskedState}`); }
-        function attachThemeToggle(selector) { const themeToggleBtn = document.querySelector(selector); if (themeToggleBtn) { themeToggleBtn.addEventListener('click', () => { const isCurrentlyDark = htmlEl.classList.contains('dark'); const newTheme = isCurrentlyDark ? 'light' : 'dark'; applyTheme(newTheme); saveSettings({ theme: newTheme }); }); } }
 
-
-        // === BAGIAN 1: VARIABEL & FUNGSI GLOBAL ===
-        let currentDate = new Date();
-        let selectedDate = new Date();
-        let allCategories = []; // Akan diisi oleh loadHeaderData
-        let allAccounts = []; // Akan diisi oleh loadHeaderData
-        let selectedAccountId = null;
-        let transactions = []; // Akan diisi oleh loadMonthlyData
-        let currentView = 'overview';
-        let calendarFilter = 'expense';
-        let currentType = 'expense';
-        let calcValue = '0';
-        let waitingForEquals = false;
-        let currentTransactionId = null;
-        let activeSwipeElement = null;
-        let touchStartX = 0, touchCurrentX = 0, touchStartY = 0, isSwiping = false, swipeThreshold = -60;
-        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-
-        
-        // === [BARU] BAGIAN 2: LOGIKA PEMUATAN DATA INDEPENDEN ===
-
+        // === [BARU] BAGIAN 0.5: API HELPER ===
         /**
          * Fungsi helper untuk memanggil API Anda dengan otentikasi.
+         * @param {string} endpoint - Path API (cth: '/wallets')
+         * @param {object} options - Opsi 'fetch' (method, body, dll.)
+         * @returns {Promise<any>} - Properti 'data' dari respons JSON
          */
         async function fetchApi(endpoint, options = {}) {
             const token = localStorage.getItem('sessionToken');
@@ -525,32 +753,319 @@
                 navigate('/login');
                 throw new Error('Sesi tidak valid');
             }
-            const defaultHeaders = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
-            const config = { ...options, headers: { ...defaultHeaders, ...options.headers } };
+
+            const defaultHeaders = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // [PENTING] Sesuai middleware 'protect'
+            };
+
+            const config = {
+                ...options,
+                headers: { ...defaultHeaders, ...options.headers }
+            };
+
+            // Ganti 'https://api.casflo.id' dengan URL API Anda jika berbeda
             const response = await fetch(`https://api.casflo.id/api/v1${endpoint}`, config);
 
-            if (response.status === 401) {
+            if (response.status === 401) { // Token expired atau invalid
                 localStorage.removeItem('sessionToken');
                 console.log("Sesi 401, token dihapus.");
                 navigate('/login');
                 throw new Error('Sesi kedaluwarsa');
             }
+
             if (!response.ok) {
                 const errorResult = await response.json();
                 console.error("API Error:", errorResult);
                 throw new Error(errorResult.error?.message || 'Gagal mengambil data dari API');
             }
+            
+            // API Anda selalu mengembalikan { success: true, data: ... }
             const result = await response.json(); 
             return result.data; 
         }
+        // --- [AKHIR BAGIAN 0.5] ---
+// --- [AKHIR BAGIAN 0.5] ---
 
-        /**
-         * [BARU] 1. Memuat data Header (Dompet) & dependensi (Akun, Kategori).
-         * Ini adalah fungsi pertama yang dijalankan.
-         */
-        async function loadHeaderData() {
+        // [BARU] Fungsi-fungsi untuk Modal Pengganti Dompet
+        const walletModal = document.getElementById('wallet-modal-overlay');
+        const walletListContainer = document.getElementById('wallet-list-container');
+        
+        async function openWalletSwitcher() {
+            if (!walletModal || !walletListContainer) return;
+
             try {
-                // 1. Ambil semua dompet milik user
+                const currentWalletId = localStorage.getItem('currentWalletId');
+                // 1. Ambil daftar dompet terbaru dari API
+                const wallets = await fetchApi('/wallets');
+                
+                // 2. Bersihkan daftar sebelumnya
+                walletListContainer.innerHTML = ''; 
+
+                // 3. Isi daftar dengan dompet yang ada
+                wallets.forEach(wallet => {
+                    const item = document.createElement('div');
+                    item.className = 'wallet-list-item';
+                    item.textContent = wallet.name;
+                    // Tandai dompet yang sedang aktif
+                    if (wallet.id === currentWalletId) {
+                        item.classList.add('active');
+                    }
+                    // Tambahkan aksi klik
+                    item.onclick = () => selectWallet(wallet.id, wallet.name);
+                    walletListContainer.appendChild(item);
+                });
+                
+                // 4. Tampilkan modal
+                walletModal.classList.add('visible');
+
+            } catch (error) {
+                console.error("Gagal membuka pengganti dompet:", error);
+                alert("Gagal memuat daftar dompet.");
+            }
+        }
+
+        function closeWalletSwitcher() {
+            if (walletModal) {
+                walletModal.classList.remove('visible');
+            }
+        }
+
+        function selectWallet(walletId, walletName) {
+            // 1. Simpan pilihan baru ke localStorage
+            localStorage.setItem('currentWalletId', walletId);
+            localStorage.setItem('currentWalletName', walletName);
+            
+            // 2. Tutup modal
+            closeWalletSwitcher();
+            
+            // 3. Muat ulang halaman agar semua data (transaksi, akun, dll)
+            //    diambil ulang untuk dompet yang baru dipilih.
+            //    Ini adalah cara paling aman untuk memastikan data konsisten.
+            window.location.href = '/';
+        }
+        // ... (setelah fungsi selectWallet)
+
+        // [BARU] Helper untuk Collapsible Groups
+        const COLLAPSED_KEY = 'casflo_collapsed_groups';
+        function getCollapsedGroups() {
+            try {
+                const collapsed = localStorage.getItem(COLLAPSED_KEY);
+                return collapsed ? JSON.parse(collapsed) : [];
+            } catch (e) {
+                return []; // Jika JSON rusak, reset
+            }
+        }
+        function saveCollapsedGroups(groups) {
+            localStorage.setItem(COLLAPSED_KEY, JSON.stringify(groups));
+        }
+        
+        /**
+         * Dipanggil saat header tanggal diklik
+         * @param {string} dateKey - Kunci unik untuk grup tanggal (misal: "Tue Nov 05 2025")
+         * @param {HTMLElement} headerElement - Elemen .list-header yang diklik
+         */
+        function toggleGroupCollapse(dateKey, headerElement) {
+            const group = headerElement.closest('.transaction-group');
+            if (!group) return;
+
+            const isCollapsed = group.classList.toggle('collapsed');
+            let collapsedGroups = getCollapsedGroups();
+            
+            if (isCollapsed) {
+                // Baru saja DITUTUP, tambahkan ke daftar
+                if (!collapsedGroups.includes(dateKey)) {
+                    collapsedGroups.push(dateKey);
+                }
+            } else {
+                // Baru saja DIBUKA, hapus dari daftar
+                collapsedGroups = collapsedGroups.filter(key => key !== dateKey);
+            }
+            saveCollapsedGroups(collapsedGroups);
+        }
+        // [AKHIR FUNGSI COLLAPSE]
+
+        // [BARU] Fungsi-fungsi untuk Swipe
+        
+        /**
+         * Menutup item swipe yang sedang aktif
+         */
+        function closeActiveSwipe() {
+            if (activeSwipeElement) {
+                activeSwipeElement.style.transform = 'translateX(0)';
+                activeSwipeElement = null;
+            }
+        }
+
+        function handleTouchStart(e) {
+            const targetContent = e.currentTarget;
+            // Tutup item lain yang mungkin terbuka
+            if (targetContent !== activeSwipeElement) {
+                closeActiveSwipe();
+            }
+
+            touchStartX = e.touches[0].clientX;
+            touchCurrentX = touchStartX;
+            touchStartY = e.touches[0].clientY; 
+            isSwiping = false; // Reset status swipe
+            
+            targetContent.style.transition = 'none'; // Hapus transisi agar menempel di jari
+        }
+
+        function handleTouchMove(e) {
+            if (e.touches.length > 1) return; // Abaikan multi-touch
+
+            touchCurrentX = e.touches[0].clientX;
+            const deltaX = touchCurrentX - touchStartX;
+
+            // [PENTING] Cek apakah ini scroll vertikal
+            if (!isSwiping) {
+                const deltaY = e.touches[0].clientY - touchStartY;
+                if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) {
+                    // Ini adalah scroll vertikal, abaikan
+                    return;
+                }
+            }
+            
+            // Ini adalah swipe horizontal
+            isSwiping = true;
+            e.preventDefault(); // Hentikan browser dari scrolling
+
+            let newTransform = deltaX;
+            if (deltaX > 0) newTransform = 0; // Jangan geser ke kanan
+            if (deltaX < -100) newTransform = -100; // Batasi geseran (lebar tombol 80 + 20 buffer)
+
+            e.currentTarget.style.transform = `translateX(${newTransform}px)`;
+        }
+
+        function handleTouchEnd(e) {
+            const targetContent = e.currentTarget;
+            const actionWidth = 80; // Lebar tombol hapus
+
+            // Tambahkan transisi lagi untuk "snap"
+            targetContent.style.transition = 'transform 0.3s ease-out';
+
+            if (isSwiping) {
+                // Ini adalah swipe
+                const deltaX = touchCurrentX - touchStartX;
+                
+                if (deltaX < swipeThreshold) {
+                    // Snap Buka
+                    targetContent.style.transform = `translateX(-${actionWidth}px)`;
+                    activeSwipeElement = targetContent;
+                } else {
+                    // Snap Tutup
+                    targetContent.style.transform = 'translateX(0)';
+                    if (targetContent === activeSwipeElement) {
+                        activeSwipeElement = null;
+                    }
+                }
+            }
+            
+            // 'isSwiping' akan tetap false jika ini adalah tap,
+            // sehingga event click asli (openTransactionModal) akan ter-trigger.
+            // Kita tidak perlu memanggilnya secara manual.
+        }
+        // [AKHIR BARU]
+
+        const txModal = document.getElementById('tx-modal-overlay');
+
+        function openTransactionModal(tx) {
+            if (!txModal) return;
+
+            // 1. Simpan ID untuk aksi (delete/edit)
+            currentTransactionId = tx.id;
+
+            // 2. Isi data modal
+            document.getElementById('tx-modal-icon').textContent = tx.icon || tx.category.charAt(0);
+            document.getElementById('tx-modal-category-name').textContent = tx.category;
+            
+            const amountEl = document.getElementById('tx-modal-amount');
+            // Pastikan amount adalah angka sebelum toLocaleString
+            const amount = Number(tx.amount) || 0;
+            const amountString = `${tx.type === 'expense' ? '-' : ''}Rp${amount.toLocaleString('id-ID')}`;
+            amountEl.textContent = amountString;
+            amountEl.style.color = tx.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)';
+
+            // Format tanggal dari "YYYY-MM-DD"
+            const date = new Date(tx.date + 'T00:00:00'); // Tambahkan T00:00 untuk menghindari masalah zona waktu
+            document.getElementById('tx-modal-date').textContent = date.toLocaleDateString('id-ID', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            });
+            
+            document.getElementById('tx-modal-account').textContent = tx.account;
+            document.getElementById('tx-modal-notes').textContent = tx.notes;
+            document.getElementById('tx-modal-wallet').textContent = localStorage.getItem('currentWalletName') || '...';
+            
+            // 3. Tampilkan modal
+            txModal.classList.add('visible');
+        }
+
+function closeTransactionModal() {
+            if (txModal) {
+                txModal.classList.remove('visible');
+                currentTransactionId = null; // Hapus ID saat modal ditutup
+            }
+        }
+
+        // [PERBAIKAN] Fungsi yang hilang, sekarang ditambahkan
+        async function handleDeleteTransaction(txId) {
+            // Gunakan ID from parameter (swipe) atau dari global (modal)
+            const transactionIdToDelete = txId || currentTransactionId;
+            if (!transactionIdToDelete) return;
+
+            if (!confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
+                return;
+            }
+
+            const walletId = localStorage.getItem('currentWalletId');
+            
+            try {
+                console.log(`Menghapus transaksi: ${transactionIdToDelete}...`);
+
+                await fetchApi(`/wallets/${walletId}/transactions/${transactionIdToDelete}`, {
+                    method: 'DELETE'
+                });
+
+                console.log('Transaksi berhasil dihapus.');
+                closeTransactionModal(); // Tutup modal (jika terbuka)
+                closeActiveSwipe();    // Tutup swipe (jika terbuka)
+                updateMainView();      // Muat ulang list
+                
+            } catch (error) {
+                console.error('Gagal menghapus transaksi:', error);
+                alert('Gagal menghapus: ' + error.message);
+            }
+        }
+
+        // [PERBAIKAN] Hanya satu fungsi edit yang benar
+        function handleEditTransaction(txId) {
+            const transactionIdToEdit = txId || currentTransactionId;
+            if (!transactionIdToEdit) return;
+
+            const tx = transactions.find(t => t.id === transactionIdToEdit);
+            
+            if (tx) {
+                sessionStorage.setItem('tx_for_edit', JSON.stringify(tx));
+                closeTransactionModal(); // Tutup modal (jika terbuka)
+                closeActiveSwipe();    // Tutup swipe (jika terbuka)
+                navigate('/create');
+            } else {
+                alert('Gagal menemukan data transaksi untuk diedit.');
+            }
+        }
+
+        // [BARU] Fungsi untuk mengambil data awal (dompet & akun) saat aplikasi dimuat
+       // [PERBAIKAN] Fungsi ini sekarang memprioritaskan dompet di localStorage
+ 
+
+       // [PERBAIKAN KATEGORI] Ganti total fungsi ini
+       async function initializeAppData() {
+            try {
+                // 1. Cek apakah sudah ada dompet yang dipilih sebelumnya
+                const preferredWalletId = localStorage.getItem('currentWalletId');
+
+                // 2. Ambil semua dompet milik user
                 const wallets = await fetchApi('/wallets');
                 if (!wallets || wallets.length === 0) {
                     console.warn('User tidak punya dompet. Mengarahkan ke /create-wallet');
@@ -558,396 +1073,464 @@
                     return;
                 }
 
-                // 2. Tentukan dompet aktif (dari localStorage atau ambil yang pertama)
-                const preferredWalletId = localStorage.getItem('currentWalletId');
-                let activeWallet = wallets.find(w => w.id === preferredWalletId) || wallets[0];
+                // 3. Tentukan dompet aktif
+                let activeWallet;
+                if (preferredWalletId) {
+                    // Cari dompet yang tersimpan di localStorage dari daftar API
+                    activeWallet = wallets.find(w => w.id === preferredWalletId);
+                }
+
+                // Jika tidak ada dompet yang tersimpan (atau tidak valid), gunakan dompet pertama
+                if (!activeWallet) {
+                    activeWallet = wallets[0];
+                }
                 
-                // 3. Simpan dompet aktif yang valid ke localStorage
+                // 4. Simpan dompet aktif yang valid ke localStorage
                 localStorage.setItem('currentWalletId', activeWallet.id);
                 localStorage.setItem('currentWalletName', activeWallet.name); 
                 console.log(`Dompet aktif diatur: ${activeWallet.name} (${activeWallet.id})`);
 
-                // 4. [INDEPENDEN] Ganti skeleton header dengan data asli
-                renderHeader(activeWallet.name);
-
-                // 5. [DEPENDENSI] Ambil akun dan kategori untuk dompet aktif INI SEKALI SAJA
+                // 5. [INI BAGIAN KUNCINYA] Ambil akun dan kategori untuk dompet aktif
                 const [accounts, categories] = await Promise.all([
                     fetchApi(`/wallets/${activeWallet.id}/accounts`),
                     fetchApi(`/wallets/${activeWallet.id}/categories`)
                 ]);
 
+                // 6. Simpan Akun ke Global
                 allAccounts = accounts;
-                allCategories = categories;
-
-                if (allAccounts.length > 0) {
-                    selectedAccountId = allAccounts.find(a => a.type === 'ASSET')?.id || allAccounts[0].id;
+                if (!accounts || accounts.length === 0) {
+                    console.error('ERROR: Dompet ini tidak memiliki akun!');
+                    // Di aplikasi nyata, ini idealnya tidak terjadi
+                } else {
+                    // Tetapkan akun default (utamakan ASET)
+                    const defaultAccount = accounts.find(a => a.type === 'ASSET') || accounts[0];
+                    selectedAccountId = defaultAccount.id; // Set var global
+                    console.log(`Akun aktif diatur: ${defaultAccount.name} (${defaultAccount.id})`);
                 }
-                console.log(`Memuat ${allAccounts.length} akun dan ${allCategories.length} kategori.`);
 
-                // 6. [PENTING] Picu pemuatan data bulanan (Ringkasan & Transaksi)
-                // Ini akan berjalan secara independen SETELAH header dimuat.
-                loadMonthlyData();
+                // 7. Simpan Kategori ke Global
+                allCategories = categories; // <--- INI AKAN MENGISI ARRAY
+                console.log(`Berhasil memuat ${allCategories.length} kategori.`);
+                // [AKHIR BAGIAN KUNCI]
+
+
+                // 8. Panggil 'runPageInit' SETELAH semua data siap
+                runPageInit(location.pathname);
 
             } catch (error) {
-                console.error("Gagal memuat data header:", error);
-                // Tampilkan error di tempat skeleton header
-                const headerContainer = document.getElementById('header-container');
-                if (headerContainer) headerContainer.innerHTML = `<div style="padding: 20px; background: #E84545; color: white; text-align: center;">Gagal memuat dompet.</div>`;
+                console.error("Gagal inisialisasi data aplikasi:", error);
+                if (error.message !== 'Sesi kedaluwarsa') {
+                    alert("Gagal inisialisasi data: " + error.message);
+                }
             }
         }
-        
-        /**
-         * [BARU] 2. Memuat data bulanan (Ringkasan & Transaksi).
-         * Dipanggil oleh loadHeaderData() dan saat bulan diubah.
-         */
-        async function loadMonthlyData() {
-            const walletId = localStorage.getItem('currentWalletId');
-            if (!walletId) return; // Menunggu header dimuat
-
-            // Tampilkan kembali skeleton saat berganti bulan
-            renderSummaryCard(null); // 'null' akan merender skeleton
-            renderTransactionList(null); // 'null' akan merender skeleton
-            updateMonthDisplay(); // Perbarui tampilan tanggal
-
-            console.log("Memuat data bulanan untuk", currentDate.toISOString().slice(0, 7));
-            
-            // Tentukan rentang tanggal
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const startDate = new Date(year, month, 1).toISOString().split('T')[0];
-            const endDate = new Date(year, month + 1, 0).toISOString().split('T')[0];
-
+        function getSettings() {
             try {
-                // 1. Ambil transaksi dari API (HANYA SATU PANGGILAN API)
-                const fetchedTransactions = await fetchApi(
-                    `/wallets/${walletId}/transactions?startDate=${startDate}&endDate=${endDate}`
-                );
-
-                // 2. Konversi data API ke format 'transactions' global
-                transactions = fetchedTransactions.map(tx => {
-                    const isExpense = tx.category_type === 'EXPENSE'; 
-                    return {
-                        id: tx.id,
-                        type: isExpense ? 'expense' : 'income',
-                        amount: Math.abs(tx.amount),
-                        category: tx.category_name,
-                        notes: tx.description || 'Tanpa catatan',
-                        account: tx.account_name, 
-                        icon: tx.category_icon,
-                        color: 'var(--light-purple)',
-                        date: tx.transaction_date,
-                        category_id: tx.category_id,
-                        account_id: tx.account_id
-                    };
-                });
-                
-                // 3. Hitung ringkasan dari data transaksi
-                const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-                const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-                const total = income - expense;
-                const summaryData = { total, income, expense };
-
-                // 4. [INDEPENDEN] Ganti skeleton ringkasan dengan data asli
-                renderSummaryCard(summaryData);
-
-                // 5. [INDEPENDEN] Ganti skeleton transaksi dengan data asli
-                renderTransactionList(transactions.sort((a, b) => new Date(b.date) - new Date(a.date)));
-
-            } catch (error) {
-                console.error("Gagal memuat data bulanan:", error);
-                // Tampilkan error di tempat skeleton
-                renderSummaryCard({ error: true });
-                renderTransactionList({ error: true });
+                const settings = localStorage.getItem(settingsKey);
+                // Default jika tidak ada settings: { theme: 'system' }
+                return settings ? JSON.parse(settings) : { theme: 'system' };
+            } catch (e) {
+                return { theme: 'system' }; // Fallback jika JSON rusak
             }
         }
 
-
-        // === [BARU] BAGIAN 3: FUNGSI RENDER (PENGGANTI SKELETON) ===
-
+        function saveSettings(settingsObject) {
+            try {
+                // Ambil settings yang ada, lalu gabungkan dengan yang baru
+                const existingSettings = getSettings();
+                const newSettings = { ...existingSettings, ...settingsObject };
+                localStorage.setItem(settingsKey, JSON.stringify(newSettings));
+            } catch (e) {
+                console.error("Gagal menyimpan settings:", e);
+            }
+        }
         /**
-         * [BARU] Mengganti skeleton header dengan HTML header asli.
+         * [BARU] Menerapkan/menghapus kelas 'balance-masked' ke kontainer utama
          */
-        function renderHeader(walletName) {
-            const headerContainer = document.getElementById('header-container');
-            if (!headerContainer) return;
-
-            const shortName = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
-
-            headerContainer.innerHTML = `
-                <header class="main-header">
-                    <div class="header-top">
-                        <div class="left">
-                            <i class="fas fa-search"></i>
-                            <div class="header-title" id="walletSwitcherBtn" style="cursor: pointer;">
-                                <span id="currentWalletNameDisplay">${walletName}</span>
-                                <i class="fas fa-chevron-down fa-xs"></i>
-                            </div>
-                        </div>
-                        <div class="right" style="display: flex; align-items: center; gap: 10px;">
-                            <button class="theme-toggle inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-white transition-all *:pointer-events-none" style="background: rgba(0,0,0,0.2);">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 dark:hidden">
-                                    <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd"></path>
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="hidden h-5 dark:block">
-                                    <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"></path>
-                                </svg>
-                            </button>
-                            <div class="view-toggle-group">
-                                <button class="toggle-btn" id="detailToggleBtn">
-                                    <i class="fas fa-store"></i>
-                                    <span>Detail</span>
-                                </button>
-                                <button class="toggle-btn" id="calendarToggleBtn">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>Kalender</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="header-actions">
-                        <div class="action-box">
-                            <div class="icon"><i class="fas fa-book"></i></div>
-                            <span class="text" id="currentWalletNameShort">${shortName}</span>
-                        </div>
-                        <div class="action-box" id="createNewWalletBtn" style="cursor: pointer;">
-                            <div class="icon"><i class="fas fa-plus"></i></div>
-                            <span class="text">Baru B...</span>
-                        </div>
-                    </div>
-                </header>
-            `;
-            
-            // [PENTING] Pasang ulang listener ke elemen-elemen baru
-            attachThemeToggle('.theme-toggle');
-            document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
-            document.getElementById('createNewWalletBtn')?.addEventListener('click', () => navigate('/create-wallet'));
-            document.getElementById('detailToggleBtn')?.addEventListener('click', () => setView('overview'));
-            document.getElementById('calendarToggleBtn')?.addEventListener('click', () => setView('calendar'));
-            
-            // Terapkan view yang benar (terakhir disimpan)
-            const savedView = localStorage.getItem('preferredView');
-            setView(savedView || 'overview');
+        function applyMaskingState(isMasked) {
+            const container = document.getElementById('app-container');
+            if (container) {
+                // Terapkan 'balance-masked' jika isMasked true, hapus jika false
+                container.classList.toggle('balance-masked', isMasked);
+            }
         }
 
         /**
-         * [BARU] Mengganti skeleton ringkasan dengan HTML asli (atau skeleton lagi).
+         * [BARU] Dipanggil saat ikon mata diklik
          */
-        function renderSummaryCard(data) {
-            const summaryContainer = document.getElementById('summary-card-container');
-            if (!summaryContainer) return;
-
-            let htmlToRender;
-            if (data === null) {
-                // Tampilkan Skeleton (saat ganti bulan)
-                htmlToRender = `
-                <div class="card overview-card skeleton-ringkasan-wrapper">
-                    <div class="skeleton-ringkasan-kolom">
-                        <div class="skeleton-bar skeleton-text-kecil" style="width: 50px;"></div>
-                        <div class="skeleton-bar skeleton-text-besar" style="width: 100px;"></div>
-                    </div>
-                    <div class="skeleton-ringkasan-kolom">
-                        <div class="skeleton-bar skeleton-text-kecil" style="width: 80px;"></div>
-                        <div class="skeleton-bar skeleton-text-besar" style="width: 100px;"></div>
-                    </div>
-                    <div class="skeleton-ringkasan-kolom">
-                        <div class="skeleton-bar skeleton-text-kecil" style="width: 80px;"></div>
-                        <div class="skeleton-bar skeleton-text-besar" style="width: 100px;"></div>
-                    </div>
-                </div>`;
-            } else if (data.error) {
-                // Tampilkan Error
-                htmlToRender = `<div class="card overview-card" style="color: var(--expense-red); text-align: center;">Gagal memuat ringkasan.</div>`;
+        function toggleBalanceMasking() {
+            // 1. Ambil settings saat ini
+            let settings = getSettings();
+            
+            // 2. Invert nilainya (jika tidak ada, anggap false -> jadi true)
+            const newMaskedState = !settings.isBalanceMasked;
+            
+            // 3. Simpan state baru ke localStorage
+            saveSettings({ isBalanceMasked: newMaskedState });
+            
+            // 4. Terapkan state baru ke UI
+            applyMaskingState(newMaskedState);
+            console.log(`Masking saldo: ${newMaskedState}`);
+        }
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                htmlEl.classList.add('dark');
+            } else if (theme === 'light') {
+                htmlEl.classList.remove('dark');
             } else {
-                // Tampilkan Data Asli
-                const formatCurrency = (value) => { 
-                    const num = Number(value) || 0;
-                    const sign = num < 0 ? '-' : ''; 
-                    return `${sign}Rp${Math.abs(num).toLocaleString('id-ID')}`; 
-                };
-                
-                htmlToRender = `
-                <div class="card overview-card" id="overviewCard">
-                    <div class="card-header">
-                        <div class="icon" id="mainBookIconBtn" style="cursor: pointer;"><i class="fas fa-book-open"></i></div>
-                        <div class="date-selector">
-                            <i class="fas fa-chevron-left" id="prevMonthBtn"></i>
-                            <span id="currentMonthDisplay">...</span>
-                            <i class="fas fa-chevron-right" id="nextMonthBtn"></i>
-                        </div>
-                        <div class="card-actions">
-                            <div class="icon"><i class="fas fa-envelope"></i></div>
-                            <div class="icon" id="toggleMaskBtn" style="cursor: pointer;">
-                                <i class="fas fa-eye icon-eye-open"></i>
-                                <i class="fas fa-eye-slash icon-eye-closed"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="stat-item">
-                            <div class="label"><i class="fas fa-wallet fa-xs"></i><span>Total</span></div>
-                            <div class="amount expense data-maskable-amount" id="totalAmount">${formatCurrency(data.total)}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="label"><i class="fas fa-arrow-down fa-xs"></i><span>Penghasilan</span></div>
-                            <div class="amount data-maskable-amount" id="incomeAmount">${formatCurrency(data.income)}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="label"><i class="fas fa-arrow-up fa-xs"></i><span>Pengeluaran</span></div>
-                            <div class="amount expense data-maskable-amount" id="expenseAmount">${formatCurrency(data.expense)}</div>
-                        </div>
-                    </div>
-                </div>`;
+                // Mode 'system' (default)
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    htmlEl.classList.add('dark');
+                } else {
+                    htmlEl.classList.remove('dark');
+                }
+            }
+        }
+
+        // Terapkan tema segera saat skrip ini dimuat
+        let currentSettings = getSettings();
+        applyTheme(currentSettings.theme);
+        
+        // Fungsi ini dipanggil oleh init...Page()
+        function attachThemeToggle(selector) {
+            const themeToggleBtn = document.querySelector(selector);
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    const isCurrentlyDark = htmlEl.classList.contains('dark');
+                    const newTheme = isCurrentlyDark ? 'light' : 'dark';
+                    applyTheme(newTheme); 
+                    saveSettings({ theme: newTheme }); // Simpan pilihan baru
+                });
+            }
+        }
+        // --- [AKHIR BAGIAN 0] ---
+
+
+        // === BAGIAN 1: VARIABEL & FUNGSI GLOBAL ===
+        let currentDate = new Date();
+        let selectedDate = new Date();
+        let transactions = []; // Data dummy, ganti dengan API call
+        let currentView = 'overview';
+        let calendarFilter = 'expense';
+        // Variabel global untuk 'create.html'
+        let currentType = 'expense';
+        let selectedCategory = null;
+        let calcValue = '0';
+        let waitingForEquals = false;
+
+        let allCategories = [];
+        let allAccounts = [];
+        let selectedAccountId = null; // Kita akan kelola ini secara global
+        let currentTransactionId = null; // [BARU] Untuk modal detail
+        let activeSwipeElement = null; // Menyimpan elemen .transaction-item-content yang sedang terbuka
+        let touchStartX = 0;
+        let touchCurrentX = 0;
+        let touchStartY = 0; // Untuk deteksi scroll
+        let isSwiping = false; // Flag untuk membedakan swipe dari click
+        let swipeThreshold = -60; // Geser minimal 60px ke kiri
+
+        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        function appendToCalc(value) {
+            const operators = ['+', '-', '*', '/'];
+            
+            if (operators.includes(value)) {
+                waitingForEquals = true;
+                changeButtonToEquals();
+            }
+            
+            // [PERBAIKAN] Mencegah duplikat titik/koma
+            if (value === '.' && calcValue.includes('.')) {
+                return; // Jangan lakukan apa-apa jika sudah ada titik
             }
 
-            summaryContainer.innerHTML = htmlToRender;
+            if (calcValue === '0' && !operators.includes(value) && value !== '.') {
+                calcValue = value;
+            } else {
+                const lastChar = calcValue.slice(-1);
+                if (operators.includes(lastChar) && operators.includes(value)) {
+                    calcValue = calcValue.slice(0, -1) + value;
+                } else {
+                    calcValue += value;
+                }
+            }
+            updateDisplay();
+        }
+        function deleteLast() { calcValue = calcValue.slice(0, -1) || '0'; checkWaitingForEquals(); updateDisplay(); }
+        function handleActionClick() { 
+            if (waitingForEquals) {
+                calculateResult(); 
+            } else if (currentTransactionId) {
+                updateTransaction(); // [UBAH INI]
+            } else {
+                saveTransaction(); 
+            }
+        }
+        function selectType(type) { currentType = type; document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); document.getElementById(type + 'Btn').classList.add('active'); selectedCategory = null; loadCategories(); }
+        function updateDisplay() {
+            const amountDisplay = document.getElementById('amountDisplay');
+            if (!amountDisplay) return;
+
+            // Pisahkan bagian integer dan desimal
+            let parts = calcValue.split('.');
             
-            // Pasang ulang listener untuk elemen-elemen baru
-            if (data && !data.error) {
-                document.getElementById('prevMonthBtn')?.addEventListener('click', goToPrevMonth);
-                document.getElementById('nextMonthBtn')?.addEventListener('click', goToNextMonth);
-                document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
-                document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
+            // Format bagian integer (sebelum koma) dengan titik pemisah ribuan
+            let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            
+            let displayValue;
+            if (parts.length > 1) {
+                // Jika ada desimal, gabungkan dengan KOMA
+                displayValue = integerPart + ',' + (parts[1] || '');
+            } else {
+                // Jika tidak ada desimal
+                displayValue = integerPart;
             }
             
-            // Terapkan status masking & view yang ada
-            applyMaskingState(getSettings().isBalanceMasked || false);
-            setView(currentView);
+            amountDisplay.textContent = displayValue;
+        }
+        function checkWaitingForEquals() { const hasOperator = ['+', '-', '*', '/'].some(op => calcValue.includes(op)); if (!hasOperator) { waitingForEquals = false; changeButtonToCheck(); } }
+        function changeButtonToEquals() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn equals'; actionBtn.innerHTML = '<i class="fas fa-equals"></i>'; }}
+        function changeButtonToCheck() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn check'; actionBtn.innerHTML = '<i class="fas fa-check"></i>'; }}
+        function calculateResult() { try { let expression = calcValue.replace(/×/g, '*').replace(/÷/g, '/'); const result = eval(expression); calcValue = String(result); waitingForEquals = false; changeButtonToCheck(); updateDisplay(); } catch (e) { calcValue = '0'; updateDisplay(); } }
+        function clearCalc() { calcValue = '0'; waitingForEquals = false; changeButtonToCheck(); updateDisplay(); }
+        function loadCategories() {
+            // [PERBAIKAN] Filter dari 'allCategories' global, sesuaikan 'type'
+            const typeToFilter = currentType.toUpperCase(); // 'expense' -> 'EXPENSE'
+            const categories = allCategories.filter(cat => cat.type === typeToFilter);
+
+            const recommendedGrid = document.getElementById('recommendedGrid');
+            const uncategorizedGrid = document.getElementById('uncategorizedGrid');
+            if(!recommendedGrid || !uncategorizedGrid) return;
+            
+            recommendedGrid.innerHTML = '';
+            uncategorizedGrid.innerHTML = '';
+            
+            // Logika slice dan render tetap sama
+            categories.slice(0, 4).forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat)));
+            categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat)));
         }
         
-        /**
-         * [BARU] Mengganti skeleton transaksi dengan daftar asli (atau skeleton lagi).
-         */
-        function renderTransactionList(data) {
-            const listContainer = document.getElementById('transaction-list-container');
-            if (!listContainer) return;
+        
+        
+        function createCategoryElement(category) {
+            const div = document.createElement('div');
+            div.className = 'category-item';
+            div.onclick = () => selectCategory(category, div);
             
-            let htmlToRender;
+            // [PERBAIKAN] Gunakan 'category.icon' dari database.
+            // Jika icon-nya null, gunakan huruf pertama sebagai cadangan.
+            const icon = category.icon || category.name.charAt(0).toUpperCase();
+            const defaultColor = 'var(--light-purple)'; // Warna default
 
-            if (data === null) {
-                // Tampilkan Skeleton (saat ganti bulan)
-                htmlToRender = `
-                <div class="card transaction-list skeleton-transaksi-wrapper">
-                    <div class="skeleton-list-header">
-                        <div class="skeleton-bar skeleton-text-sedang" style="width: 120px;"></div>
-                        <div class="skeleton-bar skeleton-text-kecil" style="width: 150px;"></div>
-                    </div>
-                    <div class="skeleton-list-item">
-                        <div class="skeleton-bar skeleton-icon-kategori"></div>
-                        <div class="skeleton-item-details">
-                            <div class="skeleton-bar skeleton-text-sedang" style="width: 60%;"></div>
-                            <div class="skeleton-bar skeleton-text-kecil" style="width: 40%;"></div>
-                        </div>
-                        <div class="skeleton-item-info">
-                            <div class="skeleton-bar skeleton-text-sedang" style="width: 90px;"></div>
-                            <div class="skeleton-bar skeleton-text-kecil" style="width: 60px;"></div>
-                        </div>
-                    </div>
-                    <div class="skeleton-list-item">
-                        <div class="skeleton-bar skeleton-icon-kategori"></div>
-                        <div class="skeleton-item-details">
-                            <div class="skeleton-bar skeleton-text-sedang" style="width: 50%;"></div>
-                            <div class="skeleton-bar skeleton-text-kecil" style="width: 30%;"></div>
-                        </div>
-                        <div class="skeleton-item-info">
-                            <div class="skeleton-bar skeleton-text-sedang" style="width: 80px;"></div>
-                            <div class="skeleton-bar skeleton-text-kecil" style="width: 50px;"></div>
-                        </div>
-                    </div>
-                </div>`;
+            div.innerHTML = `<div class="category-icon" style="background: ${defaultColor}">${icon}</div><div class="category-name">${category.name}</div>`;
             
-            } else if (data.error) {
-                // Tampilkan Error
-                htmlToRender = `<div class="card transaction-list empty-transaction-list" style="color: var(--expense-red);">Gagal memuat transaksi.</div>`;
-            
-            } else if (data.length === 0) {
-                // Tampilkan Pesan Kosong
-                htmlToRender = `<div class="card transaction-list empty-transaction-list">Belum ada transaksi di bulan ini</div>`;
-            
-            } else {
-                // Tampilkan Data Asli
-                const collapsedGroups = getCollapsedGroups();
-                const grouped = data.reduce((acc, tx) => {
-                    const dateKey = new Date(tx.date).toDateString();
-                    if (!acc[dateKey]) acc[dateKey] = [];
-                    acc[dateKey].push(tx);
-                    return acc;
-                }, {});
-                const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
-
-                htmlToRender = `<div class="card transaction-list">`;
-                for (const dateKey of sortedDates) {
-                    const txsOnThisDate = grouped[dateKey];
-                    const date = new Date(dateKey);
-                    const totalExpenseOnDate = txsOnThisDate.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-                    
-                    const isCollapsed = collapsedGroups.includes(dateKey);
-                    
-                    htmlToRender += `
-                    <div class="transaction-group ${isCollapsed ? 'collapsed' : ''}">
-                        <div class="list-header" onclick="toggleGroupCollapse('${dateKey}', this)">
-                            <div class="date-info">
-                                <i class="fas fa-chevron-down fa-xs"></i>
-                                <span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span>
-                            </div>
-                            <div class="summary">Pengeluaran: Rp${(totalExpenseOnDate).toLocaleString('id-ID')}</div>
-                        </div>
-                        <div class="transaction-items-container">
-                    `;
-                    
-                    txsOnThisDate.forEach(t => {
-                        const icon = t.icon || t.category.charAt(0).toUpperCase();
-                        const amountColor = t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)';
-                        const amountPrefix = t.type === 'expense' ? '-' : '';
-                        
-                        // [PENTING] Simpan data JSON di elemen untuk modal & swipe
-                        const txDataString = JSON.stringify(t).replace(/"/g, '&quot;');
-
-                        htmlToRender += `
-                        <div class="transaction-item-wrapper">
-                            <div class="transaction-item-actions">
-                                <button class="delete-btn" onclick="event.stopPropagation(); handleDeleteTransaction('${t.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                            <div class="transaction-item-content transaction-item" 
-                                 data-tx-json="${txDataString}"
-                                 ontouchstart="handleTouchStart(event)"
-                                 ontouchmove="handleTouchMove(event)"
-                                 ontouchend="handleTouchEnd(event)"
-                                 ontouchcancel="handleTouchEnd(event)"
-                                 onclick="handleItemClick(this)">
-                                
-                                <div class="icon" style="background-color: ${t.color};"><span>${icon}</span></div>
-                                <div class="details">
-                                    <div class="category">${t.category}</div>
-                                    <div class="notes">${t.notes}</div>
-                                </div>
-                                <div class="info">
-                                    <div class="amount data-maskable-amount" 
-                                         style="color: ${amountColor}" 
-                                         data-masked-color="${t.type}">
-                                        ${amountPrefix}Rp${(t.amount).toLocaleString('id-ID')}
-                                    </div>
-                                    <div class="account">${t.account}</div>
-                                </div>
-                            </div>
-                        </div>`;
-                    });
-
-                    htmlToRender += `</div></div>`; // Tutup items-container & transaction-group
-                }
-                htmlToRender += `</div>`; // Tutup transaction-list
+            // [TAMBAHKAN INI] Cek jika kategori ini adalah yang sedang dipilih
+            if (selectedCategory && category.id === selectedCategory.id) {
+                div.classList.add('selected');
             }
-
-            listContainer.innerHTML = htmlToRender;
-            
-            // Terapkan status masking
-            applyMaskingState(getSettings().isBalanceMasked || false);
+            return div;
         }
+        
+        
+        function selectCategory(category, element) { selectedCategory = category; document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); element.classList.add('selected'); }
+        async function saveTransaction() {
+            try {
+                const amount = parseFloat(calcValue); 
+                if (isNaN(amount) || amount <= 0) {
+                    alert('Masukkan jumlah yang valid'); // Ganti dengan modal custom
+                    return;
+                }
+                if (!selectedCategory) {
+                    alert('Pilih kategori terlebih dahulu'); // Ganti dengan modal custom
+                    return;
+                }
+
+                // 1. Dapatkan Token & Data Penting dari localStorage
+                //    (Kita asumsikan data ini disimpan setelah login/saat memilih dompet)
+                const token = localStorage.getItem('sessionToken');
+                
+                // [PENTING] Anda perlu cara untuk menyimpan dan mengambil walletId dan accountId yang sedang aktif
+                // Untuk contoh ini, kita asumsikan ID-nya di-hardcode atau diambil dari localStorage
+                const walletId = localStorage.getItem('currentWalletId'); // GANTI INI: Anda harus implementasikan logika untuk ini
+                const accountId = selectedAccountId;
 
 
-        // === BAGIAN 4: FUNGSI UTILITAS & FUNGSI HALAMAN LAMA (DIMODIFIKASI) ===
+                if (!token) {
+                    alert('Sesi tidak ditemukan. Silakan login ulang.');
+                    navigate('/login');
+                    return;
+                }
+                if (!walletId || !accountId) {
+                    alert('Dompet atau akun aktif tidak ditemukan. Silakan muat ulang.');
+                    // Di aplikasi nyata, Anda akan mengambil data ini dari API terlebih dahulu
+                    // Untuk sementara, kita bisa hentikan di sini
+                    console.error("currentWalletId atau selectedAccountId tidak ditemukan di localStorage.");
+                    return; 
+                }
 
+                // 2. Siapkan Payload (Body) sesuai spesifikasi API Anda
+                // Endpoint mengharapkan format YYYY-MM-DD untuk tanggal
+                const transactionDate = new Date().toISOString().split('T')[0]; 
+                
+                const payload = {
+                    wallet_id: walletId,
+                    type: currentType.toUpperCase(), // API mengharapkan 'EXPENSE' atau 'INCOME'
+                    amount: amount, // API Anda di 'queries.js' sudah menangani konversi ke sen
+                    category_id: selectedCategory.id,
+                    description: selectedCategory.name, // Anda bisa tambahkan input deskripsi terpisah nanti
+                    transaction_date: transactionDate,
+                };
+
+                // API 'queries.js' Anda mengharapkan 'from_account_id' atau 'to_account_id'
+                if (currentType === 'expense') {
+                    payload.from_account_id = accountId;
+                } else {
+                    payload.to_account_id = accountId;
+                }
+
+                // (Opsional) Tampilkan loading state di tombol
+                changeButtonToLoading(true); // Anda perlu membuat fungsi ini
+
+                // 3. Kirim data ke API
+                const response = await fetch(`https://api.casflo.id/api/v1/wallets/${walletId}/transactions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` // [WAJIB] Kirim token otentikasi
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error?.message || 'Gagal menyimpan transaksi');
+                }
+
+                // 4. Sukses!
+                console.log('Transaksi berhasil disimpan:', result.data);
+                
+                // Reset kalkulator & navigasi kembali ke halaman utama
+                clearCalc(); 
+                navigate('/'); 
+
+            } catch (error) {
+                console.error('Error saving transaction:', error);
+                alert(`Terjadi kesalahan: ${error.message}`); // Tampilkan error ke user
+            } finally {
+                // (Opsional) Hilangkan loading state
+                changeButtonToLoading(false); // Anda perlu membuat fungsi ini
+            }
+        }
+        // ... (setelah fungsi saveTransaction)
+
+        // [BARU] Fungsi untuk UPDATE transaksi
+        async function updateTransaction() {
+            try {
+                const amount = parseFloat(calcValue);
+                if (isNaN(amount) || amount <= 0) {
+                    alert('Masukkan jumlah yang valid');
+                    return;
+                }
+                if (!selectedCategory) {
+                    alert('Pilih kategori terlebih dahulu');
+                    return;
+                }
+
+                const token = localStorage.getItem('sessionToken');
+                const walletId = localStorage.getItem('currentWalletId');
+                const accountId = selectedAccountId;
+
+                if (!token || !walletId || !accountId || !currentTransactionId) {
+                    console.error("Data update tidak lengkap", { token, walletId, accountId, currentTransactionId });
+                    alert('Data tidak lengkap untuk memperbarui transaksi.');
+                    return;
+                }
+
+                const transactionDate = new Date().toISOString().split('T')[0]; // Anda bisa ganti ini dengan input tanggal
+                
+                const payload = {
+                    wallet_id: walletId,
+                    type: currentType.toUpperCase(),
+                    amount: amount, // Sudah dalam Rupiah
+                    category_id: selectedCategory.id,
+                    description: selectedCategory.name, // TODO: Tambah input deskripsi
+                    transaction_date: transactionDate,
+                };
+
+                if (currentType === 'expense') {
+                    payload.from_account_id = accountId;
+                } else {
+                    payload.to_account_id = accountId;
+                }
+
+                changeButtonToLoading(true);
+
+                // Panggil API PUT yang baru kita buat
+                const response = await fetch(`https://api.casflo.id/api/v1/wallets/${walletId}/transactions/${currentTransactionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error?.message || 'Gagal memperbarui transaksi');
+                }
+
+                console.log('Transaksi berhasil diperbarui:', result.data);
+                
+                clearCalc(); 
+                currentTransactionId = null; // Reset mode edit
+                navigate('/'); 
+
+            } catch (error) {
+                console.error('Error updating transaction:', error);
+                alert(`Terjadi kesalahan: ${error.message}`);
+            } finally {
+                changeButtonToLoading(false);
+            }
+        }
+        
+        // (Opsional) Fungsi helper untuk loading state
+        function changeButtonToLoading(isLoading) {
+            const actionBtn = document.getElementById('actionBtn');
+            if (!actionBtn) return;
+            
+            if (isLoading) {
+                actionBtn.disabled = true;
+                actionBtn.innerHTML = '<span class="loading-spinner-tombol"></span>'; // Anda perlu CSS untuk .loading-spinner-tombol
+            } else {
+                actionBtn.disabled = false;
+                // Kembalikan ke tombol 'check' atau 'equals'
+                checkWaitingForEquals(); 
+            }
+        }
+        // --- [PERBAIKAN KALENDER] Fungsi Halaman Utama ---
+        function setView(viewName) {
+            currentView = viewName;
+            localStorage.setItem('preferredView', viewName);
+            const overviewCard = document.getElementById('overviewCard');
+            const calendarCard = document.getElementById('calendarCard');
+            const detailToggleBtn = document.getElementById('detailToggleBtn');
+            const calendarToggleBtn = document.getElementById('calendarToggleBtn');
+
+            if (detailToggleBtn) detailToggleBtn.classList.toggle('active-view', viewName === 'overview');
+            if (calendarToggleBtn) calendarToggleBtn.classList.toggle('active-view', viewName === 'calendar');
+
+            if (viewName === 'overview') {
+                if (overviewCard) overviewCard.classList.remove('view-hidden');
+                if (calendarCard) calendarCard.classList.add('view-hidden');
+            } else {
+                if (overviewCard) overviewCard.classList.add('view-hidden');
+                if (calendarCard) calendarCard.classList.remove('view-hidden');
+                renderCalendar(); 
+            }
+        }
         function updateMonthDisplay() { 
             const display = document.getElementById('currentMonthDisplay');
             const calendarDisplay = document.getElementById('calendarMonthYear');
@@ -960,47 +1543,21 @@
             if (calendarDisplay) {
                  calendarDisplay.textContent = `${monthNames[month]} ${year}`;
             }
+            updateMainView(); 
         }
-        function goToPrevMonth() { 
-            currentDate.setMonth(currentDate.getMonth() - 1); 
-            loadMonthlyData(); // [PENTING] Panggil pemuat data baru
-        }
-        function goToNextMonth() { 
-            currentDate.setMonth(currentDate.getMonth() + 1); 
-            loadMonthlyData(); // [PENTING] Panggil pemuat data baru
-        }
-        
-        function setView(viewName) { 
-            currentView = viewName;
-            localStorage.setItem('preferredView', viewName);
-            const overviewContainer = document.getElementById('summary-card-container');
-            const calendarCard = document.getElementById('calendarCard');
-            const detailToggleBtn = document.getElementById('detailToggleBtn');
-            const calendarToggleBtn = document.getElementById('calendarToggleBtn');
-
-            if (detailToggleBtn) detailToggleBtn.classList.toggle('active-view', viewName === 'overview');
-            if (calendarToggleBtn) calendarToggleBtn.classList.toggle('active-view', viewName === 'calendar');
-
-            if (viewName === 'overview') {
-                if (overviewContainer) overviewContainer.classList.remove('view-hidden');
-                if (calendarCard) calendarCard.classList.add('view-hidden');
-            } else {
-                if (overviewContainer) overviewContainer.classList.add('view-hidden');
-                if (calendarCard) calendarCard.classList.remove('view-hidden');
-                renderCalendar(); 
-            }
-        }
+        function goToPrevMonth() { currentDate.setMonth(currentDate.getMonth() - 1); if(currentView === 'calendar') { renderCalendar(); } updateMonthDisplay(); }
+        function goToNextMonth() { currentDate.setMonth(currentDate.getMonth() + 1); if(currentView === 'calendar') { renderCalendar(); } updateMonthDisplay(); }
         function setCalendarFilter(filter) { 
             calendarFilter = filter;
-            document.getElementById('tabPengeluaran')?.classList.toggle('active', filter === 'expense');
-            document.getElementById('tabPenghasilan')?.classList.toggle('active', filter === 'income');
-            document.getElementById('tabTotal')?.classList.toggle('active', filter === 'total');
+            if (document.getElementById('tabPengeluaran')) document.getElementById('tabPengeluaran').classList.toggle('active', filter === 'expense');
+            if (document.getElementById('tabPenghasilan')) document.getElementById('tabPenghasilan').classList.toggle('active', filter === 'income');
+            if (document.getElementById('tabTotal')) document.getElementById('tabTotal').classList.toggle('active', filter === 'total');
             renderCalendar();
         }
         function renderCalendar() { 
-            /* ... (Fungsi renderCalendar Anda yang sudah ada, tidak perlu diubah) ... */
             const calendarGrid = document.getElementById('calendarGrid');
             if (!calendarGrid) return;
+            console.log("Merender kalender...");
             calendarGrid.innerHTML = '';
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -1035,217 +1592,582 @@
                 }
                 calendarGrid.appendChild(dayEl);
             }
-            // Update total kalender
-            const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-            const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-            const total = income - expense;
-            const formatCurrency = (value) => { const sign = value < 0 ? '-' : ''; return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; };
-            if(document.getElementById('calendarTotalAmount')) document.getElementById('calendarTotalAmount').textContent = formatCurrency(total);
-            if(document.getElementById('calendarIncomeAmount')) document.getElementById('calendarIncomeAmount').textContent = formatCurrency(income);
-            if(document.getElementById('calendarExpenseAmount')) document.getElementById('calendarExpenseAmount').textContent = formatCurrency(expense);
         }
+function renderTransactionList(filteredTransactions) { 
+            const transactionListEl = document.querySelector('.transaction-list');
+            if (!transactionListEl) return;
+            transactionListEl.innerHTML = '';
+            
+            const collapsedGroups = getCollapsedGroups();
+            
+            const grouped = filteredTransactions.reduce((acc, tx) => {
+                const dateKey = new Date(tx.date).toDateString();
+                if (!acc[dateKey]) {
+                    acc[dateKey] = [];
+                }
+                acc[dateKey].push(tx);
+                return acc;
+            }, {});
 
-        // --- (Fungsi Modal, Swipe, Collapse, Aksi, Navigasi, Kalkulator) ---
-        // Sebagian besar fungsi ini tidak berubah dari file asli Anda
-        
-        // [Fungsi Modal Dompet]
-        const walletModal = document.getElementById('wallet-modal-overlay');
-        const walletListContainer = document.getElementById('wallet-list-container');
-        async function openWalletSwitcher() {
-            if (!walletModal || !walletListContainer) return;
-            try {
-                const currentWalletId = localStorage.getItem('currentWalletId');
-                const wallets = await fetchApi('/wallets');
-                walletListContainer.innerHTML = ''; 
-                wallets.forEach(wallet => {
-                    const item = document.createElement('div');
-                    item.className = 'wallet-list-item';
-                    item.textContent = wallet.name;
-                    if (wallet.id === currentWalletId) {
-                        item.classList.add('active');
-                    }
-                    item.onclick = () => selectWallet(wallet.id, wallet.name);
-                    walletListContainer.appendChild(item);
-                });
-                walletModal.classList.add('visible');
-            } catch (error) { console.error("Gagal membuka pengganti dompet:", error); alert("Gagal memuat daftar dompet."); }
-        }
-        function closeWalletSwitcher() { if (walletModal) { walletModal.classList.remove('visible'); } }
-        function selectWallet(walletId, walletName) {
-            localStorage.setItem('currentWalletId', walletId);
-            localStorage.setItem('currentWalletName', walletName);
-            closeWalletSwitcher();
-            window.location.href = '/'; // Muat ulang untuk dompet baru
-        }
-        
-        // [Fungsi Modal Transaksi]
-        const txModal = document.getElementById('tx-modal-overlay');
-        function openTransactionModal(tx) {
-            if (!txModal) return;
-            currentTransactionId = tx.id;
-            document.getElementById('tx-modal-icon').textContent = tx.icon || tx.category.charAt(0);
-            document.getElementById('tx-modal-category-name').textContent = tx.category;
-            const amountEl = document.getElementById('tx-modal-amount');
-            const amount = Number(tx.amount) || 0;
-            const amountString = `${tx.type === 'expense' ? '-' : ''}Rp${amount.toLocaleString('id-ID')}`;
-            amountEl.textContent = amountString;
-            amountEl.style.color = tx.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)';
-            const date = new Date(tx.date + 'T00:00:00');
-            document.getElementById('tx-modal-date').textContent = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-            document.getElementById('tx-modal-account').textContent = tx.account;
-            document.getElementById('tx-modal-notes').textContent = tx.notes;
-            document.getElementById('tx-modal-wallet').textContent = localStorage.getItem('currentWalletName') || '...';
-            txModal.classList.add('visible');
-        }
-        function closeTransactionModal() { if (txModal) { txModal.classList.remove('visible'); currentTransactionId = null; } }
-        
-        // [Fungsi Collapse]
-        const COLLAPSED_KEY = 'casflo_collapsed_groups';
-        function getCollapsedGroups() { try { const collapsed = localStorage.getItem(COLLAPSED_KEY); return collapsed ? JSON.parse(collapsed) : []; } catch (e) { return []; } }
-        function saveCollapsedGroups(groups) { localStorage.setItem(COLLAPSED_KEY, JSON.stringify(groups)); }
-        function toggleGroupCollapse(dateKey, headerElement) {
-            const group = headerElement.closest('.transaction-group');
-            if (!group) return;
-            const isCollapsed = group.classList.toggle('collapsed');
-            let collapsedGroups = getCollapsedGroups();
-            if (isCollapsed) { if (!collapsedGroups.includes(dateKey)) { collapsedGroups.push(dateKey); } }
-            else { collapsedGroups = collapsedGroups.filter(key => key !== dateKey); }
-            saveCollapsedGroups(collapsedGroups);
-        }
-        
-        // [Fungsi Swipe]
-        function closeActiveSwipe() { if (activeSwipeElement) { activeSwipeElement.style.transform = 'translateX(0)'; activeSwipeElement = null; } }
-        function handleTouchStart(e) { const targetContent = e.currentTarget; if (targetContent !== activeSwipeElement) { closeActiveSwipe(); } touchStartX = e.touches[0].clientX; touchCurrentX = touchStartX; touchStartY = e.touches[0].clientY; isSwiping = false; targetContent.style.transition = 'none'; }
-        function handleTouchMove(e) { if (e.touches.length > 1) return; touchCurrentX = e.touches[0].clientX; const deltaX = touchCurrentX - touchStartX; if (!isSwiping) { const deltaY = e.touches[0].clientY - touchStartY; if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) { return; } } isSwiping = true; e.preventDefault(); let newTransform = deltaX; if (deltaX > 0) newTransform = 0; if (deltaX < -100) newTransform = -100; e.currentTarget.style.transform = `translateX(${newTransform}px)`; }
-        function handleTouchEnd(e) { const targetContent = e.currentTarget; const actionWidth = 80; targetContent.style.transition = 'transform 0.3s ease-out'; if (isSwiping) { const deltaX = touchCurrentX - touchStartX; if (deltaX < swipeThreshold) { targetContent.style.transform = `translateX(-${actionWidth}px)`; activeSwipeElement = targetContent; } else { targetContent.style.transform = 'translateX(0)'; if (targetContent === activeSwipeElement) { activeSwipeElement = null; } } } }
-        
-        // [BARU] Aksi Klik Item (membedakan tap & swipe)
-        function handleItemClick(element) {
-            if (!isSwiping && !activeSwipeElement) {
-                // Ini adalah 'tap' murni, buka modal
-                const txData = JSON.parse(element.getAttribute('data-tx-json'));
-                openTransactionModal(txData);
-            } else if (activeSwipeElement) {
-                // Item sedang terbuka, 'tap' akan menutupnya
-                closeActiveSwipe();
+            if (Object.keys(grouped).length === 0) {
+                transactionListEl.innerHTML = `<div class="empty-transaction-list">Belum ada transaksi di bulan ini</div>`;
+                return;
             }
-            // Reset status swipe untuk klik berikutnya
-            isSwiping = false; 
-        }
 
-        // [Fungsi Aksi Transaksi]
-        async function handleDeleteTransaction(txId) {
-            const transactionIdToDelete = txId || currentTransactionId;
-            if (!transactionIdToDelete) return;
-            if (!confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) return;
+            const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+            
+            for (const dateKey of sortedDates) {
+                const txsOnThisDate = grouped[dateKey];
+                const date = new Date(dateKey);
+                
+                const totalExpenseOnDate = txsOnThisDate
+                    .filter(t => t.type === 'expense')
+                    .reduce((sum, t) => sum + t.amount, 0);
+
+                const groupEl = document.createElement('div');
+                groupEl.className = 'transaction-group';
+
+                const listHeader = document.createElement('div');
+                listHeader.className = 'list-header';
+                
+                listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: Rp${(totalExpenseOnDate).toLocaleString('id-ID')}</div>`;
+                listHeader.onclick = () => toggleGroupCollapse(dateKey, listHeader);
+                
+                const itemsContainer = document.createElement('div');
+                itemsContainer.className = 'transaction-items-container';
+
+                if (collapsedGroups.includes(dateKey)) {
+                    groupEl.classList.add('collapsed');
+                }
+                
+                groupEl.appendChild(listHeader);
+
+                // [PERBAIKAN DIMULAI DI SINI]
+                txsOnThisDate.forEach(t => {
+                    // 1. Buat Wrapper Utama
+                    const itemWrapper = document.createElement('div');
+                    itemWrapper.className = 'transaction-item-wrapper';
+
+                    // 2. Buat Tombol Aksi (tersembunyi)
+                    const itemActions = document.createElement('div');
+                    itemActions.className = 'transaction-item-actions';
+                    itemActions.innerHTML = `
+                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                    `;
+                    
+                    // [INI YANG HILANG DARI FILE ANDA]
+                    // Tambahkan listener ke tombol (passing t.id)
+                    itemActions.querySelector('.delete-btn').onclick = (e) => {
+                        e.stopPropagation(); // Hentikan event agar tidak menutup swipe
+                        handleDeleteTransaction(t.id); // Panggil fungsi yang sudah ada
+                    };
+                    // [AKHIR BAGIAN HILANG]
+
+
+                    // 3. Buat Konten yang Terlihat (yang akan digeser)
+                    const itemContent = document.createElement('div');
+                    itemContent.className = 'transaction-item-content transaction-item'; // Gabungkan kelas
+                    
+                    const icon = t.icon || t.category.charAt(0).toUpperCase();
+                    itemContent.innerHTML = `
+                        <div class="icon" style="background-color: ${t.color};"><span>${icon}</span></div>
+                        <div class="details"><div class="category">${t.category}</div><div class="notes">${t.notes}</div></div>
+                        <div class="info">
+                            <div class="amount data-maskable-amount" 
+                                 style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}"
+                                 data-masked-color="${t.type}">
+                                ${t.type === 'expense' ? '-' : ''}Rp${(t.amount).toLocaleString('id-ID')}
+                            </div>
+                            <div class="account">${t.account}</div>
+                        </div>`;
+
+                    // [INI JUGA HILANG DARI FILE ANDA]
+                    // Tambahkan listener swipe ke item KONTEN
+                    itemContent.addEventListener('touchstart', handleTouchStart, { passive: true });
+                    itemContent.addEventListener('touchmove', handleTouchMove, { passive: false }); // false untuk izinkan preventDefault
+                    itemContent.addEventListener('touchend', handleTouchEnd);
+                    itemContent.addEventListener('touchcancel', handleTouchEnd);
+                    
+                    // (Opsional) Klik (Tap) akan membuka modal
+                    itemContent.onclick = () => {
+                        // Hanya panggil modal jika item tidak digeser
+                        if (!isSwiping && !activeSwipeElement) {
+                             openTransactionModal(t);
+                        } else if (activeSwipeElement) {
+                            // Jika item sudah terbuka, klik lagi akan menutupnya
+                            closeActiveSwipe();
+                        }
+                    };
+                    // [AKHIR BAGIAN HILANG]
+
+                    // 4. Susun elemen
+                    itemWrapper.appendChild(itemActions);
+                    itemWrapper.appendChild(itemContent);
+                    
+                    // 5. Append wrapper ke kontainer
+                    itemsContainer.appendChild(itemWrapper);
+                });
+                // [PERBAIKAN SELESAI]
+                
+                groupEl.appendChild(itemsContainer);
+                transactionListEl.appendChild(groupEl);
+            }
+        }
+       // [PERBAIKAN] Fungsi diubah menjadi async untuk mengambil data dari API
+        async function updateMainView() { 
+            console.log("Memuat data API untuk", currentDate.toISOString().slice(0, 7));
+            
             const walletId = localStorage.getItem('currentWalletId');
-            try {
-                await fetchApi(`/wallets/${walletId}/transactions/${transactionIdToDelete}`, { method: 'DELETE' });
-                closeTransactionModal();
-                closeActiveSwipe();
-                loadMonthlyData(); // Muat ulang data bulanan
-            } catch (error) { console.error('Gagal menghapus transaksi:', error); alert('Gagal menghapus: ' + error.message); }
-        }
-        function handleEditTransaction(txId) {
-            const transactionIdToEdit = txId || currentTransactionId;
-            if (!transactionIdToEdit) return;
-            const tx = transactions.find(t => t.id === transactionIdToEdit);
-            if (tx) {
-                sessionStorage.setItem('tx_for_edit', JSON.stringify(tx));
-                closeTransactionModal();
-                closeActiveSwipe();
-                navigate('/create');
-            } else { alert('Gagal menemukan data transaksi untuk diedit.'); }
-        }
-        
-        // [Fungsi Kalkulator & Halaman Create]
-        function appendToCalc(value) { const operators = ['+', '-', '*', '/']; if (operators.includes(value)) { waitingForEquals = true; changeButtonToEquals(); } if (value === '.' && calcValue.includes('.')) { return; } if (calcValue === '0' && !operators.includes(value) && value !== '.') { calcValue = value; } else { const lastChar = calcValue.slice(-1); if (operators.includes(lastChar) && operators.includes(value)) { calcValue = calcValue.slice(0, -1) + value; } else { calcValue += value; } } updateDisplay(); }
-        function deleteLast() { calcValue = calcValue.slice(0, -1) || '0'; checkWaitingForEquals(); updateDisplay(); }
-        function handleActionClick() { if (waitingForEquals) { calculateResult(); } else if (currentTransactionId) { updateTransaction(); } else { saveTransaction(); } }
-        function selectType(type) { currentType = type; document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); document.getElementById(type + 'Btn').classList.add('active'); selectedCategory = null; loadCategories(); }
-        function updateDisplay() { const amountDisplay = document.getElementById('amountDisplay'); if (!amountDisplay) return; let parts = calcValue.split('.'); let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); let displayValue; if (parts.length > 1) { displayValue = integerPart + ',' + (parts[1] || ''); } else { displayValue = integerPart; } amountDisplay.textContent = displayValue; }
-        function checkWaitingForEquals() { const hasOperator = ['+', '-', '*', '/'].some(op => calcValue.includes(op)); if (!hasOperator) { waitingForEquals = false; changeButtonToCheck(); } }
-        function changeButtonToEquals() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn equals'; actionBtn.innerHTML = '<i class="fas fa-equals"></i>'; }}
-        function changeButtonToCheck() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn check'; actionBtn.innerHTML = '<i class="fas fa-check"></i>'; }}
-        function calculateResult() { try { let expression = calcValue.replace(/×/g, '*').replace(/÷/g, '/'); const result = eval(expression); calcValue = String(result); waitingForEquals = false; changeButtonToCheck(); updateDisplay(); } catch (e) { calcValue = '0'; updateDisplay(); } }
-        function clearCalc() { calcValue = '0'; waitingForEquals = false; changeButtonToCheck(); updateDisplay(); }
-        function loadCategories() { const typeToFilter = currentType.toUpperCase(); const categories = allCategories.filter(cat => cat.type === typeToFilter); const recommendedGrid = document.getElementById('recommendedGrid'); const uncategorizedGrid = document.getElementById('uncategorizedGrid'); if(!recommendedGrid || !uncategorizedGrid) return; recommendedGrid.innerHTML = ''; uncategorizedGrid.innerHTML = ''; categories.slice(0, 4).forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat))); categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat))); }
-        function createCategoryElement(category) { const div = document.createElement('div'); div.className = 'category-item'; div.onclick = () => selectCategory(category, div); const icon = category.icon || category.name.charAt(0).toUpperCase(); const defaultColor = 'var(--light-purple)'; div.innerHTML = `<div class="category-icon" style="background: ${defaultColor}">${icon}</div><div class="category-name">${category.name}</div>`; if (selectedCategory && category.id === selectedCategory.id) { div.classList.add('selected'); } return div; }
-        function selectCategory(category, element) { selectedCategory = category; document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); element.classList.add('selected'); }
-        async function saveTransaction() { try { const amount = parseFloat(calcValue.replace(/\./g, '').replace(',', '.')); if (isNaN(amount) || amount <= 0) { alert('Masukkan jumlah yang valid'); return; } if (!selectedCategory) { alert('Pilih kategori terlebih dahulu'); return; } const walletId = localStorage.getItem('currentWalletId'); const accountId = selectedAccountId; if (!walletId || !accountId) { console.error("currentWalletId atau selectedAccountId tidak ditemukan."); return; } const transactionDate = new Date().toISOString().split('T')[0]; const payload = { wallet_id: walletId, type: currentType.toUpperCase(), amount: amount, category_id: selectedCategory.id, description: selectedCategory.name, transaction_date: transactionDate, }; if (currentType === 'expense') { payload.from_account_id = accountId; } else { payload.to_account_id = accountId; } changeButtonToLoading(true); await fetchApi(`/wallets/${walletId}/transactions`, { method: 'POST', body: JSON.stringify(payload) }); clearCalc(); navigate('/'); } catch (error) { console.error('Error saving transaction:', error); alert(`Terjadi kesalahan: ${error.message}`); } finally { changeButtonToLoading(false); } }
-        async function updateTransaction() { try { const amount = parseFloat(calcValue.replace(/\./g, '').replace(',', '.')); if (isNaN(amount) || amount <= 0) { alert('Masukkan jumlah yang valid'); return; } if (!selectedCategory) { alert('Pilih kategori terlebih dahulu'); return; } const walletId = localStorage.getItem('currentWalletId'); const accountId = selectedAccountId; if (!walletId || !accountId || !currentTransactionId) { alert('Data tidak lengkap untuk memperbarui transaksi.'); return; } const transactionDate = new Date().toISOString().split('T')[0]; const payload = { wallet_id: walletId, type: currentType.toUpperCase(), amount: amount, category_id: selectedCategory.id, description: selectedCategory.name, transaction_date: transactionDate, }; if (currentType === 'expense') { payload.from_account_id = accountId; } else { payload.to_account_id = accountId; } changeButtonToLoading(true); await fetchApi(`/wallets/${walletId}/transactions/${currentTransactionId}`, { method: 'PUT', body: JSON.stringify(payload) }); clearCalc(); currentTransactionId = null; navigate('/'); } catch (error) { console.error('Error updating transaction:', error); alert(`Terjadi kesalahan: ${error.message}`); } finally { changeButtonToLoading(false); } }
-        function changeButtonToLoading(isLoading) { const actionBtn = document.getElementById('actionBtn'); if (!actionBtn) return; if (isLoading) { actionBtn.disabled = true; actionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; } else { actionBtn.disabled = false; checkWaitingForEquals(); } }
-        function updateAccountIcon(accountId) { const account = allAccounts.find(acc => acc.id === accountId); if (!account) return; const accountCard = document.querySelector('.account-card'); if (accountCard) { const initial = account.name.substring(0, 2).toUpperCase(); accountCard.innerHTML = `<span style="font-size: 1.2rem; font-weight: 600;">${initial}</span>`; } }
-        function selectAccount() { if (allAccounts.length === 0) return; const currentIndex = allAccounts.findIndex(acc => acc.id === selectedAccountId); const nextIndex = (currentIndex + 1) % allAccounts.length; const nextAccount = allAccounts[nextIndex]; selectedAccountId = nextAccount.id; updateAccountIcon(selectedAccountId); console.log(`Akun diubah ke: ${nextAccount.name}`); }
+            if (!walletId) {
+                console.warn("updateMainView: Menunggu walletId...");
+                return; // Berhenti jika data awal (dari initializeAppData) belum dimuat
+            }
 
-        // === BAGIAN 5: INISIALISASI HALAMAN & ROUTING ===
+            // Tentukan rentang tanggal untuk filter API
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            // Format YYYY-MM-DD
+            const startDate = new Date(year, month, 1).toISOString().split('T')[0];
+            const endDate = new Date(year, month + 1, 0).toISOString().split('T')[0];
+
+            try {
+                // Ambil transaksi dari API, BUKAN dari array global
+                // [MEMANGGIL API] GET /api/v1/wallets/:walletId/transactions
+                const fetchedTransactions = await fetchApi(
+                    `/wallets/${walletId}/transactions?startDate=${startDate}&endDate=${endDate}`
+                );
+                
+                // [PENTING] Konversi data API ke format yang diharapkan oleh renderTransactionList()
+                // BLOK BARU YANG BENAR:
+                transactions = fetchedTransactions.map(tx => {
+                    // API mengirim: 'EXPENSE' (amount positif) atau 'INCOME' (amount negatif)
+                    const isExpense = tx.category_type === 'EXPENSE'; 
+                    return {
+                        id: tx.id,
+                        type: isExpense ? 'expense' : 'income',
+                        amount: Math.abs(tx.amount), // Ini sudah Rupiah
+                        category: tx.category_name,
+                        notes: tx.description || 'Tanpa catatan',
+                        account: tx.account_name, 
+                        icon: tx.category_icon, // [PERBAIKAN] Gunakan ikon dari API
+                        color: 'var(--light-purple)', // Warna default
+                        date: tx.transaction_date,
+                        category_id: tx.category_id, // [TAMBAHKAN INI]
+                        account_id: tx.account_id   // [TAMBAHKAN INI]
+                    };
+                });
+
+                // Sisa fungsi ini SAMA seperti sebelumnya
+                const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+                const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+                const total = income - expense;
+                const formatCurrency = (value) => { 
+                    const sign = value < 0 ? '-' : ''; 
+                    // [PERBAIKAN] Pastikan tidak ada / 100 di sini
+                    return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; 
+                };
+                // [BARU] Fungsi helper untuk update ikon akun di halaman /create
+                function updateAccountIcon(accountId) {
+                    const account = allAccounts.find(acc => acc.id === accountId);
+                    if (!account) return;
+
+                    const accountCard = document.querySelector('.account-card');
+                    if (accountCard) {
+                        // Tampilkan 2 huruf inisial nama akun
+                        const initial = account.name.substring(0, 2).toUpperCase();
+                        accountCard.innerHTML = `<span style="font-size: 1.2rem; font-weight: 600;">${initial}</span>`;
+                    }
+                }
+
+                // [BARU] Implementasi fungsi selectAccount()
+                function selectAccount() {
+                    if (allAccounts.length === 0) return; // Belum dimuat
+
+                    // 1. Cari indeks akun yang sedang dipilih
+                    const currentIndex = allAccounts.findIndex(acc => acc.id === selectedAccountId);
+                    // 2. Dapatkan indeks berikutnya, kembali ke 0 jika sudah di akhir
+                    const nextIndex = (currentIndex + 1) % allAccounts.length;
+                    
+                    const nextAccount = allAccounts[nextIndex];
+                    selectedAccountId = nextAccount.id; // 3. Set akun baru secara global
+
+                    // 4. Update UI
+                    updateAccountIcon(selectedAccountId);
+                    console.log(`Akun diubah ke: ${nextAccount.name}`);
+                }
+                
+                
+                
+                if(document.getElementById('totalAmount')) document.getElementById('totalAmount').textContent = formatCurrency(total);
+                if(document.getElementById('incomeAmount')) document.getElementById('incomeAmount').textContent = formatCurrency(income);
+                if(document.getElementById('expenseAmount')) document.getElementById('expenseAmount').textContent = formatCurrency(expense);
+                if(document.getElementById('calendarTotalAmount')) document.getElementById('calendarTotalAmount').textContent = formatCurrency(total);
+                if(document.getElementById('calendarIncomeAmount')) document.getElementById('calendarIncomeAmount').textContent = formatCurrency(income);
+                if(document.getElementById('calendarExpenseAmount')) document.getElementById('calendarExpenseAmount').textContent = formatCurrency(expense);
+                
+                renderTransactionList(transactions.sort((a, b) => new Date(b.date) - new Date(a.date)));
+                if(currentView === 'calendar') renderCalendar();
+            
+            } catch (error) {
+                console.error("Gagal memuat transaksi:", error);
+                if (error.message !== 'Sesi kedaluwarsa') {
+                   alert("Gagal memuat transaksi: " + error.message);
+                }
+            }
+        }
+        // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
+        // Fungsi helper untuk update ikon akun di halaman /create
+        function updateAccountIcon(accountId) {
+            const account = allAccounts.find(acc => acc.id === accountId);
+            if (!account) return;
+
+            const accountCard = document.querySelector('.account-card');
+            if (accountCard) {
+                // Tampilkan 2 huruf inisial nama akun
+                const initial = account.name.substring(0, 2).toUpperCase();
+                accountCard.innerHTML = `<span style="font-size: 1.2rem; font-weight: 600;">${initial}</span>`;
+            }
+        }
+
+        // Implementasi fungsi selectAccount()
+        function selectAccount() {
+            if (allAccounts.length === 0) return; // Belum dimuat
+
+            // 1. Cari indeks akun yang sedang dipilih
+            const currentIndex = allAccounts.findIndex(acc => acc.id === selectedAccountId);
+            // 2. Dapatkan indeks berikutnya, kembali ke 0 jika sudah di akhir
+            const nextIndex = (currentIndex + 1) % allAccounts.length;
+            
+            const nextAccount = allAccounts[nextIndex];
+            selectedAccountId = nextAccount.id; // 3. Set akun baru secara global
+
+            // 4. Update UI
+            updateAccountIcon(selectedAccountId);
+            console.log(`Akun diubah ke: ${nextAccount.name}`);
+        }
+
+        // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
         function initMainPage() {
-            console.log("Halaman Utama diinisialisasi (hanya listener statis).");
-            // Pasang listener HANYA untuk elemen yang PASTI ADA saat skeleton dimuat
+            console.log("Halaman Utama diinisialisasi.");
+            document.getElementById('detailToggleBtn')?.addEventListener('click', () => setView('overview'));
+            document.getElementById('calendarToggleBtn')?.addEventListener('click', () => setView('calendar'));
+            document.getElementById('prevMonthBtn')?.addEventListener('click', goToPrevMonth);
+            document.getElementById('nextMonthBtn')?.addEventListener('click', goToNextMonth);
             document.getElementById('calendarPrevMonthBtn')?.addEventListener('click', goToPrevMonth);
             document.getElementById('calendarNextMonthBtn')?.addEventListener('click', goToNextMonth);
             document.getElementById('tabPengeluaran')?.addEventListener('click', () => setCalendarFilter('expense'));
             document.getElementById('tabPenghasilan')?.addEventListener('click', () => setCalendarFilter('income'));
             document.getElementById('tabTotal')?.addEventListener('click', () => setCalendarFilter('total'));
-            
-            // Listener untuk tombol toggle view (ini ada di header skeleton, jadi aman)
-            // (Listener ini dipasang ulang di dalam renderHeader agar lebih kokoh)
-            document.getElementById('detailToggleBtn')?.addEventListener('click', () => setView('overview'));
-            document.getElementById('calendarToggleBtn')?.addEventListener('click', () => setView('calendar'));
+            document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
+            document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
 
             const savedView = localStorage.getItem('preferredView');
-            setView(savedView || 'overview');
-        }
-        function initCreatePage() { const txToEditJSON = sessionStorage.getItem('tx_for_edit'); if (txToEditJSON) { const tx = JSON.parse(txToEditJSON); currentTransactionId = tx.id; currentType = tx.type; calcValue = String(tx.amount); selectedAccountId = tx.account_id; selectedCategory = allCategories.find(c => c.id === tx.category_id); document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); document.getElementById(currentType + 'Btn').classList.add('active'); loadCategories(); updateDisplay(); updateAccountIcon(selectedAccountId); sessionStorage.removeItem('tx_for_edit'); } else { currentTransactionId = null; currentType = 'expense'; selectedCategory = null; clearCalc(); loadCategories(); updateAccountIcon(selectedAccountId); } console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`); }
-        function initWalletPage() { console.log("Halaman dompet dimuat."); attachThemeToggle('.theme-toggle'); /* ... (Logika load data dompet Anda) ... */ }
-        function initAnalysisPage() { console.log("Halaman Analisis dimuat."); /* ... (Logika halaman analisis Anda) ... */ }
-        function initMorePage() { 
-            console.log("Halaman More dimuat."); 
-            document.getElementById('logout-btn')?.addEventListener('click', () => { 
-                if (confirm("Apakah Anda yakin ingin logout?")) { 
-                    localStorage.removeItem('sessionToken'); 
-                    window.location.href = '/login'; 
-                } 
-            }); 
+            if (document.getElementById('detailToggleBtn')) { 
+                setView(savedView || 'overview');
+            }
+            if (document.getElementById('currentMonthDisplay')) {
+                updateMonthDisplay(); 
+            }
+
+            // [PERBAIKAN] Ambil nama dompet dari localStorage
+            const walletName = localStorage.getItem('currentWalletName');
+            if (walletName) {
+                // 1. Update header utama
+                const walletNameEl = document.getElementById('currentWalletNameDisplay');
+                if (walletNameEl) {
+                    walletNameEl.textContent = walletName;
+                }
+
+                // 2. Update kotak aksi
+                const walletShortNameEl = document.getElementById('currentWalletNameShort');
+                if (walletShortNameEl) {
+                    // Tampilkan 6 karakter pertama + ...
+                    walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
+                }
+            }
+            // [PERBAIKAN] Tambahkan listener untuk tombol pengganti dompet
+            document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
+            
+            // [PERBAIKAN] Fungsikan tombol "Baru B..."
+            document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
+                navigate('/create-wallet');
+            });
+
             // Pasang listener untuk tombol mode gelap/terang
             attachThemeToggle('.theme-toggle'); 
+        }
+        
+        function initCreatePage() {
+            // [BARU] Cek apakah ada data edit di sessionStorage
+            const txToEditJSON = sessionStorage.getItem('tx_for_edit');
             
-            // Logika animasi grid
+            if (txToEditJSON) {
+                // === MODE EDIT ===
+                const tx = JSON.parse(txToEditJSON);
+                
+                currentTransactionId = tx.id; // Set ID global untuk flag 'edit'
+                currentType = tx.type;
+                calcValue = String(tx.amount);
+                selectedAccountId = tx.account_id;
+                selectedCategory = allCategories.find(c => c.id === tx.category_id);
+                
+                // Set tombol tipe (Pemasukan/Pengeluaran)
+                document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active'));
+                document.getElementById(currentType + 'Btn').classList.add('active');
+                
+                loadCategories(); // Muat kategori (akan otomatis memilih yang benar)
+                updateDisplay(); // Tampilkan jumlah di kalkulator
+                updateAccountIcon(selectedAccountId); // Tampilkan ikon akun
+                
+                // Hapus data dari session agar tidak terpakai lagi
+                sessionStorage.removeItem('tx_for_edit');
+                
+            } else {
+                // === MODE BUAT BARU (logika yang sudah ada) ===
+                currentTransactionId = null; // Pastikan null
+                currentType = 'expense';
+                selectedCategory = null;
+                clearCalc();
+                loadCategories(); 
+                updateAccountIcon(selectedAccountId); // Set akun default
+            }
+            
+            console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
+        }
+
+        function initWalletPage() { 
+            console.log("Halaman dompet dimuat."); 
+            // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
+            attachThemeToggle('.theme-toggle');
+        }
+        
+        function initAnalysisPage() {
+            console.log("Halaman Analisis dimuat.");
+
+            const activePill = document.querySelector('.header-tabs .active-pill');
+            const tabButtons = document.querySelectorAll('.header-tabs .tab-button');
+            if (!activePill || !tabButtons.length) return;
+
+            function movePill(targetButton) {
+                requestAnimationFrame(() => {
+                    if (targetButton) {
+                        activePill.style.width = `${targetButton.offsetWidth}px`;
+                        activePill.style.left = `${targetButton.offsetLeft}px`;
+                    }
+                });
+            }
+
+            function handleTabClick(event) {
+                const clickedButton = event.currentTarget;
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                clickedButton.classList.add('active');
+                movePill(clickedButton);
+
+                const mode = clickedButton.dataset.mode;
+                if (mode === 'pengeluaran') {
+                    animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)');
+                } else if (mode === 'penghasilan') {
+                    animateChart(85, 850000000, 'Penghasilan', 'var(--income-green)');
+                } else {
+                    animateChart(0, 0, mode.charAt(0).toUpperCase() + mode.slice(1), '#ccc');
+                }
+            }
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', handleTabClick);
+            });
+
+            // [PERBAIKAN KUNCI] Beri jeda sesaat sebelum menghitung posisi awal.
+            // Ini memberi waktu bagi browser untuk menyelesaikan render animasi CSS.
+            const initialActiveTab = document.querySelector('.header-tabs .tab-button.active');
+            if (initialActiveTab) {
+                setTimeout(() => {
+                    movePill(initialActiveTab);
+                }, 50); // Jeda 50 milidetik biasanya sudah cukup.
+            }
+            
+            // Menambahkan listener untuk memperbaiki posisi saat layar dirotasi
+            window.addEventListener('resize', () => {
+                const currentActiveTab = document.querySelector('.header-tabs .tab-button.active');
+                if (currentActiveTab) {
+                    movePill(currentActiveTab);
+                }
+            });
+            
+                        function animateChart(percentage, totalAmount, label, color) {
+                const segment = document.getElementById('chart-segment');
+                const amountEl = document.getElementById('chart-total-amount');
+                const labelEl = document.getElementById('chart-center-label');
+                if (!segment || !amountEl || !labelEl) return;
+                labelEl.textContent = label;
+                segment.style.stroke = color;
+                const radius = segment.r.baseVal.value;
+                const circumference = 2 * Math.PI * radius;
+                segment.style.strokeDasharray = `${circumference} ${circumference}`;
+                const offset = circumference - (percentage / 100) * circumference;
+                segment.style.strokeDashoffset = offset;
+                let currentAmount = 0;
+                const steps = 100;
+                const increment = totalAmount / steps;
+                if(window.chartCounter) clearInterval(window.chartCounter);
+                window.chartCounter = setInterval(() => {
+                    currentAmount += increment;
+                    if (currentAmount >= totalAmount) {
+                        currentAmount = totalAmount;
+                        clearInterval(window.chartCounter);
+                    }
+                    amountEl.textContent = 'Rp' + Math.floor(currentAmount).toLocaleString('id-ID');
+                }, 10);
+            }
+
+
+            setTimeout(() => {
+                animateChart(99.9, 1000204542, 'Pengeluaran', 'var(--expense-red)'); 
+            }, 100);
+        }
+
+        function initMorePage() {
+            currentType = 'expense';
+            selectedCategory = null;
+            clearCalc();
+            loadCategories();
+            console.log("Halaman More dimuat.");
+
+             const logoutButton = document.getElementById('logout-btn');
+        
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    console.log("Tombol Logout diklik.");
+                    
+                    // Tampilkan konfirmasi sederhana
+                    // NOTE: confirm() mungkin tidak berfungsi di beberapa lingkungan 'blob'
+                    // Jika ini tidak muncul, kita harus membuat modal custom
+                    if (confirm("Apakah Anda yakin ingin logout?")) {
+                        // 1. Hapus session token dari localStorage
+                        localStorage.removeItem('sessionToken');
+                        
+                        // 2. Arahkan pengguna kembali ke halaman login (reload penuh)
+                        window.location.href = '/login';
+                    }
+                });
+            }
+
             const gridItems = document.querySelectorAll('.more-grid .grid-item');
             if (gridItems.length > 0) {
                 gridItems.forEach((item, index) => {
+                    // Terapkan penundaan (delay) untuk setiap item
+                    // 50ms * index = 0ms, 50ms, 100ms, dst.
                     setTimeout(() => {
                         item.classList.add('visible');
-                    }, index * 50);
+                    }, index * 50); // Penundaan 50ms per item
                 });
+            }
+
+        }
+
+        // === BAGIAN 3: LOGIKA SPA ROUTING (DENGAN PERBAIKAN) ===
+        
+        const pageContainer = document.getElementById('app-container');
+        const isBlobEnvironment = window.location.protocol === 'blob:';
+
+        function runPageInit(path) {
+            if (path === '/') { initMainPage(); } 
+            else if (path === '/wallet') { initWalletPage(); } 
+            else if (path === '/create') { initCreatePage(); }
+            else if (path === '/more') { initMorePage(); }
+            else if (path === '/analysis') { initAnalysisPage(); }
+        }
+
+        function executePageScript(newContentElement) {
+            const oldScript = document.getElementById('page-specific-script');
+            if (oldScript) {
+                oldScript.parentNode.removeChild(oldScript);
+            }
+            const scriptTemplate = newContentElement.querySelector('script[type="text/javascript-template"]');
+            if (scriptTemplate) {
+                try {
+                    const newScript = document.createElement('script');
+                    newScript.id = 'page-specific-script';
+                    newScript.textContent = scriptTemplate.textContent;
+                    document.body.appendChild(newScript);
+                } catch (e) {
+                    console.error("Error executing page script:", e);
+                }
             }
         }
         
-        // [Fungsi Routing SPA]
-        const pageContainer = document.getElementById('app-container');
-        const isBlobEnvironment = window.location.protocol === 'blob:';
-        function runPageInit(path) { if (path === '/') { initMainPage(); } else if (path === '/wallet') { initWalletPage(); } else if (path === '/create') { initCreatePage(); } else if (path === '/more') { initMorePage(); } else if (path === '/analysis') { initAnalysisPage(); } }
-        function executePageScript(newContentElement) { const oldScript = document.getElementById('page-specific-script'); if (oldScript) { oldScript.parentNode.removeChild(oldScript); } const scriptTemplate = newContentElement.querySelector('script[type="text/javascript-template"]'); if (scriptTemplate) { try { const newScript = document.createElement('script'); newScript.id = 'page-specific-script'; newScript.textContent = scriptTemplate.textContent; document.body.appendChild(newScript); } catch (e) { console.error("Error executing page script:", e); } } }
-        async function navigate(path) { if (isBlobEnvironment) { const targetUrl = new URL(path, window.location.origin); window.location.href = targetUrl.href; return; } if (!pageContainer) return; try { const response = await fetch(path, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }); if (!response.ok) { window.location.href = path; return; } const newContent = await response.text(); history.pushState({ path }, '', path); pageContainer.innerHTML = newContent; executePageScript(pageContainer); runPageInit(path); } catch (error) { console.error("Gagal melakukan navigasi:", error); window.location.href = path; } }
-        document.addEventListener('click', (event) => { const anchor = event.target.closest('a'); if (anchor && anchor.href && new URL(anchor.href).origin === location.origin) { event.preventDefault(); const path = new URL(anchor.href).pathname; if (path !== location.pathname) { navigate(path); } } });
-        window.addEventListener('popstate', (event) => { if (isBlobEnvironment) return; if (event.state && event.state.path) { (async () => { if (!pageContainer) return; try { const response = await fetch(event.state.path, { headers: { 'X-Requested-with': 'XMLHttpRequest' } }); if (!response.ok) { window.location.href = event.state.path; return; } const newContent = await response.text(); pageContainer.innerHTML = newContent; executePageScript(pageContainer); runPageInit(event.state.path); } catch (error) { console.error("Gagal memuat state:", error); window.location.href = event.state.path; } })(); } });
+        async function navigate(path) {
+            if (isBlobEnvironment) { 
+                const targetUrl = new URL(path, window.location.origin);
+                window.location.href = targetUrl.href;
+                return; 
+            }
+            
+            if (!pageContainer) return;
+            try {
+                const response = await fetch(path, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                if (!response.ok) { window.location.href = path; return; }
+                const newContent = await response.text();
+                
+                history.pushState({ path }, '', path);
+                pageContainer.innerHTML = newContent;
+                executePageScript(pageContainer);
+                runPageInit(path);
 
-        // [FUNGSI UTAMA YANG DIROMBAK]
-        // Ini adalah "bootloader" aplikasi Anda
+            } catch (error) {
+                console.error("Gagal melakukan navigasi:", error);
+                window.location.href = path;
+            }
+        }
+
+        document.addEventListener('click', (event) => {
+            const anchor = event.target.closest('a');
+            if (anchor && anchor.href && new URL(anchor.href).origin === location.origin) {
+                event.preventDefault();
+                const path = new URL(anchor.href).pathname;
+                if (path !== location.pathname) {
+                    navigate(path);
+                }
+            }
+        });
+
+        window.addEventListener('popstate', (event) => {
+            if (isBlobEnvironment) return; 
+            if (event.state && event.state.path) {
+                (async () => {
+                    if (!pageContainer) return;
+                    try {
+                        const response = await fetch(event.state.path, { headers: { 'X-Requested-with': 'XMLHttpRequest' } });
+                        if (!response.ok) { window.location.href = event.state.path; return; }
+                        const newContent = await response.text();
+                        pageContainer.innerHTML = newContent;
+                        executePageScript(pageContainer);
+                        runPageInit(event.state.path);
+                    } catch (error) {
+                         console.error("Gagal memuat state:", error);
+                         window.location.href = event.state.path;
+                    }
+                })();
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
+            // [PERBAIKAN KUNCI] Pengecekan keamanan untuk session token
             const sessionToken = localStorage.getItem('sessionToken');
-            const isAuthPage = ['/login', '/create-account', '/two-step', '/auth/callback', '/create-wallet'].includes(window.location.pathname);
+            const isAuthPage = window.location.pathname === '/login' || 
+                               window.location.pathname === '/create-account' || 
+                               window.location.pathname === '/two-step' ||
+                               window.location.pathname === '/auth/callback';
 
             if (sessionToken && isAuthPage) {
                 window.location.href = '/';
                 return;
             }
+
             if (!sessionToken && !isAuthPage) {
                 window.location.href = '/login';
                 return;
             }
-            
-            // Pasang listener modal global
             document.getElementById('tx-modal-delete-btn')?.addEventListener('click', () => handleDeleteTransaction());
             document.getElementById('tx-modal-edit-btn')?.addEventListener('click', () => handleEditTransaction());
 
@@ -1253,24 +2175,21 @@
                 history.replaceState({ path: location.pathname }, '', location.pathname);
             }
             
-            // Terapkan tema & masking dari localStorage
             applyTheme(getSettings().theme);
             applyMaskingState(getSettings().isBalanceMasked || false);
-            
             executePageScript(pageContainer); 
 
-            // [PERUBAHAN UTAMA]
+            // [PERBAIKAN KUNCI]
+            // Jika kita di halaman aplikasi (bukan login/register),
+            // kita panggil 'initializeAppData' yang akan mengambil data
+            // DAN BARU memanggil 'runPageInit' setelahnya.
             if (!isAuthPage) {
-                // 1. Panggil 'runPageInit' DULU untuk memasang listener dasar
-                runPageInit(location.pathname);
-                // 2. MULAI memuat data header (dan turunannya) secara asinkron
-                loadHeaderData(); 
+                initializeAppData(); // <-- PANGGIL FUNGSI BARU INI
             } else {
-                // Halaman auth (login, dll) bisa langsung jalan
-                runPageInit(location.pathname); 
+                runPageInit(location.pathname); // Halaman auth (login, dll) bisa langsung jalan
             }
         });
-
     </script>
 </body>
 </html>
+
