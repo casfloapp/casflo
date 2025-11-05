@@ -440,16 +440,20 @@
             display: inline-block;
         }
 
-        /* Logika untuk menyembunyikan nominal */
+       /* Logika untuk menyembunyikan nominal */
         .balance-masked .data-maskable-amount {
-            font-size: 0; /* Sembunyikan teks asli */
+            color: transparent !important; /* Sembunyikan teks asli, biarkan spasinya */
+            position: relative; /* Konteks untuk pseudo-element */
             transition: all 0.1s;
+            /* Ukuran font asli (dihapus dari sini, biarkan inherit) */
         }
         .balance-masked .data-maskable-amount::before {
             content: "Rp******"; /* Tampilkan teks masking */
-            font-size: 16px; /* Ukuran font nominal asli */
-            color: var(--text-dark);
-            font-weight: 700;
+            color: var(--text-dark); /* Tampilkan lagi teks masking */
+            position: absolute;
+            left: 0;
+            right: 0;
+            /* Biarkan text-align di-inherit dari parent (center di card, right di list) */
         }
         /* Jaga warna merah untuk nominal pengeluaran */
         .balance-masked .data-maskable-amount.expense::before {
@@ -466,12 +470,13 @@
         
         /* Aturan masking untuk daftar transaksi dinamis */
         .balance-masked .transaction-item .info .amount {
-            font-size: 0; 
+            color: transparent !important;
+            position: relative;
         }
         .balance-masked .transaction-item .info .amount::before {
             content: "Rp******";
-            font-size: 15px; /* Font size asli dari daftar transaksi */
-            font-weight: 700;
+            position: absolute;
+            right: 0; /* Hanya perlu 'right' untuk daftar */
         }
         /* Jaga warna hijau/merah di daftar transaksi */
         .balance-masked .transaction-item .info .amount[data-masked-color="income"]::before {
@@ -486,7 +491,6 @@
         .dark .balance-masked .transaction-item .info .amount[data-masked-color="expense"]::before {
             color: var(--expense-red);
         }
-        /* [AKHIR BARU] */
 
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
@@ -1147,7 +1151,7 @@
                 const txsOnThisDate = grouped[dateKey];
                 const date = new Date(dateKey);
                 
-                // [DIUBAH] Hitung total pengeluaran (dalam sen)
+                // [DIUBAH] Hitung total pengeluaran (sekarang dalam Rupiah)
                 const totalExpenseOnDate = txsOnThisDate
                     .filter(t => t.type === 'expense')
                     .reduce((sum, t) => sum + t.amount, 0);
@@ -1160,7 +1164,7 @@
                 const listHeader = document.createElement('div');
                 listHeader.className = 'list-header';
                 
-                // [DIUBAH] Tampilkan total (dibagi 100) dan tambahkan onclick
+                // [PERBAIKAN] Tampilkan total Rupiah (tanpa / 100)
                 listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: Rp${(totalExpenseOnDate).toLocaleString('id-ID')}</div>`;
                 listHeader.onclick = () => toggleGroupCollapse(dateKey, listHeader);
                 
@@ -1180,9 +1184,8 @@
                     const itemEl = document.createElement('div');
                     itemEl.className = 'transaction-item';
                     
-                    // [DIUBAH] Ambil ikon dari data (tx.icon) dan bagi amount dengan 100
-                    // [DIUBAH] Ambil ikon dari data (tx.icon) dan bagi amount dengan 100
-                    const icon = t.icon || t.category.charAt(0);
+                    // [PERBAIKAN] Gunakan t.icon, fallback ke huruf pertama
+                    const icon = t.icon || t.category.charAt(0).toUpperCase();
                     itemEl.innerHTML = `
                         <div class="icon" style="background-color: ${t.color};"><span>${icon}</span></div>
                         <div class="details"><div class="category">${t.category}</div><div class="notes">${t.notes}</div></div>
@@ -1190,7 +1193,7 @@
                             <div class="amount data-maskable-amount" 
                                  style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}"
                                  data-masked-color="${t.type}">
-                                ${t.type === 'expense' ? '-' : ''}Rp${(t.amount / 100).toLocaleString('id-ID')}
+                                ${t.type === 'expense' ? '-' : ''}Rp${(t.amount).toLocaleString('id-ID')}
                             </div>
                             <div class="account">${t.account}</div>
                         </div>`;
@@ -1239,14 +1242,11 @@
                     return {
                         id: tx.id,
                         type: isExpense ? 'expense' : 'income',
-                        // [FIX 1] Ambil nilai absolut dan bagi 100 (karena API kirim sen)
-                        amount: Math.abs(tx.amount),
+                        amount: Math.abs(tx.amount), // Ini sudah Rupiah
                         category: tx.category_name,
                         notes: tx.description || 'Tanpa catatan',
-                        // [FIX 2] Ambil account_name dari API
                         account: tx.account_name, 
-                        // [FIX 3] Ganti icon '...?' dengan inisial kategori
-                        icon: tx.category_name.charAt(0).toUpperCase(), 
+                        icon: tx.category_icon, // [PERBAIKAN] Gunakan ikon dari API
                         color: 'var(--light-purple)', // Warna default
                         date: tx.transaction_date
                     };
@@ -1256,8 +1256,11 @@
                 const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
                 const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
                 const total = income - expense;
-                const formatCurrency = (value) => { const sign = value < 0 ? '-' : ''; return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; };
-                
+                const formatCurrency = (value) => { 
+                    const sign = value < 0 ? '-' : ''; 
+                    // [PERBAIKAN] Pastikan tidak ada / 100 di sini
+                    return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; 
+                };
                 // [BARU] Fungsi helper untuk update ikon akun di halaman /create
                 function updateAccountIcon(accountId) {
                     const account = allAccounts.find(acc => acc.id === accountId);
