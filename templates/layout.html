@@ -731,12 +731,12 @@
             div.className = 'category-item';
             div.onclick = () => selectCategory(category, div);
             
-            // [PERBAIKAN] Gunakan inisial nama, karena API tidak punya 'icon'/'color'
-            // Kita akan gunakan huruf pertama dari nama kategori
-            const iconInitial = category.name.charAt(0).toUpperCase();
+            // [PERBAIKAN] Gunakan 'category.icon' dari database.
+            // Jika icon-nya null, gunakan huruf pertama sebagai cadangan.
+            const icon = category.icon || category.name.charAt(0).toUpperCase();
             const defaultColor = 'var(--light-purple)'; // Warna default
 
-            div.innerHTML = `<div class="category-icon" style="background: ${defaultColor}">${iconInitial}</div><div class="category-name">${category.name}</div>`;
+            div.innerHTML = `<div class="category-icon" style="background: ${defaultColor}">${icon}</div><div class="category-name">${category.name}</div>`;
             return div;
         }
         
