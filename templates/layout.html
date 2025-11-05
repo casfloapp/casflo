@@ -883,7 +883,37 @@
             }
         }
         // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
-        
+        // Fungsi helper untuk update ikon akun di halaman /create
+        function updateAccountIcon(accountId) {
+            const account = allAccounts.find(acc => acc.id === accountId);
+            if (!account) return;
+
+            const accountCard = document.querySelector('.account-card');
+            if (accountCard) {
+                // Tampilkan 2 huruf inisial nama akun
+                const initial = account.name.substring(0, 2).toUpperCase();
+                accountCard.innerHTML = `<span style="font-size: 1.2rem; font-weight: 600;">${initial}</span>`;
+            }
+        }
+
+        // Implementasi fungsi selectAccount()
+        function selectAccount() {
+            if (allAccounts.length === 0) return; // Belum dimuat
+
+            // 1. Cari indeks akun yang sedang dipilih
+            const currentIndex = allAccounts.findIndex(acc => acc.id === selectedAccountId);
+            // 2. Dapatkan indeks berikutnya, kembali ke 0 jika sudah di akhir
+            const nextIndex = (currentIndex + 1) % allAccounts.length;
+            
+            const nextAccount = allAccounts[nextIndex];
+            selectedAccountId = nextAccount.id; // 3. Set akun baru secara global
+
+            // 4. Update UI
+            updateAccountIcon(selectedAccountId);
+            console.log(`Akun diubah ke: ${nextAccount.name}`);
+        }
+
+        // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
         function initMainPage() {
             console.log("Halaman Utama diinisialisasi.");
             document.getElementById('detailToggleBtn')?.addEventListener('click', () => setView('overview'));
