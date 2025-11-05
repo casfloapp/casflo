@@ -418,6 +418,75 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         /* [AKHIR BARU] */
+        /* [BARU] CSS untuk Masking Saldo (Mata) */
+        #toggleMaskBtn {
+            transition: background-color 0.2s, opacity 0.2s;
+            border-radius: 50%; /* Bulatkan hover */
+        }
+        #toggleMaskBtn:hover {
+            opacity: 0.7;
+        }
+        /* Status 'Aktif' saat masking menyala */
+        .balance-masked #toggleMaskBtn {
+            background-color: rgba(0,0,0,0.2); 
+        }
+
+        /* Logika untuk menukar ikon mata */
+        .icon-eye-closed,
+        .balance-masked .icon-eye-open {
+            display: none;
+        }
+        .balance-masked .icon-eye-closed {
+            display: inline-block;
+        }
+
+        /* Logika untuk menyembunyikan nominal */
+        .balance-masked .data-maskable-amount {
+            font-size: 0; /* Sembunyikan teks asli */
+            transition: all 0.1s;
+        }
+        .balance-masked .data-maskable-amount::before {
+            content: "Rp******"; /* Tampilkan teks masking */
+            font-size: 16px; /* Ukuran font nominal asli */
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+        /* Jaga warna merah untuk nominal pengeluaran */
+        .balance-masked .data-maskable-amount.expense::before {
+            color: var(--expense-red);
+        }
+        
+        /* Aturan untuk mode gelap */
+        .dark .balance-masked .data-maskable-amount::before {
+            color: #d1d5db;
+        }
+        .dark .balance-masked .data-maskable-amount.expense::before {
+            color: var(--expense-red);
+        }
+        
+        /* Aturan masking untuk daftar transaksi dinamis */
+        .balance-masked .transaction-item .info .amount {
+            font-size: 0; 
+        }
+        .balance-masked .transaction-item .info .amount::before {
+            content: "Rp******";
+            font-size: 15px; /* Font size asli dari daftar transaksi */
+            font-weight: 700;
+        }
+        /* Jaga warna hijau/merah di daftar transaksi */
+        .balance-masked .transaction-item .info .amount[data-masked-color="income"]::before {
+            color: var(--income-green);
+        }
+        .balance-masked .transaction-item .info .amount[data-masked-color="expense"]::before {
+            color: var(--expense-red);
+        }
+        .dark .balance-masked .transaction-item .info .amount[data-masked-color="income"]::before {
+            color: var(--income-green);
+        }
+        .dark .balance-masked .transaction-item .info .amount[data-masked-color="expense"]::before {
+            color: var(--expense-red);
+        }
+        /* [AKHIR BARU] */
 
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
@@ -693,7 +762,34 @@
                 console.error("Gagal menyimpan settings:", e);
             }
         }
+        /**
+         * [BARU] Menerapkan/menghapus kelas 'balance-masked' ke kontainer utama
+         */
+        function applyMaskingState(isMasked) {
+            const container = document.getElementById('app-container');
+            if (container) {
+                // Terapkan 'balance-masked' jika isMasked true, hapus jika false
+                container.classList.toggle('balance-masked', isMasked);
+            }
+        }
 
+        /**
+         * [BARU] Dipanggil saat ikon mata diklik
+         */
+        function toggleBalanceMasking() {
+            // 1. Ambil settings saat ini
+            let settings = getSettings();
+            
+            // 2. Invert nilainya (jika tidak ada, anggap false -> jadi true)
+            const newMaskedState = !settings.isBalanceMasked;
+            
+            // 3. Simpan state baru ke localStorage
+            saveSettings({ isBalanceMasked: newMaskedState });
+            
+            // 4. Terapkan state baru ke UI
+            applyMaskingState(newMaskedState);
+            console.log(`Masking saldo: ${newMaskedState}`);
+        }
         function applyTheme(theme) {
             if (theme === 'dark') {
                 htmlEl.classList.add('dark');
@@ -1085,13 +1181,16 @@
                     itemEl.className = 'transaction-item';
                     
                     // [DIUBAH] Ambil ikon dari data (tx.icon) dan bagi amount dengan 100
+                    // [DIUBAH] Ambil ikon dari data (tx.icon) dan bagi amount dengan 100
                     const icon = t.icon || t.category.charAt(0);
                     itemEl.innerHTML = `
                         <div class="icon" style="background-color: ${t.color};"><span>${icon}</span></div>
                         <div class="details"><div class="category">${t.category}</div><div class="notes">${t.notes}</div></div>
                         <div class="info">
-                            <div class="amount" style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}">
-                                ${t.type === 'expense' ? '-' : ''}Rp${(t.amount).toLocaleString('id-ID')}
+                            <div class="amount data-maskable-amount" 
+                                 style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}"
+                                 data-masked-color="${t.type}">
+                                ${t.type === 'expense' ? '-' : ''}Rp${(t.amount / 100).toLocaleString('id-ID')}
                             </div>
                             <div class="account">${t.account}</div>
                         </div>`;
@@ -1252,6 +1351,7 @@
             document.getElementById('tabPenghasilan')?.addEventListener('click', () => setCalendarFilter('income'));
             document.getElementById('tabTotal')?.addEventListener('click', () => setCalendarFilter('total'));
             document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
+            document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
 
             const savedView = localStorage.getItem('preferredView');
             if (document.getElementById('detailToggleBtn')) { 
@@ -1542,6 +1642,7 @@
             }
             
             applyTheme(getSettings().theme);
+            applyMaskingState(getSettings().isBalanceMasked || false);
             executePageScript(pageContainer); 
 
             // [PERBAIKAN KUNCI]

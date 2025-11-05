@@ -61,21 +61,25 @@
                     </div>
                     <div class="card-actions">
                         <div class="icon"><i class="fas fa-envelope"></i></div>
-                        <div class="icon"><i class="fas fa-eye"></i></div>
+                        <div class="icon" id="toggleMaskBtn" style="cursor: pointer;">
+                            <i class="fas fa-eye icon-eye-open"></i>
+                            <i class="fas fa-eye-slash icon-eye-closed"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="stat-item">
                         <div class="label"><i class="fas fa-wallet fa-xs"></i><span>Total</span></div>
-                        <div class="amount expense" id="totalAmount">Rp0</div>
+                        <div class="amount expense data-maskable-amount" id="totalAmount">Rp0</div>
                     </div>
                     <div class="stat-item">
                         <div class="label"><i class="fas fa-arrow-down fa-xs"></i><span>Penghasilan</span></div>
-                        <div class="amount" id="incomeAmount">Rp0</div>
+                        <div class="amount data-maskable-amount" id="incomeAmount">Rp0</div>
                     </div>
                     <div class="stat-item">
                         <div class="label"><i class="fas fa-arrow-up fa-xs"></i><span>Pengeluaran</span></div>
-                        <div class="amount expense" id="expenseAmount">Rp0</div>
+                        <div class="amount expense data-maskable-amount" id="expenseAmount">Rp0</div>
+                    </div>v class="amount expense" id="expenseAmount">Rp0</div>
                     </div>
                 </div>
             </div>
@@ -105,15 +109,15 @@
                 <div class="calendar-summary-amounts">
                     <div>
                         <div class="label">Total</div>
-                        <div class="amount expense" id="calendarTotalAmount">Rp0</div>
+                        <div class="amount expense data-maskable-amount" id="calendarTotalAmount">Rp0</div>
                     </div>
                     <div>
                         <div class="label">Penghasilan</div>
-                        <div class="amount" id="calendarIncomeAmount">Rp0</div>
+                        <div class="amount data-maskable-amount" id="calendarIncomeAmount">Rp0</div>
                     </div>
                     <div>
                         <div class="label">Pengeluaran</div>
-                        <div class="amount expense" id="calendarExpenseAmount">Rp0</div>
+                        <div class="amount expense data-maskable-amount" id="calendarExpenseAmount">Rp0</div>
                     </div>
                 </div>
             </div>
