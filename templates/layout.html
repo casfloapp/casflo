@@ -1001,15 +1001,48 @@
             txModal.classList.add('visible');
         }
 
-        function closeTransactionModal() {
+function closeTransactionModal() {
             if (txModal) {
                 txModal.classList.remove('visible');
                 currentTransactionId = null; // Hapus ID saat modal ditutup
             }
         }
 
-        function handleEditTransaction(txId) { // [UBAH] Tambahkan parameter txId
+        // [PERBAIKAN] Fungsi yang hilang, sekarang ditambahkan
+        async function handleDeleteTransaction(txId) {
+            // Gunakan ID from parameter (swipe) atau dari global (modal)
+            const transactionIdToDelete = txId || currentTransactionId;
+            if (!transactionIdToDelete) return;
+
+            if (!confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
+                return;
+            }
+
+            const walletId = localStorage.getItem('currentWalletId');
+            
+            try {
+                console.log(`Menghapus transaksi: ${transactionIdToDelete}...`);
+
+                await fetchApi(`/wallets/${walletId}/transactions/${transactionIdToDelete}`, {
+                    method: 'DELETE'
+                });
+
+                console.log('Transaksi berhasil dihapus.');
+                closeTransactionModal(); // Tutup modal (jika terbuka)
+                closeActiveSwipe();    // Tutup swipe (jika terbuka)
+                updateMainView();      // Muat ulang list
+                
+            } catch (error) {
+                console.error('Gagal menghapus transaksi:', error);
+                alert('Gagal menghapus: ' + error.message);
+            }
+        }
+
+        // [PERBAIKAN] Hanya satu fungsi edit yang benar
+        function handleEditTransaction(txId) {
             const transactionIdToEdit = txId || currentTransactionId;
+            if (!transactionIdToEdit) return;
+
             const tx = transactions.find(t => t.id === transactionIdToEdit);
             
             if (tx) {
@@ -1021,21 +1054,6 @@
                 alert('Gagal menemukan data transaksi untuk diedit.');
             }
         }
-
-        function handleEditTransaction() {
-            // [PERBAIKAN] Cari data tx lengkap dari array global
-            const tx = transactions.find(t => t.id === currentTransactionId);
-            
-            if (tx) {
-                // Simpan di sessionStorage untuk diambil oleh halaman /create
-                sessionStorage.setItem('tx_for_edit', JSON.stringify(tx));
-                closeTransactionModal();
-                navigate('/create');
-            } else {
-                alert('Gagal menemukan data transaksi untuk diedit.');
-            }
-        }
-        // [AKHIR BARU]
 
         // [BARU] Fungsi untuk mengambil data awal (dompet & akun) saat aplikasi dimuat
        // [PERBAIKAN] Fungsi ini sekarang memprioritaskan dompet di localStorage
