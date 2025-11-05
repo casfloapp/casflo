@@ -1065,7 +1065,7 @@
                 listHeader.className = 'list-header';
                 
                 // [DIUBAH] Tampilkan total (dibagi 100) dan tambahkan onclick
-                listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: Rp${(totalExpenseOnDate / 100).toLocaleString('id-ID')}</div>`;
+                listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: Rp${(totalExpenseOnDate).toLocaleString('id-ID')}</div>`;
                 listHeader.onclick = () => toggleGroupCollapse(dateKey, listHeader);
                 
                 // [BARU] 3. Buat kontainer untuk item
@@ -1251,6 +1251,7 @@
             document.getElementById('tabPengeluaran')?.addEventListener('click', () => setCalendarFilter('expense'));
             document.getElementById('tabPenghasilan')?.addEventListener('click', () => setCalendarFilter('income'));
             document.getElementById('tabTotal')?.addEventListener('click', () => setCalendarFilter('total'));
+            document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
 
             const savedView = localStorage.getItem('preferredView');
             if (document.getElementById('detailToggleBtn')) { 
