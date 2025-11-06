@@ -662,6 +662,42 @@
             background-color: #374151;
         }
         /* [AKHIR BARU] */
+
+    /* [BARU] CSS UNTUK SKELETON LOADER */
+        .skeleton-loader {
+            display: inline-block;
+            height: 1em;
+            width: 70%;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            /* Animasi denyut (pulse) */
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .skeleton-loader.skeleton-text-md { width: 50%; }
+        .skeleton-loader.skeleton-text-lg { width: 80%; }
+        .skeleton-loader.skeleton-block { height: 40px; width: 100%; }
+        .skeleton-loader.skeleton-avatar { width: 45px; height: 45px; border-radius: 12px; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Penyesuaian untuk Mode Gelap */
+        .dark .skeleton-loader {
+            background-color: #4b5563; /* dark:border-gray-600 */
+        }
+        
+        /* [BARU] Logika untuk menyembunyikan konten asli saat loading */
+        /* Saat .loading, skeleton-placeholder akan tampil */
+        .loading .skeleton-placeholder { display: block; } 
+        /* Saat .loading, real-content akan sembunyi */
+        .loading .real-content { display: none; }
+        /* Secara default, skeleton-placeholder sembunyi */
+        .skeleton-placeholder { display: none; }
+        /* [AKHIR BARU] */
+
+        /* ... Sisa CSS Global Anda ... */
         
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
@@ -778,9 +814,68 @@
             }
             
             // API Anda selalu mengembalikan { success: true, data: ... }
+            // API Anda selalu mengembalikan { success: true, data: ... }
             const result = await response.json(); 
             return result.data; 
         }
+        // --- [AKHIR BAGIAN 0.5] ---
+
+        // [BARU] Fungsi helper untuk update UI Header (Sangat Cepat)
+        function updateHeaderUI(walletName) {
+            // 1. Update nama di header
+            const walletNameEl = document.getElementById('currentWalletNameDisplay');
+            if (walletNameEl) {
+                walletNameEl.textContent = walletName;
+            }
+
+            // 2. Update kotak aksi
+            const walletShortNameEl = document.getElementById('currentWalletNameShort');
+            if (walletShortNameEl) {
+                walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
+            }
+            
+            // 3. Sembunyikan skeleton header dan tampilkan konten asli
+            const headerSkeleton = document.getElementById('walletNameSkeleton');
+            if (headerSkeleton) {
+                headerSkeleton.style.display = 'none'; // Sembunyikan skeleton
+            }
+            if (walletNameEl) {
+                walletNameEl.style.display = 'inline-block'; // Tampilkan konten asli
+            }
+        }
+        
+        // [BARU] Fungsi untuk memuat data overview card secara independen (Cepat)
+        async function loadOverviewData() {
+            const walletId = localStorage.getItem('currentWalletId');
+            if (!walletId) return;
+
+            const overviewCard = document.getElementById('overviewCard');
+            if (!overviewCard) return;
+
+            try {
+                // Panggil endpoint /summary Anda yang ada di wallets.js
+                const summary = await fetchApi(`/wallets/${walletId}/summary`);
+                
+                const formatCurrency = (value) => { 
+                    const sign = value < 0 ? '-' : ''; 
+                    return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; 
+                };
+
+                // Isi datanya
+                // (Perhatikan: API Anda mengembalikan nilai dalam Rupiah, bukan sen)
+                if(document.getElementById('totalAmount')) document.getElementById('totalAmount').textContent = formatCurrency(summary.net_worth);
+                if(document.getElementById('incomeAmount')) document.getElementById('incomeAmount').textContent = formatCurrency(summary.monthly_income);
+                if(document.getElementById('expenseAmount')) document.getElementById('expenseAmount').textContent = formatCurrency(summary.monthly_expense);
+                
+                // Sembunyikan skeleton
+                overviewCard.classList.remove('loading');
+
+            } catch (error) {
+                console.error("Gagal memuat summary:", error);
+                // Jika gagal, biarkan skeleton terlihat
+            }
+        }
+        
         // --- [AKHIR BAGIAN 0.5] ---
 // --- [AKHIR BAGIAN 0.5] ---
 
@@ -1057,6 +1152,7 @@ function closeTransactionModal() {
  
 
        // [PERBAIKAN KATEGORI] Ganti total fungsi ini
+       // [MODIFIKASI] initializeAppData
        async function initializeAppData() {
             try {
                 // 1. Cek apakah sudah ada dompet yang dipilih sebelumnya
@@ -1086,6 +1182,10 @@ function closeTransactionModal() {
                 localStorage.setItem('currentWalletId', activeWallet.id);
                 localStorage.setItem('currentWalletName', activeWallet.name); 
                 console.log(`Dompet aktif diatur: ${activeWallet.name} (${activeWallet.id})`);
+
+                // [BARU] Panggil fungsi untuk update header
+                // Ini akan menyembunyikan skeleton header secara instan
+                updateHeaderUI(activeWallet.name); 
 
                 // 5. [INI BAGIAN KUNCINYA] Ambil akun dan kategori untuk dompet aktif
                 const [accounts, categories] = await Promise.all([
@@ -1591,7 +1691,7 @@ function closeTransactionModal() {
             }
         }
 function renderTransactionList(filteredTransactions) { 
-            const transactionListEl = document.querySelector('.transaction-list');
+            const transactionListEl = document.getElementById('transactionListContent');
             if (!transactionListEl) return;
             transactionListEl.innerHTML = '';
             
@@ -1711,14 +1811,18 @@ function renderTransactionList(filteredTransactions) {
             }
         }
        // [PERBAIKAN] Fungsi diubah menjadi async untuk mengambil data dari API
+       // [PERBAIKAN] Fungsi diubah menjadi async untuk mengambil data dari API
         async function updateMainView() { 
-            console.log("Memuat data API untuk", currentDate.toISOString().slice(0, 7));
+            console.log("Memuat data Transaksi untuk", currentDate.toISOString().slice(0, 7));
             
             const walletId = localStorage.getItem('currentWalletId');
             if (!walletId) {
                 console.warn("updateMainView: Menunggu walletId...");
                 return; // Berhenti jika data awal (dari initializeAppData) belum dimuat
             }
+
+            // [BARU] Dapatkan kontainer list
+            const transactionListContainer = document.getElementById('transactionListContainer');
 
             // Tentukan rentang tanggal untuk filter API
             const year = currentDate.getFullYear();
@@ -1728,6 +1832,11 @@ function renderTransactionList(filteredTransactions) {
             const endDate = new Date(year, month + 1, 0).toISOString().split('T')[0];
 
             try {
+                // [BARU] Tampilkan lagi skeleton list saat ganti bulan
+                if (transactionListContainer) {
+                    transactionListContainer.classList.add('loading');
+                }
+
                 // Ambil transaksi dari API, BUKAN dari array global
                 // [MEMANGGIL API] GET /api/v1/wallets/:walletId/transactions
                 const fetchedTransactions = await fetchApi(
@@ -1753,56 +1862,28 @@ function renderTransactionList(filteredTransactions) {
                         account_id: tx.account_id   // [TAMBAHKAN INI]
                     };
                 });
+                
+                // [DIHAPUS] Logika untuk overview card (total, income, expense) dihapus dari sini
 
-                // Sisa fungsi ini SAMA seperti sebelumnya
+                // [MODIFIKASI] Logika ini tetap diperlukan untuk Tampilan Kalender
                 const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
                 const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
                 const total = income - expense;
                 const formatCurrency = (value) => { 
                     const sign = value < 0 ? '-' : ''; 
-                    // [PERBAIKAN] Pastikan tidak ada / 100 di sini
                     return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; 
                 };
-                // [BARU] Fungsi helper untuk update ikon akun di halaman /create
-                function updateAccountIcon(accountId) {
-                    const account = allAccounts.find(acc => acc.id === accountId);
-                    if (!account) return;
-
-                    const accountCard = document.querySelector('.account-card');
-                    if (accountCard) {
-                        // Tampilkan 2 huruf inisial nama akun
-                        const initial = account.name.substring(0, 2).toUpperCase();
-                        accountCard.innerHTML = `<span style="font-size: 1.2rem; font-weight: 600;">${initial}</span>`;
-                    }
-                }
-
-                // [BARU] Implementasi fungsi selectAccount()
-                function selectAccount() {
-                    if (allAccounts.length === 0) return; // Belum dimuat
-
-                    // 1. Cari indeks akun yang sedang dipilih
-                    const currentIndex = allAccounts.findIndex(acc => acc.id === selectedAccountId);
-                    // 2. Dapatkan indeks berikutnya, kembali ke 0 jika sudah di akhir
-                    const nextIndex = (currentIndex + 1) % allAccounts.length;
-                    
-                    const nextAccount = allAccounts[nextIndex];
-                    selectedAccountId = nextAccount.id; // 3. Set akun baru secara global
-
-                    // 4. Update UI
-                    updateAccountIcon(selectedAccountId);
-                    console.log(`Akun diubah ke: ${nextAccount.name}`);
-                }
-                
-                
-                
-                if(document.getElementById('totalAmount')) document.getElementById('totalAmount').textContent = formatCurrency(total);
-                if(document.getElementById('incomeAmount')) document.getElementById('incomeAmount').textContent = formatCurrency(income);
-                if(document.getElementById('expenseAmount')) document.getElementById('expenseAmount').textContent = formatCurrency(expense);
                 if(document.getElementById('calendarTotalAmount')) document.getElementById('calendarTotalAmount').textContent = formatCurrency(total);
                 if(document.getElementById('calendarIncomeAmount')) document.getElementById('calendarIncomeAmount').textContent = formatCurrency(income);
                 if(document.getElementById('calendarExpenseAmount')) document.getElementById('calendarExpenseAmount').textContent = formatCurrency(expense);
                 
                 renderTransactionList(transactions.sort((a, b) => new Date(b.date) - new Date(a.date)));
+                
+                // [BARU] Sembunyikan skeleton list setelah selesai
+                if (transactionListContainer) {
+                    transactionListContainer.classList.remove('loading');
+                }
+
                 if(currentView === 'calendar') renderCalendar();
             
             } catch (error) {
@@ -1810,9 +1891,15 @@ function renderTransactionList(filteredTransactions) {
                 if (error.message !== 'Sesi kedaluwarsa') {
                    alert("Gagal memuat transaksi: " + error.message);
                 }
+                // [BARU] Jika gagal, tetap sembunyikan loading (opsional, bisa diganti pesan error)
+                if (transactionListContainer) {
+                    transactionListContainer.classList.remove('loading');
+                    // Anda bisa tambahkan pesan error di sini
+                    document.getElementById('transactionListContent').innerHTML = `<div class="empty-transaction-list">Gagal memuat transaksi.</div>`;
+                }
             }
-        }
-        // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
+        } 
+       // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
         // Fungsi helper untuk update ikon akun di halaman /create
         function updateAccountIcon(accountId) {
             const account = allAccounts.find(acc => acc.id === accountId);
@@ -1857,43 +1944,30 @@ function renderTransactionList(filteredTransactions) {
             document.getElementById('tabTotal')?.addEventListener('click', () => setCalendarFilter('total'));
             document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
             document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
+            document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
+            document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
+                navigate('/create-wallet');
+            });
+
+            // [BARU] Panggil fungsi untuk update header (untuk kasus refresh)
+            const walletName = localStorage.getItem('currentWalletName');
+            if (walletName) {
+                updateHeaderUI(walletName);
+            }
+
+            // [BARU] Panggil loader independen untuk overview card
+            loadOverviewData();
 
             const savedView = localStorage.getItem('preferredView');
             if (document.getElementById('detailToggleBtn')) { 
                 setView(savedView || 'overview');
             }
             if (document.getElementById('currentMonthDisplay')) {
-                updateMonthDisplay(); 
+                updateMonthDisplay(); // Ini akan memicu updateMainView (transaction list)
             }
-
-            // [PERBAIKAN] Ambil nama dompet dari localStorage
-            const walletName = localStorage.getItem('currentWalletName');
-            if (walletName) {
-                // 1. Update header utama
-                const walletNameEl = document.getElementById('currentWalletNameDisplay');
-                if (walletNameEl) {
-                    walletNameEl.textContent = walletName;
-                }
-
-                // 2. Update kotak aksi
-                const walletShortNameEl = document.getElementById('currentWalletNameShort');
-                if (walletShortNameEl) {
-                    // Tampilkan 6 karakter pertama + ...
-                    walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
-                }
-            }
-            // [PERBAIKAN] Tambahkan listener untuk tombol pengganti dompet
-            document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
             
-            // [PERBAIKAN] Fungsikan tombol "Baru B..."
-            document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
-                navigate('/create-wallet');
-            });
-
-            // Pasang listener untuk tombol mode gelap/terang
             attachThemeToggle('.theme-toggle'); 
         }
-        
         function initCreatePage() {
             // [BARU] Cek apakah ada data edit di sessionStorage
             const txToEditJSON = sessionStorage.getItem('tx_for_edit');

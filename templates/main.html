@@ -6,7 +6,10 @@
             <div class="left">
                 <i class="fas fa-search"></i>
                 <div class="header-title" id="walletSwitcherBtn" style="cursor: pointer;">
-                    <span id="currentWalletNameDisplay">buku bawaan</span>
+                    <span id="currentWalletNameDisplay" class="real-content" style="display: none;">buku bawaan</span> 
+                    <span class="skeleton-placeholder" id="walletNameSkeleton">
+                        <span class="skeleton-loader" style="width: 80px; height: 16px;"></span>
+                    </span>
                     <i class="fas fa-chevron-down fa-xs"></i>
                 </div>
             </div>
@@ -51,7 +54,7 @@
 
     <main class="main-content">
         <div class="view-container" id="viewContainer">
-            <div class="card overview-card" id="overviewCard">
+            <div class="card overview-card loading" id="overviewCard">
                 <div class="card-header">
                     <div class="icon" id="mainBookIconBtn" style="cursor: pointer;"><i class="fas fa-book-open"></i></div>
                     <div class="date-selector">
@@ -67,7 +70,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
+                
+                <div class="card-body real-content">
                     <div class="stat-item">
                         <div class="label"><i class="fas fa-wallet fa-xs"></i><span>Total</span></div>
                         <div class="amount expense data-maskable-amount" id="totalAmount">Rp0</div>
@@ -81,8 +85,22 @@
                         <div class="amount expense data-maskable-amount" id="expenseAmount">Rp0</div>
                     </div>
                 </div>
-            </div>
-            
+                
+                <div class="card-body skeleton-placeholder">
+                    <div class="stat-item">
+                        <div class="label"><i class="fas fa-wallet fa-xs"></i><span>Total</span></div>
+                        <div class="skeleton-loader" style="height: 16px; width: 70px; margin: 0 auto;"></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label"><i class="fas fa-arrow-down fa-xs"></i><span>Penghasilan</span></div>
+                        <div class="skeleton-loader" style="height: 16px; width: 70px; margin: 0 auto;"></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label"><i class="fas fa-arrow-up fa-xs"></i><span>Pengeluaran</span></div>
+                        <div class="skeleton-loader" style="height: 16px; width: 70px; margin: 0 auto;"></div>
+                    </div>
+                </div>
+                </div>
             <div class="card calendar-card view-hidden" id="calendarCard">
                 <div class="calendar-header">
                     <i class="fas fa-chevron-left" id="calendarPrevMonthBtn"></i>
@@ -122,8 +140,47 @@
             </div>
         </div>
 
-        <div class="card transaction-list">
-             </div>
+        <div class="card transaction-list loading" id="transactionListContainer">
+            
+            <div class="skeleton-placeholder" id="transactionListSkeleton">
+                <div class="skeleton-loader" style="height: 20px; width: 120px; margin-bottom: 15px;"></div>
+                
+                <div class="transaction-item" style="opacity: 0.7;">
+                    <div class="skeleton-loader skeleton-avatar"></div>
+                    <div class="details" style="flex-grow: 1;">
+                        <div class="skeleton-loader skeleton-text-lg" style="height: 15px;"></div>
+                        <div class="skeleton-loader skeleton-text-md" style="height: 12px; margin-top: 5px;"></div>
+                    </div>
+                    <div class="info" style="text-align: right;">
+                        <div class="skeleton-loader skeleton-text-md" style="height: 15px; width: 60px;"></div>
+                    </div>
+                </div>
+                
+                <div class="transaction-item" style="opacity: 0.5;">
+                    <div class="skeleton-loader skeleton-avatar"></div>
+                    <div class="details" style="flex-grow: 1;">
+                        <div class="skeleton-loader skeleton-text-lg" style="height: 15px;"></div>
+                        <div class="skeleton-loader skeleton-text-md" style="height: 12px; margin-top: 5px;"></div>
+                    </div>
+                    <div class="info" style="text-align: right;">
+                        <div class="skeleton-loader skeleton-text-md" style="height: 15px; width: 60px;"></div>
+                    </div>
+                </div>
+                
+                <div class="transaction-item" style="opacity: 0.3;">
+                    <div class="skeleton-loader skeleton-avatar"></div>
+                    <div class="details" style="flex-grow: 1;">
+                        <div class="skeleton-loader skeleton-text-lg" style="height: 15px;"></div>
+                        <div class="skeleton-loader skeleton-text-md" style="height: 12px; margin-top: 5px;"></div>
+                    </div>
+                    <div class="info" style="text-align: right;">
+                        <div class="skeleton-loader skeleton-text-md" style="height: 15px; width: 60px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="real-content" id="transactionListContent">
+                </div>
+        </div>
     </main>
 
     <a href="/create" class="fab">
