@@ -204,6 +204,16 @@
         .action-box { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px; flex: 1; }
         .action-box .icon { background: rgba(255,255,255,0.2); width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
         .action-box .text { font-size: 14px; }
+        /* [BARU] CSS untuk tombol aksi ikon-saja */
+        .action-box.icon-only {
+            flex: 0 1 auto; /* Jangan memanjang, biarkan ukuran auto */
+            gap: 0; /* Hapus jarak karena tidak ada teks */
+        }
+        .action-box.icon-only .icon {
+             margin: 0; /* Hapus margin jika ada */
+        }
+        /* [AKHIR BARU] */
+
         .main-content { flex: 1; overflow-y: auto; padding: 0 20px; position: relative; z-index: 5; padding-bottom: 100px; }
         .card { background: white; border-radius: 18px; margin-bottom: 20px; margin-top: 20px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); padding: 18px; }
         .empty-transaction-list { text-align: center; color: #888; padding: 40px 0; }
@@ -979,7 +989,8 @@
                 wallets.forEach(wallet => {
                     const item = document.createElement('div');
                     item.className = 'wallet-list-item';
-                    item.textContent = wallet.name;
+                    const icon = wallet.icon || '📚'; // Ambil icon, beri default '📚'
+                    item.innerHTML = `<span style="font-size: 20px; width: 30px; text-align: center; margin-right: 15px;">${icon}</span> <span>${wallet.name}</span>`;
                     // Tandai dompet yang sedang aktif
                     if (wallet.id === currentWalletId) {
                         item.classList.add('active');
@@ -1004,19 +1015,26 @@
             }
         }
         function updateHeaderUI(walletName) {
-            // 1. Update nama di header
+            // 1. Update nama di header (dropdown)
             const walletNameEl = document.getElementById('currentWalletNameDisplay');
             if (walletNameEl) {
                 walletNameEl.textContent = walletName;
             }
 
-            // 2. Update kotak aksi
+            // 2. Update kotak aksi (tombol di bawah header)
             const walletShortNameEl = document.getElementById('currentWalletNameShort');
             if (walletShortNameEl) {
                 walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
             }
             
-            // 3. [MODIFIKASI] Hapus class .loading dari PARENT
+            // [BARU] 3. Update Ikon di kotak aksi
+            const walletIconEl = document.getElementById('currentWalletIcon');
+            if (walletIconEl) {
+                const icon = localStorage.getItem('currentWalletIcon') || '📚';
+                walletIconEl.textContent = icon;
+            }
+
+            // 4. Hapus class .loading dari PARENT
             const headerParent = document.getElementById('walletSwitcherBtn');
             if (headerParent) {
                 headerParent.classList.remove('loading');
@@ -1315,6 +1333,7 @@ function closeTransactionModal() {
                 // 4. Simpan dompet aktif yang valid ke localStorage
                 localStorage.setItem('currentWalletId', activeWallet.id);
                 localStorage.setItem('currentWalletName', activeWallet.name); 
+                localStorage.setItem('currentWalletIcon', activeWallet.icon || '📚'); // <-- TAMBAHKAN BARIS INI
                 console.log(`Dompet aktif diatur: ${activeWallet.name} (${activeWallet.id})`);
 
                 // 5. [INI BAGIAN KUNCINYA] Ambil akun dan kategori untuk dompet aktif
