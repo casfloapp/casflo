@@ -215,8 +215,17 @@
             padding-bottom: 0px; /* Beri ruang untuk scrollbar (opsional) */
         }
         /* Sembunyikan scrollbar */
-        .header-actions::-webkit-scrollbar { display: none; }
-        .header-actions { -ms-overflow-style: none; scrollbar-width: none; }
+        .header-actions::-webkit-scrollbar,
+        .main-content::-webkit-scrollbar,
+        .categories-section::-webkit-scrollbar { 
+            display: none; /* WebKit (Chrome, Safari, iOS) */
+        }
+        .header-actions,
+        .main-content,
+        .categories-section { 
+            -ms-overflow-style: none;  /* IE dan Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
 
         .action-box { 
             background: rgba(255,255,255,0.1); /* Latar belakang redup (default) */
