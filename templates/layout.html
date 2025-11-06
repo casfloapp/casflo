@@ -256,7 +256,32 @@
         }
         /* [AKHIR BARU] */
 
-        .main-content { flex: 1; overflow-y: auto; padding: 0 20px; position: relative; z-index: 5; padding-bottom: 100px; }
+        .main-content { 
+            flex: 1; 
+            /* [PERBAIKAN] Ubah overflow-y menjadi hidden dan tambahkan flex column */
+            overflow-y: hidden; 
+            display: flex;
+            flex-direction: column;
+            /* [AKHIR PERBAIKAN] */
+            padding: 0 20px; 
+            position: relative; 
+            z-index: 5; 
+            /* [PERBAIKAN] Hapus padding-bottom dari sini */
+        }
+        /* [BARU] Aturan untuk membuat header card (overview) tetap */
+        .main-content .view-container {
+            flex-shrink: 0;
+        }
+
+        /* [BARU] Aturan untuk membuat list transaksi scrollable */
+        .main-content .transaction-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            /* Hapus margin-top agar menempel */
+            margin-top: 0; 
+            /* [PERBAIKAN] Tambahkan padding-bottom di SINI agar item terakhir tidak terpotong nav */
+            padding-bottom: 100px;
+        }
         .card { background: white; border-radius: 18px; margin-bottom: 20px; margin-top: 20px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); padding: 18px; }
         .empty-transaction-list { text-align: center; color: #888; padding: 40px 0; }
         .view-hidden { display: none; }
