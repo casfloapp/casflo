@@ -1028,9 +1028,9 @@
             const incomeWrapper = document.getElementById('incomeAmountWrapper');
             const expenseWrapper = document.getElementById('expenseAmountWrapper');
             
-            const totalEl = document.getElementById('totalAmount');
-            const incomeEl = document.getElementById('incomeAmount');
-            const expenseEl = document.getElementById('expenseAmount');
+            const caltotalEl = document.getElementById('totalAmount');
+            const calincomeEl = document.getElementById('incomeAmount');
+            const calexpenseEl = document.getElementById('expenseAmount');
 
             try {
                 const summary = await fetchApi(`/wallets/${walletId}/summary`);
