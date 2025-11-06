@@ -317,12 +317,25 @@
         }
         .calendar-summary-amounts .amount.expense { color: var(--expense-red); }
         .calendar-summary-amounts .amount.income { color: var(--income-green); } /* [BARU] */
-        .transaction-list .list-header { display: flex; justify-content: space-between; align-items: center; }
+        .transaction-list .list-header { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                padding-bottom: 8px; /* [PERBAIKAN] Memberi jarak ke item di bawahnya */
+        }
         .transaction-list .list-header .date-info { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
         .transaction-list .list-header .summary { font-size: 13px; color: var(--text-light); }
-        .transaction-item { display: flex; align-items: center; gap: 15px; padding: 12px 15px; border-bottom: 1px solid var(--bg-gray); }
+        
+        .transaction-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 12px 0; /* [PERBAIKAN] Hapus padding horizontal (kiri/kanan) */
+            border-bottom: 1px solid var(--bg-gray); 
+        }
         .transaction-item:last-child { border-bottom: none; }
-        .transaction-item:first-of-type { padding-top: 5px; }
+        /* [PERBAIKAN] Aturan di bawah ini DIHAPUS karena menyebabkan jarak atas tidak rata */
+        /* .transaction-item:first-of-type { padding-top: 5px; } */
         .transaction-item .icon { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; flex-shrink: 0; }
         .transaction-item .details { flex-grow: 1; }
         .transaction-item .details .category { font-weight: 600; font-size: 15px; }
