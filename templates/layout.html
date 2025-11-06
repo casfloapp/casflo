@@ -200,17 +200,59 @@
         .toggle-btn:not(.active-view) span { max-width: 0; opacity: 0; margin-left: 0; }
         .toggle-btn:not(.active-view) { padding: 8px 10px; }
         .header-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; }
-        .header-actions { display: flex; gap: 15px; }
-        .action-box { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px; flex: 1; }
-        .action-box .icon { background: rgba(255,255,255,0.2); width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
-        .action-box .text { font-size: 14px; }
-        /* [BARU] CSS untuk tombol aksi ikon-saja */
+        .header-actions {
+            display: flex;
+            gap: 10px; /* Jarak antar tombol dompet */
+            overflow-x: auto; /* Aktifkan scroll horizontal jika dompet banyak */
+            padding-bottom: 5px; /* Beri ruang untuk scrollbar (opsional) */
+        }
+        /* Sembunyikan scrollbar */
+        .header-actions::-webkit-scrollbar { display: none; }
+        .header-actions { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .action-box { 
+            background: rgba(255,255,255,0.1); /* Latar belakang redup (default) */
+            border-radius: 12px; 
+            padding: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            flex-shrink: 0; /* Mencegah tombol menyusut */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .action-box .icon { 
+            background: rgba(255,255,255,0.2); 
+            width: 35px; 
+            height: 35px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 8px; 
+            font-size: 20px; /* Untuk emoji */
+        }
+        .action-box .text {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap; /* Jaga agar nama tidak turun baris */
+            /* [KUNCI] Sembunyikan nama secara default */
+            display: none; 
+        }/* [BARU] CSS untuk tombol aksi ikon-saja */
         .action-box.icon-only {
             flex: 0 1 auto; /* Jangan memanjang, biarkan ukuran auto */
             gap: 0; /* Hapus jarak karena tidak ada teks */
         }
         .action-box.icon-only .icon {
              margin: 0; /* Hapus margin jika ada */
+        }
+        .action-box:hover .text,
+        .action-box.active .text {
+            display: block;
+        }
+
+        /* [KUNCI] Warna berbeda untuk yang aktif */
+        .action-box.active {
+            background: rgba(255,255,255,0.3); /* Lebih terang */
         }
         /* [AKHIR BARU] */
 
@@ -989,14 +1031,16 @@
                 wallets.forEach(wallet => {
                     const item = document.createElement('div');
                     item.className = 'wallet-list-item';
+                    
                     const icon = wallet.icon || '📚'; // Ambil icon, beri default '📚'
                     item.innerHTML = `<span style="font-size: 20px; width: 30px; text-align: center; margin-right: 15px;">${icon}</span> <span>${wallet.name}</span>`;
+
                     // Tandai dompet yang sedang aktif
                     if (wallet.id === currentWalletId) {
                         item.classList.add('active');
                     }
                     // Tambahkan aksi klik
-                    item.onclick = () => selectWallet(wallet.id, wallet.name);
+                    item.onclick = () => selectWallet(wallet.id, wallet.name, icon); // <-- PERBARUI INI
                     walletListContainer.appendChild(item);
                 });
                 
@@ -1014,30 +1058,58 @@
                 walletModal.classList.remove('visible');
             }
         }
-        function updateHeaderUI(walletName) {
-            // 1. Update nama di header (dropdown)
-            const walletNameEl = document.getElementById('currentWalletNameDisplay');
-            if (walletNameEl) {
-                walletNameEl.textContent = walletName;
-            }
+        /**
+         * [FUNGSI BARU] Me-render tombol-tombol dompet di header
+         */
+        async function renderWalletActions() {
+            const container = document.getElementById('wallet-actions-container');
+            if (!container) return;
 
-            // 2. Update kotak aksi (tombol di bawah header)
-            const walletShortNameEl = document.getElementById('currentWalletNameShort');
-            if (walletShortNameEl) {
-                walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
-            }
-            
-            // [BARU] 3. Update Ikon di kotak aksi
-            const walletIconEl = document.getElementById('currentWalletIcon');
-            if (walletIconEl) {
-                const icon = localStorage.getItem('currentWalletIcon') || '📚';
-                walletIconEl.textContent = icon;
-            }
+            try {
+                const currentWalletId = localStorage.getItem('currentWalletId');
+                const wallets = await fetchApi('/wallets');
 
-            // 4. Hapus class .loading dari PARENT
-            const headerParent = document.getElementById('walletSwitcherBtn');
-            if (headerParent) {
-                headerParent.classList.remove('loading');
+                container.innerHTML = ''; // Bersihkan kontainer
+
+                // Urutkan dompet: yang aktif jadi pertama
+                wallets.sort((a, b) => {
+                    if (a.id === currentWalletId) return -1;
+                    if (b.id === currentWalletId) return 1;
+                    return 0;
+                });
+
+                // 1. Render setiap dompet sebagai tombol
+                wallets.forEach(wallet => {
+                    const walletBox = document.createElement('div');
+                    walletBox.className = 'action-box';
+                    if (wallet.id === currentWalletId) {
+                        walletBox.classList.add('active');
+                    }
+                    
+                    const icon = wallet.icon || '📚';
+                    const name = wallet.name;
+
+                    walletBox.innerHTML = `
+                        <div class="icon">${icon}</div>
+                        <span class="text">${name}</span>
+                    `;
+                    
+                    walletBox.onclick = () => selectWallet(wallet.id, wallet.name, icon);
+                    container.appendChild(walletBox);
+                });
+
+                // 2. Render tombol "Baru"
+                const newWalletBtn = document.createElement('div');
+                newWalletBtn.className = 'action-box icon-only';
+                newWalletBtn.id = 'createNewWalletBtn'; // ID lama tetap ada
+                newWalletBtn.style.cursor = 'pointer';
+                newWalletBtn.innerHTML = `<div class="icon"><i class="fas fa-plus"></i></div>`;
+                newWalletBtn.onclick = () => navigate('/create-wallet');
+                container.appendChild(newWalletBtn);
+
+            } catch (error) {
+                console.error("Gagal me-render wallet actions:", error);
+                container.innerHTML = '<div class="action-box"><span class="text" style="display:block; color: white;">Gagal memuat dompet</span></div>';
             }
         }
         async function loadOverviewData() {
@@ -1080,6 +1152,7 @@
             // 1. Simpan pilihan baru ke localStorage
             localStorage.setItem('currentWalletId', walletId);
             localStorage.setItem('currentWalletName', walletName);
+            localStorage.setItem('currentWalletIcon', walletIcon || '📚'); // <-- TAMBAHKAN INI
             
             // 2. Tutup modal
             closeWalletSwitcher();
@@ -2106,7 +2179,7 @@ function renderTransactionList(filteredTransactions) {
         }
 
         // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
-       function initMainPage() {
+        function initMainPage() {
         console.log("Halaman Utama diinisialisasi.");
         document.getElementById('detailToggleBtn')?.addEventListener('click', () => setView('overview'));
         document.getElementById('calendarToggleBtn')?.addEventListener('click', () => setView('calendar'));
@@ -2120,20 +2193,30 @@ function renderTransactionList(filteredTransactions) {
         document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
         document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
         document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
-        document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {navigate('/create-wallet');});
+        // HAPUS createNewWalletBtn listener, karena tombol itu dibuat dinamis oleh renderWalletActions
 
+        // [PERBAIKAN] Logika inisialisasi yang baru:
         const walletName = localStorage.getItem('currentWalletName');
-            if (walletName) {
-                updateHeaderUI(walletName); // Memanggil ini dari kode Anda yang sudah ada
-            }
+        if (walletName) {
+            // 1. Update nama di dropdown atas
+            const walletNameEl = document.getElementById('currentWalletNameDisplay');
+            if (walletNameEl) walletNameEl.textContent = walletName;
+            const headerParent = document.getElementById('walletSwitcherBtn');
+            if (headerParent) headerParent.classList.remove('loading');
+        }
 
-        // [INI YANG HILANG] Panggil loader independen untuk overview card
+        // 2. Render tombol-tombol ikon dompet
+        renderWalletActions();
+
+        // 3. Muat data kartu (Total, Pemasukan, Pengeluaran)
         loadOverviewData();
 
         const savedView = localStorage.getItem('preferredView');
         if (document.getElementById('detailToggleBtn')) { 
             setView(savedView || 'overview');
         }
+        
+        // 4. Muat daftar transaksi
         if (document.getElementById('currentMonthDisplay')) {
             updateMonthDisplay(); // Ini akan memicu updateMainView (transaction list)
         }
