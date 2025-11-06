@@ -1909,11 +1909,11 @@ function renderTransactionList(filteredTransactions) {
                     const itemContent = document.createElement('div');
                     itemContent.className = 'transaction-item-content transaction-item'; // Gabungkan kelas
                     
-                    const categoryName = t.category || 'Tanpa Kategori'; // <-- TAMBAHKAN INI
-                    const icon = t.icon || categoryName.charAt(0).toUpperCase(); // <-- UBAH INI
+                    const categoryName = t.category || 'Tanpa Kategori'; // <-- [BARU] Tambahkan baris ini
+                    const icon = t.icon || categoryName.charAt(0).toUpperCase(); // <-- [UBAH] Gunakan categoryName
                     itemContent.innerHTML = `
                         <div class="icon" style="background-color: ${t.color};"><span>${icon}</span></div>
-                        <div class="details"><div class="category">${categoryName}</div><div class="notes">${t.notes}</div></div> 
+                        <div class="details"><div class="category">${categoryName}</div><div class="notes">${t.notes}</div></div>
                         <div class="info">
                             <div class="amount data-maskable-amount" 
                                  style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}"
