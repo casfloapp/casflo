@@ -57,8 +57,9 @@
             min-height: 100vh; 
             min-height: 100svh; 
             touch-action: manipulation; 
+            overflow: hidden;
         }
-        .app-container { 
+        #app-container { 
             width: 100%; 
             min-height: 100vh; 
             min-height: 100svh; 
@@ -66,6 +67,13 @@
             flex-direction: column; 
             position: relative; 
             overflow-x: hidden; 
+        }
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1; /* Ambil sisa ruang dari #app-container */
+            overflow: hidden; /* Mencegah container ini scroll */
+            width: 100%;
         }
 
         /* [BARU] Aturan CSS untuk Mode Gelap */
@@ -835,7 +843,7 @@
         
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
-            .app-container { max-width: 480px; margin: 0 auto; height: 100vh; }
+            #app-container { max-width: 480px; margin: 0 auto; height: 100vh; } /* [PERBAIKAN] Targetkan ID */
             .add-view { max-width: 480px; }
             .calculator-section { padding: 20px; gap: 12px; }
             .amount-display { font-size: 36px; }
@@ -843,6 +851,7 @@
             .calc-btn .fas { font-size: 28px; }
             .dark body { background-color: #111827; }
         }
+            
     </style>
 </head>
 <body>
