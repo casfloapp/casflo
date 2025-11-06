@@ -709,56 +709,6 @@
         }
         /* [AKHIR BARU] */
         /* [AKHIR CSS MODAL] */
-
-        /* [BARU] CSS untuk Aksi Geser (Swipe) */
-        .transaction-group {
-            /* Mencegah item swipe "bocor" saat grup ditutup */
-            overflow: hidden; 
-            margin-top: 10px;
-        }
-        .transaction-item-wrapper {
-            position: relative;
-            background-color: var(--expense-red); /* Warna latar belakang aksi */
-            border-radius: 12px; /* Sesuai radius item */
-            margin-bottom: 1px; /* Pemisah antar item */
-        }
-        .dark .transaction-item-wrapper {
-             background-color: var(--expense-red);
-        }
-        .transaction-item-actions {
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
-            width: 80px; /* Lebar tombol hapus */
-        }
-        .transaction-item-actions .delete-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
-        }
-        /* Ini adalah item yang bergerak */
-        .transaction-item-content {
-            position: relative;
-            background-color: white;
-            border-radius: 12px; 
-            transition: transform 0.3s ease-out; 
-            z-index: 2; /* Di atas tombol aksi */
-            cursor: pointer; /* Menandakan bisa diklik */
-        }
-        .dark .transaction-item-content {
-            background-color: #374151;
-        }
-        /* [AKHIR BARU] */
-        /* [BARU] CSS UNTUK SPINNER (DUA TIPE) */
         
         /* Tipe 1: Spinner Inline (untuk teks/angka) */
         .inline-spinner {
@@ -1252,88 +1202,6 @@
         }
         // [AKHIR FUNGSI COLLAPSE]
 
-        // [BARU] Fungsi-fungsi untuk Swipe
-        
-        /**
-         * Menutup item swipe yang sedang aktif
-         */
-        function closeActiveSwipe() {
-            if (activeSwipeElement) {
-                activeSwipeElement.style.transform = 'translateX(0)';
-                activeSwipeElement = null;
-            }
-        }
-
-        function handleTouchStart(e) {
-            const targetContent = e.currentTarget;
-            // Tutup item lain yang mungkin terbuka
-            if (targetContent !== activeSwipeElement) {
-                closeActiveSwipe();
-            }
-
-            touchStartX = e.touches[0].clientX;
-            touchCurrentX = touchStartX;
-            touchStartY = e.touches[0].clientY; 
-            isSwiping = false; // Reset status swipe
-            
-            targetContent.style.transition = 'none'; // Hapus transisi agar menempel di jari
-        }
-
-        function handleTouchMove(e) {
-            if (e.touches.length > 1) return; // Abaikan multi-touch
-
-            touchCurrentX = e.touches[0].clientX;
-            const deltaX = touchCurrentX - touchStartX;
-
-            // [PENTING] Cek apakah ini scroll vertikal
-            if (!isSwiping) {
-                const deltaY = e.touches[0].clientY - touchStartY;
-                if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) {
-                    // Ini adalah scroll vertikal, abaikan
-                    return;
-                }
-            }
-            
-            // Ini adalah swipe horizontal
-            isSwiping = true;
-            e.preventDefault(); // Hentikan browser dari scrolling
-
-            let newTransform = deltaX;
-            if (deltaX > 0) newTransform = 0; // Jangan geser ke kanan
-            if (deltaX < -100) newTransform = -100; // Batasi geseran (lebar tombol 80 + 20 buffer)
-
-            e.currentTarget.style.transform = `translateX(${newTransform}px)`;
-        }
-
-        function handleTouchEnd(e) {
-            const targetContent = e.currentTarget;
-            const actionWidth = 80; // Lebar tombol hapus
-
-            // Tambahkan transisi lagi untuk "snap"
-            targetContent.style.transition = 'transform 0.3s ease-out';
-
-            if (isSwiping) {
-                // Ini adalah swipe
-                const deltaX = touchCurrentX - touchStartX;
-                
-                if (deltaX < swipeThreshold) {
-                    // Snap Buka
-                    targetContent.style.transform = `translateX(-${actionWidth}px)`;
-                    activeSwipeElement = targetContent;
-                } else {
-                    // Snap Tutup
-                    targetContent.style.transform = 'translateX(0)';
-                    if (targetContent === activeSwipeElement) {
-                        activeSwipeElement = null;
-                    }
-                }
-            }
-            
-            // 'isSwiping' akan tetap false jika ini adalah tap,
-            // sehingga event click asli (openTransactionModal) akan ter-trigger.
-            // Kita tidak perlu memanggilnya secara manual.
-        }
-        // [AKHIR BARU]
 
         const txModal = document.getElementById('tx-modal-overlay');
 
@@ -1396,7 +1264,6 @@ function closeTransactionModal() {
 
                 console.log('Transaksi berhasil dihapus.');
                 closeTransactionModal(); // Tutup modal (jika terbuka)
-                closeActiveSwipe();    // Tutup swipe (jika terbuka)
                 updateMainView();      // Muat ulang list
                 
             } catch (error) {
@@ -1415,7 +1282,6 @@ function closeTransactionModal() {
             if (tx) {
                 sessionStorage.setItem('tx_for_edit', JSON.stringify(tx));
                 closeTransactionModal(); // Tutup modal (jika terbuka)
-                closeActiveSwipe();    // Tutup swipe (jika terbuka)
                 navigate('/create');
             } else {
                 alert('Gagal menemukan data transaksi untuk diedit.');
@@ -1590,12 +1456,6 @@ function closeTransactionModal() {
         let allAccounts = [];
         let selectedAccountId = null; // Kita akan kelola ini secara global
         let currentTransactionId = null; // [BARU] Untuk modal detail
-        let activeSwipeElement = null; // Menyimpan elemen .transaction-item-content yang sedang terbuka
-        let touchStartX = 0;
-        let touchCurrentX = 0;
-        let touchStartY = 0; // Untuk deteksi scroll
-        let isSwiping = false; // Flag untuk membedakan swipe dari click
-        let swipeThreshold = -60; // Geser minimal 60px ke kiri
 
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -2034,34 +1894,18 @@ function renderTransactionList(filteredTransactions) {
                 groupEl.appendChild(listHeader);
 
                 // [PERBAIKAN DIMULAI DI SINI]
+                // [PERBAIKAN DIMULAI DI SINI]
                 txsOnThisDate.forEach(t => {
-                    // 1. Buat Wrapper Utama
-                    const itemWrapper = document.createElement('div');
-                    itemWrapper.className = 'transaction-item-wrapper';
-
-                    // 2. Buat Tombol Aksi (tersembunyi)
-                    const itemActions = document.createElement('div');
-                    itemActions.className = 'transaction-item-actions';
-                    itemActions.innerHTML = `
-                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
-                    `;
+                    // 1. Buat elemen item transaksi
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'transaction-item'; // Hanya kelas ini
+                    itemEl.style.cursor = 'pointer'; // Tambahkan cursor pointer
                     
-                    // [INI YANG HILANG DARI FILE ANDA]
-                    // Tambahkan listener ke tombol (passing t.id)
-                    itemActions.querySelector('.delete-btn').onclick = (e) => {
-                        e.stopPropagation(); // Hentikan event agar tidak menutup swipe
-                        handleDeleteTransaction(t.id); // Panggil fungsi yang sudah ada
-                    };
-                    // [AKHIR BAGIAN HILANG]
-
-
-                    // 3. Buat Konten yang Terlihat (yang akan digeser)
-                    const itemContent = document.createElement('div');
-                    itemContent.className = 'transaction-item-content transaction-item'; // Gabungkan kelas
+                    const categoryName = t.category || 'Tanpa Kategori';
+                    const icon = t.icon || categoryName.charAt(0).toUpperCase();
                     
-                    const categoryName = t.category || 'Tanpa Kategori'; // <-- [BARU] Tambahkan baris ini
-                    const icon = t.icon || categoryName.charAt(0).toUpperCase(); // <-- [UBAH] Gunakan categoryName
-                    itemContent.innerHTML = `
+                    // 2. Isi HTML-nya
+                    itemEl.innerHTML = `
                         <div class="icon" style="background-color: ${t.color};"><span>${icon}</span></div>
                         <div class="details"><div class="category">${categoryName}</div><div class="notes">${t.notes}</div></div>
                         <div class="info">
@@ -2073,31 +1917,13 @@ function renderTransactionList(filteredTransactions) {
                             <div class="account">${t.account}</div>
                         </div>`;
 
-                    // [INI JUGA HILANG DARI FILE ANDA]
-                    // Tambahkan listener swipe ke item KONTEN
-                    itemContent.addEventListener('touchstart', handleTouchStart, { passive: true });
-                    itemContent.addEventListener('touchmove', handleTouchMove, { passive: false }); // false untuk izinkan preventDefault
-                    itemContent.addEventListener('touchend', handleTouchEnd);
-                    itemContent.addEventListener('touchcancel', handleTouchEnd);
-                    
-                    // (Opsional) Klik (Tap) akan membuka modal
-                    itemContent.onclick = () => {
-                        // Hanya panggil modal jika item tidak digeser
-                        if (!isSwiping && !activeSwipeElement) {
-                             openTransactionModal(t);
-                        } else if (activeSwipeElement) {
-                            // Jika item sudah terbuka, klik lagi akan menutupnya
-                            closeActiveSwipe();
-                        }
+                    // 3. Tambahkan listener klik yang sederhana
+                    itemEl.onclick = () => {
+                        openTransactionModal(t); // Langsung buka modal
                     };
-                    // [AKHIR BAGIAN HILANG]
 
-                    // 4. Susun elemen
-                    itemWrapper.appendChild(itemActions);
-                    itemWrapper.appendChild(itemContent);
-                    
-                    // 5. Append wrapper ke kontainer
-                    itemsContainer.appendChild(itemWrapper);
+                    // 4. Append item langsung ke kontainer
+                    itemsContainer.appendChild(itemEl);
                 });
                 // [PERBAIKAN SELESAI]
                 
