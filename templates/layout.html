@@ -1948,8 +1948,11 @@ function renderTransactionList(filteredTransactions) {
                 // [MODIFIKASI] Jika gagal, tetap sembunyikan loading
                 if (transactionListContainer) {
                     transactionListContainer.classList.remove('loading');
-                    // Dan tampilkan pesan error
-                    document.getElementById('transactionListContent').innerHTML = `<div class="empty-transaction-list">Gagal memuat transaksi.</div>`;
+                    // [PERBAIKAN] Kosongkan dulu, baru isi pesan error
+                    const transactionListEl = document.getElementById('transactionListContent');
+                    if (transactionListEl) {
+                        transactionListEl.innerHTML = `<div class="empty-transaction-list">Gagal memuat transaksi.</div>`;
+                    }
                 }
             }
         }// === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
