@@ -228,6 +228,15 @@
         .overview-card .stat-item .label { font-size: 12px; color: var(--text-light); margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 4px; }
         .overview-card .stat-item .amount { font-size: 16px; font-weight: 700; }
         .overview-card .stat-item .amount.expense { color: var(--expense-red); }
+        .overview-card .stat-item .amount { 
+            /* font-size: 16px; */ /* Dihapus agar bisa dinamis */
+            font-weight: 700;
+            display: flex; /* [PERBAIKAN] Menggunakan flex untuk center */
+            justify-content: center; /* [PERBAIKAN] Center horizontal */
+            align-items: center; /* [PERBAIKAN] Center vertikal */
+            min-height: 1.2em; /* Mencegah 'loncat' saat loading */
+            line-height: 1.2; /* [PERBAIKAN] Untuk font dinamis */
+        }
         .calendar-card .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 600; }
         .calendar-card .calendar-header i { cursor: pointer; }
         .calendar-card .calendar-header .month-year { font-size: 16px; }
@@ -918,49 +927,68 @@
             }
         }
         async function loadOverviewData() {
-            const walletId = localStorage.getItem('currentWalletId');
-            if (!walletId) return;
+        const walletId = localStorage.getItem('currentWalletId');
+        if (!walletId) return;
 
-            // [MODIFIKASI] Ambil elemen wrapper dan teks
-            const totalWrapper = document.getElementById('totalAmountWrapper');
-            const incomeWrapper = document.getElementById('incomeAmountWrapper');
-            const expenseWrapper = document.getElementById('expenseAmountWrapper');
-            
-            const totalEl = document.getElementById('totalAmount');
-            const incomeEl = document.getElementById('incomeAmount');
-            const expenseEl = document.getElementById('expenseAmount');
+        // Ambil elemen wrapper dan teks
+        const totalWrapper = document.getElementById('totalAmountWrapper');
+        const incomeWrapper = document.getElementById('incomeAmountWrapper');
+        const expenseWrapper = document.getElementById('expenseAmountWrapper');
 
-            try {
-                // Panggil endpoint /summary Anda yang ada di wallets.js
-                const summary = await fetchApi(`/wallets/${walletId}/summary`);
-                
-                const formatCurrency = (value) => { 
-                    const sign = value < 0 ? '-' : ''; 
-                    return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; 
-                };
+        const totalEl = document.getElementById('totalAmount');
+        const incomeEl = document.getElementById('incomeAmount');
+        const expenseEl = document.getElementById('expenseAmount');
 
-                // Isi datanya ke elemen .real-content
-                if(totalEl) totalEl.textContent = formatCurrency(summary.net_worth);
-                if(incomeEl) incomeEl.textContent = formatCurrency(summary.monthly_income);
-                if(expenseEl) expenseEl.textContent = formatCurrency(summary.monthly_expense);
-                
-                // [MODIFIKASI] Sembunyikan spinner per-angka
-                if (totalWrapper) totalWrapper.classList.remove('loading');
-                if (incomeWrapper) incomeWrapper.classList.remove('loading');
-                if (expenseWrapper) expenseWrapper.classList.remove('loading');
+        // [BARU] Fungsi untuk format mata uang & set font size
+        const formatAndSet = (wrapper, element, value, type) => {
+            if (!element || !wrapper) return;
 
-            } catch (error) {
-                console.error("Gagal memuat summary:", error);
-                // [MODIFIKASI] Tampilkan error jika gagal
-                if(totalEl) totalEl.textContent = "Error";
-                if(incomeEl) incomeEl.textContent = "Error";
-                if(expenseEl) expenseEl.textContent = "Error";
-                // Sembunyikan spinner agar error terlihat
-                if (totalWrapper) totalWrapper.classList.remove('loading');
-                if (incomeWrapper) incomeWrapper.classList.remove('loading');
-                if (expenseWrapper) expenseWrapper.classList.remove('loading');
+            let sign = '';
+            if (type === 'total' && value < 0) {
+                sign = '-'; // Hanya 'total' yang boleh punya minus
             }
+
+            const amountString = `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`;
+
+            // Atur font size dinamis berdasarkan panjang string
+            if (amountString.length > 13) { // e.g., "Rp1.000.000.000"
+                element.style.fontSize = "13px";
+            } else if (amountString.length > 10) { // e.g., "Rp10.000.000"
+                element.style.fontSize = "14px";
+            } else {
+                element.style.fontSize = "16px"; // default
+            }
+
+            // Atur warna
+            if (type === 'total') {
+                if (value < 0) wrapper.classList.add('expense'); // Merah jika total minus
+                else wrapper.classList.remove('expense'); // Hitam jika total plus
+            }
+            // (Warna 'income' dan 'expense' sudah diatur via class di HTML)
+
+            element.textContent = amountString;
+            wrapper.classList.remove('loading');
+        };
+
+        try {
+            // Panggil endpoint /summary
+            const summary = await fetchApi(`/wallets/${walletId}/summary`);
+
+            // API mengembalikan income/expense sbg angka positif (setelah fix Langkah 1)
+            formatAndSet(totalWrapper, totalEl, summary.net_worth, 'total');
+            formatAndSet(incomeWrapper, incomeEl, summary.monthly_income, 'income');
+            formatAndSet(expenseWrapper, expenseEl, summary.monthly_expense, 'expense');
+
+        } catch (error) {
+            console.error("Gagal memuat summary:", error);
+            if(totalEl) totalEl.textContent = "Error";
+            if(incomeEl) incomeEl.textContent = "Error";
+            if(expenseEl) expenseEl.textContent = "Error";
+            if (totalWrapper) totalWrapper.classList.remove('loading');
+            if (incomeWrapper) incomeWrapper.classList.remove('loading');
+            if (expenseWrapper) expenseWrapper.classList.remove('loading');
         }
+    }
 
         function selectWallet(walletId, walletName) {
             // 1. Simpan pilihan baru ke localStorage
@@ -1908,7 +1936,7 @@ function renderTransactionList(filteredTransactions) {
                         account: tx.account_name, 
                         icon: tx.category_icon, // [PERBAIKAN] Gunakan ikon dari API
                         color: 'var(--light-purple)', // Warna default
-                        
+
                         // [PERBAIKAN BUG] Tambahkan T00:00:00 untuk menghindari error timezone
                         date: tx.transaction_date + 'T00:00:00', 
 
@@ -1987,46 +2015,45 @@ function renderTransactionList(filteredTransactions) {
         }
 
         // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
-        function initMainPage() {
-            console.log("Halaman Utama diinisialisasi.");
-            document.getElementById('detailToggleBtn')?.addEventListener('click', () => setView('overview'));
-            document.getElementById('calendarToggleBtn')?.addEventListener('click', () => setView('calendar'));
-            document.getElementById('prevMonthBtn')?.addEventListener('click', goToPrevMonth);
-            document.getElementById('nextMonthBtn')?.addEventListener('click', goToNextMonth);
-            document.getElementById('calendarPrevMonthBtn')?.addEventListener('click', goToPrevMonth);
-            document.getElementById('calendarNextMonthBtn')?.addEventListener('click', goToNextMonth);
-            document.getElementById('tabPengeluaran')?.addEventListener('click', () => setCalendarFilter('expense'));
-            document.getElementById('tabPenghasilan')?.addEventListener('click', () => setCalendarFilter('income'));
-            document.getElementById('tabTotal')?.addEventListener('click', () => setCalendarFilter('total'));
-            document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
-            document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
-            document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher); // <-- PERBAIKAN DARI KODE ANDA
-            
-            // [PERBAIKAN] Fungsikan tombol "Baru B..."
-            document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
-                navigate('/create-wallet');
-            });
+       function initMainPage() {
+        console.log("Halaman Utama diinisialisasi.");
+        document.getElementById('detailToggleBtn')?.addEventListener('click', () => setView('overview'));
+        document.getElementById('calendarToggleBtn')?.addEventListener('click', () => setView('calendar'));
+        document.getElementById('prevMonthBtn')?.addEventListener('click', goToPrevMonth);
+        document.getElementById('nextMonthBtn')?.addEventListener('click', goToNextMonth);
+        document.getElementById('calendarPrevMonthBtn')?.addEventListener('click', goToPrevMonth);
+        document.getElementById('calendarNextMonthBtn')?.addEventListener('click', goToNextMonth);
+        document.getElementById('tabPengeluaran')?.addEventListener('click', () => setCalendarFilter('expense'));
+        document.getElementById('tabPenghasilan')?.addEventListener('click', () => setCalendarFilter('income'));
+        document.getElementById('tabTotal')?.addEventListener('click', () => setCalendarFilter('total'));
+        document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
+        document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
+        document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
 
-            // [BARU] Panggil fungsi untuk update header (untuk kasus refresh)
-            const walletName = localStorage.getItem('currentWalletName');
-            if (walletName) {
-                updateHeaderUI(walletName); // Memanggil ini dari kode Anda yang sudah ada
-            }
+        // [PERBAIKAN] Fungsikan tombol "Baru B..."
+        document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
+            navigate('/create-wallet');
+        });
 
-            // [INI YANG HILANG] Panggil loader independen untuk overview card
-            loadOverviewData();
-
-            const savedView = localStorage.getItem('preferredView');
-            if (document.getElementById('detailToggleBtn')) { 
-                setView(savedView || 'overview');
-            }
-            if (document.getElementById('currentMonthDisplay')) {
-                updateMonthDisplay(); // Ini akan memicu updateMainView (transaction list)
-            }
-            
-            attachThemeToggle('.theme-toggle'); 
+        // [MODIFIKASI] Panggil fungsi untuk update header (untuk kasus refresh)
+        const walletName = localStorage.getItem('currentWalletName');
+        if (walletName) {
+            updateHeaderUI(walletName); // Panggil fungsi yang sudah ada
         }
 
+        // [INI YANG HILANG] Panggil loader independen untuk overview card
+        loadOverviewData();
+
+        const savedView = localStorage.getItem('preferredView');
+        if (document.getElementById('detailToggleBtn')) { 
+            setView(savedView || 'overview');
+        }
+        if (document.getElementById('currentMonthDisplay')) {
+            updateMonthDisplay(); // Ini akan memicu updateMainView (transaction list)
+        }
+
+        attachThemeToggle('.theme-toggle'); 
+    }
         function initCreatePage() {
             // [BARU] Cek apakah ada data edit di sessionStorage
             const txToEditJSON = sessionStorage.getItem('tx_for_edit');
