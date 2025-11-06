@@ -871,6 +871,46 @@
             const result = await response.json(); 
             return result.data; 
         }
+        /**
+         * [BARU] Helper global untuk format mata uang & set font size
+         * @param {HTMLElement} wrapper - Elemen pembungkus (.loading atau parent)
+         * @param {HTMLElement} element - Elemen teks (.real-content)
+         * @param {number} value - Angka yang akan diformat
+         * @param {'total'|'income'|'expense'} type - Tipe data
+         */
+        function formatAndSetDisplay(wrapper, element, value, type) {
+            if (!element || !wrapper) return;
+
+            let sign = '';
+            // Tanda minus hanya untuk pengeluaran atau total negatif
+            if (type === 'expense' || (type === 'total' && value < 0)) {
+                sign = '-';
+            }
+            
+            const amountString = `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`;
+            
+            // Atur font size dinamis
+            if (amountString.length > 13) { // > 1 Miliar (misal: -Rp100.000.000)
+                element.style.fontSize = "13px";
+            } else if (amountString.length > 10) { // > 10 Juta (misal: -Rp10.000.000)
+                element.style.fontSize = "14px";
+            } else {
+                element.style.fontSize = "16px"; // default
+            }
+
+            // Atur warna
+            wrapper.classList.remove('expense', 'income'); // Reset warna
+            if (type === 'total') {
+                if (value < 0) wrapper.classList.add('expense'); // Merah jika total minus
+            } else if (type === 'income') {
+                wrapper.classList.add('income');
+            } else if (type === 'expense') {
+                wrapper.classList.add('expense');
+            }
+            
+            element.textContent = amountString;
+            wrapper.classList.remove('loading');
+        }
 
         // --- [AKHIR BAGIAN 0.5] ---
 
@@ -979,7 +1019,7 @@
                 headerParent.classList.remove('loading');
             }
         }
-       async function loadOverviewData() {
+        async function loadOverviewData() {
             const walletId = localStorage.getItem('currentWalletId');
             if (!walletId) return;
 
@@ -1014,6 +1054,7 @@
                 if (expenseWrapper) expenseWrapper.classList.remove('loading');
             }
         }
+       
         function selectWallet(walletId, walletName) {
             // 1. Simpan pilihan baru ke localStorage
             localStorage.setItem('currentWalletId', walletId);
@@ -2056,17 +2097,12 @@ function renderTransactionList(filteredTransactions) {
         document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
         document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
         document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
+        document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {navigate('/create-wallet');});
 
-        // [PERBAIKAN] Fungsikan tombol "Baru B..."
-        document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
-            navigate('/create-wallet');
-        });
-
-        // [MODIFIKASI] Panggil fungsi untuk update header (untuk kasus refresh)
         const walletName = localStorage.getItem('currentWalletName');
-        if (walletName) {
-            updateHeaderUI(walletName); // Panggil fungsi yang sudah ada
-        }
+            if (walletName) {
+                updateHeaderUI(walletName); // Memanggil ini dari kode Anda yang sudah ada
+            }
 
         // [INI YANG HILANG] Panggil loader independen untuk overview card
         loadOverviewData();
