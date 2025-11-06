@@ -1674,10 +1674,27 @@ function closeTransactionModal() {
             if (calendarDisplay) {
                  calendarDisplay.textContent = `${monthNames[month]} ${year}`;
             }
+
+            // [BARU] Sembunyikan spinner tanggal
+            const dateWrapper = document.getElementById('dateSelectorWrapper');
+            if (dateWrapper) {
+                dateWrapper.classList.remove('loading');
+            }
+
             updateMainView(); 
         }
-        function goToPrevMonth() { currentDate.setMonth(currentDate.getMonth() - 1); if(currentView === 'calendar') { renderCalendar(); } updateMonthDisplay(); }
-        function goToNextMonth() { currentDate.setMonth(currentDate.getMonth() + 1); if(currentView === 'calendar') { renderCalendar(); } updateMonthDisplay(); }
+        function goToPrevMonth() { 
+            document.getElementById('dateSelectorWrapper')?.classList.add('loading');
+            currentDate.setMonth(currentDate.getMonth() - 1); 
+            if(currentView === 'calendar') { renderCalendar(); } 
+            updateMonthDisplay(); 
+        }
+        function goToNextMonth() { 
+            document.getElementById('dateSelectorWrapper')?.classList.add('loading');
+            currentDate.setMonth(currentDate.getMonth() + 1); 
+            if(currentView === 'calendar') { renderCalendar(); } 
+            updateMonthDisplay(); 
+        }
         function setCalendarFilter(filter) { 
             calendarFilter = filter;
             if (document.getElementById('tabPengeluaran')) document.getElementById('tabPengeluaran').classList.toggle('active', filter === 'expense');
@@ -1891,7 +1908,10 @@ function renderTransactionList(filteredTransactions) {
                         account: tx.account_name, 
                         icon: tx.category_icon, // [PERBAIKAN] Gunakan ikon dari API
                         color: 'var(--light-purple)', // Warna default
-                        date: tx.transaction_date,
+                        
+                        // [PERBAIKAN BUG] Tambahkan T00:00:00 untuk menghindari error timezone
+                        date: tx.transaction_date + 'T00:00:00', 
+
                         category_id: tx.category_id, // [TAMBAHKAN INI]
                         account_id: tx.account_id   // [TAMBAHKAN INI]
                     };
@@ -2003,7 +2023,7 @@ function renderTransactionList(filteredTransactions) {
             
             attachThemeToggle('.theme-toggle'); 
         }
-        
+
         function initCreatePage() {
             // [BARU] Cek apakah ada data edit di sessionStorage
             const txToEditJSON = sessionStorage.getItem('tx_for_edit');

@@ -52,9 +52,10 @@
             <div class="card overview-card" id="overviewCard">
                 <div class="card-header">
                     <div class="icon" id="mainBookIconBtn" style="cursor: pointer;"><i class="fas fa-book-open"></i></div>
-                    <div class="date-selector">
+                    <div class="date-selector loading" id="dateSelectorWrapper">
                         <i class="fas fa-chevron-left" id="prevMonthBtn"></i>
-                        <span id="currentMonthDisplay"></span>
+                        <span class="real-content" id="currentMonthDisplay"></span>
+                        <span class="inline-spinner" style="border-color: #f4f5f9; border-top-color: transparent;"></span>
                         <i class="fas fa-chevron-right" id="nextMonthBtn"></i>
                     </div>
                     <div class="card-actions">
