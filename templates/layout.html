@@ -1040,7 +1040,7 @@
                         item.classList.add('active');
                     }
                     // Tambahkan aksi klik
-                    item.onclick = () => selectWallet(wallet.id, wallet.name, icon); // <-- PERBARUI INI
+                    item.onclick = () => selectWallet(wallet.id, wallet.name, icon); 
                     walletListContainer.appendChild(item);
                 });
                 
@@ -1148,19 +1148,36 @@
             }
         }
        
-        function selectWallet(walletId, walletName) {
+        function selectWallet(walletId, walletName, walletIcon) {
+            // 0. Jika dompet yang diklik sudah aktif, tidak perlu lakukan apa-apa
+            if (localStorage.getItem('currentWalletId') === walletId) {
+                closeWalletSwitcher(); // Cukup tutup modal (jika terbuka)
+                return;
+            }
+
             // 1. Simpan pilihan baru ke localStorage
             localStorage.setItem('currentWalletId', walletId);
             localStorage.setItem('currentWalletName', walletName);
-            localStorage.setItem('currentWalletIcon', walletIcon || '📚'); // <-- TAMBAHKAN INI
+            localStorage.setItem('currentWalletIcon', walletIcon || '📚');
             
-            // 2. Tutup modal
+            // 2. Tutup modal (jika terbuka)
             closeWalletSwitcher();
             
-            // 3. Muat ulang halaman agar semua data (transaksi, akun, dll)
-            //    diambil ulang untuk dompet yang baru dipilih.
-            //    Ini adalah cara paling aman untuk memastikan data konsisten.
-            window.location.href = '/';
+            // 3. [PERBAIKAN KUNCI] Update UI tanpa me-muat ulang halaman
+
+            // 3a. Render ulang tombol header
+            // Ini akan otomatis mengurutkan ulang (geser ke kiri) dan mengubah warna
+            renderWalletActions(); 
+
+            // 3b. Update nama di dropdown atas (yang di samping ikon pencarian)
+            const walletNameEl = document.getElementById('currentWalletNameDisplay');
+            if (walletNameEl) walletNameEl.textContent = walletName;
+
+            // 3c. Muat ulang data untuk kartu overview (Total, Pemasukan, dll)
+            loadOverviewData();
+
+            // 3d. Muat ulang daftar transaksi (spinner akan muncul dan hilang lagi)
+            updateMainView();
         }
         // ... (setelah fungsi selectWallet)
 
