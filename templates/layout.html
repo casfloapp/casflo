@@ -254,8 +254,17 @@
         .calendar-summary-tabs .tab.active { border-color: var(--primary-blue); color: var(--primary-blue); background-color: var(--light-purple); }
         .calendar-summary-amounts { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; }
         .calendar-summary-amounts .label { font-size: 12px; color: var(--text-light); margin-bottom: 5px; }
-        .calendar-summary-amounts .amount { font-size: 16px; font-weight: 700; }
+        .calendar-summary-amounts .amount { 
+            /* font-size: 16px; */ /* Dihapus agar dinamis */
+            font-weight: 700;
+            display: flex; /* [BARU] */
+            justify-content: center; /* [BARU] */
+            align-items: center; /* [BARU] */
+            min-height: 1.2em; /* [BARU] */
+            line-height: 1.2; /* [BARU] */
+        }
         .calendar-summary-amounts .amount.expense { color: var(--expense-red); }
+        .calendar-summary-amounts .amount.income { color: var(--income-green); } /* [BARU] */
         .transaction-list .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .transaction-list .list-header .date-info { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
         .transaction-list .list-header .summary { font-size: 13px; color: var(--text-light); }
@@ -862,6 +871,49 @@
             const result = await response.json(); 
             return result.data; 
         }
+
+        // --- [AKHIR BAGIAN 0.5] ---
+
+        /**
+         * [BARU] Helper global untuk format mata uang & set font size
+         * @param {HTMLElement} wrapper - Elemen pembungkus (.loading atau parent)
+         * @param {HTMLElement} element - Elemen teks (.real-content)
+         * @param {number} value - Angka yang akan diformat
+         * @param {'total'|'income'|'expense'} type - Tipe data
+         */
+        function formatAndSetDisplay(wrapper, element, value, type) {
+            if (!element || !wrapper) return;
+
+            let sign = '';
+            // Tanda minus hanya untuk pengeluaran atau total negatif
+            if (type === 'expense' || (type === 'total' && value < 0)) {
+                sign = '-';
+            }
+            
+            const amountString = `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`;
+            
+            // Atur font size dinamis
+            if (amountString.length > 13) { // > 1 Miliar (misal: -Rp100.000.000)
+                element.style.fontSize = "13px";
+            } else if (amountString.length > 10) { // > 10 Juta (misal: -Rp10.000.000)
+                element.style.fontSize = "14px";
+            } else {
+                element.style.fontSize = "16px"; // default
+            }
+
+            // Atur warna
+            wrapper.classList.remove('expense', 'income'); // Reset warna
+            if (type === 'total') {
+                if (value < 0) wrapper.classList.add('expense'); // Merah jika total minus
+            } else if (type === 'income') {
+                wrapper.classList.add('income');
+            } else if (type === 'expense') {
+                wrapper.classList.add('expense');
+            }
+            
+            element.textContent = amountString;
+            wrapper.classList.remove('loading');
+        }
         // --- [AKHIR BAGIAN 0.5] ---
 // --- [AKHIR BAGIAN 0.5] ---
 
@@ -927,70 +979,41 @@
                 headerParent.classList.remove('loading');
             }
         }
-        async function loadOverviewData() {
-        const walletId = localStorage.getItem('currentWalletId');
-        if (!walletId) return;
+       async function loadOverviewData() {
+            const walletId = localStorage.getItem('currentWalletId');
+            if (!walletId) return;
 
-        // Ambil elemen wrapper dan teks
-        const totalWrapper = document.getElementById('totalAmountWrapper');
-        const incomeWrapper = document.getElementById('incomeAmountWrapper');
-        const expenseWrapper = document.getElementById('expenseAmountWrapper');
+            // Ambil elemen wrapper dan teks
+            const totalWrapper = document.getElementById('totalAmountWrapper');
+            const incomeWrapper = document.getElementById('incomeAmountWrapper');
+            const expenseWrapper = document.getElementById('expenseAmountWrapper');
+            
+            const totalEl = document.getElementById('totalAmount');
+            const incomeEl = document.getElementById('incomeAmount');
+            const expenseEl = document.getElementById('expenseAmount');
 
-        const totalEl = document.getElementById('totalAmount');
-        const incomeEl = document.getElementById('incomeAmount');
-        const expenseEl = document.getElementById('expenseAmount');
+            try {
+                const summary = await fetchApi(`/wallets/${walletId}/summary`);
+                
+                // [PERBAIKAN KUNCI] Hitung total bulanan, BUKAN net worth
+                const monthlyTotal = (summary.monthly_income || 0) - (summary.monthly_expense || 0);
 
-        // [BARU] Fungsi untuk format mata uang & set font size
-        const formatAndSet = (wrapper, element, value, type) => {
-            if (!element || !wrapper) return;
+                // Panggil helper global
+                formatAndSetDisplay(totalWrapper, totalEl, monthlyTotal, 'total');
+                formatAndSetDisplay(incomeWrapper, incomeEl, summary.monthly_income, 'income');
+                formatAndSetDisplay(expenseWrapper, expenseEl, summary.monthly_expense, 'expense');
 
-            let sign = '';
-            if (type === 'total' && value < 0) {
-                sign = '-'; // Hanya 'total' yang boleh punya minus
+            } catch (error) {
+                console.error("Gagal memuat summary:", error);
+                // Handle error
+                if(totalEl) totalEl.textContent = "Error";
+                if(incomeEl) incomeEl.textContent = "Error";
+                if(expenseEl) expenseEl.textContent = "Error";
+                if (totalWrapper) totalWrapper.classList.remove('loading');
+                if (incomeWrapper) incomeWrapper.classList.remove('loading');
+                if (expenseWrapper) expenseWrapper.classList.remove('loading');
             }
-
-            const amountString = `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`;
-
-            // Atur font size dinamis berdasarkan panjang string
-            if (amountString.length > 13) { // e.g., "Rp1.000.000.000"
-                element.style.fontSize = "13px";
-            } else if (amountString.length > 10) { // e.g., "Rp10.000.000"
-                element.style.fontSize = "14px";
-            } else {
-                element.style.fontSize = "16px"; // default
-            }
-
-            // Atur warna
-            if (type === 'total') {
-                if (value < 0) wrapper.classList.add('expense'); // Merah jika total minus
-                else wrapper.classList.remove('expense'); // Hitam jika total plus
-            }
-            // (Warna 'income' dan 'expense' sudah diatur via class di HTML)
-
-            element.textContent = amountString;
-            wrapper.classList.remove('loading');
-        };
-
-        try {
-            // Panggil endpoint /summary
-            const summary = await fetchApi(`/wallets/${walletId}/summary`);
-
-            // API mengembalikan income/expense sbg angka positif (setelah fix Langkah 1)
-            formatAndSet(totalWrapper, totalEl, summary.net_worth, 'total');
-            formatAndSet(incomeWrapper, incomeEl, summary.monthly_income, 'income');
-            formatAndSet(expenseWrapper, expenseEl, summary.monthly_expense, 'expense');
-
-        } catch (error) {
-            console.error("Gagal memuat summary:", error);
-            if(totalEl) totalEl.textContent = "Error";
-            if(incomeEl) incomeEl.textContent = "Error";
-            if(expenseEl) expenseEl.textContent = "Error";
-            if (totalWrapper) totalWrapper.classList.remove('loading');
-            if (incomeWrapper) incomeWrapper.classList.remove('loading');
-            if (expenseWrapper) expenseWrapper.classList.remove('loading');
         }
-    }
-
         function selectWallet(walletId, walletName) {
             // 1. Simpan pilihan baru ke localStorage
             localStorage.setItem('currentWalletId', walletId);
@@ -1949,17 +1972,20 @@ function renderTransactionList(filteredTransactions) {
                 // [DIHAPUS] Logika untuk overview card (total, income, expense) dihapus dari sini
 
                 // [MODIFIKASI] Logika ini tetap diperlukan untuk Tampilan Kalender
+                // [MODIFIKASI] Logika ini tetap diperlukan untuk Tampilan Kalender
                 const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
                 const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
                 const total = income - expense;
-                const formatCurrency = (value) => { 
-                    const sign = value < 0 ? '-' : ''; 
-                    return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; 
-                };
-                if(document.getElementById('calendarTotalAmount')) document.getElementById('calendarTotalAmount').textContent = formatCurrency(total);
-                if(document.getElementById('calendarIncomeAmount')) document.getElementById('calendarIncomeAmount').textContent = formatCurrency(income);
-                if(document.getElementById('calendarExpenseAmount')) document.getElementById('calendarExpenseAmount').textContent = formatCurrency(expense);
                 
+                // [BARU] Ambil elemen & wrapper kalender
+                const calTotalEl = document.getElementById('calendarTotalAmount');
+                const calIncomeEl = document.getElementById('calendarIncomeAmount');
+                const calExpenseEl = document.getElementById('calendarExpenseAmount');
+                
+                // Wrapper-nya adalah parent <div> dari elemen di atas
+                if (calTotalEl) formatAndSetDisplay(calTotalEl.parentElement, calTotalEl, total, 'total');
+                if (calIncomeEl) formatAndSetDisplay(calIncomeEl.parentElement, calIncomeEl, income, 'income');
+                if (calExpenseEl) formatAndSetDisplay(calExpenseEl.parentElement, calExpenseEl, expense, 'expense');
                 renderTransactionList(transactions.sort((a, b) => new Date(b.date) - new Date(a.date)));
                 
                 // [MODIFIKASI] Sembunyikan spinner list setelah selesai
