@@ -687,12 +687,21 @@
         /* Tipe 2: Spinner Div (untuk list) */
         .div-preloader-container {
             display: none; /* Sembunyi by default */
-            position: relative;
+            /* [MODIFIKASI] Ubah ke position: absolute */
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            min-height: 200px; /* Tinggi minimal untuk list */
+            height: 100%; /* Penuhi seluruh card */
+            min-height: 200px; 
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 5; /* Pastikan di atas konten */
+            background: var(--bg-gray); /* Samarkan dengan bg body */
+        }
+        .dark .div-preloader-container {
+            background: #111827; /* Samarkan dengan bg body gelap */
         }
 
         .div-spinner {
@@ -1968,40 +1977,30 @@ function renderTransactionList(filteredTransactions) {
             document.getElementById('tabTotal')?.addEventListener('click', () => setCalendarFilter('total'));
             document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
             document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
-
-            const savedView = localStorage.getItem('preferredView');
-            if (document.getElementById('detailToggleBtn')) { 
-                setView(savedView || 'overview');
-            }
-            if (document.getElementById('currentMonthDisplay')) {
-                updateMonthDisplay(); 
-            }
-
-            // [PERBAIKAN] Ambil nama dompet dari localStorage
-            const walletName = localStorage.getItem('currentWalletName');
-            if (walletName) {
-                // 1. Update header utama
-                const walletNameEl = document.getElementById('currentWalletNameDisplay');
-                if (walletNameEl) {
-                    walletNameEl.textContent = walletName;
-                }
-
-                // 2. Update kotak aksi
-                const walletShortNameEl = document.getElementById('currentWalletNameShort');
-                if (walletShortNameEl) {
-                    // Tampilkan 6 karakter pertama + ...
-                    walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
-                }
-            }
-            // [PERBAIKAN] Tambahkan listener untuk tombol pengganti dompet
-            document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
+            document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher); // <-- PERBAIKAN DARI KODE ANDA
             
             // [PERBAIKAN] Fungsikan tombol "Baru B..."
             document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
                 navigate('/create-wallet');
             });
 
-            // Pasang listener untuk tombol mode gelap/terang
+            // [BARU] Panggil fungsi untuk update header (untuk kasus refresh)
+            const walletName = localStorage.getItem('currentWalletName');
+            if (walletName) {
+                updateHeaderUI(walletName); // Memanggil ini dari kode Anda yang sudah ada
+            }
+
+            // [INI YANG HILANG] Panggil loader independen untuk overview card
+            loadOverviewData();
+
+            const savedView = localStorage.getItem('preferredView');
+            if (document.getElementById('detailToggleBtn')) { 
+                setView(savedView || 'overview');
+            }
+            if (document.getElementById('currentMonthDisplay')) {
+                updateMonthDisplay(); // Ini akan memicu updateMainView (transaction list)
+            }
+            
             attachThemeToggle('.theme-toggle'); 
         }
         
