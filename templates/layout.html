@@ -662,42 +662,68 @@
             background-color: #374151;
         }
         /* [AKHIR BARU] */
+        /* [BARU] CSS UNTUK SPINNER (DUA TIPE) */
+        
+        /* Tipe 1: Spinner Inline (untuk teks/angka) */
+        .inline-spinner {
+            display: none; /* Sembunyi by default */
+            width: 1rem;   /* 16px */
+            height: 1rem;  /* 16px */
+            border: 2px solid var(--primary-blue);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+        /* Penyesuaian untuk di dalam header */
+        .header-title .inline-spinner {
+            border-color: #fff;
+            border-top-color: transparent;
+        }
+        .dark .header-title .inline-spinner {
+             border-color: #fff;
+             border-top-color: transparent;
+        }
 
-    /* [BARU] CSS UNTUK SKELETON LOADER */
-        .skeleton-loader {
+        /* Tipe 2: Spinner Div (untuk list) */
+        .div-preloader-container {
+            display: none; /* Sembunyi by default */
+            position: relative;
+            width: 100%;
+            min-height: 200px; /* Tinggi minimal untuk list */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .div-spinner {
             display: inline-block;
-            height: 1em;
-            width: 70%;
-            background-color: #e0e0e0;
-            border-radius: 4px;
-            /* Animasi denyut (pulse) */
-            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        .skeleton-loader.skeleton-text-md { width: 50%; }
-        .skeleton-loader.skeleton-text-lg { width: 80%; }
-        .skeleton-loader.skeleton-block { height: 40px; width: 100%; }
-        .skeleton-loader.skeleton-avatar { width: 45px; height: 45px; border-radius: 12px; }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            width: 2.5rem; /* 40px */
+            height: 2.5rem; /* 40px */
+            border: 4px solid #e0e0e0; /* Warna dasar spinner */
+            border-top-color: var(--primary-blue); /* Warna utama spinner */
+            border-radius: 50%;
+            animation: spin 1s ease-in-out infinite;
         }
 
-        /* Penyesuaian untuk Mode Gelap */
-        .dark .skeleton-loader {
-            background-color: #4b5563; /* dark:border-gray-600 */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Penyesuaian Mode Gelap untuk Spinner Div */
+        .dark .div-spinner {
+            border-color: #4b5563; /* Warna dasar gelap */
+            border-top-color: var(--primary-blue); /* Warna utama tetap sama */
         }
         
-        /* [BARU] Logika untuk menyembunyikan konten asli saat loading */
-        /* Saat .loading, skeleton-placeholder akan tampil */
-        .loading .skeleton-placeholder { display: block; } 
-        /* Saat .loading, real-content akan sembunyi */
+        /* [MODIFIKASI] Logika untuk menyembunyikan konten asli saat loading */
+        
+        /* Saat .loading, sembunyikan .real-content */
         .loading .real-content { display: none; }
-        /* Secara default, skeleton-placeholder sembunyi */
-        .skeleton-placeholder { display: none; }
-        /* [AKHIR BARU] */
 
-        /* ... Sisa CSS Global Anda ... */
+        /* Tampilkan spinner yang sesuai */
+        .loading .inline-spinner { display: inline-block; }
+        .loading .div-preloader-container { display: flex; }
+        /* [AKHIR BARU] */
         
         @media (min-width: 768px) {
             body { background-color: #e9ecef; }
@@ -814,68 +840,9 @@
             }
             
             // API Anda selalu mengembalikan { success: true, data: ... }
-            // API Anda selalu mengembalikan { success: true, data: ... }
             const result = await response.json(); 
             return result.data; 
         }
-        // --- [AKHIR BAGIAN 0.5] ---
-
-        // [BARU] Fungsi helper untuk update UI Header (Sangat Cepat)
-        function updateHeaderUI(walletName) {
-            // 1. Update nama di header
-            const walletNameEl = document.getElementById('currentWalletNameDisplay');
-            if (walletNameEl) {
-                walletNameEl.textContent = walletName;
-            }
-
-            // 2. Update kotak aksi
-            const walletShortNameEl = document.getElementById('currentWalletNameShort');
-            if (walletShortNameEl) {
-                walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
-            }
-            
-            // 3. Sembunyikan skeleton header dan tampilkan konten asli
-            const headerSkeleton = document.getElementById('walletNameSkeleton');
-            if (headerSkeleton) {
-                headerSkeleton.style.display = 'none'; // Sembunyikan skeleton
-            }
-            if (walletNameEl) {
-                walletNameEl.style.display = 'inline-block'; // Tampilkan konten asli
-            }
-        }
-        
-        // [BARU] Fungsi untuk memuat data overview card secara independen (Cepat)
-        async function loadOverviewData() {
-            const walletId = localStorage.getItem('currentWalletId');
-            if (!walletId) return;
-
-            const overviewCard = document.getElementById('overviewCard');
-            if (!overviewCard) return;
-
-            try {
-                // Panggil endpoint /summary Anda yang ada di wallets.js
-                const summary = await fetchApi(`/wallets/${walletId}/summary`);
-                
-                const formatCurrency = (value) => { 
-                    const sign = value < 0 ? '-' : ''; 
-                    return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; 
-                };
-
-                // Isi datanya
-                // (Perhatikan: API Anda mengembalikan nilai dalam Rupiah, bukan sen)
-                if(document.getElementById('totalAmount')) document.getElementById('totalAmount').textContent = formatCurrency(summary.net_worth);
-                if(document.getElementById('incomeAmount')) document.getElementById('incomeAmount').textContent = formatCurrency(summary.monthly_income);
-                if(document.getElementById('expenseAmount')) document.getElementById('expenseAmount').textContent = formatCurrency(summary.monthly_expense);
-                
-                // Sembunyikan skeleton
-                overviewCard.classList.remove('loading');
-
-            } catch (error) {
-                console.error("Gagal memuat summary:", error);
-                // Jika gagal, biarkan skeleton terlihat
-            }
-        }
-        
         // --- [AKHIR BAGIAN 0.5] ---
 // --- [AKHIR BAGIAN 0.5] ---
 
@@ -920,6 +887,69 @@
         function closeWalletSwitcher() {
             if (walletModal) {
                 walletModal.classList.remove('visible');
+            }
+        }
+        function updateHeaderUI(walletName) {
+            // 1. Update nama di header
+            const walletNameEl = document.getElementById('currentWalletNameDisplay');
+            if (walletNameEl) {
+                walletNameEl.textContent = walletName;
+            }
+
+            // 2. Update kotak aksi
+            const walletShortNameEl = document.getElementById('currentWalletNameShort');
+            if (walletShortNameEl) {
+                walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
+            }
+            
+            // 3. [MODIFIKASI] Hapus class .loading dari PARENT
+            const headerParent = document.getElementById('walletSwitcherBtn');
+            if (headerParent) {
+                headerParent.classList.remove('loading');
+            }
+        }
+        async function loadOverviewData() {
+            const walletId = localStorage.getItem('currentWalletId');
+            if (!walletId) return;
+
+            // [MODIFIKASI] Ambil elemen wrapper dan teks
+            const totalWrapper = document.getElementById('totalAmountWrapper');
+            const incomeWrapper = document.getElementById('incomeAmountWrapper');
+            const expenseWrapper = document.getElementById('expenseAmountWrapper');
+            
+            const totalEl = document.getElementById('totalAmount');
+            const incomeEl = document.getElementById('incomeAmount');
+            const expenseEl = document.getElementById('expenseAmount');
+
+            try {
+                // Panggil endpoint /summary Anda yang ada di wallets.js
+                const summary = await fetchApi(`/wallets/${walletId}/summary`);
+                
+                const formatCurrency = (value) => { 
+                    const sign = value < 0 ? '-' : ''; 
+                    return `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`; 
+                };
+
+                // Isi datanya ke elemen .real-content
+                if(totalEl) totalEl.textContent = formatCurrency(summary.net_worth);
+                if(incomeEl) incomeEl.textContent = formatCurrency(summary.monthly_income);
+                if(expenseEl) expenseEl.textContent = formatCurrency(summary.monthly_expense);
+                
+                // [MODIFIKASI] Sembunyikan spinner per-angka
+                if (totalWrapper) totalWrapper.classList.remove('loading');
+                if (incomeWrapper) incomeWrapper.classList.remove('loading');
+                if (expenseWrapper) expenseWrapper.classList.remove('loading');
+
+            } catch (error) {
+                console.error("Gagal memuat summary:", error);
+                // [MODIFIKASI] Tampilkan error jika gagal
+                if(totalEl) totalEl.textContent = "Error";
+                if(incomeEl) incomeEl.textContent = "Error";
+                if(expenseEl) expenseEl.textContent = "Error";
+                // Sembunyikan spinner agar error terlihat
+                if (totalWrapper) totalWrapper.classList.remove('loading');
+                if (incomeWrapper) incomeWrapper.classList.remove('loading');
+                if (expenseWrapper) expenseWrapper.classList.remove('loading');
             }
         }
 
@@ -1152,7 +1182,6 @@ function closeTransactionModal() {
  
 
        // [PERBAIKAN KATEGORI] Ganti total fungsi ini
-       // [MODIFIKASI] initializeAppData
        async function initializeAppData() {
             try {
                 // 1. Cek apakah sudah ada dompet yang dipilih sebelumnya
@@ -1182,10 +1211,6 @@ function closeTransactionModal() {
                 localStorage.setItem('currentWalletId', activeWallet.id);
                 localStorage.setItem('currentWalletName', activeWallet.name); 
                 console.log(`Dompet aktif diatur: ${activeWallet.name} (${activeWallet.id})`);
-
-                // [BARU] Panggil fungsi untuk update header
-                // Ini akan menyembunyikan skeleton header secara instan
-                updateHeaderUI(activeWallet.name); 
 
                 // 5. [INI BAGIAN KUNCINYA] Ambil akun dan kategori untuk dompet aktif
                 const [accounts, categories] = await Promise.all([
@@ -1811,7 +1836,7 @@ function renderTransactionList(filteredTransactions) {
             }
         }
        // [PERBAIKAN] Fungsi diubah menjadi async untuk mengambil data dari API
-       // [PERBAIKAN] Fungsi diubah menjadi async untuk mengambil data dari API
+        // [PERBAIKAN] Fungsi diubah menjadi async untuk mengambil data dari API
         async function updateMainView() { 
             console.log("Memuat data Transaksi untuk", currentDate.toISOString().slice(0, 7));
             
@@ -1832,7 +1857,7 @@ function renderTransactionList(filteredTransactions) {
             const endDate = new Date(year, month + 1, 0).toISOString().split('T')[0];
 
             try {
-                // [BARU] Tampilkan lagi skeleton list saat ganti bulan
+                // [MODIFIKASI] Tampilkan lagi spinner list
                 if (transactionListContainer) {
                     transactionListContainer.classList.add('loading');
                 }
@@ -1879,7 +1904,7 @@ function renderTransactionList(filteredTransactions) {
                 
                 renderTransactionList(transactions.sort((a, b) => new Date(b.date) - new Date(a.date)));
                 
-                // [BARU] Sembunyikan skeleton list setelah selesai
+                // [MODIFIKASI] Sembunyikan spinner list setelah selesai
                 if (transactionListContainer) {
                     transactionListContainer.classList.remove('loading');
                 }
@@ -1891,15 +1916,14 @@ function renderTransactionList(filteredTransactions) {
                 if (error.message !== 'Sesi kedaluwarsa') {
                    alert("Gagal memuat transaksi: " + error.message);
                 }
-                // [BARU] Jika gagal, tetap sembunyikan loading (opsional, bisa diganti pesan error)
+                // [MODIFIKASI] Jika gagal, tetap sembunyikan loading
                 if (transactionListContainer) {
                     transactionListContainer.classList.remove('loading');
-                    // Anda bisa tambahkan pesan error di sini
+                    // Dan tampilkan pesan error
                     document.getElementById('transactionListContent').innerHTML = `<div class="empty-transaction-list">Gagal memuat transaksi.</div>`;
                 }
             }
-        } 
-       // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
+        }// === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
         // Fungsi helper untuk update ikon akun di halaman /create
         function updateAccountIcon(accountId) {
             const account = allAccounts.find(acc => acc.id === accountId);
@@ -1944,30 +1968,43 @@ function renderTransactionList(filteredTransactions) {
             document.getElementById('tabTotal')?.addEventListener('click', () => setCalendarFilter('total'));
             document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
             document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
-            document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
-            document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
-                navigate('/create-wallet');
-            });
-
-            // [BARU] Panggil fungsi untuk update header (untuk kasus refresh)
-            const walletName = localStorage.getItem('currentWalletName');
-            if (walletName) {
-                updateHeaderUI(walletName);
-            }
-
-            // [BARU] Panggil loader independen untuk overview card
-            loadOverviewData();
 
             const savedView = localStorage.getItem('preferredView');
             if (document.getElementById('detailToggleBtn')) { 
                 setView(savedView || 'overview');
             }
             if (document.getElementById('currentMonthDisplay')) {
-                updateMonthDisplay(); // Ini akan memicu updateMainView (transaction list)
+                updateMonthDisplay(); 
             }
+
+            // [PERBAIKAN] Ambil nama dompet dari localStorage
+            const walletName = localStorage.getItem('currentWalletName');
+            if (walletName) {
+                // 1. Update header utama
+                const walletNameEl = document.getElementById('currentWalletNameDisplay');
+                if (walletNameEl) {
+                    walletNameEl.textContent = walletName;
+                }
+
+                // 2. Update kotak aksi
+                const walletShortNameEl = document.getElementById('currentWalletNameShort');
+                if (walletShortNameEl) {
+                    // Tampilkan 6 karakter pertama + ...
+                    walletShortNameEl.textContent = walletName.length > 6 ? walletName.substring(0, 6) + '...' : walletName;
+                }
+            }
+            // [PERBAIKAN] Tambahkan listener untuk tombol pengganti dompet
+            document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
             
+            // [PERBAIKAN] Fungsikan tombol "Baru B..."
+            document.getElementById('createNewWalletBtn')?.addEventListener('click', () => {
+                navigate('/create-wallet');
+            });
+
+            // Pasang listener untuk tombol mode gelap/terang
             attachThemeToggle('.theme-toggle'); 
         }
+        
         function initCreatePage() {
             // [BARU] Cek apakah ada data edit di sessionStorage
             const txToEditJSON = sessionStorage.getItem('tx_for_edit');
