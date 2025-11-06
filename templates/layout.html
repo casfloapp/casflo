@@ -1113,7 +1113,7 @@
                 container.innerHTML = '<div class="action-box"><span class="text" style="display:block; color: white;">Gagal memuat dompet</span></div>';
             }
         }
-        
+
         async function loadOverviewData(startDate, endDate) { // <-- [PERBAIKAN] Tambah parameter
             const walletId = localStorage.getItem('currentWalletId');
             if (!walletId) return;
@@ -1181,8 +1181,11 @@
             const walletNameEl = document.getElementById('currentWalletNameDisplay');
             if (walletNameEl) walletNameEl.textContent = walletName;
 
-            // 3c. Muat ulang data untuk kartu overview (Total, Pemasukan, dll)
-            loadOverviewData();
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const startDate = new Date(year, month, 1).toISOString().split('T')[0];
+            const endDate = new Date(year, month + 1, 0).toISOString().split('T')[0];
+            loadOverviewData(startDate, endDate);
 
             // 3d. Muat ulang daftar transaksi (spinner akan muncul dan hilang lagi)
             updateMainView();
@@ -2136,7 +2139,7 @@ function renderTransactionList(filteredTransactions) {
                         account_id: tx.account_id   // [TAMBAHKAN INI]
                     };
                 });
-                
+                loadOverviewData(startDate, endDate);
                 // [DIHAPUS] Logika untuk overview card (total, income, expense) dihapus dari sini
 
                 // [MODIFIKASI] Logika ini tetap diperlukan untuk Tampilan Kalender
@@ -2239,8 +2242,6 @@ function renderTransactionList(filteredTransactions) {
         // 2. Render tombol-tombol ikon dompet
         renderWalletActions();
 
-        // 3. Muat data kartu (Total, Pemasukan, Pengeluaran)
-        loadOverviewData();
 
         const savedView = localStorage.getItem('preferredView');
         if (document.getElementById('detailToggleBtn')) { 
