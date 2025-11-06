@@ -1113,7 +1113,8 @@
                 container.innerHTML = '<div class="action-box"><span class="text" style="display:block; color: white;">Gagal memuat dompet</span></div>';
             }
         }
-        async function loadOverviewData() {
+        
+        async function loadOverviewData(startDate, endDate) { // <-- [PERBAIKAN] Tambah parameter
             const walletId = localStorage.getItem('currentWalletId');
             if (!walletId) return;
 
@@ -1127,8 +1128,14 @@
             const calincomeEl = document.getElementById('incomeAmount');
             const calexpenseEl = document.getElementById('expenseAmount');
 
+            // [PERBAIKAN] Tambahkan 'loading' class secara manual
+            totalWrapper?.classList.add('loading');
+            incomeWrapper?.classList.add('loading');
+            expenseWrapper?.classList.add('loading');
+
             try {
-                const summary = await fetchApi(`/wallets/${walletId}/summary`);
+                // [PERBAIKAN] Kirim tanggal ke API
+                const summary = await fetchApi(`/wallets/${walletId}/summary?startDate=${startDate}&endDate=${endDate}`);
                 
                 const monthlyTotal = (summary.monthly_income || 0) - (summary.monthly_expense || 0);
 
