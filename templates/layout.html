@@ -1028,6 +1028,7 @@
             const incomeWrapper = document.getElementById('incomeAmountWrapper');
             const expenseWrapper = document.getElementById('expenseAmountWrapper');
             
+            // Variabel yang benar
             const caltotalEl = document.getElementById('totalAmount');
             const calincomeEl = document.getElementById('incomeAmount');
             const calexpenseEl = document.getElementById('expenseAmount');
@@ -1035,20 +1036,19 @@
             try {
                 const summary = await fetchApi(`/wallets/${walletId}/summary`);
                 
-                // [PERBAIKAN KUNCI] Hitung total bulanan, BUKAN net worth
                 const monthlyTotal = (summary.monthly_income || 0) - (summary.monthly_expense || 0);
 
-                // Panggil helper global
-                formatAndSetDisplay(totalWrapper, totalEl, monthlyTotal, 'total');
-                formatAndSetDisplay(incomeWrapper, incomeEl, summary.monthly_income, 'income');
-                formatAndSetDisplay(expenseWrapper, expenseEl, summary.monthly_expense, 'expense');
+                // [PERBAIKAN] Panggil helper global dengan variabel yang benar
+                formatAndSetDisplay(totalWrapper, caltotalEl, monthlyTotal, 'total');
+                formatAndSetDisplay(incomeWrapper, calincomeEl, summary.monthly_income, 'income');
+                formatAndSetDisplay(expenseWrapper, calexpenseEl, summary.monthly_expense, 'expense');
 
             } catch (error) {
                 console.error("Gagal memuat summary:", error);
-                // Handle error
-                if(totalEl) totalEl.textContent = "Error";
-                if(incomeEl) incomeEl.textContent = "Error";
-                if(expenseEl) expenseEl.textContent = "Error";
+                // [PERBAIKAN] Handle error dengan variabel yang benar
+                if(caltotalEl) caltotalEl.textContent = "Error";
+                if(calincomeEl) calincomeEl.textContent = "Error";
+                if(calexpenseEl) calexpenseEl.textContent = "Error";
                 if (totalWrapper) totalWrapper.classList.remove('loading');
                 if (incomeWrapper) incomeWrapper.classList.remove('loading');
                 if (expenseWrapper) expenseWrapper.classList.remove('loading');
