@@ -2470,7 +2470,8 @@ function renderTransactionList(filteredTransactions) {
                 history.pushState({ path }, '', path);
                 pageContainer.innerHTML = newContent;
                 executePageScript(pageContainer);
-                runPageInit(path);
+                // [PERBAIKAN] Beri browser waktu untuk me-render HTML baru
+                setTimeout(() => runPageInit(path), 0); 
 
             } catch (error) {
                 console.error("Gagal melakukan navigasi:", error);
@@ -2500,7 +2501,8 @@ function renderTransactionList(filteredTransactions) {
                         const newContent = await response.text();
                         pageContainer.innerHTML = newContent;
                         executePageScript(pageContainer);
-                        runPageInit(event.state.path);
+                        // [PERBAIKAN] Beri browser waktu untuk me-render HTML baru
+                        setTimeout(() => runPageInit(event.state.path), 0);
                     } catch (error) {
                          console.error("Gagal memuat state:", error);
                          window.location.href = event.state.path;
