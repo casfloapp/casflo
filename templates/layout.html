@@ -320,7 +320,7 @@
         .transaction-list .list-header { display: flex; justify-content: space-between; align-items: center; }
         .transaction-list .list-header .date-info { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
         .transaction-list .list-header .summary { font-size: 13px; color: var(--text-light); }
-        .transaction-item { display: flex; align-items: center; gap: 15px; padding: 12px 0; border-bottom: 1px solid var(--bg-gray); }
+        .transaction-item { display: flex; align-items: center; gap: 15px; padding: 12px 15px; border-bottom: 1px solid var(--bg-gray); }
         .transaction-item:last-child { border-bottom: none; }
         .transaction-item:first-of-type { padding-top: 5px; }
         .transaction-item .icon { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; flex-shrink: 0; }
@@ -693,6 +693,7 @@
         .transaction-group {
             /* Mencegah item swipe "bocor" saat grup ditutup */
             overflow: hidden; 
+            margin-bottom: 10px;
         }
         .transaction-item-wrapper {
             position: relative;
