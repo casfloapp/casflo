@@ -1966,10 +1966,10 @@ function renderTransactionList(filteredTransactions) {
             const walletId = localStorage.getItem('currentWalletId');
             if (!walletId) {
                 console.warn("updateMainView: Menunggu walletId...");
-                return; // Berhenti jika data awal (dari initializeAppData) belum dimuat
+                return;
             }
 
-            // [BARU] Dapatkan kontainer list
+            // [PERBAIKAN] Pindahkan definisi variabel ke SINI
             const transactionListContainer = document.getElementById('transactionListContainer');
 
             // Tentukan rentang tanggal untuk filter API
