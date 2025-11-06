@@ -787,6 +787,80 @@
         .loading .inline-spinner { display: inline-block; }
         .loading .div-preloader-container { display: flex; }
         /* [AKHIR BARU] */
+
+        /* [BARU] CSS untuk Tombol Tanggal di Halaman Create */
+        .action-btn.today {
+            font-size: 13px; /* Ukuran font agar muat */
+            font-weight: 600;
+            padding: 0 5px; /* Padding horizontal */
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        /* [BARU] CSS untuk Modal Kalender Tanggal */
+        #date-modal-content {
+            padding: 15px;
+        }
+        #date-modal-content .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            padding: 0 10px;
+        }
+        #date-modal-content .calendar-header i { cursor: pointer; }
+        #date-modal-content .calendar-header .month-year { font-size: 18px; }
+        #date-modal-content .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        #date-modal-content .calendar-weekdays .day-name.weekend { color: var(--expense-red); }
+        #date-modal-content .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px; /* Beri jarak antar tanggal */
+        }
+        #date-modal-content .calendar-grid .day {
+            font-size: 14px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 38px;
+            width: 38px; /* Buat jadi kotak */
+            cursor: pointer;
+            border-radius: 50%; /* Bulatkan */
+            margin: 0 auto;
+        }
+        #date-modal-content .calendar-grid .day:hover {
+            background-color: #f0f0f0;
+        }
+        .dark #date-modal-content .calendar-grid .day:hover {
+            background-color: #4b5563;
+        }
+        #date-modal-content .calendar-grid .day.weekend { color: var(--expense-red); }
+        #date-modal-content .calendar-grid .day.selected {
+            background-color: var(--primary-blue);
+            color: white;
+            font-weight: 700;
+        }
+        #date-modal-content .calendar-grid .day.today .date-number {
+             /* Tanda untuk hari ini */
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 2px;
+        }
+        .dark #date-modal-content .calendar-grid .day.today .date-number {
+            border-bottom-color: white;
+        }
+        #date-modal-content .calendar-grid .day.selected.today .date-number {
+            border-bottom: none; /* Hapus tanda jika dipilih */
+        }
  
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
@@ -851,6 +925,12 @@
             </div>
         </div>
     </div>
+    <div id="date-modal-overlay" class="tx-modal-overlay" onclick="closeDateModal()">
+        <div class="tx-modal-content" onclick="event.stopPropagation()">
+            <div id="date-modal-content"></div>
+        </div>
+    </div>
+
 
     <script>
         const sessionToken = localStorage.getItem('sessionToken');
@@ -1295,6 +1375,105 @@ function closeTransactionModal() {
                 alert('Gagal menemukan data transaksi untuk diedit.');
             }
         }
+        // === [BARU] FUNGSI-FUNGSI MODAL TANGGAL ===
+const dateModal = document.getElementById('date-modal-overlay');
+
+function selectDate() {
+    // Fungsi ini dipanggil dari create.html
+    // Atur tanggal modal ke tanggal yang sedang dipilih
+    modalCalendarDate = new Date(selectedTransactionDate.getTime());
+    renderDateModalCalendar();
+    if(dateModal) dateModal.classList.add('visible');
+}
+
+function closeDateModal() {
+    if(dateModal) dateModal.classList.remove('visible');
+}
+
+function dateModalNav(direction) {
+    modalCalendarDate.setMonth(modalCalendarDate.getMonth() + direction);
+    renderDateModalCalendar();
+}
+
+function handleDateSelect(day, month, year) {
+    selectedTransactionDate = new Date(year, month, day);
+    updateCreateDateButton(); // Update teks tombol
+    closeDateModal(); // Tutup modal
+}
+
+function updateCreateDateButton() {
+    const display = document.getElementById('create-date-display');
+    if (!display) return;
+
+    const today = new Date();
+    const yesterday = new Date(today.getTime() - 86400000);
+
+    if (selectedTransactionDate.toDateString() === today.toDateString()) {
+        display.textContent = 'TODAY';
+    } else if (selectedTransactionDate.toDateString() === yesterday.toDateString()) {
+        display.textContent = 'KEMARIN';
+    } else {
+        // Format: DD/MM
+        display.textContent = selectedTransactionDate.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
+    }
+}
+
+function renderDateModalCalendar() {
+    const content = document.getElementById('date-modal-content');
+    if (!content) return;
+
+    const year = modalCalendarDate.getFullYear();
+    const month = modalCalendarDate.getMonth();
+
+    let header = `
+        <div class="calendar-header">
+            <i class="fas fa-chevron-left" onclick="dateModalNav(-1)"></i>
+            <span class="month-year">${monthNames[month]} ${year}</span>
+            <i class="fas fa-chevron-right" onclick="dateModalNav(1)"></i>
+        </div>
+        <div class="calendar-weekdays">
+            <div class="day-name weekend">Min</div><div class="day-name">Sen</div><div class="day-name">Sel</div>
+            <div class="day-name">Rab</div><div class="day-name">Kam</div><div class="day-name">Jum</div>
+            <div class="day-name weekend">Sab</div>
+        </div>
+        <div class="calendar-grid" id="date-modal-grid"></div>
+    `;
+    content.innerHTML = header;
+
+    const calendarGrid = document.getElementById('date-modal-grid');
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const today = new Date();
+
+    for (let i = 0; i < firstDayOfMonth; i++) {
+        calendarGrid.insertAdjacentHTML('beforeend', `<div></div>`); // Sel kosong
+    }
+
+    for (let i = 1; i <= daysInMonth; i++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'day';
+
+        const date = new Date(year, month, i);
+        const dayOfWeek = date.getDay();
+        if (dayOfWeek === 0 || dayOfWeek === 6) dayEl.classList.add('weekend');
+
+        // Cek apakah ini hari ini
+        if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+            dayEl.classList.add('today');
+        }
+
+        // Cek apakah ini tanggal yang dipilih
+        if (i === selectedTransactionDate.getDate() && month === selectedTransactionDate.getMonth() && year === selectedTransactionDate.getFullYear()) {
+            dayEl.classList.add('selected');
+        }
+
+        dayEl.innerHTML = `<span class="date-number">${i}</span>`;
+        dayEl.onclick = () => handleDateSelect(i, month, year);
+        calendarGrid.appendChild(dayEl);
+    }
+}
+// === [AKHIR FUNGSI MODAL TANGGAL] ===
+
 
         // [BARU] Fungsi untuk mengambil data awal (dompet & akun) saat aplikasi dimuat
        // [PERBAIKAN] Fungsi ini sekarang memprioritaskan dompet di localStorage
@@ -1464,6 +1643,8 @@ function closeTransactionModal() {
         let allAccounts = [];
         let selectedAccountId = null; // Kita akan kelola ini secara global
         let currentTransactionId = null; // [BARU] Untuk modal detail
+        let selectedTransactionDate = new Date(); // [BARU] Default ke hari ini
+        let modalCalendarDate = new Date(); // [BARU] Untuk navigasi di modal
 
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -1606,7 +1787,7 @@ function closeTransactionModal() {
 
                 // 2. Siapkan Payload (Body) sesuai spesifikasi API Anda
                 // Endpoint mengharapkan format YYYY-MM-DD untuk tanggal
-                const transactionDate = new Date().toISOString().split('T')[0]; 
+                const transactionDate = selectedTransactionDate.toISOString().split('T')[0];
                 
                 const payload = {
                     wallet_id: walletId,
@@ -1683,7 +1864,7 @@ function closeTransactionModal() {
                     return;
                 }
 
-                const transactionDate = new Date().toISOString().split('T')[0]; // Anda bisa ganti ini dengan input tanggal
+                const transactionDate = selectedTransactionDate.toISOString().split('T')[0];
                 
                 const payload = {
                     wallet_id: walletId,
@@ -2110,43 +2291,44 @@ function renderTransactionList(filteredTransactions) {
 
         attachThemeToggle('.theme-toggle'); 
     }
-        function initCreatePage() {
-            // [BARU] Cek apakah ada data edit di sessionStorage
-            const txToEditJSON = sessionStorage.getItem('tx_for_edit');
-            
-            if (txToEditJSON) {
-                // === MODE EDIT ===
-                const tx = JSON.parse(txToEditJSON);
-                
-                currentTransactionId = tx.id; // Set ID global untuk flag 'edit'
-                currentType = tx.type;
-                calcValue = String(tx.amount);
-                selectedAccountId = tx.account_id;
-                selectedCategory = allCategories.find(c => c.id === tx.category_id);
-                
-                // Set tombol tipe (Pemasukan/Pengeluaran)
-                document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active'));
-                document.getElementById(currentType + 'Btn').classList.add('active');
-                
-                loadCategories(); // Muat kategori (akan otomatis memilih yang benar)
-                updateDisplay(); // Tampilkan jumlah di kalkulator
-                updateAccountIcon(selectedAccountId); // Tampilkan ikon akun
-                
-                // Hapus data dari session agar tidak terpakai lagi
-                sessionStorage.removeItem('tx_for_edit');
-                
-            } else {
-                // === MODE BUAT BARU (logika yang sudah ada) ===
-                currentTransactionId = null; // Pastikan null
-                currentType = 'expense';
-                selectedCategory = null;
-                clearCalc();
-                loadCategories(); 
-                updateAccountIcon(selectedAccountId); // Set akun default
-            }
-            
-            console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
-        }
+       function initCreatePage() {
+    const txToEditJSON = sessionStorage.getItem('tx_for_edit');
+
+    if (txToEditJSON) {
+        // === MODE EDIT ===
+        const tx = JSON.parse(txToEditJSON);
+
+        currentTransactionId = tx.id; 
+        currentType = tx.type;
+        calcValue = String(tx.amount);
+        selectedAccountId = tx.account_id;
+        selectedCategory = allCategories.find(c => c.id === tx.category_id);
+        // [PERBAIKAN] Set tanggal dari transaksi yang diedit
+        selectedTransactionDate = new Date(tx.date); 
+
+        document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(currentType + 'Btn').classList.add('active');
+
+        loadCategories(); 
+        updateDisplay(); 
+        updateAccountIcon(selectedAccountId); 
+
+        sessionStorage.removeItem('tx_for_edit');
+
+    } else {
+        // === MODE BUAT BARU ===
+        currentTransactionId = null; 
+        currentType = 'expense';
+        selectedCategory = null;
+        selectedTransactionDate = new Date(); // [PERBAIKAN] Reset ke hari ini
+        clearCalc();
+        loadCategories(); 
+        updateAccountIcon(selectedAccountId); 
+    }
+
+    updateCreateDateButton(); // [BARU] Update teks tombol (misal: "TODAY")
+    console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
+}
 
         function initWalletPage() { 
             console.log("Halaman dompet dimuat."); 
