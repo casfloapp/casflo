@@ -2614,14 +2614,14 @@ function renderTransactionList(filteredTransactions) {
             clearCalc();
             loadCategories();
             console.log("Halaman More dimuat.");
-
-             const logoutButton = document.getElementById('logout-btn');
+        
+            const logoutButton = document.getElementById('logout-btn');
         
             if (logoutButton) {
-                logoutButton.addEventListener('click', () => {
+                logoutButton.addEventListener('click', async () => { // <--- [PERBAIKAN] Tambahkan 'async' di sini
                     console.log("Tombol Logout diklik.");
                     
-                    const confirmed = await showDialog({
+                    const confirmed = await showDialog({ // <--- SEKARANG VALID
                         title: 'Logout',
                         text: 'Apakah Anda yakin ingin logout?',
                         confirmText: 'Logout',
