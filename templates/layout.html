@@ -1119,11 +1119,12 @@ const sessionToken = localStorage.getItem('sessionToken');
             let sign = '';
             // Tanda minus hanya untuk pengeluaran atau total negatif
             if (type === 'expense' || (type === 'total' && value < 0)) {
-                sign = '-';
+                // [PERBAIKAN] Hapus baris 'sign = "-";'
             }
             
-            const amountString = `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`;
-            
+            // [PERBAIKAN] Hapus '${sign}' dari string di bawah
+            const amountString = `Rp${Math.abs(value).toLocaleString('id-ID')}`;
+
             // Atur font size dinamis
             if (amountString.length > 13) { // > 1 Miliar (misal: -Rp100.000.000)
                 element.style.fontSize = "13px";
@@ -2288,7 +2289,7 @@ function renderTransactionList(filteredTransactions) {
                             <div class="amount data-maskable-amount" 
                                  style="color: ${t.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)'}"
                                  data-masked-color="${t.type}">
-                                ${t.type === 'expense' ? '-' : ''}Rp${(t.amount).toLocaleString('id-ID')}
+                                ${t.type === 'expense' ? '-' : '+'}Rp${(t.amount).toLocaleString('id-ID')}
                             </div>
                             <div class="account">${t.account}</div>
                         </div>`;
