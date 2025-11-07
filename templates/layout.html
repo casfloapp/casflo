@@ -866,6 +866,67 @@
             background: #4b5563;
         }
 
+        /* ... (style mode gelap) ... */
+        .dark .category-item:hover {
+            background: #4b5563;
+        }
+
+        /* [BARU] CSS UNTUK MODAL DIALOG KUSTOM */
+        .dialog-modal-body {
+            padding: 20px 25px 20px 25px;
+        }
+        .dialog-modal-body .dialog-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        .dark .dialog-modal-body .dialog-title {
+            color: white;
+        }
+        .dialog-modal-body .dialog-text {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.5;
+            white-space: pre-wrap; /* Agar \n (baris baru) berfungsi */
+        }
+        .dark .dialog-modal-body .dialog-text {
+            color: #d1d5db;
+        }
+        
+        .dialog-modal-actions {
+            display: flex;
+            gap: 10px;
+            padding: 0 25px 25px 25px;
+            margin-top: 25px;
+        }
+        .dialog-modal-btn {
+            flex-grow: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .dialog-modal-btn.cancel {
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+        }
+        .dark .dialog-modal-btn.cancel {
+            background-color: #4b5563;
+            color: white;
+        }
+        .dialog-modal-btn.confirm {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+        .dialog-modal-btn.confirm.destructive {
+            background-color: var(--expense-red);
+            color: white;
+        }
+        /* [AKHIR CSS BARU] */
+
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
             .app-container { max-width: 480px; margin: 0 auto; height: 100vh; }
@@ -979,8 +1040,20 @@
             </div>
         </div>
     </div>
-
-<script>const sessionToken = localStorage.getItem('sessionToken');
+<div id="dialog-modal-overlay" class="tx-modal-overlay" onclick="closeDialog(false)">
+        <div class="tx-modal-content" onclick="event.stopPropagation()">
+            <div class="dialog-modal-body">
+                <h3 id="dialog-modal-title">Judul Dialog</h3>
+                <p id="dialog-modal-text">Ini adalah teks untuk dialog...</p>
+            </div>
+            <div class="dialog-modal-actions">
+                <button id="dialog-modal-cancel-btn" class="dialog-modal-btn cancel">Batal</button>
+                <button id="dialog-modal-confirm-btn" class="dialog-modal-btn confirm">OK</button>
+            </div>
+        </div>
+    </div>
+<script>
+const sessionToken = localStorage.getItem('sessionToken');
         if (!sessionToken) {
             window.location.href = '/login';
         }
@@ -1156,7 +1229,7 @@
 
             } catch (error) {
                 console.error("Gagal membuka pengganti dompet:", error);
-                alert("Gagal memuat daftar dompet.");
+                showDialog({ title: 'Error', text: 'Gagal memuat daftar dompet.' });
             }
         }
 
@@ -1384,9 +1457,14 @@ function closeTransactionModal() {
             const transactionIdToDelete = txId || currentTransactionId;
             if (!transactionIdToDelete) return;
 
-            if (!confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
-                return;
-            }
+            const confirmed = await showDialog({
+                title: 'Hapus Transaksi',
+                text: 'Apakah Anda yakin ingin menghapus transaksi ini?',
+                confirmText: 'Hapus',
+                cancelText: 'Batal',
+                isDestructive: true
+            });
+            if (!confirmed) return;
 
             const walletId = localStorage.getItem('currentWalletId');
             
@@ -1403,7 +1481,7 @@ function closeTransactionModal() {
                 
             } catch (error) {
                 console.error('Gagal menghapus transaksi:', error);
-                alert('Gagal menghapus: ' + error.message);
+                showDialog({ title: 'Error', text: 'Gagal menghapus: ' + error.message });
             }
         }
 
@@ -1419,7 +1497,7 @@ function closeTransactionModal() {
                 closeTransactionModal(); // Tutup modal (jika terbuka)
                 navigate('/create');
             } else {
-                alert('Gagal menemukan data transaksi untuk diedit.');
+                showDialog({ title: 'Error', text: 'Gagal menemukan data transaksi untuk diedit.' });
             }
         }
         // === [BARU] FUNGSI-FUNGSI MODAL TANGGAL ===
@@ -1694,7 +1772,69 @@ function renderDateModalCalendar() {
         let modalCalendarDate = new Date(); // [BARU] Untuk navigasi di modal
 
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+// [BARU] Variabel Global untuk Promise Dialog
+        let dialogResolve = null;
 
+        /**
+         * [BARU] Menutup modal dialog dan me-resolve promise
+         */
+        function closeDialog(value) {
+            document.getElementById('dialog-modal-overlay')?.classList.remove('visible');
+            if (dialogResolve) {
+                dialogResolve(value); // Mengirimkan 'true' atau 'false'
+                dialogResolve = null; // Reset
+            }
+        }
+
+        /**
+         * [BARU] Pengganti kustom untuk alert() dan confirm()
+         * @param {object} options - { title, text, confirmText, cancelText, isDestructive }
+         * @returns {Promise<boolean>} - true jika 'confirm' diklik, false jika 'cancel'
+         */
+        function showDialog(options) {
+            const modal = document.getElementById('dialog-modal-overlay');
+            const titleEl = document.getElementById('dialog-modal-title');
+            const textEl = document.getElementById('dialog-modal-text');
+            const confirmBtn = document.getElementById('dialog-modal-confirm-btn');
+            const cancelBtn = document.getElementById('dialog-modal-cancel-btn');
+
+            if (!modal || !titleEl || !textEl || !confirmBtn || !cancelBtn) {
+                // Fallback jika elemen modal tidak ada
+                console.error("Modal dialog tidak ditemukan. Menggunakan confirm bawaan.");
+                return Promise.resolve(confirm(options.text));
+            }
+
+            titleEl.textContent = options.title || 'Konfirmasi';
+            textEl.textContent = options.text || '';
+            confirmBtn.textContent = options.confirmText || 'OK';
+            
+            // Tampilkan/sembunyikan tombol Batal
+            if (options.cancelText) {
+                cancelBtn.textContent = options.cancelText;
+                cancelBtn.style.display = 'block';
+            } else {
+                cancelBtn.style.display = 'none'; // Mode "Alert"
+            }
+            
+            // Atur warna tombol Konfirmasi (merah jika destruktif)
+            confirmBtn.classList.toggle('destructive', options.isDestructive === true);
+
+            // Tampilkan modal
+            modal.classList.add('visible');
+
+            // Buat Promise baru yang akan menunggu respons user
+            return new Promise((resolve) => {
+                dialogResolve = resolve; // Simpan fungsi resolve secara global
+                
+                // Hapus listener lama agar tidak menumpuk
+                confirmBtn.onclick = null; 
+                cancelBtn.onclick = null;
+
+                // Tambahkan listener baru
+                confirmBtn.onclick = () => closeDialog(true);
+                cancelBtn.onclick = () => closeDialog(false);
+            });
+        }
         function appendToCalc(value) {
             const operators = ['+', '-', '*', '/'];
             
@@ -1801,11 +1941,11 @@ function renderDateModalCalendar() {
             try {
                 const amount = parseFloat(calcValue); 
                 if (isNaN(amount) || amount <= 0) {
-                    alert('Masukkan jumlah yang valid'); // Ganti dengan modal custom
+                    showDialog({ title: 'Input Tidak Valid', text: 'Masukkan jumlah yang valid.' });
                     return;
                 }
                 if (!selectedCategory) {
-                    alert('Pilih kategori terlebih dahulu'); // Ganti dengan modal custom
+                    showDialog({ title: 'Input Tidak Lengkap', text: 'Pilih kategori terlebih dahulu.' });
                     return;
                 }
 
@@ -1880,7 +2020,7 @@ function renderDateModalCalendar() {
 
             } catch (error) {
                 console.error('Error saving transaction:', error);
-                alert(`Terjadi kesalahan: ${error.message}`); // Tampilkan error ke user
+                showDialog({ title: 'Error', text: `Terjadi kesalahan: ${error.message}` });
             } finally {
                 // (Opsional) Hilangkan loading state
                 changeButtonToLoading(false); // Anda perlu membuat fungsi ini
@@ -1893,11 +2033,11 @@ function renderDateModalCalendar() {
             try {
                 const amount = parseFloat(calcValue);
                 if (isNaN(amount) || amount <= 0) {
-                    alert('Masukkan jumlah yang valid');
+                    showDialog({ title: 'Input Tidak Valid', text: 'Masukkan jumlah yang valid.' });
                     return;
                 }
                 if (!selectedCategory) {
-                    alert('Pilih kategori terlebih dahulu');
+                    showDialog({ title: 'Input Tidak Lengkap', text: 'Pilih kategori terlebih dahulu.' });
                     return;
                 }
 
@@ -1907,7 +2047,7 @@ function renderDateModalCalendar() {
 
                 if (!token || !walletId || !accountId || !currentTransactionId) {
                     console.error("Data update tidak lengkap", { token, walletId, accountId, currentTransactionId });
-                    alert('Data tidak lengkap untuk memperbarui transaksi.');
+                    showDialog({ title: 'Error', text: 'Data tidak lengkap untuk memperbarui transaksi.' });
                     return;
                 }
 
@@ -1954,7 +2094,7 @@ function renderDateModalCalendar() {
 
             } catch (error) {
                 console.error('Error updating transaction:', error);
-                alert(`Terjadi kesalahan: ${error.message}`);
+                showDialog({ title: 'Error', text: `Terjadi kesalahan: ${error.message}` });
             } finally {
                 changeButtonToLoading(false);
             }
@@ -2252,7 +2392,7 @@ function renderTransactionList(filteredTransactions) {
             } catch (error) {
                 console.error("Gagal memuat transaksi:", error);
                 if (error.message !== 'Sesi kedaluwarsa') {
-                   alert("Gagal memuat transaksi: " + error.message);
+                   showDialog({ title: 'Error', text: "Gagal memuat transaksi: " + error.message });
                 }
                 // [MODIFIKASI] Jika gagal, tetap sembunyikan loading
                 if (transactionListContainer) {
@@ -2481,10 +2621,15 @@ function renderTransactionList(filteredTransactions) {
                 logoutButton.addEventListener('click', () => {
                     console.log("Tombol Logout diklik.");
                     
-                    // Tampilkan konfirmasi sederhana
-                    // NOTE: confirm() mungkin tidak berfungsi di beberapa lingkungan 'blob'
-                    // Jika ini tidak muncul, kita harus membuat modal custom
-                    if (confirm("Apakah Anda yakin ingin logout?")) {
+                    const confirmed = await showDialog({
+                        title: 'Logout',
+                        text: 'Apakah Anda yakin ingin logout?',
+                        confirmText: 'Logout',
+                        cancelText: 'Batal',
+                        isDestructive: true
+                    });
+                    
+                    if (confirmed) {
                         // 1. Hapus session token dari localStorage
                         localStorage.removeItem('sessionToken');
                         
@@ -2826,13 +2971,18 @@ async function loadAllWalletsAndMembers() {
          */
         async function handleDeleteBook(walletId, userRoleInWallet) {
             if (userRoleInWallet !== 'OWNER') {
-                alert('Hanya OWNER yang dapat menghapus buku.');
+                showDialog({ title: 'Aksi Ditolak', text: 'Hanya OWNER yang dapat menghapus buku.' });
                 return;
             }
             
-            if (!confirm('PERINGATAN: Anda akan menghapus buku ini.\nSEMUA data transaksi, akun, dan anggota di dalamnya akan hilang selamanya.\n\nApakah Anda yakin?')) {
-                return;
-            }
+            const confirmed = await showDialog({
+                title: 'Hapus Buku',
+                text: 'PERINGATAN: Anda akan menghapus buku ini.\nSEMUA data transaksi, akun, dan anggota di dalamnya akan hilang selamanya.\n\nApakah Anda yakin?',
+                confirmText: 'Ya, Hapus',
+                cancelText: 'Batal',
+                isDestructive: true
+            });
+            if (!confirmed) return;
 
             const messageEl = document.getElementById('invite-message');
             messageEl.textContent = 'Menghapus buku...';
@@ -2937,9 +3087,14 @@ async function loadAllWalletsAndMembers() {
         async function handleDeleteMember(walletId, userId) { 
             if (!userId || !walletId) return;
 
-            if (!confirm('Anda yakin ingin menghapus anggota ini dari buku ini?')) {
-                return;
-            }
+            const confirmed = await showDialog({
+                title: 'Hapus Anggota',
+                text: 'Anda yakin ingin menghapus anggota ini dari buku ini?',
+                confirmText: 'Hapus',
+                cancelText: 'Batal',
+                isDestructive: true
+            });
+            if (!confirmed) return;
 
             // Gunakan pesan global di halaman
             const messageEl = document.getElementById('invite-message');
@@ -3034,10 +3189,9 @@ async function loadAllWalletsAndMembers() {
                     navigate('/books'); 
 
                 } catch (error) {
-                    if (errorContainer) {
-                        errorContainer.textContent = error.message;
-                        errorContainer.classList.remove('hidden');
-                    }
+                    // [DIUBAH] Gunakan dialog, bukan error-container
+                    showDialog({ title: 'Gagal Membuat Buku', text: error.message });
+                    if (errorContainer) errorContainer.classList.add('hidden'); // Sembunyikan lagi
                     // Reset tombol
                     if (spinner) spinner.classList.remove('active');
                     if (buttonText) {
