@@ -36,59 +36,11 @@
         padding-bottom: 100px;
     }
 
-    /* Form undangan (dari member.html) */
-    .invite-form {
-        background-color: white;
-        border-radius: 18px;
-        padding: 20px;
-        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
-        margin-bottom: 25px;
-    }
-    .dark .invite-form { background-color: #374151; }
-    .invite-form .form-title {
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: var(--text-dark);
-    }
-    .dark .invite-form .form-title { color: white; }
-    .invite-form .form-group { margin-bottom: 15px; }
-    .invite-form label {
-        display: block;
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--text-light);
-        margin-bottom: 8px;
-    }
-    .invite-form .input-field,
-    .invite-form .select-field {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        background-color: var(--bg-gray);
-        font-size: 14px;
-    }
-    .dark .invite-form .input-field,
-    .dark .invite-form .select-field {
-        background-color: #4b5563;
-        border-color: #4b5563;
-        color: white;
-    }
-    .invite-form .submit-btn {
-        width: 100%;
-        background: var(--primary-blue);
-        color: white;
-        border: none;
-        padding: 12px;
-        border-radius: 10px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-    .invite-form #invite-message {
-        font-size: 13px;
-        margin-top: 10px;
-        text-align: center;
-    }
+    /* [DIHAPUS] CSS .invite-form dihapus dari sini 
+      karena form sekarang ada di dalam modal (layout.html)
+    */
+
+    /* Pesan error/sukses (tetap dibutuhkan untuk JS) */
     #invite-message.success { color: var(--income-green); }
     #invite-message.error { color: var(--expense-red); }
 
@@ -109,9 +61,13 @@
         justify-content: space-between;
         align-items: center;
         padding: 15px 20px;
-        border-bottom: 1px solid var(--bg-gray);
+        /* [DIUBAH] Border-bottom dinamis, hanya muncul jika list tidak kosong */
     }
-    .dark .book-card-header { border-bottom-color: #4b5563; }
+    .book-card-header.with-members {
+         border-bottom: 1px solid var(--bg-gray);
+    }
+    .dark .book-card-header.with-members { border-bottom-color: #4b5563; }
+    
     .book-card-header .list-title {
         font-size: 18px;
         font-weight: 600;
@@ -133,10 +89,26 @@
         color: var(--expense-red);
     }
     
-    /* Daftar Anggota (dari member.html) */
+    /* [PERBAIKAN 1] CSS untuk daftar anggota yang bisa di-collapse */
     .book-member-list {
-        padding: 10px 20px;
+        padding: 0 20px; /* Hapus padding atas/bawah saat ditutup */
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out, padding 0.4s ease-out;
     }
+    .book-member-list.visible {
+        max-height: 1000px; /* Ketinggian maks (bisa angka besar) */
+        padding: 10px 20px; /* Kembalikan padding saat dibuka */
+    }
+    .book-card-header .book-action-btn.collabs .fas {
+        transition: transform 0.3s ease;
+    }
+    /* Ikon 'collabs' akan berputar saat aktif */
+    .book-card-header .book-action-btn.collabs.active .fas {
+        transform: rotate(180deg);
+    }
+
+    /* Daftar Anggota (dari member.html) */
     .member-item {
         display: flex;
         align-items: center;
@@ -206,37 +178,14 @@
         <div class="book-header-top">
             <a href="/more" class="back-link"><i class="fas fa-chevron-left"></i></a>
             <span>Manajemen Buku</span>
-            <span style="width: 20px;"></span> 
+            <a href="/create-wallet" class="back-link" style="font-size: 22px;">
+                <i class="fas fa-plus"></i>
+            </a> 
         </div>
     </header>
 
     <main class="book-content">
-        <form class="invite-form" id="invite-member-form">
-            <h3 class="form-title">Undang Anggota Baru</h3>
-            <div class="form-group">
-                <label for="invite-wallet">Pilih Buku</label>
-                <select id="invite-wallet" class="select-field" required>
-                    <option value="">Memuat buku Anda...</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="invite-role">Peran</label>
-                <select id="invite-role" class="select-field">
-                    <option value="ADMIN">Admin (Bisa tambah/edit/hapus transaksi)</option>
-                    <option value="VIEWER">Viewer (Hanya bisa melihat)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="invite-email">Email Anggota</label>
-                <input type="email" id="invite-email" class="input-field" placeholder="windakaede@gmail.com" required>
-            </div>
-            <div class="form-group">
-                <label for="invite-label">Label (Opsional)</label>
-                <input type="text" id="invite-label" class="input-field" placeholder="cth: Istri, Anak, Bendahara">
-            </div>
-            <button type="submit" class="submit-btn">Kirim Undangan</button>
-            <div id="invite-message"></div>
-        </form>
+        <div id="invite-message" style="margin-bottom: 15px;"></div>
 
         <div id="book-list-section">
             <div style="text-align: center; padding: 20px; color: var(--text-light);">

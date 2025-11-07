@@ -931,6 +931,50 @@
         </div>
     </div>
 
+<div id="invite-modal-overlay" class="tx-modal-overlay" onclick="closeInviteModal()">
+        <div class="tx-modal-content" onclick="event.stopPropagation()">
+            <div class="tx-modal-header">
+                <h3 id="invite-modal-title" style="font-weight: 600;">Undang Anggota</h3>
+                <button class="tx-modal-close" onclick="closeInviteModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="tx-modal-body" style="padding-top: 15px;">
+                <p class="text-sm text-slate-500 dark:text-slate-400" style="margin-bottom: 15px; font-size: 14px;">
+                    Ke buku: <strong id="invite-modal-wallet-name">Nama Buku</strong>
+                </p>
+                
+                <form id="modal-invite-form">
+                    <input type="hidden" id="invite-modal-wallet-id">
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="invite-modal-email" class="mb-2 text-sm font-bold text-slate-600 dark:text-slate-200" style="display: block; font-size: 13px; font-weight: 500; color: var(--text-light); margin-bottom: 8px;">Email Anggota</label>
+                        <input type="email" id="invite-modal-email" class="input-field" placeholder="windakaede@gmail.com" required 
+                               style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: var(--bg-gray); font-size: 14px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="invite-modal-role" class="mb-2 text-sm font-bold text-slate-600 dark:text-slate-200" style="display: block; font-size: 13px; font-weight: 500; color: var(--text-light); margin-bottom: 8px;">Peran</label>
+                        <select id="invite-modal-role" class="select-field" 
+                                style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: var(--bg-gray); font-size: 14px; -webkit-appearance: none; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22currentColor%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.5em 1.5em;">
+                            <option value="ADMIN">Admin (Bisa tambah/edit/hapus)</option>
+                            <option value="VIEWER">Viewer (Hanya bisa melihat)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="invite-modal-label" class="mb-2 text-sm font-bold text-slate-600 dark:text-slate-200" style="display: block; font-size: 13px; font-weight: 500; color: var(--text-light); margin-bottom: 8px;">Label (Opsional)</label>
+                        <input type="text" id="invite-modal-label" class="input-field" placeholder="cth: Istri, Anak, Bendahara" 
+                               style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: var(--bg-gray); font-size: 14px;">
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" 
+                            style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                        <span class="loading-spinner" style="border-top-color: #fff; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; width: 1.2rem; height: 1.2rem; margin-right: 8px;"></span>
+                        <span>Kirim Undangan</span>
+                    </button>
+                    
+                    <div id="modal-invite-message" style="font-size: 13px; margin-top: 10px; text-align: center;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 <script>const sessionToken = localStorage.getItem('sessionToken');
         if (!sessionToken) {
@@ -2570,6 +2614,345 @@ async function loadAllWalletsAndMembers() {
     }
 }
 
+// === [FUNGSI-FUNGSI BARU UNTUK books.html] ===
+
+        // [BARU] Fungsi untuk membuka modal undangan
+        function openInviteModal(walletId, walletName) {
+            const modal = document.getElementById('invite-modal-overlay');
+            if (!modal) return;
+
+            // Isi data buku ke modal
+            document.getElementById('invite-modal-wallet-name').textContent = walletName;
+            document.getElementById('invite-modal-wallet-id').value = walletId;
+            
+            // Bersihkan form & pesan error
+            const form = document.getElementById('modal-invite-form');
+            form.reset();
+            const messageEl = document.getElementById('modal-invite-message');
+            messageEl.textContent = '';
+            messageEl.className = '';
+            
+            // Reset tombol submit
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = false;
+            submitBtn.querySelector('span:not(.loading-spinner)').style.display = 'inline';
+            submitBtn.querySelector('.loading-spinner').style.display = 'none';
+
+            modal.classList.add('visible');
+        }
+
+        // [BARU] Fungsi untuk menutup modal undangan
+        function closeInviteModal() {
+            const modal = document.getElementById('invite-modal-overlay');
+            if (modal) {
+                modal.classList.remove('visible');
+            }
+        }
+        
+        // [BARU - PERBAIKAN 1] Fungsi untuk toggle daftar anggota (collabs)
+        function toggleMemberList(buttonElement) {
+            const card = buttonElement.closest('.book-list-card');
+            if (!card) return;
+            
+            const memberList = card.querySelector('.book-member-list');
+            if (!memberList) return;
+
+            // Toggle kelas 'visible' pada list
+            memberList.classList.toggle('visible');
+            // Toggle kelas 'active' pada tombol (untuk rotasi ikon)
+            buttonElement.classList.toggle('active');
+        }
+
+        /**
+         * [DIUBAH] Mengambil semua buku & anggota, lalu merendernya dengan tombol aksi
+         */
+        async function loadAllWalletsAndMembers() {
+            const listSection = document.getElementById('book-list-section');
+            // [DIHAPUS] Logika untuk 'walletSelect' (form global) dihapus
+            if (!listSection) return;
+
+            listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat daftar buku & anggota...</span></div>`;
+
+            try {
+                const myUser = await fetchApi('/auth/users/me'); 
+                const wallets = await fetchApi('/wallets'); 
+
+                listSection.innerHTML = ''; // Bersihkan spinner
+
+                if (!wallets || wallets.length === 0) {
+                    listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);">Anda belum memiliki buku.</div>`;
+                    return;
+                }
+                
+                // [DIHAPUS] Loop 1 (untuk isi dropdown) dihapus
+
+                // [Loop 2 diubah] Render daftar anggota untuk setiap buku
+                for (const wallet of wallets) {
+                    const card = document.createElement('div');
+                    card.className = 'book-list-card'; 
+
+                    const cardHeader = document.createElement('div');
+                    cardHeader.className = 'book-card-header';
+                    
+                    // Cek apakah user ini bisa mengundang (Owner/Admin)
+                    const canInvite = (wallet.role === 'OWNER' || wallet.role === 'ADMIN');
+                    
+                    // [PERBAIKAN 3] Buat tombol invite (hanya jika diizinkan)
+                    const inviteBtnHtml = canInvite 
+                        ? `<button class="book-action-btn invite" title="Undang Anggota" onclick="openInviteModal('${wallet.id}', '${wallet.name}')"><i class="fas fa-user-plus"></i></button>`
+                        : '';
+
+                    // [PERBAIKAN 1 & 3] Menambahkan tombol collabs & invite
+                    cardHeader.innerHTML = `
+                        <h3 class="list-title">${wallet.name}</h3>
+                        <div class="book-actions">
+                            <button class="book-action-btn collabs" title="Lihat Anggota" onclick="toggleMemberList(this)">
+                                <i class="fas fa-chevron-down"></i> </button>
+                            ${inviteBtnHtml}
+                            <button class="book-action-btn" title="Ubah Nama" onclick="handleRenameBook('${wallet.id}', '${wallet.name}')"><i class="fas fa-edit"></i></button>
+                            <button class="book-action-btn delete" title="Hapus Buku" onclick="handleDeleteBook('${wallet.id}', '${wallet.role}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    
+                    // [PERBAIKAN 1] Buat div member list, tapi HIDDEN by default
+                    const memberListDiv = document.createElement('div');
+                    memberListDiv.className = 'book-member-list'; // CSS baru akan menyembunyikannya
+
+                    // Ambil anggota untuk buku ini
+                    const members = await fetchApi(`/wallets/${wallet.id}/members`);
+
+                    if (!members || members.length === 0) {
+                        memberListDiv.innerHTML += `<div class="member-item" style="border:none; color: var(--text-light); font-size: 14px;">Hanya Anda.</div>`;
+                        // Jika tidak ada anggota, jangan tambahkan border di header
+                    } else {
+                        // Jika ada anggota, tambahkan border di header
+                        cardHeader.classList.add('with-members');
+                        
+                        members.forEach(member => {
+                            const item = document.createElement('div');
+                            item.className = 'member-item';
+
+                            let avatarHtml = '';
+                            if (member.avatar_url) {
+                                avatarHtml = `<img src="${member.avatar_url}" alt="${member.full_name}">`;
+                            } else {
+                                avatarHtml = `<span>${member.full_name.charAt(0).toUpperCase()}</span>`;
+                            }
+
+                            const isOwner = member.role === 'OWNER';
+                            const isMe = member.id === myUser.id;
+                            // Hanya Owner Buku (Anda) yang bisa hapus anggota LAIN
+                            const canDelete = (wallet.role === 'OWNER' && !isOwner); 
+
+                            const labelHtml = member.label 
+                                ? `<div class="email" style="font-style: italic; color: var(--primary-blue);">${member.label}</div>` 
+                                : '';
+
+                            item.innerHTML = `
+                                <div class="avatar">${avatarHtml}</div>
+                                <div class="details">
+                                    <div class="name">${member.full_name} ${isMe ? '(Anda)' : ''}</div>
+                                    <div class="email">${member.email}</div>
+                                    ${labelHtml} 
+                                </div>
+                                <div class="role-info">
+                                    <span class="role-tag">${member.role}</span>
+                                    <button class="delete-member-btn" ${!canDelete ? 'disabled' : ''} onclick="handleDeleteMember('${wallet.id}', '${member.id}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                            memberListDiv.appendChild(item);
+                        });
+                    }
+                    card.appendChild(cardHeader); 
+                    card.appendChild(memberListDiv); // memberListDiv ditambahkan (hidden)
+                    listSection.appendChild(card);
+                }
+
+            } catch (error) {
+                listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat: ${error.message}</div>`;
+            }
+        }
+
+        /**
+         * [FUNGSI BARU] Untuk mengubah nama buku (Wallet)
+         */
+        async function handleRenameBook(walletId, currentName) {
+            const newName = prompt("Masukkan nama baru untuk buku:", currentName);
+            
+            if (!newName || newName.trim() === '' || newName === currentName) {
+                return; // Batal jika nama kosong atau sama
+            }
+
+            // Gunakan pesan global di halaman
+            const messageEl = document.getElementById('invite-message');
+            messageEl.textContent = 'Mengubah nama...';
+            messageEl.className = '';
+
+            try {
+                await fetchApi(`/wallets/${walletId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ name: newName }) 
+                });
+
+                messageEl.textContent = 'Nama buku berhasil diubah.';
+                messageEl.className = 'success';
+                loadAllWalletsAndMembers(); // Muat ulang daftar untuk menampilkan nama baru
+
+            } catch (error) {
+                messageEl.textContent = `Gagal mengubah nama: ${error.message}`;
+                messageEl.className = 'error';
+            }
+        }
+
+        /**
+         * [FUNGSI BARU] Untuk menghapus buku (Wallet)
+         */
+        async function handleDeleteBook(walletId, userRoleInWallet) {
+            if (userRoleInWallet !== 'OWNER') {
+                alert('Hanya OWNER yang dapat menghapus buku.');
+                return;
+            }
+            
+            if (!confirm('PERINGATAN: Anda akan menghapus buku ini.\nSEMUA data transaksi, akun, dan anggota di dalamnya akan hilang selamanya.\n\nApakah Anda yakin?')) {
+                return;
+            }
+
+            const messageEl = document.getElementById('invite-message');
+            messageEl.textContent = 'Menghapus buku...';
+            messageEl.className = '';
+
+            try {
+                await fetchApi(`/wallets/${walletId}`, {
+                    method: 'DELETE' 
+                });
+
+                // Cek apakah buku yang dihapus adalah buku yang sedang aktif
+                if (localStorage.getItem('currentWalletId') === walletId) {
+                    localStorage.removeItem('currentWalletId');
+                    localStorage.removeItem('currentWalletName');
+                    localStorage.removeItem('currentWalletIcon');
+                    // Idealnya, kita harus mengatur dompet aktif ke dompet lain
+                    // Tapi untuk sekarang, kita muat ulang daftar saja
+                }
+
+                messageEl.textContent = 'Buku berhasil dihapus.';
+                messageEl.className = 'success';
+                loadAllWalletsAndMembers(); // Muat ulang daftar
+
+            } catch (error) {
+                messageEl.textContent = `Gagal menghapus buku: ${error.message}`;
+                messageEl.className = 'error';
+            }
+        }
+
+
+        /**
+         * [DIUBAH] Menangani submit form undangan (versi MODAL)
+         */
+        async function handleModalInviteSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            
+            // Ambil data dari form MODAL
+            const email = document.getElementById('invite-modal-email').value;
+            const role = document.getElementById('invite-modal-role').value;
+            const label = document.getElementById('invite-modal-label').value;
+            const walletId = document.getElementById('invite-modal-wallet-id').value; // <-- [KUNCI]
+            
+            const messageEl = document.getElementById('modal-invite-message'); // Pesan di modal
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const btnText = submitBtn.querySelector('span:not(.loading-spinner)');
+            const btnSpinner = submitBtn.querySelector('.loading-spinner');
+
+            if (!walletId) { // Seharusnya tidak terjadi, tapi untuk keamanan
+                messageEl.textContent = 'ID Buku tidak ditemukan. Coba lagi.';
+                messageEl.className = 'error';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'inline-block';
+            messageEl.textContent = '';
+            messageEl.className = '';
+
+            try {
+                const result = await fetchApi(`/wallets/${walletId}/members`, {
+                    method: 'POST',
+                    body: JSON.stringify({ email, role, label }) 
+                });
+
+                messageEl.textContent = 'Berhasil mengundang!';
+                messageEl.className = 'success';
+                form.reset(); 
+                loadAllWalletsAndMembers(); // Muat ulang seluruh daftar di belakang
+                
+                // Tutup modal setelah 2 detik
+                setTimeout(closeInviteModal, 2000);
+
+            } catch (error) {
+                messageEl.textContent = error.message; 
+                messageEl.className = 'error';
+            } finally {
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnSpinner.style.display = 'none';
+            }
+        }
+
+        /**
+         * [DIUBAH] Menghapus anggota (versi global)
+         */
+        async function handleDeleteMember(walletId, userId) { 
+            if (!userId || !walletId) return;
+
+            if (!confirm('Anda yakin ingin menghapus anggota ini dari buku ini?')) {
+                return;
+            }
+
+            // Gunakan pesan global di halaman
+            const messageEl = document.getElementById('invite-message');
+            messageEl.textContent = 'Menghapus...';
+            messageEl.className = '';
+
+            try {
+                await fetchApi(`/wallets/${walletId}/members/${userId}`, {
+                    method: 'DELETE'
+                });
+
+                messageEl.textContent = 'Anggota berhasil dihapus.';
+                messageEl.className = 'success';
+                loadAllWalletsAndMembers(); // Muat ulang seluruh daftar
+
+            } catch (error) {
+                messageEl.textContent = `Gagal menghapus: ${error.message}`;
+                messageEl.className = 'error';
+            }
+        }
+
+        /**
+         * [DIUBAH] Inisialisasi Halaman Buku
+         */
+        function initBooksPage() {
+            console.log("Halaman Buku (Global) diinisialisasi.");
+
+            // Muat semua buku dan anggotanya
+            loadAllWalletsAndMembers();
+
+            // [PERBAIKAN KUNCI] Pasang listener ke form MODAL
+            const inviteForm = document.getElementById('modal-invite-form');
+            if (inviteForm) {
+                // Hapus listener lama jika ada (untuk mencegah duplikat)
+                inviteForm.removeEventListener('submit', handleModalInviteSubmit);
+                // Tambahkan listener baru
+                inviteForm.addEventListener('submit', handleModalInviteSubmit);
+            }
+            
+            // [DIHAPUS] Listener untuk form global dihapus
+        }
+// === [AKHIR FUNGSI-FUNGSI BARU] ===
 /**
  * [FUNGSI BARU] Untuk mengubah nama buku (Wallet)
  */
