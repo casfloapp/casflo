@@ -2496,12 +2496,17 @@ async function loadMembers() {
             // Tentukan apakah tombol hapus harus nonaktif
             const isOwner = member.role === 'OWNER';
             const isMe = member.id === myUser.id;
+            const labelHtml = member.label 
+                ? `<div class="email" style="font-style: italic; color: var(--primary-blue);">${member.label}</div>` 
+                : '';
 
+            // [MODIFIKASI] Tampilkan nama, email, DAN label (jika ada)
             item.innerHTML = `
                 <div class="avatar">${avatarHtml}</div>
                 <div class="details">
                     <div class="name">${member.full_name} ${isMe ? '(Anda)' : ''}</div>
                     <div class="email">${member.email}</div>
+                    ${labelHtml} 
                 </div>
                 <div class="role-info">
                     <span class="role-tag">${member.role}</span>
@@ -2526,6 +2531,7 @@ async function handleInviteMember(event) {
     const form = event.target;
     const email = document.getElementById('invite-email').value;
     const role = document.getElementById('invite-role').value;
+    const label = document.getElementById('invite-label').value;
     const messageEl = document.getElementById('invite-message');
     const submitBtn = form.querySelector('button[type="submit"]');
 
@@ -2540,7 +2546,7 @@ async function handleInviteMember(event) {
         const walletId = localStorage.getItem('currentWalletId');
         const result = await fetchApi(`/wallets/${walletId}/members`, {
             method: 'POST',
-            body: JSON.stringify({ email, role })
+            body: JSON.stringify({ email, role, label })
         });
 
         messageEl.textContent = 'Berhasil mengundang!';
