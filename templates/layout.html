@@ -2460,6 +2460,153 @@ function renderTransactionList(filteredTransactions) {
 
         }
 
+
+/**
+ * Mengambil dan merender daftar anggota
+ */
+async function loadMembers() {
+    const listContainer = document.getElementById('member-list-container');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat anggota...</span></div>`;
+
+    try {
+        const walletId = localStorage.getItem('currentWalletId');
+        const myUser = await fetchApi('/auth/users/me'); // Ambil info user 'saya'
+        const members = await fetchApi(`/wallets/${walletId}/members`);
+
+        listContainer.innerHTML = ''; // Bersihkan spinner
+
+        if (!members || members.length === 0) {
+            listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);">Belum ada anggota.</div>`;
+            return;
+        }
+
+        members.forEach(member => {
+            const item = document.createElement('div');
+            item.className = 'member-item';
+
+            let avatarHtml = '';
+            if (member.avatar_url) {
+                avatarHtml = `<img src="${member.avatar_url}" alt="${member.full_name}">`;
+            } else {
+                avatarHtml = `<span>${member.full_name.charAt(0).toUpperCase()}</span>`;
+            }
+
+            // Tentukan apakah tombol hapus harus nonaktif
+            const isOwner = member.role === 'OWNER';
+            const isMe = member.id === myUser.id;
+
+            item.innerHTML = `
+                <div class="avatar">${avatarHtml}</div>
+                <div class="details">
+                    <div class="name">${member.full_name} ${isMe ? '(Anda)' : ''}</div>
+                    <div class="email">${member.email}</div>
+                </div>
+                <div class="role-info">
+                    <span class="role-tag">${member.role}</span>
+                    <button class="delete-member-btn" ${isOwner ? 'disabled' : ''} onclick="handleDeleteMember('${member.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            listContainer.appendChild(item);
+        });
+
+    } catch (error) {
+        listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat anggota: ${error.message}</div>`;
+    }
+}
+
+/**
+ * Menangani submit form undangan anggota baru
+ */
+async function handleInviteMember(event) {
+    event.preventDefault();
+    const form = event.target;
+    const email = document.getElementById('invite-email').value;
+    const role = document.getElementById('invite-role').value;
+    const messageEl = document.getElementById('invite-message');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    if (!email) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Mengundang...';
+    messageEl.textContent = '';
+    messageEl.className = '';
+
+    try {
+        const walletId = localStorage.getItem('currentWalletId');
+        const result = await fetchApi(`/wallets/${walletId}/members`, {
+            method: 'POST',
+            body: JSON.stringify({ email, role })
+        });
+
+        messageEl.textContent = 'Berhasil mengundang!';
+        messageEl.className = 'success';
+        form.reset(); // Kosongkan form
+        loadMembers(); // Muat ulang daftar anggota
+
+    } catch (error) {
+        // Tampilkan error (misal: "User not found")
+        messageEl.textContent = error.message;
+        messageEl.className = 'error';
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Kirim Undangan';
+    }
+}
+
+/**
+ * Menghapus anggota dari dompet
+ */
+async function handleDeleteMember(userId) {
+    if (!userId) return;
+    if (!confirm('Anda yakin ingin menghapus anggota ini dari dompet?')) {
+        return;
+    }
+
+    const messageEl = document.getElementById('invite-message');
+    messageEl.textContent = '';
+    messageEl.className = '';
+
+    try {
+        const walletId = localStorage.getItem('currentWalletId');
+        await fetchApi(`/wallets/${walletId}/members/${userId}`, {
+            method: 'DELETE'
+        });
+
+        messageEl.textContent = 'Anggota berhasil dihapus.';
+        messageEl.className = 'success';
+        loadMembers(); // Muat ulang daftar
+
+    } catch (error) {
+        messageEl.textContent = `Gagal menghapus: ${error.message}`;
+        messageEl.className = 'error';
+    }
+}
+
+/**
+ * Inisialisasi Halaman Anggota
+ */
+function initMemberPage() {
+    console.log("Halaman Anggota diinisialisasi.");
+
+    // Muat daftar anggota saat halaman dibuka
+    loadMembers();
+
+    // Pasang listener ke form undangan
+    const inviteForm = document.getElementById('invite-member-form');
+    if (inviteForm) {
+        inviteForm.addEventListener('submit', handleInviteMember);
+    }
+
+    // Pasang listener untuk tombol mode gelap (jika ada di halaman ini)
+    attachThemeToggle('.theme-toggle');
+}
+
+// === [AKHIR DARI FUNGSI BARU] ===
         // === BAGIAN 3: LOGIKA SPA ROUTING (DENGAN PERBAIKAN) ===
         
         const pageContainer = document.getElementById('app-container');
@@ -2471,6 +2618,7 @@ function renderTransactionList(filteredTransactions) {
             else if (path === '/create') { initCreatePage(); }
             else if (path === '/more') { initMorePage(); }
             else if (path === '/analysis') { initAnalysisPage(); }
+            else if (path === '/member') { initMemberPage(); }
         }
 
         function executePageScript(newContentElement) {

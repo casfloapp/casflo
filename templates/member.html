@@ -1,0 +1,246 @@
+<style>
+    /* Gaya khusus untuk halaman anggota */
+    .member-page-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100svh;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    .member-header {
+        background: var(--primary-blue);
+        color: white;
+        padding: 20px;
+        flex-shrink: 0;
+        z-index: 10;
+        border-bottom-left-radius: 25px;
+        border-bottom-right-radius: 25px;
+    }
+    .member-header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .member-header-top .back-link {
+        color: white;
+        text-decoration: none;
+        font-size: 20px;
+    }
+    .member-content {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 20px;
+        padding-bottom: 100px;
+    }
+
+    /* Gaya untuk form undangan */
+    .invite-form {
+        background-color: white;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+        margin-bottom: 25px;
+    }
+    .dark .invite-form {
+        background-color: #374151; /* dark:bg-gray-700 */
+    }
+    .invite-form .form-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: var(--text-dark);
+    }
+    .dark .invite-form .form-title {
+        color: white;
+    }
+    .invite-form .form-group {
+        margin-bottom: 15px;
+    }
+    .invite-form label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-light);
+        margin-bottom: 8px;
+    }
+    .invite-form .input-field,
+    .invite-form .select-field {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        background-color: var(--bg-gray);
+        font-size: 14px;
+    }
+    .dark .invite-form .input-field,
+    .dark .invite-form .select-field {
+        background-color: #4b5563; /* dark:border-gray-600 */
+        border-color: #4b5563;
+        color: white;
+    }
+    .invite-form .submit-btn {
+        width: 100%;
+        background: var(--primary-blue);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .invite-form .submit-btn:hover {
+        background-color: #3a388a;
+    }
+    #invite-message {
+        font-size: 13px;
+        margin-top: 10px;
+        text-align: center;
+    }
+    #invite-message.success { color: var(--income-green); }
+    #invite-message.error { color: var(--expense-red); }
+
+    /* Gaya untuk daftar anggota */
+    .member-list-card {
+        background-color: white;
+        border-radius: 18px;
+        padding: 10px 20px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+    }
+    .dark .member-list-card {
+        background-color: #374151; /* dark:bg-gray-700 */
+    }
+    .member-list-card .list-title {
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 5px;
+        padding-top: 10px;
+    }
+    .dark .member-list-card .list-title {
+        color: white;
+    }
+    .member-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--bg-gray);
+    }
+    .member-item:last-child {
+        border-bottom: none;
+    }
+    .dark .member-item {
+        border-bottom-color: #4b5563; /* dark:border-gray-600 */
+    }
+    .member-item .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background-color: var(--light-purple);
+        color: var(--primary-blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+    .member-item .avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .member-item .details {
+        flex-grow: 1;
+        overflow: hidden;
+    }
+    .member-item .details .name {
+        font-weight: 600;
+        color: var(--text-dark);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .dark .member-item .details .name {
+        color: white;
+    }
+    .member-item .details .email {
+        font-size: 13px;
+        color: var(--text-light);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .member-item .role-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-left: 15px;
+    }
+    .member-item .role-info .role-tag {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-light);
+    }
+    .member-item .role-info .delete-member-btn {
+        background: none;
+        border: none;
+        color: var(--expense-red);
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .member-item .role-info .delete-member-btn:disabled {
+        color: #ccc;
+        cursor: not-allowed;
+    }
+    .dark .member-item .role-info .delete-member-btn:disabled {
+        color: #4b5563;
+    }
+</style>
+
+<div class="member-page-container">
+    <header class="member-header">
+        <div class="member-header-top">
+            <a href="/more" class="back-link"><i class="fas fa-chevron-left"></i></a>
+            <span>Manajemen Anggota</span>
+            <span style="width: 20px;"></span> </div>
+    </header>
+
+    <main class="member-content">
+        <form class="invite-form" id="invite-member-form">
+            <h3 class="form-title">Undang Anggota Baru</h3>
+            <div class="form-group">
+                <label for="invite-role">Peran</label>
+                <select id="invite-role" class="select-field">
+                    <option value="ADMIN">Admin (Bisa tambah/edit/hapus transaksi)</option>
+                    <option value="VIEWER">Viewer (Hanya bisa melihat)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="invite-email">Email Anggota</label>
+                <input type="email" id="invite-email" class="input-field" placeholder="windakaede@gmail.com" required>
+            </div>
+            <button type="submit" class="submit-btn">Kirim Undangan</button>
+            <div id="invite-message"></div>
+        </form>
+
+        <div class="member-list-card">
+            <h3 class="list-title">Anggota Saat Ini</h3>
+            <div id="member-list-container">
+                <div style="text-align: center; padding: 20px; color: var(--text-light);">
+                    <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
+                    <span style="margin-left: 10px;">Memuat anggota...</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bottom-nav">
+        <a href="/" class="nav-item"><i class="fas fa-book"></i><span>Buku</span></a>
+        <a href="/wallet" class="nav-item"><i class="fas fa-wallet"></i><span>Dompet</span></a>
+        <a href="/analysis" class="nav-item"><i class="fas fa-chart-pie"></i><span>Analisis</span></a>
+        <a href="/more" class="nav-item active"><i class="fas fa-ellipsis-h"></i><span>Lebih</span></a>
+    </footer>
+</div>

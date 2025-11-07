@@ -11,6 +11,7 @@ import createAccountPage from './templates/create-account.html';
 import twoStepPage from './templates/two-step.html';
 import authCallbackPage from './templates/auth-callback.html'; // Untuk login Google
 import createWalletPage from './templates/create-wallet.html'; // <-- [BARU] Impor ini
+import memberContent from './templates/member.html';
 
 
 export default {
@@ -50,6 +51,9 @@ export default {
                 break;
             case '/analysis':
                 pageContent = analysisContent;
+                break;
+            case '/member': // <-- [TAMBAHKAN BLOK INI]
+                pageContent = memberContent;
                 break;
             default:
                 pageContent = mainContent;
