@@ -32,9 +32,6 @@ export default {
         if (path === '/auth/callback') {
             return new Response(authCallbackPage, { headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
         }
-        if (path === '/create-wallet') {
-            return new Response(createWalletPage, { headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
-        }
 
         let pageContent;
         switch (path) {
@@ -58,6 +55,9 @@ export default {
                 break;
             case '/books': // <-- 2. Tambahkan case ini
                 pageContent = booksContent;
+                break;
+            case '/create-wallet': // <-- [DITAMBAHKAN]
+                pageContent = createWalletPage;
                 break;
             default:
                 pageContent = mainContent;
