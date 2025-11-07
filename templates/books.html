@@ -36,11 +36,12 @@
         padding-bottom: 100px;
     }
 
-    /* [DIHAPUS] CSS .invite-form dihapus dari sini 
-      karena form sekarang ada di dalam modal (layout.html)
-    */
-
     /* Pesan error/sukses (tetap dibutuhkan untuk JS) */
+    #invite-message {
+        font-size: 13px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
     #invite-message.success { color: var(--income-green); }
     #invite-message.error { color: var(--expense-red); }
 
@@ -61,7 +62,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 15px 20px;
-        /* [DIUBAH] Border-bottom dinamis, hanya muncul jika list tidak kosong */
+        /* Border-bottom akan ditambahkan oleh JS jika ada anggota */
     }
     .book-card-header.with-members {
          border-bottom: 1px solid var(--bg-gray);
@@ -106,6 +107,12 @@
     /* Ikon 'collabs' akan berputar saat aktif */
     .book-card-header .book-action-btn.collabs.active .fas {
         transform: rotate(180deg);
+    }
+    
+    /* [BARU] Loader di dalam daftar anggota */
+    .member-list-loader {
+        text-align: center;
+        padding: 15px;
     }
 
     /* Daftar Anggota (dari member.html) */

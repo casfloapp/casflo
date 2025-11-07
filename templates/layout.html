@@ -2649,29 +2649,85 @@ async function loadAllWalletsAndMembers() {
             }
         }
         
-        // [BARU - PERBAIKAN 1] Fungsi untuk toggle daftar anggota (collabs)
-        function toggleMemberList(buttonElement) {
+        // [PERBAIKAN PERFORMA - FUNGSI DIUBAH TOTAL]
+        async function toggleMemberList(buttonElement, walletId, walletRole, myUserId) {
             const card = buttonElement.closest('.book-list-card');
             if (!card) return;
             
-            const memberList = card.querySelector('.book-member-list');
-            if (!memberList) return;
+            const memberListDiv = card.querySelector('.book-member-list');
+            if (!memberListDiv) return;
 
-            // Toggle kelas 'visible' pada list
-            memberList.classList.toggle('visible');
-            // Toggle kelas 'active' pada tombol (untuk rotasi ikon)
-            buttonElement.classList.toggle('active');
+            const isLoaded = memberListDiv.dataset.loaded === 'true';
+            const isVisible = memberListDiv.classList.contains('visible');
+
+            if (!isVisible && !isLoaded) {
+                // === KASUS 1: BELUM DIMUAT & TERTUTUP -> BUKA & MUAT DATA ===
+                buttonElement.classList.add('active'); // Putar ikon
+                memberListDiv.classList.add('visible'); // Tampilkan div (untuk spinner)
+                
+                try {
+                    // PANGGIL API DI SINI
+                    const members = await fetchApi(`/wallets/${walletId}/members`);
+                    memberListDiv.innerHTML = ''; // Hapus spinner
+                    
+                    if (!members || members.length === 0) {
+                        memberListDiv.innerHTML = `<div class="member-item" style="border:none; color: var(--text-light); font-size: 14px;">Hanya Anda.</div>`;
+                    } else {
+                        // Jika ada anggota, tambahkan border di header
+                        card.querySelector('.book-card-header').classList.add('with-members');
+                        
+                        members.forEach(member => {
+                            const item = document.createElement('div');
+                            item.className = 'member-item';
+                            let avatarHtml = '';
+                            if (member.avatar_url) {
+                                avatarHtml = `<img src="${member.avatar_url}" alt="${member.full_name}">`;
+                            } else {
+                                avatarHtml = `<span>${member.full_name.charAt(0).toUpperCase()}</span>`;
+                            }
+                            const isOwner = member.role === 'OWNER';
+                            const isMe = member.id === myUserId;
+                            const canDelete = (walletRole === 'OWNER' && !isOwner); 
+                            const labelHtml = member.label ? `<div class="email" style="font-style: italic; color: var(--primary-blue);">${member.label}</div>` : '';
+
+                            item.innerHTML = `
+                                <div class="avatar">${avatarHtml}</div>
+                                <div class="details">
+                                    <div class="name">${member.full_name} ${isMe ? '(Anda)' : ''}</div>
+                                    <div class="email">${member.email}</div>
+                                    ${labelHtml} 
+                                </div>
+                                <div class="role-info">
+                                    <span class="role-tag">${member.role}</span>
+                                    <button class="delete-member-btn" ${!canDelete ? 'disabled' : ''} onclick="handleDeleteMember('${walletId}', '${member.id}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                            memberListDiv.appendChild(item);
+                        });
+                    }
+                    memberListDiv.dataset.loaded = 'true'; // Tandai sudah dimuat
+                } catch (e) {
+                    memberListDiv.querySelector('.member-list-loader').innerHTML = `<span style="color: var(--expense-red);">Gagal memuat anggota.</span>`;
+                }
+
+            } else {
+                // === KASUS 2: SUDAH DIMUAT -> TINGGAL BUKA/TUTUP ===
+                buttonElement.classList.toggle('active');
+                memberListDiv.classList.toggle('visible');
+            }
         }
 
+
         /**
-         * [DIUBAH] Mengambil semua buku & anggota, lalu merendernya dengan tombol aksi
+         * [DIUBAH] Mengambil HANYA BUKU (bukan anggota)
          */
         async function loadAllWalletsAndMembers() {
             const listSection = document.getElementById('book-list-section');
-            // [DIHAPUS] Logika untuk 'walletSelect' (form global) dihapus
             if (!listSection) return;
 
-            listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat daftar buku & anggota...</span></div>`;
+            listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat daftar buku...</span></div>`;
 
             try {
                 const myUser = await fetchApi('/auth/users/me'); 
@@ -2684,9 +2740,7 @@ async function loadAllWalletsAndMembers() {
                     return;
                 }
                 
-                // [DIHAPUS] Loop 1 (untuk isi dropdown) dihapus
-
-                // [Loop 2 diubah] Render daftar anggota untuk setiap buku
+                // Render daftar buku
                 for (const wallet of wallets) {
                     const card = document.createElement('div');
                     card.className = 'book-list-card'; 
@@ -2694,84 +2748,41 @@ async function loadAllWalletsAndMembers() {
                     const cardHeader = document.createElement('div');
                     cardHeader.className = 'book-card-header';
                     
-                    // Cek apakah user ini bisa mengundang (Owner/Admin)
                     const canInvite = (wallet.role === 'OWNER' || wallet.role === 'ADMIN');
                     
-                    // [PERBAIKAN 3] Buat tombol invite (hanya jika diizinkan)
                     const inviteBtnHtml = canInvite 
                         ? `<button class="book-action-btn invite" title="Undang Anggota" onclick="openInviteModal('${wallet.id}', '${wallet.name}')"><i class="fas fa-user-plus"></i></button>`
                         : '';
 
-                    // [PERBAIKAN 1 & 3] Menambahkan tombol collabs & invite
+                    // [PERBAIKAN 1 & 3] Onclick memanggil toggleMemberList BARU
                     cardHeader.innerHTML = `
                         <h3 class="list-title">${wallet.name}</h3>
                         <div class="book-actions">
-                            <button class="book-action-btn collabs" title="Lihat Anggota" onclick="toggleMemberList(this)">
-                                <i class="fas fa-chevron-down"></i> </button>
+                            <button class="book-action-btn collabs" title="Lihat Anggota" onclick="toggleMemberList(this, '${wallet.id}', '${wallet.role}', '${myUser.id}')">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
                             ${inviteBtnHtml}
                             <button class="book-action-btn" title="Ubah Nama" onclick="handleRenameBook('${wallet.id}', '${wallet.name}')"><i class="fas fa-edit"></i></button>
                             <button class="book-action-btn delete" title="Hapus Buku" onclick="handleDeleteBook('${wallet.id}', '${wallet.role}')"><i class="fas fa-trash"></i></button>
                         </div>
                     `;
                     
-                    // [PERBAIKAN 1] Buat div member list, tapi HIDDEN by default
+                    // [PERBAIKAN 1] Buat div member list KOSONG dengan loader
                     const memberListDiv = document.createElement('div');
-                    memberListDiv.className = 'book-member-list'; // CSS baru akan menyembunyikannya
+                    memberListDiv.className = 'book-member-list'; // (hidden by default)
+                    // Tambahkan spinner loader
+                    memberListDiv.innerHTML = `
+                        <div class="member-list-loader" style="text-align: center; padding: 15px;">
+                            <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
+                        </div>`;
 
-                    // Ambil anggota untuk buku ini
-                    const members = await fetchApi(`/wallets/${wallet.id}/members`);
-
-                    if (!members || members.length === 0) {
-                        memberListDiv.innerHTML += `<div class="member-item" style="border:none; color: var(--text-light); font-size: 14px;">Hanya Anda.</div>`;
-                        // Jika tidak ada anggota, jangan tambahkan border di header
-                    } else {
-                        // Jika ada anggota, tambahkan border di header
-                        cardHeader.classList.add('with-members');
-                        
-                        members.forEach(member => {
-                            const item = document.createElement('div');
-                            item.className = 'member-item';
-
-                            let avatarHtml = '';
-                            if (member.avatar_url) {
-                                avatarHtml = `<img src="${member.avatar_url}" alt="${member.full_name}">`;
-                            } else {
-                                avatarHtml = `<span>${member.full_name.charAt(0).toUpperCase()}</span>`;
-                            }
-
-                            const isOwner = member.role === 'OWNER';
-                            const isMe = member.id === myUser.id;
-                            // Hanya Owner Buku (Anda) yang bisa hapus anggota LAIN
-                            const canDelete = (wallet.role === 'OWNER' && !isOwner); 
-
-                            const labelHtml = member.label 
-                                ? `<div class="email" style="font-style: italic; color: var(--primary-blue);">${member.label}</div>` 
-                                : '';
-
-                            item.innerHTML = `
-                                <div class="avatar">${avatarHtml}</div>
-                                <div class="details">
-                                    <div class="name">${member.full_name} ${isMe ? '(Anda)' : ''}</div>
-                                    <div class="email">${member.email}</div>
-                                    ${labelHtml} 
-                                </div>
-                                <div class="role-info">
-                                    <span class="role-tag">${member.role}</span>
-                                    <button class="delete-member-btn" ${!canDelete ? 'disabled' : ''} onclick="handleDeleteMember('${wallet.id}', '${member.id}')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            `;
-                            memberListDiv.appendChild(item);
-                        });
-                    }
                     card.appendChild(cardHeader); 
                     card.appendChild(memberListDiv); // memberListDiv ditambahkan (hidden)
                     listSection.appendChild(card);
                 }
 
             } catch (error) {
-                listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat: ${error.message}</div>`;
+                listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat buku: ${error.message}</div>`;
             }
         }
 
@@ -2833,8 +2844,6 @@ async function loadAllWalletsAndMembers() {
                     localStorage.removeItem('currentWalletId');
                     localStorage.removeItem('currentWalletName');
                     localStorage.removeItem('currentWalletIcon');
-                    // Idealnya, kita harus mengatur dompet aktif ke dompet lain
-                    // Tapi untuk sekarang, kita muat ulang daftar saja
                 }
 
                 messageEl.textContent = 'Buku berhasil dihapus.';
@@ -2887,7 +2896,23 @@ async function loadAllWalletsAndMembers() {
                 messageEl.textContent = 'Berhasil mengundang!';
                 messageEl.className = 'success';
                 form.reset(); 
-                loadAllWalletsAndMembers(); // Muat ulang seluruh daftar di belakang
+                
+                // [PENTING] Muat ulang HANYA daftar anggota buku itu
+                // 1. Cari card-nya
+                const card = document.querySelector(`.book-action-btn.invite[onclick*="'${walletId}'"]`).closest('.book-list-card');
+                if (card) {
+                    // 2. Hapus status 'loaded'
+                    const memberListDiv = card.querySelector('.book-member-list');
+                    memberListDiv.dataset.loaded = 'false';
+                    // 3. Hapus isinya (biarkan spinner)
+                    memberListDiv.innerHTML = `
+                        <div class="member-list-loader" style="text-align: center; padding: 15px;">
+                            <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
+                        </div>`;
+                    // 4. Panggil ulang toggle untuk memuat ulang
+                    const collabsBtn = card.querySelector('.book-action-btn.collabs');
+                    toggleMemberList(collabsBtn, walletId, 'OWNER', myUser.id); // Asumsikan user adalah owner/admin
+                }
                 
                 // Tutup modal setelah 2 detik
                 setTimeout(closeInviteModal, 2000);
@@ -2924,7 +2949,21 @@ async function loadAllWalletsAndMembers() {
 
                 messageEl.textContent = 'Anggota berhasil dihapus.';
                 messageEl.className = 'success';
-                loadAllWalletsAndMembers(); // Muat ulang seluruh daftar
+                
+                // [PENTING] Muat ulang HANYA daftar anggota buku itu
+                const card = document.querySelector(`.book-action-btn.invite[onclick*="'${walletId}'"]`).closest('.book-list-card');
+                if (card) {
+                    const memberListDiv = card.querySelector('.book-member-list');
+                    memberListDiv.dataset.loaded = 'false';
+                    memberListDiv.innerHTML = `
+                        <div class="member-list-loader" style="text-align: center; padding: 15px;">
+                            <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
+                        </div>`;
+                    const collabsBtn = card.querySelector('.book-action-btn.collabs');
+                    if (collabsBtn.classList.contains('active')) {
+                         toggleMemberList(collabsBtn, walletId, 'OWNER', myUser.id);
+                    }
+                }
 
             } catch (error) {
                 messageEl.textContent = `Gagal menghapus: ${error.message}`;
@@ -2938,7 +2977,7 @@ async function loadAllWalletsAndMembers() {
         function initBooksPage() {
             console.log("Halaman Buku (Global) diinisialisasi.");
 
-            // Muat semua buku dan anggotanya
+            // Muat semua buku (TANPA anggota)
             loadAllWalletsAndMembers();
 
             // [PERBAIKAN KUNCI] Pasang listener ke form MODAL
@@ -2949,8 +2988,6 @@ async function loadAllWalletsAndMembers() {
                 // Tambahkan listener baru
                 inviteForm.addEventListener('submit', handleModalInviteSubmit);
             }
-            
-            // [DIHAPUS] Listener untuk form global dihapus
         }
 // === [AKHIR FUNGSI-FUNGSI BARU] ===
 /**
