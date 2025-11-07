@@ -2599,6 +2599,18 @@ async function handleDeleteMember(userId) {
 function initMemberPage() {
     console.log("Halaman Anggota diinisialisasi.");
 
+    // [BARU] Ambil nama dompet dari localStorage dan tampilkan
+        const walletNameEl = document.getElementById('member-list-wallet-name');
+        const walletName = localStorage.getItem('currentWalletName');
+        
+        if (walletNameEl && walletName) {
+            walletNameEl.querySelector('.real-content').textContent = `Untuk dompet: ${walletName}`;
+            walletNameEl.classList.remove('loading');
+        } else if (walletNameEl) {
+            // Fallback jika nama tidak ada
+            walletNameEl.querySelector('.real-content').textContent = "Dompet tidak ditemukan";
+            walletNameEl.classList.remove('loading');
+        }
     // Muat daftar anggota saat halaman dibuka
     loadMembers();
 

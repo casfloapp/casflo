@@ -101,7 +101,41 @@
     }
     #invite-message.success { color: var(--income-green); }
     #invite-message.error { color: var(--expense-red); }
-
+/* ... (CSS yang sudah ada) ... */
+    .member-list-card .list-title {
+        font-weight: 600;
+        color: var(--text-dark);
+        /* margin-bottom: 5px; */ /* <-- [DIUBAH] Hapus/komentari margin-bottom */
+        padding-top: 10px;
+    }
+    
+    /* [BARU] Style untuk nama dompet */
+    .wallet-name-display {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-light);
+        margin-bottom: 15px; /* Jarak ke daftar anggota */
+        padding-top: 2px;
+        min-height: 1.2em; /* Mencegah loncat saat loading */
+    }
+    .wallet-name-display .real-content { display: block; }
+    .wallet-name-display .inline-spinner { display: none; }
+    .wallet-name-display.loading .real-content { display: none; }
+    .wallet-name-display.loading .inline-spinner { 
+        display: inline-block;
+        border-color: var(--primary-blue);
+        border-top-color: transparent;
+        width: 14px;
+        height: 14px;
+    }
+    .dark .wallet-name-display.loading .inline-spinner {
+        border-color: white;
+        border-top-color: transparent;
+    }
+    .dark .wallet-name-display {
+        color: #9ca3af; /* dark:text-gray-400 */
+    }
+    /* [AKHIR BARU] */
     /* Gaya untuk daftar anggota */
     .member-list-card {
         background-color: white;
@@ -198,6 +232,7 @@
     .dark .member-item .role-info .delete-member-btn:disabled {
         color: #4b5563;
     }
+    
 </style>
 
 <div class="member-page-container">
@@ -234,6 +269,12 @@
 
         <div class="member-list-card">
             <h3 class="list-title">Anggota Saat Ini</h3>
+            
+            <p id="member-list-wallet-name" class="wallet-name-display loading">
+                <span class="real-content">...</span>
+                <span class="inline-spinner"></span>
+            </p>
+            
             <div id="member-list-container">
                 <div style="text-align: center; padding: 20px; color: var(--text-light);">
                     <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
