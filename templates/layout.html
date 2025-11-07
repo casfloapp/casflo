@@ -2461,6 +2461,69 @@ function renderTransactionList(filteredTransactions) {
         }
 
 
+/**
+ * Mengambil dan merender daftar anggota
+ */
+async function loadMembers() {
+    const listContainer = document.getElementById('member-list-container');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat anggota...</span></div>`;
+
+    try {
+        const walletId = localStorage.getItem('currentWalletId');
+        const myUser = await fetchApi('/auth/users/me'); // Ambil info user 'saya'
+        const members = await fetchApi(`/wallets/${walletId}/members`);
+
+        listContainer.innerHTML = ''; // Bersihkan spinner
+
+        if (!members || members.length === 0) {
+            listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);">Belum ada anggota.</div>`;
+            return;
+        }
+
+        members.forEach(member => {
+            const item = document.createElement('div');
+            item.className = 'member-item';
+
+            let avatarHtml = '';
+            if (member.avatar_url) {
+                avatarHtml = `<img src="${member.avatar_url}" alt="${member.full_name}">`;
+            } else {
+                avatarHtml = `<span>${member.full_name.charAt(0).toUpperCase()}</span>`;
+            }
+
+            // Tentukan apakah tombol hapus harus nonaktif
+            const isOwner = member.role === 'OWNER';
+            const isMe = member.id === myUser.id;
+            const labelHtml = member.label 
+                ? `<div class="email" style="font-style: italic; color: var(--primary-blue);">${member.label}</div>` 
+                : '';
+
+            // [MODIFIKASI] Tampilkan nama, email, DAN label (jika ada)
+            item.innerHTML = `
+                <div class="avatar">${avatarHtml}</div>
+                <div class="details">
+                    <div class="name">${member.full_name} ${isMe ? '(Anda)' : ''}</div>
+                    <div class="email">${member.email}</div>
+                    ${labelHtml} 
+                </div>
+                <div class="role-info">
+                    <span class="role-tag">${member.role}</span>
+                    <button class="delete-member-btn" ${isOwner ? 'disabled' : ''} onclick="handleDeleteMember('${member.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            listContainer.appendChild(item);
+        });
+
+    } catch (error) {
+        listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat anggota: ${error.message}</div>`;
+    }
+}
+
+
 // === [PEROMBAKAN TOTAL] FUNGSI-FUNGSI HALAMAN ANGGOTA ===
 
 /**
