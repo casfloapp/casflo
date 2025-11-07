@@ -2461,68 +2461,199 @@ function renderTransactionList(filteredTransactions) {
         }
 
 
-/**
- * Mengambil dan merender daftar anggota
- */
-async function loadMembers() {
-    const listContainer = document.getElementById('member-list-container');
-    if (!listContainer) return;
+// === [PEROMBAKAN TOTAL] FUNGSI-FUNGSI HALAMAN ANGGOTA ===
 
-    listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat anggota...</span></div>`;
+/**
+ * [BARU] Mengambil semua buku & anggota, lalu merendernya
+ */
+async function loadAllWalletsAndMembers() {
+    const listSection = document.getElementById('member-list-section');
+    const walletSelect = document.getElementById('invite-wallet');
+    if (!listSection || !walletSelect) return;
+
+    listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat daftar buku & anggota...</span></div>`;
+    walletSelect.innerHTML = '<option value="">Memuat buku...</option>';
+    walletSelect.disabled = true;
 
     try {
-        const walletId = localStorage.getItem('currentWalletId');
         const myUser = await fetchApi('/auth/users/me'); // Ambil info user 'saya'
-        const members = await fetchApi(`/wallets/${walletId}/members`);
+        const wallets = await fetchApi('/wallets'); // Ambil semua buku
 
-        listContainer.innerHTML = ''; // Bersihkan spinner
+        listSection.innerHTML = ''; // Bersihkan spinner
+        walletSelect.innerHTML = ''; // Bersihkan dropdown
+        walletSelect.disabled = false;
 
-        if (!members || members.length === 0) {
-            listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);">Belum ada anggota.</div>`;
+        if (!wallets || wallets.length === 0) {
+            listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);">Anda belum memiliki buku.</div>`;
+            walletSelect.innerHTML = '<option value="">Tidak ada buku</option>';
             return;
         }
 
-        members.forEach(member => {
-            const item = document.createElement('div');
-            item.className = 'member-item';
-
-            let avatarHtml = '';
-            if (member.avatar_url) {
-                avatarHtml = `<img src="${member.avatar_url}" alt="${member.full_name}">`;
-            } else {
-                avatarHtml = `<span>${member.full_name.charAt(0).toUpperCase()}</span>`;
+        // [Loop 1] Isi dropdown form undangan
+        wallets.forEach(wallet => {
+            // Hanya perbolehkan mengundang ke buku dimana kita adalah OWNER atau ADMIN
+            if (wallet.role === 'OWNER' || wallet.role === 'ADMIN') {
+                const option = document.createElement('option');
+                option.value = wallet.id;
+                option.textContent = wallet.name;
+                walletSelect.appendChild(option);
             }
-
-            // Tentukan apakah tombol hapus harus nonaktif
-            const isOwner = member.role === 'OWNER';
-            const isMe = member.id === myUser.id;
-            const labelHtml = member.label 
-                ? `<div class="email" style="font-style: italic; color: var(--primary-blue);">${member.label}</div>` 
-                : '';
-
-            // [MODIFIKASI] Tampilkan nama, email, DAN label (jika ada)
-            item.innerHTML = `
-                <div class="avatar">${avatarHtml}</div>
-                <div class="details">
-                    <div class="name">${member.full_name} ${isMe ? '(Anda)' : ''}</div>
-                    <div class="email">${member.email}</div>
-                    ${labelHtml} 
-                </div>
-                <div class="role-info">
-                    <span class="role-tag">${member.role}</span>
-                    <button class="delete-member-btn" ${isOwner ? 'disabled' : ''} onclick="handleDeleteMember('${member.id}')">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-            listContainer.appendChild(item);
         });
 
+        // [Loop 2] Render daftar anggota untuk setiap buku
+        for (const wallet of wallets) {
+            const card = document.createElement('div');
+            card.className = 'member-list-card';
+
+            const cardContent = document.createElement('div');
+            cardContent.innerHTML = `<h3 class="list-title">${wallet.name}</h3>`;
+
+            // Ambil anggota untuk buku ini
+            const members = await fetchApi(`/wallets/${wallet.id}/members`);
+
+            if (!members || members.length === 0) {
+                cardContent.innerHTML += `<div class="member-item" style="border:none; color: var(--text-light); font-size: 14px;">Hanya Anda.</div>`;
+            } else {
+                members.forEach(member => {
+                    const item = document.createElement('div');
+                    item.className = 'member-item';
+
+                    let avatarHtml = '';
+                    if (member.avatar_url) {
+                        avatarHtml = `<img src="${member.avatar_url}" alt="${member.full_name}">`;
+                    } else {
+                        avatarHtml = `<span>${member.full_name.charAt(0).toUpperCase()}</span>`;
+                    }
+
+                    const isOwner = member.role === 'OWNER';
+                    const isMe = member.id === myUser.id;
+                    const canDelete = (wallet.role === 'OWNER' && !isOwner); // Hanya Owner Buku yg bisa hapus
+
+                    const labelHtml = member.label 
+                        ? `<div class="email" style="font-style: italic; color: var(--primary-blue);">${member.label}</div>` 
+                        : '';
+
+                    item.innerHTML = `
+                        <div class="avatar">${avatarHtml}</div>
+                        <div class="details">
+                            <div class="name">${member.full_name} ${isMe ? '(Anda)' : ''}</div>
+                            <div class="email">${member.email}</div>
+                            ${labelHtml} 
+                        </div>
+                        <div class="role-info">
+                            <span class="role-tag">${member.role}</span>
+                            <button class="delete-member-btn" ${!canDelete ? 'disabled' : ''} onclick="handleDeleteMember('${wallet.id}', '${member.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    cardContent.appendChild(item);
+                });
+            }
+            card.appendChild(cardContent);
+            listSection.appendChild(card);
+        }
+
     } catch (error) {
-        listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat anggota: ${error.message}</div>`;
+        listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat: ${error.message}</div>`;
     }
 }
 
+/**
+ * [BARU] Menangani submit form undangan (versi global)
+ */
+async function handleInviteMember(event) {
+    event.preventDefault();
+    const form = event.target;
+    const email = document.getElementById('invite-email').value;
+    const role = document.getElementById('invite-role').value;
+    const label = document.getElementById('invite-label').value;
+    const walletId = document.getElementById('invite-wallet').value; // <-- [BARU]
+    const messageEl = document.getElementById('invite-message');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    if (!walletId) {
+        messageEl.textContent = 'Silakan pilih buku terlebih dahulu.';
+        messageEl.className = 'error';
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Mengundang...';
+    messageEl.textContent = '';
+    messageEl.className = '';
+
+    try {
+        // [DIUBAH] walletId sekarang dinamis
+        const result = await fetchApi(`/wallets/${walletId}/members`, {
+            method: 'POST',
+            body: JSON.stringify({ email, role, label }) 
+        });
+
+        messageEl.textContent = 'Berhasil mengundang!';
+        messageEl.className = 'success';
+        form.reset(); 
+        loadAllWalletsAndMembers(); // Muat ulang seluruh daftar
+
+    } catch (error) {
+        messageEl.textContent = error.message; // Tampilkan error (misal: "User not found")
+        messageEl.className = 'error';
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Kirim Undangan';
+    }
+}
+
+/**
+ * [BARU] Menghapus anggota (versi global)
+ */
+async function handleDeleteMember(walletId, userId) { // <-- [DIUBAH] Terima walletId
+    if (!userId || !walletId) return;
+
+    // Pesan konfirmasi yang lebih spesifik
+    if (!confirm('Anda yakin ingin menghapus anggota ini dari buku ini?')) {
+        return;
+    }
+
+    const messageEl = document.getElementById('invite-message');
+    messageEl.textContent = 'Menghapus...';
+    messageEl.className = '';
+
+    try {
+        // [DIUBAH] walletId sekarang dinamis
+        await fetchApi(`/wallets/${walletId}/members/${userId}`, {
+            method: 'DELETE'
+        });
+
+        messageEl.textContent = 'Anggota berhasil dihapus.';
+        messageEl.className = 'success';
+        loadAllWalletsAndMembers(); // Muat ulang seluruh daftar
+
+    } catch (error) {
+        messageEl.textContent = `Gagal menghapus: ${error.message}`;
+        messageEl.className = 'error';
+    }
+}
+
+/**
+ * [BARU] Inisialisasi Halaman Anggota (versi global)
+ */
+function initMemberPage() {
+    console.log("Halaman Anggota (Global) diinisialisasi.");
+
+    // Muat semua buku dan anggotanya
+    loadAllWalletsAndMembers();
+
+    // Pasang listener ke form undangan
+    const inviteForm = document.getElementById('invite-member-form');
+    if (inviteForm) {
+        inviteForm.addEventListener('submit', handleInviteMember);
+    }
+
+    attachThemeToggle('.theme-toggle');
+}
+
+// === [AKHIR PEROMBAKAN] ===
 /**
  * Menangani submit form undangan anggota baru
  */

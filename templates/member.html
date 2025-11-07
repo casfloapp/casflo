@@ -94,67 +94,41 @@
     .invite-form .submit-btn:hover {
         background-color: #3a388a;
     }
-    #invite-message {
+    /* [DIUBAH] Pesan invite dipindah ke sini */
+    .invite-form #invite-message {
         font-size: 13px;
         margin-top: 10px;
         text-align: center;
     }
     #invite-message.success { color: var(--income-green); }
     #invite-message.error { color: var(--expense-red); }
-/* ... (CSS yang sudah ada) ... */
-    .member-list-card .list-title {
-        font-weight: 600;
-        color: var(--text-dark);
-        /* margin-bottom: 5px; */ /* <-- [DIUBAH] Hapus/komentari margin-bottom */
-        padding-top: 10px;
-    }
-    
-    /* [BARU] Style untuk nama dompet */
-    .wallet-name-display {
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--text-light);
-        margin-bottom: 15px; /* Jarak ke daftar anggota */
-        padding-top: 2px;
-        min-height: 1.2em; /* Mencegah loncat saat loading */
-    }
-    .wallet-name-display .real-content { display: block; }
-    .wallet-name-display .inline-spinner { display: none; }
-    .wallet-name-display.loading .real-content { display: none; }
-    .wallet-name-display.loading .inline-spinner { 
-        display: inline-block;
-        border-color: var(--primary-blue);
-        border-top-color: transparent;
-        width: 14px;
-        height: 14px;
-    }
-    .dark .wallet-name-display.loading .inline-spinner {
-        border-color: white;
-        border-top-color: transparent;
-    }
-    .dark .wallet-name-display {
-        color: #9ca3af; /* dark:text-gray-400 */
-    }
-    /* [AKHIR BARU] */
+
     /* Gaya untuk daftar anggota */
     .member-list-card {
         background-color: white;
         border-radius: 18px;
         padding: 10px 20px;
         box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+        margin-bottom: 15px; /* Jarak antar buku */
     }
     .dark .member-list-card {
         background-color: #374151; /* dark:bg-gray-700 */
     }
+    /* [BARU] Judul Buku */
     .member-list-card .list-title {
+        font-size: 18px;
         font-weight: 600;
         color: var(--text-dark);
-        margin-bottom: 5px;
         padding-top: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--bg-gray);
+        padding-bottom: 10px;
     }
     .dark .member-list-card .list-title {
         color: white;
+        border-bottom-color: #4b5563;
     }
+    
     .member-item {
         display: flex;
         align-items: center;
@@ -232,7 +206,6 @@
     .dark .member-item .role-info .delete-member-btn:disabled {
         color: #4b5563;
     }
-    
 </style>
 
 <div class="member-page-container">
@@ -246,6 +219,14 @@
     <main class="member-content">
         <form class="invite-form" id="invite-member-form">
             <h3 class="form-title">Undang Anggota Baru</h3>
+            
+            <div class="form-group">
+                <label for="invite-wallet">Pilih Buku</label>
+                <select id="invite-wallet" class="select-field" required>
+                    <option value="">Memuat buku Anda...</option>
+                </select>
+            </div>
+            
             <div class="form-group">
                 <label for="invite-role">Peran</label>
                 <select id="invite-role" class="select-field">
@@ -257,29 +238,18 @@
                 <label for="invite-email">Email Anggota</label>
                 <input type="email" id="invite-email" class="input-field" placeholder="windakaede@gmail.com" required>
             </div>
-
             <div class="form-group">
                 <label for="invite-label">Label (Opsional)</label>
                 <input type="text" id="invite-label" class="input-field" placeholder="cth: Istri, Anak, Bendahara">
             </div>
-            
             <button type="submit" class="submit-btn">Kirim Undangan</button>
             <div id="invite-message"></div>
         </form>
 
-        <div class="member-list-card">
-            <h3 class="list-title">Anggota Saat Ini</h3>
-            
-            <p id="member-list-wallet-name" class="wallet-name-display loading">
-                <span class="real-content">...</span>
-                <span class="inline-spinner"></span>
-            </p>
-            
-            <div id="member-list-container">
-                <div style="text-align: center; padding: 20px; color: var(--text-light);">
-                    <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
-                    <span style="margin-left: 10px;">Memuat anggota...</span>
-                </div>
+        <div id="member-list-section">
+            <div style="text-align: center; padding: 20px; color: var(--text-light);">
+                <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
+                <span style="margin-left: 10px;">Memuat daftar buku & anggota...</span>
             </div>
         </div>
     </main>
