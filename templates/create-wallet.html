@@ -235,7 +235,7 @@
                 // Tampilkan loading
                 errorContainer.classList.add('hidden');
                 spinner.classList.add('active');
-                buttonText.textContent = 'Membuat...';
+                buttonText.style.display = 'none'; // <-- [PERBAIKAN 1] Sembunyikan teks
                 form.querySelector('button').disabled = true;
 
                 try {
@@ -258,14 +258,15 @@
                         throw new Error(result.error?.message || 'Gagal membuat buku');
                     }
 
-                    // Sukses! Arahkan ke halaman utama (atau kembali ke /books)
-                    window.location.href = '/books'; // [DIUBAH] Arahkan kembali ke /books
+                    // Sukses! Arahkan ke halaman /books
+                    window.location.href = '/books'; 
 
                 } catch (error) {
                     errorContainer.textContent = error.message;
                     errorContainer.classList.remove('hidden');
                     // Reset tombol
                     spinner.classList.remove('active');
+                    buttonText.style.display = 'inline'; // <-- [PERBAIKAN 2] Tampilkan teks kembali
                     buttonText.textContent = 'Buat Buku';
                     form.querySelector('button').disabled = false;
                 }
