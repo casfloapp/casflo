@@ -2918,8 +2918,12 @@ async function loadAllWalletsAndMembers() {
                         : '';
 
                     // [PERBAIKAN 1 & 3] Onclick memanggil toggleMemberList BARU
+                    const icon = wallet.icon || '📚'; // Ambil ikon, beri default 📚
                     cardHeader.innerHTML = `
-                        <h3 class="list-title">${wallet.name}</h3>
+                        <div class="book-card-header-title">
+                            <div class="book-icon-box">${icon}</div>
+                            <h3 class="list-title">${wallet.name}</h3>
+                        </div>
                         <div class="book-actions">
                             <button class="book-action-btn collabs" title="Lihat Anggota" onclick="toggleMemberList(this, '${wallet.id}', '${wallet.role}', '${myUser.id}')">
                                 <i class="fas fa-chevron-down"></i>
