@@ -1157,24 +1157,21 @@ const sessionToken = localStorage.getItem('sessionToken');
          * @param {number} value - Angka yang akan diformat
          * @param {'total'|'income'|'expense'} type - Tipe data
          */
-        function formatAndSetDisplay(wrapper, element, value, type) {
+       function formatAndSetDisplay(wrapper, element, value, type) {
             if (!element || !wrapper) return;
 
-            let sign = '';
-            // Tanda minus hanya untuk pengeluaran atau total negatif
-            if (type === 'expense' || (type === 'total' && value < 0)) {
-                sign = '-';
-            }
+            // [PERBAIKAN] Logika 'sign' dihapus
             
-            const amountString = `${sign}Rp${Math.abs(value).toLocaleString('id-ID')}`;
+            // [PERBAIKAN] Tanda ${sign} dihapus dari sini
+            const amountString = `Rp${Math.abs(value).toLocaleString('id-ID')}`;
             
-            // Atur font size dinamis
-            if (amountString.length > 13) { // > 1 Miliar (misal: -Rp100.000.000)
+            // [PERBAIKAN] Ukuran font diperkecil agar muat ratusan juta
+            if (amountString.length > 13) { // > 100 Juta (cth: Rp100.000.000)
+                element.style.fontSize = "12px";
+            } else if (amountString.length > 10) { // > 1 Juta (cth: Rp1.000.000)
                 element.style.fontSize = "13px";
-            } else if (amountString.length > 10) { // > 10 Juta (misal: -Rp10.000.000)
-                element.style.fontSize = "14px";
             } else {
-                element.style.fontSize = "16px"; // default
+                element.style.fontSize = "14px"; // Ukuran default baru
             }
 
             // Atur warna
