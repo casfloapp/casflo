@@ -1424,7 +1424,7 @@ const sessionToken = localStorage.getItem('sessionToken');
             const amountEl = document.getElementById('tx-modal-amount');
             // Pastikan amount adalah angka sebelum toLocaleString
             const amount = Number(tx.amount) || 0;
-            const amountString = `${tx.type === 'expense' ? '-' : ''}Rp${amount.toLocaleString('id-ID')}`;
+            const amountString = `${tx.type === 'expense' ? '-' : '+'}Rp${amount.toLocaleString('id-ID')}`;
             amountEl.textContent = amountString;
             amountEl.style.color = tx.type === 'expense' ? 'var(--expense-red)' : 'var(--income-green)';
 
