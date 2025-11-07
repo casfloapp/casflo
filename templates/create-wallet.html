@@ -1,5 +1,5 @@
 <style>
-            /* [BARU] CSS untuk Halaman Create Wallet */
+        /* CSS untuk Halaman Create Wallet */
         .create-wallet-page-container {
             display: flex;
             flex-direction: column;
@@ -106,8 +106,47 @@
             height: 1rem;
             animation: spin 1s ease-in-out infinite;
         }
-        /* [AKHIR CSS BARU] */
+
+        /* [BARU] Style untuk pilihan Icon */
+        .icon-selection-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .icon-input {
+            width: 60px !important;
+            text-align: center;
+            font-size: 24px !important;
+            padding: 5px 10px !important;
+        }
+        .emoji-presets {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .emoji-btn {
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-gray);
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .dark .emoji-btn {
+            background-color: #4b5563;
+            border-color: #374151;
+        }
+        .emoji-btn:hover {
+            background-color: var(--light-purple);
+            border-color: var(--primary-blue);
+        }
 </style>
+
 <div class="create-wallet-page-container">
 
     <header class="create-wallet-header">
@@ -126,6 +165,21 @@
             <h3 class="form-title">Detail Buku Baru</h3>
             
             <div class="form-group">
+                <label for="wallet-icon">Ikon</label>
+                <div class="icon-selection-container">
+                    <input class="input-field icon-input" id="wallet-icon" value="📚" maxlength="2" required />
+                    <div class="emoji-presets">
+                        <button type="button" class="emoji-btn" onclick="selectWalletIcon('🏠')">🏠</button>
+                        <button type="button" class="emoji-btn" onclick="selectWalletIcon('💼')">💼</button>
+                        <button type="button" class="emoji-btn" onclick="selectWalletIcon('🎓')">🎓</button>
+                        <button type="button" class="emoji-btn" onclick="selectWalletIcon('🛒')">🛒</button>
+                        <button type="button" class="emoji-btn" onclick="selectWalletIcon('✈️')">✈️</button>
+                        <button type="button" class="emoji-btn" onclick="selectWalletIcon('❤️')">❤️</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label for="wallet-name">Nama Buku</label>
                 <input class="input-field" placeholder="Contoh: Buku Pribadi, Kantor, dll." id="wallet-name" value="" required />
             </div>
@@ -141,3 +195,9 @@
         </form>
     </main>
 </div>
+
+<script>
+    window.selectWalletIcon = function(icon) {
+        document.getElementById('wallet-icon').value = icon;
+    }
+</script>

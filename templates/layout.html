@@ -3180,6 +3180,7 @@ async function loadAllWalletsAndMembers() {
                 e.preventDefault();
                 
                 const walletName = document.getElementById('wallet-name').value;
+                const walletIcon = document.getElementById('wallet-icon').value || '📚'; // [BARU] Ambil nilai ikon
                 const moduleType = document.getElementById('module-type').value;
 
                 // Tampilkan loading
@@ -3195,6 +3196,7 @@ async function loadAllWalletsAndMembers() {
                         method: 'POST',
                         body: JSON.stringify({
                             name: walletName,
+                            icon: walletIcon,
                             moduleType: moduleType
                         })
                     });
