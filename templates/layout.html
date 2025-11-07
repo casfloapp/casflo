@@ -2255,7 +2255,7 @@ function renderTransactionList(filteredTransactions) {
                 const listHeader = document.createElement('div');
                 listHeader.className = 'list-header';
                 
-                listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: Rp${(totalExpenseOnDate).toLocaleString('id-ID')}</div>`;
+                listHeader.innerHTML = `<div class="date-info"><i class="fas fa-chevron-down fa-xs"></i><span>${date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span></div><div class="summary">Pengeluaran: <span class="data-maskable-amount expense">Rp${(totalExpenseOnDate).toLocaleString('id-ID')}</span></div>`;
                 listHeader.onclick = () => toggleGroupCollapse(dateKey, listHeader);
                 
                 const itemsContainer = document.createElement('div');
