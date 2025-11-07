@@ -594,6 +594,10 @@
         .dark .balance-masked .transaction-item .info .amount[data-masked-color="expense"]::before {
             color: var(--expense-red);
         }
+        .balance-masked .transaction-list .list-header .summary .data-maskable-amount::before {
+            left: auto; /* Hapus 'left: 0' */
+            right: 0;   /* Terapkan 'right: 0' */
+        }
         /* [BARU] CSS untuk Modal Detail Transaksi */
         .tx-modal-overlay {
             position: fixed;
