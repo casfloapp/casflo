@@ -3101,6 +3101,63 @@ async function loadAllWalletsAndMembers() {
                 inviteForm.addEventListener('submit', handleModalInviteSubmit);
             }
         }
+
+        // [BARU] Fungsi inisialisasi untuk create-wallet.html
+        function initCreateWalletPage() {
+            console.log("Halaman Create Wallet diinisialisasi.");
+            const form = document.getElementById('create-wallet-form');
+            if (!form) return; // Keluar jika form tidak ditemukan
+
+            const errorContainer = document.getElementById('error-container');
+            const spinner = document.getElementById('spinner');
+            const buttonText = document.getElementById('button-text');
+            
+            // 'fetchApi' sudah global, jadi kita bisa langsung pakai
+            // 'token' dan 'apiUrl' tidak perlu dideklarasi ulang, sudah di handle 'fetchApi'
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                
+                const walletName = document.getElementById('wallet-name').value;
+                const moduleType = document.getElementById('module-type').value;
+
+                // Tampilkan loading
+                if (errorContainer) errorContainer.classList.add('hidden');
+                if (spinner) spinner.classList.add('active');
+                if (buttonText) buttonText.style.display = 'none'; // Sembunyikan teks
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn) submitBtn.disabled = true;
+
+                try {
+                    // Gunakan fetchApi global
+                    const newWallet = await fetchApi('/wallets', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            name: walletName,
+                            moduleType: moduleType
+                        })
+                    });
+
+                    // Sukses! Arahkan ke halaman /books
+                    navigate('/books'); 
+
+                } catch (error) {
+                    if (errorContainer) {
+                        errorContainer.textContent = error.message;
+                        errorContainer.classList.remove('hidden');
+                    }
+                    // Reset tombol
+                    if (spinner) spinner.classList.remove('active');
+                    if (buttonText) {
+                        buttonText.style.display = 'inline';
+                        buttonText.textContent = 'Buat Buku';
+                    }
+                    if (submitBtn) submitBtn.disabled = false;
+                }
+            };
+            
+            form.addEventListener('submit', handleSubmit);
+        }
 // === [AKHIR FUNGSI-FUNGSI BARU] ===
 /**
  * [FUNGSI BARU] Untuk mengubah nama buku (Wallet)
@@ -3280,6 +3337,7 @@ function initBooksPage() {
             else if (path === '/analysis') { initAnalysisPage(); }
             // [DIUBAH]
             else if (path === '/books') { initBooksPage(); } // <-- Ganti dari /member
+            else if (path === '/create-wallet') { initCreateWalletPage(); }
         }
 
         function executePageScript(newContentElement) {
