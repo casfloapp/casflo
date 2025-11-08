@@ -940,7 +940,6 @@
             background-color: var(--expense-red);
             color: white;
         }
-        /* [AKHIR CSS BARU] */
         .form-card .submit-btn:disabled {
             background-color: #9ca3af;
             cursor: not-allowed;
@@ -1122,7 +1121,7 @@
 </div>
     </div>
 
-    <div id="edit-book-modal-overlay" class="tx-modal-overlay" onclick="closeEditBookModal()">
+<div id="edit-book-modal-overlay" class="tx-modal-overlay" onclick="closeEditBookModal()">
         <div class="tx-modal-content" onclick="event.stopPropagation()">
             <div class="tx-modal-header">
                 <h3 id="edit-book-modal-title" style="font-weight: 600;">Edit Buku</h3>
@@ -1163,7 +1162,6 @@
             </div>
         </div>
     </div>
-
 <script>
 const sessionToken = localStorage.getItem('sessionToken');
         if (!sessionToken) {
