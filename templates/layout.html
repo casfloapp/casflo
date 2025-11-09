@@ -1042,7 +1042,6 @@
             background-color: var(--light-purple);
             border-color: var(--primary-blue);
         }
-        /* [PERBAIKAN] TAMBAHKAN CSS INI */
         .loading-spinner { display: none; }
         .loading-spinner.active {
             display: inline-block;
@@ -3078,19 +3077,18 @@ function renderTransactionList(filteredTransactions) {
             document.getElementById('edit-book-icon').value = icon;
         }
 
-        window.selectEditIcon = function(icon) {
-            document.getElementById('edit-book-icon').value = icon;
-        }
-
-        // [PERBAIKAN] TAMBAHKAN FUNGSI INI DARI create-wallet.html
         window.selectWalletIcon = function(icon) {
             const input = document.getElementById('wallet-icon');
             if (input) {
                 input.value = icon;
             }
         }
+        
+        /* [BARU] Helper untuk tombol emoji di modal Edit */
+        window.selectEditIcon = function(icon) {
+            document.getElementById('edit-book-icon').value = icon;
+        }
 
-        /* [BARU] Fungsi untuk membuka modal Edit Buku */
         function openEditBookModal(walletId, currentName, currentIcon) {
             const modal = document.getElementById('edit-book-modal-overlay');
             if (!modal) return;
@@ -3106,13 +3104,12 @@ function renderTransactionList(filteredTransactions) {
             // Reset tombol submit
             const submitBtn = modal.querySelector('button[type="submit"]');
             submitBtn.disabled = false;
-            modal.querySelector('#edit-book-btn-text').style.display = 'inline';
             
-            // Pastikan spinner ada sebelum mengakses classList
+            const btnText = modal.querySelector('#edit-book-btn-text');
+            if (btnText) btnText.style.display = 'inline';
+            
             const spinner = modal.querySelector('#edit-book-spinner');
-            if (spinner) {
-                spinner.classList.remove('active');
-            }
+            if (spinner) spinner.classList.remove('active');
 
             modal.classList.add('visible');
         }
@@ -3125,24 +3122,26 @@ function renderTransactionList(filteredTransactions) {
             }
         }
 
-        /* [BARU] Fungsi untuk submit edit buku (pengganti handleRenameBook) */
+        /* [BARU] Fungsi untuk submit edit buku */
         async function handleModalEditSubmit(event) {
             event.preventDefault();
+            const form = event.target;
             
             const walletId = document.getElementById('edit-book-id').value;
             const newName = document.getElementById('edit-book-name').value;
             const newIcon = document.getElementById('edit-book-icon').value || '📚';
             
             const messageEl = document.getElementById('modal-edit-book-message');
-            // [PERBAIKAN] Ambil elemen baru
-            const submitBtn = document.getElementById('edit-book-submit-btn'); 
-            const spinnerContainer = document.getElementById('edit-book-spinner-container');
+            const submitBtn = form.querySelector('button[type="submit"]'); // Tombolnya
+            const btnText = document.getElementById('edit-book-btn-text'); // Teks di dalam tombol
+            const btnSpinner = document.getElementById('edit-book-spinner'); // Spinner di dalam tombol
 
-            if (!walletId || !newName || !submitBtn || !spinnerContainer) return;
+            if (!walletId || !newName) return;
 
-            // [PERBAIKAN] Sembunyikan tombol, tampilkan spinner
-            submitBtn.style.display = 'none';
-            spinnerContainer.style.display = 'block';
+            // Tampilkan loading (Spinner akan muncul karena CSS dari Langkah 1)
+            submitBtn.disabled = true;
+            if (btnText) btnText.style.display = 'none';
+            if (btnSpinner) btnSpinner.classList.add('active'); 
             messageEl.textContent = '';
             messageEl.className = '';
 
@@ -3161,13 +3160,14 @@ function renderTransactionList(filteredTransactions) {
                 messageEl.className = 'success';
                 loadAllWalletsAndMembers(); // Muat ulang daftar di background
                 
-                // Biarkan spinner berputar, lalu tutup modal
+                // Biarkan spinner tetap berputar, lalu tutup modal
                 setTimeout(() => {
                     closeEditBookModal();
                     
-                    // Reset tombol SETELAH modal ditutup (untuk bukaan berikutnya)
-                    submitBtn.style.display = 'block';
-                    spinnerContainer.style.display = 'none';
+                    // Reset tombol SETELAH modal ditutup
+                    submitBtn.disabled = false;
+                    if (btnText) btnText.style.display = 'inline';
+                    if (btnSpinner) btnSpinner.classList.remove('active');
                 }, 1000); // Tutup setelah 1 detik
 
             } catch (error) {
@@ -3175,9 +3175,10 @@ function renderTransactionList(filteredTransactions) {
                 messageEl.textContent = `Gagal memperbarui: ${error.message}`;
                 messageEl.className = 'error';
                 
-                // Kembalikan tombol jika gagal
-                submitBtn.style.display = 'block';
-                spinnerContainer.style.display = 'none';
+                // Reset tombol jika gagal
+                submitBtn.disabled = false;
+                if (btnText) btnText.style.display = 'inline';
+                if (btnSpinner) btnSpinner.classList.remove('active');
             }
         }
 
