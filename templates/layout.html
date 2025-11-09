@@ -3155,7 +3155,7 @@ function renderTransactionList(filteredTransactions) {
                 
                 // 4. Atur timer untuk menutup modal & reset tombol
                 setTimeout(() => {
-                    closeEditBookModal();
+                closeEditBookModal();
 
                     // 5. Reset tombol SETELAH modal siap ditutup
                     submitBtn.disabled = false;
@@ -3398,7 +3398,7 @@ function renderTransactionList(filteredTransactions) {
             }
         }
 
-        /* [BARU] Fungsi untuk submit edit buku */
+/* [GANTI FUNGSI INI] Fungsi untuk submit edit buku */
         async function handleModalEditSubmit(event) {
             event.preventDefault();
             const form = event.target;
@@ -3416,8 +3416,8 @@ function renderTransactionList(filteredTransactions) {
 
             // Tampilkan loading
             submitBtn.disabled = true;
-            if (btnText) btnText.style.display = 'none';
-            if (btnSpinner) btnSpinner.classList.add('active'); // Pastikan 'active'
+            btnText.style.display = 'none';
+            if (btnSpinner) btnSpinner.classList.add('active'); // Tampilkan spinner
             messageEl.textContent = '';
             messageEl.className = '';
 
@@ -3427,27 +3427,36 @@ function renderTransactionList(filteredTransactions) {
                     method: 'PUT',
                     body: JSON.stringify({ 
                         name: newName,
-                        icon: newIcon // Kirim ikon yang baru
+                        icon: newIcon 
                     }) 
                 });
 
+                // SUKSES:
                 messageEl.textContent = 'Buku berhasil diperbarui.';
                 messageEl.className = 'success';
-                loadAllWalletsAndMembers(); // Muat ulang daftar buku di belakang
+                loadAllWalletsAndMembers(); // Muat ulang daftar di background
                 
-                // Tutup modal setelah 1.5 detik
-                setTimeout(closeEditBookModal, 1500);
+                // Biarkan spinner tetap berputar, lalu tutup modal & reset tombol
+                setTimeout(() => {
+                    closeEditBookModal();
+                    
+                    // Reset tombol SETELAH modal ditutup
+                    submitBtn.disabled = false;
+                    btnText.style.display = 'inline';
+                    if (btnSpinner) btnSpinner.classList.remove('active');
+                }, 1000); // Tutup setelah 1 detik
 
             } catch (error) {
+                // GAGAL:
                 messageEl.textContent = `Gagal memperbarui: ${error.message}`;
                 messageEl.className = 'error';
+                
                 // Reset tombol jika gagal
                 submitBtn.disabled = false;
-                if (btnText) btnText.style.display = 'inline';
+                btnText.style.display = 'inline';
                 if (btnSpinner) btnSpinner.classList.remove('active');
             }
         }
-
         /* [BARU] Helper untuk tombol emoji di modal Edit */
         window.selectEditIcon = function(icon) {
             document.getElementById('edit-book-icon').value = icon;
