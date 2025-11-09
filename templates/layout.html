@@ -1042,6 +1042,7 @@
             background-color: var(--light-purple);
             border-color: var(--primary-blue);
         }
+        /* [PERBAIKAN] TAMBAHKAN CSS INI */
         .loading-spinner { display: none; }
         .loading-spinner.active {
             display: inline-block;
@@ -1211,11 +1212,14 @@
                                style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: var(--bg-gray); font-size: 14px;">
                     </div>
                     
-                    <button type="submit" class="submit-btn" 
-                            style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;">
-                        <span class="loading-spinner" id="edit-book-spinner"></span>
-                        <span id="edit-book-btn-text">Simpan Perubahan</span>
+                    <button type="submit" class="submit-btn" id="edit-book-submit-btn" 
+                        style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                       <span id="edit-book-btn-text">Simpan Perubahan</span>
                     </button>
+                    
+                    <div id="edit-book-spinner-container" style="display: none; text-align: center; padding-top: 12px;">
+                        <span class="loading-spinner active" style="border-top-color: var(--primary-blue); border-left-color: var(--primary-blue); border-right-color: transparent; border-bottom-color: transparent; width: 1.5rem; height: 1.5rem;"></span>
+                    </div>
                     
                     <div id="modal-edit-book-message" style="font-size: 13px; margin-top: 10px; text-align: center;"></div>
                 </form>
@@ -3124,64 +3128,59 @@ function renderTransactionList(filteredTransactions) {
         /* [BARU] Fungsi untuk submit edit buku (pengganti handleRenameBook) */
         async function handleModalEditSubmit(event) {
             event.preventDefault();
-            const form = event.target;
             
             const walletId = document.getElementById('edit-book-id').value;
             const newName = document.getElementById('edit-book-name').value;
             const newIcon = document.getElementById('edit-book-icon').value || '📚';
             
             const messageEl = document.getElementById('modal-edit-book-message');
-            const submitBtn = form.querySelector('button[type="submit"]');
-            const btnText = document.getElementById('edit-book-btn-text');
-            const btnSpinner = document.getElementById('edit-book-spinner');
+            // [PERBAIKAN] Ambil elemen baru
+            const submitBtn = document.getElementById('edit-book-submit-btn'); 
+            const spinnerContainer = document.getElementById('edit-book-spinner-container');
 
-            if (!walletId || !newName) return;
+            if (!walletId || !newName || !submitBtn || !spinnerContainer) return;
 
-            // Tampilkan loading
-            submitBtn.disabled = true;
-            btnText.style.display = 'none';
-            if (btnSpinner) btnSpinner.classList.add('active');
+            // [PERBAIKAN] Sembunyikan tombol, tampilkan spinner
+            submitBtn.style.display = 'none';
+            spinnerContainer.style.display = 'block';
             messageEl.textContent = '';
             messageEl.className = '';
 
-           try {
+            try {
                 // Kirim data (nama DAN ikon) ke API
                 await fetchApi(`/wallets/${walletId}`, {
                     method: 'PUT',
                     body: JSON.stringify({ 
                         name: newName,
-                        icon: newIcon // Kirim ikon yang baru
+                        icon: newIcon 
                     }) 
                 });
 
-                // 1. Tampilkan pesan sukses
+                // SUKSES:
                 messageEl.textContent = 'Buku berhasil diperbarui.';
                 messageEl.className = 'success';
+                loadAllWalletsAndMembers(); // Muat ulang daftar di background
                 
-                // 2. Muat ulang daftar di background
-                loadAllWalletsAndMembers(); 
-                
-                // 3. BIARKAN SPINNER TETAP AKTIF (Jangan reset tombol di sini)
-                
-                // 4. Atur timer untuk menutup modal & reset tombol
+                // Biarkan spinner berputar, lalu tutup modal
                 setTimeout(() => {
-                closeEditBookModal();
-
-                    // 5. Reset tombol SETELAH modal siap ditutup
-                    submitBtn.disabled = false;
-                    btnText.style.display = 'inline';
-                    if (btnSpinner) btnSpinner.classList.remove('active');
+                    closeEditBookModal();
+                    
+                    // Reset tombol SETELAH modal ditutup (untuk bukaan berikutnya)
+                    submitBtn.style.display = 'block';
+                    spinnerContainer.style.display = 'none';
                 }, 1000); // Tutup setelah 1 detik
 
             } catch (error) {
-                // JIKA GAGAL, langsung reset tombol dan tampilkan error
+                // GAGAL:
                 messageEl.textContent = `Gagal memperbarui: ${error.message}`;
                 messageEl.className = 'error';
-                submitBtn.disabled = false;
-                btnText.style.display = 'inline';
-                if (btnSpinner) btnSpinner.classList.remove('active');
+                
+                // Kembalikan tombol jika gagal
+                submitBtn.style.display = 'block';
+                spinnerContainer.style.display = 'none';
             }
         }
+
         async function handleDeleteBook(walletId, userRoleInWallet) {
             if (userRoleInWallet !== 'OWNER') {
                 showDialog({ title: 'Aksi Ditolak', text: 'Hanya OWNER yang dapat menghapus buku.' });
