@@ -3134,7 +3134,7 @@ function renderTransactionList(filteredTransactions) {
             messageEl.textContent = '';
             messageEl.className = '';
 
-            try {
+           try {
                 // Kirim data (nama DAN ikon) ke API
                 await fetchApi(`/wallets/${walletId}`, {
                     method: 'PUT',
@@ -3144,17 +3144,29 @@ function renderTransactionList(filteredTransactions) {
                     }) 
                 });
 
+                // 1. Tampilkan pesan sukses
                 messageEl.textContent = 'Buku berhasil diperbarui.';
                 messageEl.className = 'success';
-                loadAllWalletsAndMembers(); // Muat ulang daftar buku di belakang
                 
-                // Tutup modal setelah 1.5 detik
-                setTimeout(closeEditBookModal, 1500);
+                // 2. Muat ulang daftar di background
+                loadAllWalletsAndMembers(); 
+                
+                // 3. BIARKAN SPINNER TETAP AKTIF (Jangan reset tombol di sini)
+                
+                // 4. Atur timer untuk menutup modal & reset tombol
+                setTimeout(() => {
+                    closeEditBookModal();
+
+                    // 5. Reset tombol SETELAH modal siap ditutup
+                    submitBtn.disabled = false;
+                    btnText.style.display = 'inline';
+                    if (btnSpinner) btnSpinner.classList.remove('active');
+                }, 1000); // Tutup setelah 1 detik
 
             } catch (error) {
+                // JIKA GAGAL, langsung reset tombol dan tampilkan error
                 messageEl.textContent = `Gagal memperbarui: ${error.message}`;
                 messageEl.className = 'error';
-                // Reset tombol jika gagal
                 submitBtn.disabled = false;
                 btnText.style.display = 'inline';
                 if (btnSpinner) btnSpinner.classList.remove('active');
