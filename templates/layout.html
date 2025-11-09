@@ -3060,8 +3060,20 @@ function renderTransactionList(filteredTransactions) {
             }
         }
 
-window.selectEditIcon = function(icon) {
+        window.selectEditIcon = function(icon) {
             document.getElementById('edit-book-icon').value = icon;
+        }
+
+        window.selectEditIcon = function(icon) {
+            document.getElementById('edit-book-icon').value = icon;
+        }
+
+        // [PERBAIKAN] TAMBAHKAN FUNGSI INI DARI create-wallet.html
+        window.selectWalletIcon = function(icon) {
+            const input = document.getElementById('wallet-icon');
+            if (input) {
+                input.value = icon;
+            }
         }
 
         /* [BARU] Fungsi untuk membuka modal Edit Buku */
@@ -3423,7 +3435,7 @@ window.selectEditIcon = function(icon) {
                 if (btnSpinner) btnSpinner.classList.remove('active');
             }
         }
-        
+
         /* [BARU] Helper untuk tombol emoji di modal Edit */
         window.selectEditIcon = function(icon) {
             document.getElementById('edit-book-icon').value = icon;
@@ -3496,8 +3508,13 @@ window.selectEditIcon = function(icon) {
                 messageEl.className = 'success';
                 loadAllWalletsAndMembers(); // Muat ulang daftar buku di belakang
                 
-                // Tutup modal setelah 1.5 detik
-                setTimeout(closeEditBookModal, 1500);
+                // [PERBAIKAN 1] Reset tombol agar tidak "blank"
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                if (btnSpinner) btnSpinner.classList.remove('active');
+                
+                // [PERBAIKAN 2] Tutup modal lebih cepat (0.75 detik)
+                setTimeout(closeEditBookModal, 750); 
 
             } catch (error) {
                 messageEl.textContent = `Gagal memperbarui: ${error.message}`;
@@ -3505,7 +3522,7 @@ window.selectEditIcon = function(icon) {
                 // Reset tombol jika gagal
                 submitBtn.disabled = false;
                 btnText.style.display = 'inline';
-                btnSpinner.classList.remove('active');
+                if (btnSpinner) btnSpinner.classList.remove('active');
             }
         }
 
