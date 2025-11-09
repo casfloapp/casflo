@@ -1042,6 +1042,16 @@
             background-color: var(--light-purple);
             border-color: var(--primary-blue);
         }
+        .loading-spinner { display: none; }
+        .loading-spinner.active {
+            display: inline-block;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            width: 1rem; /* 16px */
+            height: 1rem; /* 16px */
+            animation: spin 1s ease-in-out infinite;
+        }
 
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
