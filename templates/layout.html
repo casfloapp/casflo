@@ -2814,114 +2814,76 @@ function renderTransactionList(filteredTransactions) {
 // === [FUNGSI-FUNGSI BARU UNTUK books.html] ===
 
 /**
- * [DIUBAH] Mengambil semua buku & anggota, lalu merendernya dengan tombol aksi
- */
-async function loadAllWalletsAndMembers() {
-    const listSection = document.getElementById('book-list-section');
-    const walletSelect = document.getElementById('invite-wallet');
-    if (!listSection || !walletSelect) return;
+         * [DIUBAH] Mengambil HANYA BUKU (bukan anggota)
+         */
+        async function loadAllWalletsAndMembers() {
+            const listSection = document.getElementById('book-list-section');
+            if (!listSection) return;
 
-    listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat daftar buku & anggota...</span></div>`;
-    walletSelect.innerHTML = '<option value="">Memuat buku...</option>';
-    walletSelect.disabled = true;
+            listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat daftar buku...</span></div>`;
 
-    try {
-        const myUser = await fetchApi('/auth/users/me'); // Ambil info user 'saya'
-        const wallets = await fetchApi('/wallets'); // Ambil semua buku
+            try {
+                const myUser = await fetchApi('/auth/users/me'); 
+                const wallets = await fetchApi('/wallets'); 
 
-        listSection.innerHTML = ''; // Bersihkan spinner
-        walletSelect.innerHTML = ''; // Bersihkan dropdown
-        walletSelect.disabled = false;
+                listSection.innerHTML = ''; // Bersihkan spinner
 
-        if (!wallets || wallets.length === 0) {
-            listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);">Anda belum memiliki buku.</div>`;
-            walletSelect.innerHTML = '<option value="">Tidak ada buku</option>';
-            return;
-        }
+                if (!wallets || wallets.length === 0) {
+                    listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);">Anda belum memiliki buku.</div>`;
+                    return;
+                }
+                
+                // Render daftar buku
+                for (const wallet of wallets) {
+                    const card = document.createElement('div');
+                    card.className = 'book-list-card'; 
 
-        // [Loop 1] Isi dropdown form undangan
-        wallets.forEach(wallet => {
-            // Hanya perbolehkan mengundang ke buku dimana kita adalah OWNER atau ADMIN
-            if (wallet.role === 'OWNER' || wallet.role === 'ADMIN') {
-                const option = document.createElement('option');
-                option.value = wallet.id;
-                option.textContent = wallet.name;
-                walletSelect.appendChild(option);
-            }
-        });
-
-        // [Loop 2] Render daftar anggota untuk setiap buku
-        for (const wallet of wallets) {
-            const card = document.createElement('div');
-            card.className = 'book-list-card'; // CSS baru Anda
-
-            // [PERUBAHAN KUNCI] Menambahkan header kartu dengan tombol
-            const cardHeader = document.createElement('div');
-            cardHeader.className = 'book-card-header';
-            cardHeader.innerHTML = `
-                <h3 class="list-title">${wallet.name}</h3>
-                <div class="book-actions">
-                    <button class="book-action-btn" onclick="handleRenameBook('${wallet.id}', '${wallet.name}')"><i class="fas fa-edit"></i></button>
-                    <button class="book-action-btn delete" onclick="handleDeleteBook('${wallet.id}', '${wallet.role}')"><i class="fas fa-trash"></i></button>
-                </div>
-            `;
-            
-            const memberListDiv = document.createElement('div');
-            memberListDiv.className = 'book-member-list';
-
-            // Ambil anggota untuk buku ini
-            const members = await fetchApi(`/wallets/${wallet.id}/members`);
-
-            if (!members || members.length === 0) {
-                memberListDiv.innerHTML += `<div class="member-item" style="border:none; color: var(--text-light); font-size: 14px;">Hanya Anda.</div>`;
-            } else {
-                members.forEach(member => {
-                    const item = document.createElement('div');
-                    item.className = 'member-item';
-
-                    let avatarHtml = '';
-                    if (member.avatar_url) {
-                        avatarHtml = `<img src="${member.avatar_url}" alt="${member.full_name}">`;
-                    } else {
-                        avatarHtml = `<span>${member.full_name.charAt(0).toUpperCase()}</span>`;
-                    }
-
-                    const isOwner = member.role === 'OWNER';
-                    const isMe = member.id === myUser.id;
-                    // Hanya Owner Buku (Anda) yang bisa hapus anggota LAIN
-                    const canDelete = (wallet.role === 'OWNER' && !isOwner); 
-
-                    const labelHtml = member.label 
-                        ? `<div class="email" style="font-style: italic; color: var(--primary-blue);">${member.label}</div>` 
+                    const cardHeader = document.createElement('div');
+                    cardHeader.className = 'book-card-header';
+                    
+                    const canInvite = (wallet.role === 'OWNER' || wallet.role === 'ADMIN');
+                    
+                    const inviteBtnHtml = canInvite 
+                        ? `<button class="book-action-btn invite" title="Undang Anggota" onclick="openInviteModal('${wallet.id}', '${wallet.name}')"><i class="fas fa-user-plus"></i></button>`
                         : '';
 
-                    item.innerHTML = `
-                        <div class="avatar">${avatarHtml}</div>
-                        <div class="details">
-                            <div class="name">${member.full_name} ${isMe ? '(Anda)' : ''}</div>
-                            <div class="email">${member.email}</div>
-                            ${labelHtml} 
+                    // [PERBAIKAN 1 & 3] Onclick memanggil toggleMemberList BARU
+                    const icon = wallet.icon || '📚'; // Ambil ikon, beri default 📚
+                    
+                    // [INI BAGIAN YANG DIPERBAIKI]
+                    // Sekarang tombol edit memanggil 'openEditBookModal' dengan 3 argumen
+                    cardHeader.innerHTML = `
+                        <div class="book-card-header-title">
+                            <div class="book-icon-box">${icon}</div>
+                            <h3 class="list-title">${wallet.name}</h3>
                         </div>
-                        <div class="role-info">
-                            <span class="role-tag">${member.role}</span>
-                            <button class="delete-member-btn" ${!canDelete ? 'disabled' : ''} onclick="handleDeleteMember('${wallet.id}', '${member.id}')">
-                                <i class="fas fa-trash"></i>
+                        <div class="book-actions">
+                            <button class="book-action-btn collabs" title="Lihat Anggota" onclick="toggleMemberList(this, '${wallet.id}', '${wallet.role}', '${myUser.id}')">
+                                <i class="fas fa-chevron-down"></i>
                             </button>
+                            ${inviteBtnHtml}
+                            <button class="book-action-btn" title="Ubah Nama" onclick="openEditBookModal('${wallet.id}', '${wallet.name}', '${icon}')"><i class="fas fa-edit"></i></button>
+                            <button class="book-action-btn delete" title="Hapus Buku" onclick="handleDeleteBook('${wallet.id}', '${wallet.role}')"><i class="fas fa-trash"></i></button>
                         </div>
                     `;
-                    memberListDiv.appendChild(item);
-                });
+                    // [AKHIR BAGIAN YANG DIPERBAIKI]
+                    
+                    const memberListDiv = document.createElement('div');
+                    memberListDiv.className = 'book-member-list'; // (hidden by default)
+                    memberListDiv.innerHTML = `
+                        <div class="member-list-loader" style="text-align: center; padding: 15px;">
+                            <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
+                        </div>`;
+
+                    card.appendChild(cardHeader); 
+                    card.appendChild(memberListDiv);
+                    listSection.appendChild(card);
+                }
+
+            } catch (error) {
+                listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat buku: ${error.message}</div>`;
             }
-            card.appendChild(cardHeader); // Tambahkan header DULU
-            card.appendChild(memberListDiv); // Lalu tambahkan daftar anggota
-            listSection.appendChild(card);
         }
-
-    } catch (error) {
-        listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat: ${error.message}</div>`;
-    }
-}
-
 // === [FUNGSI-FUNGSI BARU UNTUK books.html] ===
 
         // [BARU] Fungsi untuk membuka modal undangan
@@ -3372,6 +3334,96 @@ window.selectEditIcon = function(icon) {
                 editForm.addEventListener('submit', handleModalEditSubmit);
             }
         }
+        
+        /* [BARU] Helper untuk tombol emoji di modal Edit */
+        window.selectEditIcon = function(icon) {
+            document.getElementById('edit-book-icon').value = icon;
+        }
+
+        /* [BARU] Fungsi untuk membuka modal Edit Buku */
+        function openEditBookModal(walletId, currentName, currentIcon) {
+            const modal = document.getElementById('edit-book-modal-overlay');
+            if (!modal) return;
+
+            // Isi form dengan data yang ada
+            document.getElementById('edit-book-id').value = walletId;
+            document.getElementById('edit-book-name').value = currentName;
+            document.getElementById('edit-book-icon').value = currentIcon || '📚';
+            
+            // Bersihkan pesan error/sukses
+            document.getElementById('modal-edit-book-message').textContent = '';
+            
+            // Reset tombol submit
+            const submitBtn = modal.querySelector('button[type="submit"]');
+            submitBtn.disabled = false;
+            
+            const btnText = modal.querySelector('#edit-book-btn-text');
+            if (btnText) btnText.style.display = 'inline';
+            
+            const spinner = modal.querySelector('#edit-book-spinner');
+            if (spinner) spinner.classList.remove('active'); // Pastikan spinner 'active' bukan 'display: none'
+
+            modal.classList.add('visible');
+        }
+
+        /* [BARU] Fungsi untuk menutup modal Edit Buku */
+        function closeEditBookModal() {
+            const modal = document.getElementById('edit-book-modal-overlay');
+            if (modal) {
+                modal.classList.remove('visible');
+            }
+        }
+
+        /* [BARU] Fungsi untuk submit edit buku */
+        async function handleModalEditSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            
+            const walletId = document.getElementById('edit-book-id').value;
+            const newName = document.getElementById('edit-book-name').value;
+            const newIcon = document.getElementById('edit-book-icon').value || '📚';
+            
+            const messageEl = document.getElementById('modal-edit-book-message');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const btnText = document.getElementById('edit-book-btn-text');
+            const btnSpinner = document.getElementById('edit-book-spinner');
+
+            if (!walletId || !newName) return;
+
+            // Tampilkan loading
+            submitBtn.disabled = true;
+            if (btnText) btnText.style.display = 'none';
+            if (btnSpinner) btnSpinner.classList.add('active'); // Pastikan 'active'
+            messageEl.textContent = '';
+            messageEl.className = '';
+
+            try {
+                // Kirim data (nama DAN ikon) ke API
+                await fetchApi(`/wallets/${walletId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ 
+                        name: newName,
+                        icon: newIcon // Kirim ikon yang baru
+                    }) 
+                });
+
+                messageEl.textContent = 'Buku berhasil diperbarui.';
+                messageEl.className = 'success';
+                loadAllWalletsAndMembers(); // Muat ulang daftar buku di belakang
+                
+                // Tutup modal setelah 1.5 detik
+                setTimeout(closeEditBookModal, 1500);
+
+            } catch (error) {
+                messageEl.textContent = `Gagal memperbarui: ${error.message}`;
+                messageEl.className = 'error';
+                // Reset tombol jika gagal
+                submitBtn.disabled = false;
+                if (btnText) btnText.style.display = 'inline';
+                if (btnSpinner) btnSpinner.classList.remove('active');
+            }
+        }
+        
         /* [BARU] Helper untuk tombol emoji di modal Edit */
         window.selectEditIcon = function(icon) {
             document.getElementById('edit-book-icon').value = icon;
@@ -3494,7 +3546,7 @@ window.selectEditIcon = function(icon) {
                             moduleType: moduleType
                         })
                     });
-                    
+
                     // Sukses! Arahkan ke halaman /books
                     navigate('/books'); 
 
@@ -3637,19 +3689,27 @@ async function handleDeleteMember(walletId, userId) { // <-- [DIUBAH] Terima wal
  * [DIUBAH] Inisialisasi Halaman Buku
  */
 function initBooksPage() {
-    console.log("Halaman Buku (Global) diinisialisasi.");
+            console.log("Halaman Buku (Global) diinisialisasi.");
 
-    // Muat semua buku dan anggotanya
-    loadAllWalletsAndMembers();
+            // Muat semua buku (TANPA anggota)
+            loadAllWalletsAndMembers(); // <-- Panggil fungsi yang benar
 
-    // Pasang listener ke form undangan
-    const inviteForm = document.getElementById('invite-member-form');
-    if (inviteForm) {
-        inviteForm.addEventListener('submit', handleInviteMember);
-    }
+            // [PERBAIKAN KUNCI] Pasang listener ke form MODAL
+            const inviteForm = document.getElementById('modal-invite-form');
+            if (inviteForm) {
+                // Hapus listener lama jika ada (untuk mencegah duplikat)
+                inviteForm.removeEventListener('submit', handleModalInviteSubmit);
+                // Tambahkan listener baru
+                inviteForm.addEventListener('submit', handleModalInviteSubmit);
+            }
 
-    // Tidak perlu attachThemeToggle karena sudah ada di layout global
-}
+            // [BARU] Pasang listener ke form MODAL EDIT
+            const editForm = document.getElementById('modal-edit-book-form');
+            if (editForm) {
+                editForm.removeEventListener('submit', handleModalEditSubmit);
+                editForm.addEventListener('submit', handleModalEditSubmit);
+            }
+        }
 // === [AKHIR FUNGSI-FUNGSI BARU] ===
 
         // === BAGIAN 3: LOGIKA SPA ROUTING (DENGAN PERBAIKAN) ===
