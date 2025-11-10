@@ -1809,9 +1809,11 @@ function renderDateModalCalendar() {
 
                 // 5. [INI BAGIAN KUNCINYA] Ambil akun dan kategori untuk dompet aktif
                 const [accounts, categories] = await Promise.all([
+                    fetchApi('/auth/users/me'),
                     fetchApi(`/wallets/${activeWallet.id}/accounts`),
                     fetchApi(`/wallets/${activeWallet.id}/categories`)
                 ]);
+                myUser = user;
 
                 // 6. Simpan Akun ke Global
                 allAccounts = accounts;
@@ -1937,6 +1939,7 @@ function renderDateModalCalendar() {
 
         let allCategories = [];
         let allAccounts = [];
+        let myUser = null;
         let selectedAccountId = null; // Kita akan kelola ini secara global
         let currentTransactionId = null; // [BARU] Untuk modal detail
         let selectedTransactionDate = new Date(); // [BARU] Default ke hari ini
@@ -2836,8 +2839,11 @@ function renderTransactionList(filteredTransactions) {
             listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat daftar buku...</span></div>`;
 
             try {
-                const myUser = await fetchApi('/auth/users/me'); 
-                const wallets = await fetchApi('/wallets'); 
+                // [PERBAIKAN] Hapus "const myUser = ..." (sekarang sudah global)
+                if (!myUser) { // Tambahkan pengecekan keamanan
+                    throw new Error("Data user tidak ditemukan.");
+                }
+                const wallets = await fetchApi('/wallets');
 
                 listSection.innerHTML = ''; // Bersihkan spinner
 
