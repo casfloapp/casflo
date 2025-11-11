@@ -3364,6 +3364,10 @@ async function handleDeleteMember(walletId, userId) {
                 messageEl.textContent = 'Buku berhasil dihapus.';
                 messageEl.className = 'success';
                 loadAllWalletsAndMembers(); // Muat ulang daftar
+                setTimeout(() => {
+                    messageEl.textContent = '';
+                    messageEl.className = '';
+                }, 3000);
 
             } catch (error) {
                 messageEl.textContent = `Gagal menghapus buku: ${error.message}`;
