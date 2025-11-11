@@ -3119,7 +3119,6 @@ async function toggleMemberList(buttonElement, walletId, walletRole, myUserId = 
             }
         }
 
-// [BARU] TAMBAHKAN KODE DI BAWAH INI
         async function handleDeleteMember(walletId, userId) { 
             if (!userId || !walletId) return;
 
@@ -3176,7 +3175,6 @@ async function toggleMemberList(buttonElement, walletId, walletRole, myUserId = 
                 }, 3000);
             }
         }
-        
          /* [DIUBAH] Mengambil HANYA BUKU (bukan anggota)
          */
         async function loadAllWalletsAndMembers() {
