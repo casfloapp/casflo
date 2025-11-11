@@ -1226,24 +1226,6 @@
             </div>
         </div>
     </div>
-<div id="delete-book-modal-overlay" class="modal-overlay">
-    <div class="modal-content-small">
-        <h3 class="modal-title">Hapus Buku Ini?</h3>
-        <p class="modal-text">
-            PERINGATAN: Anda akan menghapus buku ini.
-            <br>
-            <br>
-            <strong>SEMUA</strong> data transaksi, akun, dan anggota di dalamnya akan hilang <strong>selamanya</strong>.
-            <br>
-            <br>
-            Apakah Anda yakin?
-        </p>
-        <div class="modal-buttons">
-            <button class="btn btn-secondary" onclick="closeDeleteBookModal()">Batal</button>
-            <button class="btn btn-danger" id="confirm-delete-book-btn">Hapus Buku</button>
-        </div>
-    </div>
-</div>
 <script>
 const sessionToken = localStorage.getItem('sessionToken');
         if (!sessionToken) {
