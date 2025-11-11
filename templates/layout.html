@@ -1225,6 +1225,24 @@
             </div>
         </div>
     </div>
+<div id="delete-book-modal-overlay" class="modal-overlay">
+    <div class="modal-content-small">
+        <h3 class="modal-title">Hapus Buku Ini?</h3>
+        <p class="modal-text">
+            PERINGATAN: Anda akan menghapus buku ini.
+            <br>
+            <br>
+            <strong>SEMUA</strong> data transaksi, akun, dan anggota di dalamnya akan hilang <strong>selamanya</strong>.
+            <br>
+            <br>
+            Apakah Anda yakin?
+        </p>
+        <div class="modal-buttons">
+            <button class="btn btn-secondary" onclick="closeDeleteBookModal()">Batal</button>
+            <button class="btn btn-danger" id="confirm-delete-book-btn">Hapus Buku</button>
+        </div>
+    </div>
+</div>
 <script>
 const sessionToken = localStorage.getItem('sessionToken');
         if (!sessionToken) {
@@ -2931,6 +2949,88 @@ function renderTransactionList(filteredTransactions) {
                 modal.classList.remove('visible');
             }
         }
+        // [BARU] Fungsi-fungsi untuk Modal Konfirmasi Hapus Buku
+        const deleteBookModal = document.getElementById('delete-book-modal-overlay');
+        const confirmDeleteBookBtn = document.getElementById('confirm-delete-book-btn');
+        let currentWalletToDeleteId = null; // Menyimpan ID buku yang akan dihapus
+
+        /**
+         * Membuka modal konfirmasi hapus buku
+         * @param {string} walletId - ID buku yang akan dihapus
+         */
+        function openDeleteBookModal(walletId) {
+            currentWalletToDeleteId = walletId;
+            if (deleteBookModal) {
+                deleteBookModal.classList.add('visible');
+            }
+        }
+
+        /**
+         * Menutup modal konfirmasi hapus buku
+         */
+        function closeDeleteBookModal() {
+            currentWalletToDeleteId = null;
+            if (deleteBookModal) {
+                deleteBookModal.classList.remove('visible');
+            }
+        }
+        async function deleteWallet(walletId, walletName) {
+            // [DIUBAH] Panggil modal kustom, bukan window.confirm
+            openDeleteBookModal(walletId); 
+            // Semua logika penghapusan sekarang ada di handleDeleteBookConfirmed()
+        }
+
+        /**
+         * Menangani aksi hapus buku setelah konfirmasi
+         */
+        async function handleDeleteBookConfirmed() {
+            if (!currentWalletToDeleteId) return; // Pastikan ada ID yang akan dihapus
+
+            // Nonaktifkan tombol dan tampilkan spinner (opsional, bisa ditambahkan)
+            confirmDeleteBookBtn.disabled = true; 
+            confirmDeleteBookBtn.textContent = 'Menghapus...'; // Ganti teks sementara
+
+            try {
+                // Panggil API untuk menghapus buku
+                await fetchApi(`/wallets/${currentWalletToDeleteId}`, {
+                    method: 'DELETE'
+                });
+
+                closeDeleteBookModal();
+                showDialog({ title: 'Berhasil', text: 'Buku berhasil dihapus!', type: 'success' });
+                // Muat ulang daftar dompet atau arahkan ke halaman lain jika perlu
+                loadAllWalletsAndMembers(); // Muat ulang daftar buku
+                
+                // [BARU] Perbarui wallet di local storage jika yang dihapus adalah buku yang sedang aktif
+                if (localStorage.getItem('currentWalletId') === currentWalletToDeleteId) {
+                    localStorage.removeItem('currentWalletId'); // Hapus yang lama
+                    // Jika ada buku lain, set buku pertama sebagai aktif
+                    const firstWallet = await fetchApi('/wallets'); 
+                    if (firstWallet && firstWallet.length > 0) {
+                        selectWallet(firstWallet[0].id, firstWallet[0].name, firstWallet[0].icon);
+                    } else {
+                        // Jika tidak ada buku sama sekali, arahkan ke onboarding/buat buku baru
+                        // Atur sesuai alur aplikasi Anda jika tidak ada buku
+                        console.log("Tidak ada buku tersisa, perlu alur pembuatan buku baru.");
+                        renderWalletActions(); // Ini akan menampilkan pesan "Buat Buku Baru"
+                    }
+                } else {
+                    renderWalletActions(); // Cukup update tampilan header dompet jika yang dihapus bukan yang aktif
+                }
+
+            } catch (error) {
+                console.error("Gagal menghapus buku:", error);
+                showDialog({ title: 'Error', text: error.message || 'Gagal menghapus buku.' });
+            } finally {
+                // Reset tombol dan variabel
+                confirmDeleteBookBtn.disabled = false;
+                confirmDeleteBookBtn.textContent = 'Hapus Buku'; 
+                currentWalletToDeleteId = null;
+            }
+        }
+
+        // Event listener untuk tombol konfirmasi di modal
+        confirmDeleteBookBtn.addEventListener('click', handleDeleteBookConfirmed);
         
         // [PERBAIKAN PERFORMA - FUNGSI DIUBAH TOTAL]
        async function toggleMemberList(buttonElement, walletId, walletRole, myUserId = null) { // [DIUBAH]
