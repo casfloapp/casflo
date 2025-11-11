@@ -2666,18 +2666,18 @@ function renderTransactionList(filteredTransactions) {
         document.getElementById('tabTotal')?.addEventListener('click', () => setCalendarFilter('total'));
         document.getElementById('mainBookIconBtn')?.addEventListener('click', openWalletSwitcher);
         document.getElementById('toggleMaskBtn')?.addEventListener('click', toggleBalanceMasking);
-        document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
+        //document.getElementById('walletSwitcherBtn')?.addEventListener('click', openWalletSwitcher);
         // HAPUS createNewWalletBtn listener, karena tombol itu dibuat dinamis oleh renderWalletActions
 
         // [PERBAIKAN] Logika inisialisasi yang baru:
-        const walletName = localStorage.getItem('currentWalletName');
-        if (walletName) {
-            // 1. Update nama di dropdown atas
-            const walletNameEl = document.getElementById('currentWalletNameDisplay');
-            if (walletNameEl) walletNameEl.textContent = walletName;
-            const headerParent = document.getElementById('walletSwitcherBtn');
-            if (headerParent) headerParent.classList.remove('loading');
-        }
+        // const walletName = localStorage.getItem('currentWalletName');
+        // if (walletName) {
+        //     // 1. Update nama di dropdown atas
+        //     const walletNameEl = document.getElementById('currentWalletNameDisplay');
+        //     if (walletNameEl) walletNameEl.textContent = walletName;
+        //     const headerParent = document.getElementById('walletSwitcherBtn');
+        //     if (headerParent) headerParent.classList.remove('loading');
+        // }
 
         // 2. Render tombol-tombol ikon dompet
         await renderWalletActions();
