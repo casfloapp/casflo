@@ -2653,7 +2653,7 @@ function renderTransactionList(filteredTransactions) {
         }
 
         // === BAGIAN 2: KUMPULAN SEMUA FUNGSI INISIALISASI HALAMAN ===
-        function initMainPage() {
+        async function initMainPage() {
         console.log("Halaman Utama diinisialisasi.");
         document.getElementById('detailToggleBtn')?.addEventListener('click', () => setView('overview'));
         document.getElementById('calendarToggleBtn')?.addEventListener('click', () => setView('calendar'));
@@ -2680,7 +2680,7 @@ function renderTransactionList(filteredTransactions) {
         }
 
         // 2. Render tombol-tombol ikon dompet
-        renderWalletActions();
+        await renderWalletActions();
 
 
         const savedView = localStorage.getItem('preferredView');
