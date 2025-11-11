@@ -1961,7 +1961,19 @@ function renderDateModalCalendar() {
         let modalCalendarDate = new Date(); // [BARU] Untuk navigasi di modal
 
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-// [BARU] Variabel Global untuk Promise Dialog
+
+        const OPEN_BOOKS_KEY = 'casflo_open_books';
+        function getOpenBooks() {
+            try {
+                const openBooks = localStorage.getItem(OPEN_BOOKS_KEY);
+                return openBooks ? JSON.parse(openBooks) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+        function saveOpenBooks(booksArray) {
+            localStorage.setItem(OPEN_BOOKS_KEY, JSON.stringify(booksArray));
+        }
         let dialogResolve = null;
 
         /**
@@ -3033,7 +3045,7 @@ function renderTransactionList(filteredTransactions) {
         confirmDeleteBookBtn.addEventListener('click', handleDeleteBookConfirmed);
         
         // [PERBAIKAN PERFORMA - FUNGSI DIUBAH TOTAL]
-       async function toggleMemberList(buttonElement, walletId, walletRole, myUserId = null) { // [DIUBAH]
+async function toggleMemberList(buttonElement, walletId, walletRole, myUserId = null) { // [DIUBAH]
             const card = buttonElement.closest('.book-list-card');
             if (!card) return;
             
@@ -3042,11 +3054,18 @@ function renderTransactionList(filteredTransactions) {
 
             const isLoaded = memberListDiv.dataset.loaded === 'true';
             const isVisible = memberListDiv.classList.contains('visible');
+            const openBooks = getOpenBooks(); // [BARU] Ambil status tersimpan
 
             if (!isVisible && !isLoaded) {
                 // === KASUS 1: BELUM DIMUAT & TERTUTUP -> BUKA & MUAT DATA ===
                 buttonElement.classList.add('active'); // Putar ikon
                 memberListDiv.classList.add('visible'); // Tampilkan div (untuk spinner)
+                
+                // [BARU] Simpan state Buka ke localStorage
+                if (!openBooks.includes(walletId)) {
+                    openBooks.push(walletId);
+                    saveOpenBooks(openBooks);
+                }
                 
                 try {
                     // PANGGIL API DI SINI
@@ -3098,7 +3117,22 @@ function renderTransactionList(filteredTransactions) {
             } else {
                 // === KASUS 2: SUDAH DIMUAT -> TINGGAL BUKA/TUTUP ===
                 buttonElement.classList.toggle('active');
-                memberListDiv.classList.toggle('visible');
+                const isNowVisible = memberListDiv.classList.toggle('visible'); // [BARU] Tangkap status baru
+                
+                // [BARU] Simpan state baru ke localStorage
+                if (isNowVisible) {
+                    // Baru saja dibuka
+                    if (!openBooks.includes(walletId)) {
+                        openBooks.push(walletId);
+                    }
+                } else {
+                    // Baru saja ditutup
+                    const index = openBooks.indexOf(walletId);
+                    if (index > -1) {
+                        openBooks.splice(index, 1);
+                    }
+                }
+                saveOpenBooks(openBooks);
             }
         }
 
@@ -3175,6 +3209,7 @@ async function handleDeleteMember(walletId, userId) {
             try {
                 const myUser = await fetchApi('/auth/users/me'); // [DIKEMBALIKAN]
                 const wallets = await fetchApi('/wallets');
+                const openBooks = getOpenBooks();
 
                 listSection.innerHTML = ''; // Bersihkan spinner
 
@@ -3199,13 +3234,15 @@ async function handleDeleteMember(walletId, userId) {
 
                     // [PERBAIKAN 1 & 3] Onclick memanggil toggleMemberList BARU
                     const icon = wallet.icon || '📚'; // Ambil ikon, beri default 📚
+                    const isInitiallyOpen = openBooks.includes(wallet.id);
+                    
                     cardHeader.innerHTML = `
                         <div class="book-card-header-title">
                             <div class="book-icon-box">${icon}</div>
                             <h3 class="list-title">${wallet.name}</h3>
                         </div>
                         <div class="book-actions">
-                            <button class="book-action-btn collabs" title="Lihat Anggota" onclick="toggleMemberList(this, '${wallet.id}', '${wallet.role}', '${myUser.id}')">
+                            <button class="book-action-btn collabs ${isInitiallyOpen ? 'active' : ''}" title="Lihat Anggota" onclick="toggleMemberList(this, '${wallet.id}', '${wallet.role}', '${myUser.id}')">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             ${inviteBtnHtml}
@@ -3227,6 +3264,19 @@ async function handleDeleteMember(walletId, userId) {
                     card.appendChild(memberListDiv); // memberListDiv ditambahkan (hidden)
                     listSection.appendChild(card);
                 }
+                // [BARU] Loop kedua untuk memuat data buku yang disimpan terbuka
+                // Kita lakukan ini setelah semua elemen ada di DOM
+                const openBookCards = document.querySelectorAll('.book-action-btn.collabs.active');
+                openBookCards.forEach(btn => {
+                    // Ambil argumen dari onclick
+                    const onclickAttr = btn.getAttribute('onclick');
+                    // "toggleMemberList(this, 'walletId', 'walletRole', 'myUserId')"
+                    const args = onclickAttr.match(/'([^']+)'/g).map(s => s.replace(/'/g, ''));
+                    // args akan menjadi ['walletId', 'walletRole', 'myUserId']
+                    
+                    // Panggil fungsi secara manual untuk memuat data
+                    toggleMemberList(btn, args[0], args[1], args[2]);
+                });
 
             } catch (error) {
                 listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat buku: ${error.message}</div>`;
