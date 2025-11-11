@@ -3102,7 +3102,55 @@ function renderTransactionList(filteredTransactions) {
             }
         }
 
+async function handleDeleteMember(walletId, userId) { 
+            if (!userId || !walletId) return;
 
+            const confirmed = await showDialog({
+                title: 'Hapus Anggota',
+                text: 'Anda yakin ingin menghapus anggota ini dari buku ini?',
+                confirmText: 'Hapus',
+                cancelText: 'Batal',
+                isDestructive: true
+            });
+            if (!confirmed) return;
+
+            // Gunakan pesan global di halaman
+            const messageEl = document.getElementById('invite-message');
+            messageEl.textContent = 'Menghapus...';
+            messageEl.className = '';
+
+            try {
+                await fetchApi(`/wallets/${walletId}/members/${userId}`, {
+                    method: 'DELETE'
+                });
+
+                messageEl.textContent = 'Anggota berhasil dihapus.';
+                messageEl.className = 'success';
+                
+                // [PENTING] Muat ulang HANYA daftar anggota buku itu
+                const card = document.querySelector(`.book-action-btn.invite[onclick*="'${walletId}'"]`).closest('.book-list-card');
+                if (card) {
+                    const memberListDiv = card.querySelector('.book-member-list');
+                    memberListDiv.dataset.loaded = 'false';
+                    memberListDiv.innerHTML = `
+                        <div class="member-list-loader" style="text-align: center; padding: 15px;">
+                            <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
+                        </div>`;
+                    const collabsBtn = card.querySelector('.book-action-btn.collabs');
+                    
+                    // Kita panggil ulang toggleMemberList
+                    // Kita bisa kirim 'null' untuk myUser.id karena itu hanya untuk menampilkan label '(Anda)'
+                    // yang tidak kritis saat me-refresh list.
+                    if (collabsBtn.classList.contains('active')) {
+                         toggleMemberList(collabsBtn, walletId, 'OWNER', null);
+                    }
+                }
+
+            } catch (error) {
+                messageEl.textContent = `Gagal menghapus: ${error.message}`;
+                messageEl.className = 'error';
+            }
+        }
         /**
          * [DIUBAH] Mengambil HANYA BUKU (bukan anggota)
          */
