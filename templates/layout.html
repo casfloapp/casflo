@@ -3372,6 +3372,12 @@ async function handleDeleteMember(walletId, userId) {
             } catch (error) {
                 messageEl.textContent = `Gagal menghapus buku: ${error.message}`;
                 messageEl.className = 'error';
+
+                // [BARU] Sembunyikan pesan error setelah 3 detik
+                setTimeout(() => {
+                    messageEl.textContent = '';
+                    messageEl.className = '';
+                }, 3000);
             }
         }
         /**
