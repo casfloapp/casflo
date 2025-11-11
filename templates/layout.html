@@ -3282,6 +3282,46 @@ function renderTransactionList(filteredTransactions) {
             }
         }
 
+        async function handleDeleteBook(walletId, userRoleInWallet) {
+            if (userRoleInWallet !== 'OWNER') {
+                showDialog({ title: 'Aksi Ditolak', text: 'Hanya OWNER yang dapat menghapus buku.' });
+                return;
+            }
+            
+            const confirmed = await showDialog({
+                title: 'Hapus Buku',
+                text: 'PERINGATAN: Anda akan menghapus buku ini.\nSEMUA data transaksi, akun, dan anggota di dalamnya akan hilang selamanya.\n\nApakah Anda yakin?',
+                confirmText: 'Ya, Hapus',
+                cancelText: 'Batal',
+                isDestructive: true
+            });
+            if (!confirmed) return;
+
+            const messageEl = document.getElementById('invite-message');
+            messageEl.textContent = 'Menghapus buku...';
+            messageEl.className = '';
+
+            try {
+                await fetchApi(`/wallets/${walletId}`, {
+                    method: 'DELETE' 
+                });
+
+                // Cek apakah buku yang dihapus adalah buku yang sedang aktif
+                if (localStorage.getItem('currentWalletId') === walletId) {
+                    localStorage.removeItem('currentWalletId');
+                    localStorage.removeItem('currentWalletName');
+                    localStorage.removeItem('currentWalletIcon');
+                }
+
+                messageEl.textContent = 'Buku berhasil dihapus.';
+                messageEl.className = 'success';
+                loadAllWalletsAndMembers(); // Muat ulang daftar
+
+            } catch (error) {
+                messageEl.textContent = `Gagal menghapus buku: ${error.message}`;
+                messageEl.className = 'error';
+            }
+        }
         /**
          * [DIUBAH] Menangani submit form undangan (versi MODAL)
          */
