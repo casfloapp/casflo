@@ -2453,7 +2453,7 @@ function renderTransactionList(filteredTransactions) {
                     .reduce((sum, t) => sum + t.amount, 0);
 
                 const groupEl = document.createElement('div');
-                groupEl.className = 'transaction-group';
+                groupEl.className = 'transaction-group card';
 
                 const listHeader = document.createElement('div');
                 listHeader.className = 'list-header';
