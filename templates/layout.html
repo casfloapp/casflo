@@ -3282,48 +3282,6 @@ function renderTransactionList(filteredTransactions) {
             }
         }
 
-        async function handleDeleteBook(walletId, userRoleInWallet) {
-            if (userRoleInWallet !== 'OWNER') {
-                showDialog({ title: 'Aksi Ditolak', text: 'Hanya OWNER yang dapat menghapus buku.' });
-                return;
-            }
-            
-            const confirmed = await showDialog({
-                title: 'Hapus Buku',
-                text: 'PERINGATAN: Anda akan menghapus buku ini.\nSEMUA data transaksi, akun, dan anggota di dalamnya akan hilang selamanya.\n\nApakah Anda yakin?',
-                confirmText: 'Ya, Hapus',
-                cancelText: 'Batal',
-                isDestructive: true
-            });
-            if (!confirmed) return;
-
-            const messageEl = document.getElementById('invite-message');
-            messageEl.textContent = 'Menghapus buku...';
-            messageEl.className = '';
-
-            try {
-                await fetchApi(`/wallets/${walletId}`, {
-                    method: 'DELETE' 
-                });
-
-                // Cek apakah buku yang dihapus adalah buku yang sedang aktif
-                if (localStorage.getItem('currentWalletId') === walletId) {
-                    localStorage.removeItem('currentWalletId');
-                    localStorage.removeItem('currentWalletName');
-                    localStorage.removeItem('currentWalletIcon');
-                }
-
-                messageEl.textContent = 'Buku berhasil dihapus.';
-                messageEl.className = 'success';
-                loadAllWalletsAndMembers(); // Muat ulang daftar
-
-            } catch (error) {
-                messageEl.textContent = `Gagal menghapus buku: ${error.message}`;
-                messageEl.className = 'error';
-            }
-        }
-
-
         /**
          * [DIUBAH] Menangani submit form undangan (versi MODAL)
          */
@@ -3396,55 +3354,6 @@ function renderTransactionList(filteredTransactions) {
                 btnSpinner.style.display = 'none';
             }
         }
-        /**
-         * [DIUBAH] Menghapus anggota (versi global)
-         */
-        async function handleDeleteMember(walletId, userId) { 
-            if (!userId || !walletId) return;
-
-            const confirmed = await showDialog({
-                title: 'Hapus Anggota',
-                text: 'Anda yakin ingin menghapus anggota ini dari buku ini?',
-                confirmText: 'Hapus',
-                cancelText: 'Batal',
-                isDestructive: true
-            });
-            if (!confirmed) return;
-
-            // Gunakan pesan global di halaman
-            const messageEl = document.getElementById('invite-message');
-            messageEl.textContent = 'Menghapus...';
-            messageEl.className = '';
-
-            try {
-                await fetchApi(`/wallets/${walletId}/members/${userId}`, {
-                    method: 'DELETE'
-                });
-
-                messageEl.textContent = 'Anggota berhasil dihapus.';
-                messageEl.className = 'success';
-                
-                // [PENTING] Muat ulang HANYA daftar anggota buku itu
-                const card = document.querySelector(`.book-action-btn.invite[onclick*="'${walletId}'"]`).closest('.book-list-card');
-                if (card) {
-                    const memberListDiv = card.querySelector('.book-member-list');
-                    memberListDiv.dataset.loaded = 'false';
-                    memberListDiv.innerHTML = `
-                        <div class="member-list-loader" style="text-align: center; padding: 15px;">
-                            <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
-                        </div>`;
-                    const collabsBtn = card.querySelector('.book-action-btn.collabs');
-                    if (collabsBtn.classList.contains('active')) {
-                         toggleMemberList(collabsBtn, walletId, 'OWNER', myUser.id);
-                    }
-                }
-
-            } catch (error) {
-                messageEl.textContent = `Gagal menghapus: ${error.message}`;
-                messageEl.className = 'error';
-            }
-        }
-
         /**
          * [DIUBAH] Inisialisasi Halaman Buku
          */
