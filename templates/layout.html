@@ -2933,7 +2933,7 @@ function renderTransactionList(filteredTransactions) {
         }
         
         // [PERBAIKAN PERFORMA - FUNGSI DIUBAH TOTAL]
-        async function toggleMemberList(buttonElement, walletId, walletRole, myUserId) {
+       async function toggleMemberList(buttonElement, walletId, walletRole, myUserId = null) { // [DIUBAH]
             const card = buttonElement.closest('.book-list-card');
             if (!card) return;
             
@@ -2969,7 +2969,7 @@ function renderTransactionList(filteredTransactions) {
                                 avatarHtml = `<span>${member.full_name.charAt(0).toUpperCase()}</span>`;
                             }
                             const isOwner = member.role === 'OWNER';
-                            const isMe = member.id === myUserId;
+                            const isMe = myUserId && member.id === myUserId;
                             const canDelete = (walletRole === 'OWNER' && !isOwner); 
                             const labelHtml = member.label ? `<div class="email" style="font-style: italic; color: var(--primary-blue);">${member.label}</div>` : '';
 
@@ -3013,8 +3013,8 @@ function renderTransactionList(filteredTransactions) {
             listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat daftar buku...</span></div>`;
 
             try {
-                const myUser = await fetchApi('/auth/users/me'); 
-                const wallets = await fetchApi('/wallets'); 
+                const myUser = await fetchApi('/auth/users/me'); // [DIKEMBALIKAN]
+                const wallets = await fetchApi('/wallets');
 
                 listSection.innerHTML = ''; // Bersihkan spinner
 
@@ -3227,27 +3227,27 @@ function renderTransactionList(filteredTransactions) {
         /**
          * [DIUBAH] Menangani submit form undangan (versi MODAL)
          */
-        async function handleModalInviteSubmit(event) {
+  async function handleModalInviteSubmit(event) {
             event.preventDefault();
             const form = event.target;
             
-            // Ambil data dari form MODAL
             const email = document.getElementById('invite-modal-email').value;
             const role = document.getElementById('invite-modal-role').value;
             const label = document.getElementById('invite-modal-label').value;
-            const walletId = document.getElementById('invite-modal-wallet-id').value; // <-- [KUNCI]
+            const walletId = document.getElementById('invite-modal-wallet-id').value;
             
-            const messageEl = document.getElementById('modal-invite-message'); // Pesan di modal
+            const messageEl = document.getElementById('modal-invite-message');
             const submitBtn = form.querySelector('button[type="submit"]');
             const btnText = submitBtn.querySelector('span:not(.loading-spinner)');
             const btnSpinner = submitBtn.querySelector('.loading-spinner');
 
-            if (!walletId) { // Seharusnya tidak terjadi, tapi untuk keamanan
+            if (!walletId) {
                 messageEl.textContent = 'ID Buku tidak ditemukan. Coba lagi.';
                 messageEl.className = 'error';
                 return;
             }
 
+            // Tampilkan Loader
             submitBtn.disabled = true;
             btnText.style.display = 'none';
             btnSpinner.style.display = 'inline-block';
@@ -3264,36 +3264,38 @@ function renderTransactionList(filteredTransactions) {
                 messageEl.className = 'success';
                 form.reset(); 
                 
-                // [PENTING] Muat ulang HANYA daftar anggota buku itu
-                // 1. Cari card-nya
+                // [PERBAIKAN KUNCI] Muat ulang daftar anggota
                 const card = document.querySelector(`.book-action-btn.invite[onclick*="'${walletId}'"]`).closest('.book-list-card');
                 if (card) {
-                    // 2. Hapus status 'loaded'
                     const memberListDiv = card.querySelector('.book-member-list');
                     memberListDiv.dataset.loaded = 'false';
-                    // 3. Hapus isinya (biarkan spinner)
                     memberListDiv.innerHTML = `
                         <div class="member-list-loader" style="text-align: center; padding: 15px;">
                             <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
                         </div>`;
-                    // 4. Panggil ulang toggle untuk memuat ulang
                     const collabsBtn = card.querySelector('.book-action-btn.collabs');
-                    toggleMemberList(collabsBtn, walletId, 'OWNER', myUser.id); // Asumsikan user adalah owner/admin
+                    // [INI PERBAIKANNYA] Kirim 'null' karena myUser tidak ada di sini
+                    toggleMemberList(collabsBtn, walletId, 'OWNER', null); 
                 }
                 
-                // Tutup modal setelah 2 detik
-                setTimeout(closeInviteModal, 2000);
+                // [PERBAIKAN] Tutup modal lebih cepat (1 detik)
+                setTimeout(() => {
+                    closeInviteModal();
+                    // Reset tombol SETELAH modal ditutup
+                    submitBtn.disabled = false;
+                    btnText.style.display = 'inline';
+                    btnSpinner.style.display = 'none';
+                }, 1000); // Tutup setelah 1 detik
 
             } catch (error) {
                 messageEl.textContent = error.message; 
                 messageEl.className = 'error';
-            } finally {
+                // Reset tombol jika error
                 submitBtn.disabled = false;
                 btnText.style.display = 'inline';
                 btnSpinner.style.display = 'none';
             }
         }
-
         /**
          * [DIUBAH] Menghapus anggota (versi global)
          */
