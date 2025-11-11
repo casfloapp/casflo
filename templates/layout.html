@@ -2863,11 +2863,13 @@ function renderTransactionList(filteredTransactions) {
 /**
          * [DIUBAH] Mengambil HANYA BUKU (bukan anggota)
          */
-        async function loadAllWalletsAndMembers() {
+       async function loadAllWalletsAndMembers() {
             const listSection = document.getElementById('book-list-section');
             if (!listSection) return;
 
-            listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span><span style="margin-left: 10px;">Memuat daftar buku...</span></div>`;
+            listSection.innerHTML = `<div style="text-align: center; padding: 40px 0;">
+                                          <span class="div-spinner" style="display: inline-block;"></span>
+                                     </div>`;
 
             try {
                 const myUser = await fetchApi('/auth/users/me'); 
