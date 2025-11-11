@@ -3126,6 +3126,11 @@ async function handleDeleteMember(walletId, userId) {
 
                 messageEl.textContent = 'Anggota berhasil dihapus.';
                 messageEl.className = 'success';
+
+                setTimeout(() => {
+                    messageEl.textContent = '';
+                    messageEl.className = '';
+                }, 3000);
                 
                 // [PENTING] Muat ulang HANYA daftar anggota buku itu
                 const card = document.querySelector(`.book-action-btn.invite[onclick*="'${walletId}'"]`).closest('.book-list-card');
@@ -3149,7 +3154,14 @@ async function handleDeleteMember(walletId, userId) {
             } catch (error) {
                 messageEl.textContent = `Gagal menghapus: ${error.message}`;
                 messageEl.className = 'error';
+                
+                // [BARU] Sembunyikan pesan error setelah 3 detik
+                setTimeout(() => {
+                    messageEl.textContent = '';
+                    messageEl.className = '';
+                }, 3000);
             }
+
         }
         /**
          * [DIUBAH] Mengambil HANYA BUKU (bukan anggota)
