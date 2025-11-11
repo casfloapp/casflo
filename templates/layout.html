@@ -773,6 +773,17 @@
             background: #111827; /* Samarkan dengan bg body gelap */
             border-radius: 18px;
         }
+        /* [BARU] Skeleton for Header Right Side */
+        .right.loading .theme-toggle,
+        .right.loading .view-toggle-group {
+            display: none;
+        }
+        .right .skeleton-placeholder {
+            display: none;
+        }
+        .right.loading .skeleton-placeholder {
+            display: flex;
+        }
 
         .div-spinner {
             display: inline-block;
@@ -2683,6 +2694,9 @@ function renderTransactionList(filteredTransactions) {
         }
 
         attachThemeToggle('.theme-toggle'); 
+            
+        // [BARU] Tampilkan tombol header kanan setelah semua siap
+        document.getElementById('header-right-side')?.classList.remove('loading');
     }
        function initCreatePage() {
     const txToEditJSON = sessionStorage.getItem('tx_for_edit');

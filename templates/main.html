@@ -6,28 +6,19 @@
             <div class="left">
                 <i class="fas fa-search"></i>
             </div>
-            <div class="right" style="display: flex; align-items: center; gap: 10px;">
+            <div class="right loading" id="header-right-side" style="display: flex; align-items: center; gap: 10px;">
                 
+                <div class="skeleton-placeholder" style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 32px; height: 32px; background: rgba(0,0,0,0.1); border-radius: 50%;"></div>
+                    <div style="width: 140px; height: 32px; background: rgba(0,0,0,0.1); border-radius: 20px;"></div>
+                </div>
                 <button class="theme-toggle inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-white transition-all *:pointer-events-none" style="background: rgba(0,0,0,0.2);">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 dark:hidden">
-                        <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd"></path>
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="hidden h-5 dark:block">
-                        <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"></path>
-                    </svg>
-                </button>
+                    </button>
 
                 <div class="view-toggle-group">
-                    <button class="toggle-btn" id="detailToggleBtn">
-                        <i class="fas fa-store"></i>
-                        <span>Detail</span>
-                    </button>
-                    <button class="toggle-btn" id="calendarToggleBtn">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Kalender</span>
-                    </button>
-                </div>
+                    </div>
             </div>
+                    
         </div>
        <div class="header-actions" id="wallet-actions-container">
             <div class="action-box" style="opacity: 0.5; pointer-events: none; background: rgba(255,255,255,0.2);">
