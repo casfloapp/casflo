@@ -958,13 +958,42 @@
         .dark .dialog-modal-body .dialog-text {
             color: #d1d5db;
         }
-        /* [BARU] Tambahkan blok ini */
-        .dark .tx-modal-body textarea {
+        
+        .dialog-modal-actions {
+            display: flex;
+            gap: 10px;
+            padding: 0 25px 25px 25px;
+            margin-top: 25px;
+        }
+        .dialog-modal-btn {
+            flex-grow: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .dialog-modal-btn.cancel {
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+        }
+        .dark .dialog-modal-btn.cancel {
             background-color: #4b5563;
-            border-color: #4b5563;
             color: white;
         }
-        
+        .dialog-modal-btn.confirm {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+        .dialog-modal-btn.confirm.destructive {
+            background-color: var(--expense-red);
+            color: white;
+        }
+        .form-card .submit-btn:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
 
         /* [BARU] Style untuk pilihan Icon di Modal */
         .icon-selection-container-modal {
@@ -1076,6 +1105,67 @@
         .modal-overlay{
             display: none;
         }
+        .calculator-section.new-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-bottom: 8px; /* Beri jarak ke tombol aksi */
+        }
+        .amount-container.new-style {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .dark .amount-container.new-style {
+            background: #374151;
+        }
+
+        .amount-row {
+            display: flex;
+            gap: 10px;
+        }
+        .input-wrapper {
+            flex: 1; /* Lebar sama rata */
+            background: var(--bg-gray);
+            border-radius: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .dark .input-wrapper {
+            background: #4b5563;
+        }
+        .input-wrapper .label {
+            font-size: 11px;
+            color: var(--text-light);
+            font-weight: 500;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .input-wrapper .value-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .dark .input-wrapper .value-row {
+             color: #ffffff;
+        }
+        .input-wrapper .value-row .icon {
+            color: var(--text-light);
+            width: 16px;
+            text-align: center;
+        }
+        .input-wrapper .value-row .arrow {
+            color: var(--text-light);
+            font-size: 12px;
+            margin-left: auto;
+        }
 
         /* [GOAL 1] Styling Input Catatan */
         #notes-input {
@@ -1164,197 +1254,7 @@
             background-color: var(--primary-blue);
             color: white;
         }
-        /* [BARU] Wrapper untuk Catatan & Jumlah */
-        .notes-amount-wrapper {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        /* [BARU - GOAL 1] Input Catatan */
-        .notes-input-field {
-            width: 100%;
-            border: none;
-            background: white;
-            padding: 8px 12px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .dark .notes-input-field {
-            background: #374151;
-            color: white;
-        }
-        .dark .notes-input-field::placeholder {
-            color: #9ca3af;
-        }
-        .notes-input-field:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px var(--primary-blue);
-        }
 
-        /* [MODIFIKASI] Pastikan amount-display yang lama pas */
-        .amount-display {
-            flex-grow: 1;
-            background: white;
-            padding: 0 12px;
-            border-radius: 10px;
-            text-align: right;
-            font-size: 28px; /* Ukuran font disesuaikan agar pas */
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            height: 100%;
-            min-height: 44px; /* Samakan tinggi minimal */
-        }
-        .dark .amount-display {
-            background: #374151;
-            color: #ffffff;
-        }
-        /* [BARU] Wrapper untuk Catatan & Jumlah (dijadikan 1 kartu) */
-        .notes-amount-wrapper {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            overflow: hidden; /* Penting untuk rounded corners */
-        }
-        .dark .notes-amount-wrapper {
-            background: #374151;
-        }
-
-        /* [BARU - GOAL 1] Input Catatan (tanpa background) */
-        .notes-input-field {
-            width: 100%;
-            border: none;
-            background: transparent;
-            padding: 10px 12px; /* Beri padding */
-            font-size: 14px;
-            font-weight: 500;
-            border-bottom: 1px solid var(--bg-gray); /* Garis pemisah */
-        }
-        .dark .notes-input-field {
-            color: white;
-            border-bottom-color: #4b5563; /* Garis pemisah mode gelap */
-        }
-        .dark .notes-input-field::placeholder {
-            color: #9ca3af;
-        }
-        .notes-input-field:focus {
-            outline: none;
-            box-shadow: 0 2px 0 0 var(--primary-blue) inset; /* Fokus di garis bawah */
-            border-bottom-color: transparent;
-        }
-
-        /* [MODIFIKASI] Display Jumlah (tanpa background/shadow) */
-        .amount-display {
-            flex-grow: 1;
-            background: transparent; /* Hapus background */
-            padding: 8px 12px 10px 12px; /* Sesuaikan padding */
-            border-radius: 0; /* Hapus radius */
-            text-align: right;
-            font-size: 28px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            box-shadow: none; /* Hapus shadow */
-            height: 100%;
-            min-height: auto; /* Hapus min-height */
-        }
-        .dark .amount-display {
-            background: transparent;
-            color: #ffffff;
-        }
-        .calculator-section { 
-    background: #f8f9fa; 
-    padding: 15px; 
-    border-top: 1px solid #e9ecef; 
-    flex-shrink: 0; 
-    display: grid; 
-    grid-template-rows: repeat(6, 1fr); 
-    gap: 8px; 
-}
-.amount-container { 
-    display: flex; 
-    gap: 8px; 
-}
-.amount-display { 
-    flex-grow: 1; 
-    background: white; 
-    padding: 0 12px; 
-    border-radius: 10px; 
-    text-align: right; 
-    font-size: 28px; 
-    font-weight: 700; 
-    display: flex; 
-    align-items: center; 
-    justify-content: flex-end; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-    height: 100%; 
-}
-/* [BARU] Wrapper untuk Catatan & Jumlah (dijadikan 1 kartu) */
-.notes-amount-wrapper {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    overflow: hidden; /* Penting untuk rounded corners */
-}
-.dark .notes-amount-wrapper {
-    background: #374151;
-}
-
-/* [BARU - GOAL 1] Input Catatan (tanpa background) */
-.notes-input-field {
-    width: 100%;
-    border: none;
-    background: transparent;
-    padding: 10px 12px; /* Beri padding */
-    font-size: 14px;
-    font-weight: 500;
-    border-bottom: 1px solid var(--bg-gray); /* Garis pemisah */
-}
-.dark .notes-input-field {
-    color: white;
-    border-bottom-color: #4b5563; /* Garis pemisah mode gelap */
-}
-.dark .notes-input-field::placeholder {
-    color: #9ca3af;
-}
-.notes-input-field:focus {
-    outline: none;
-    box-shadow: 0 2px 0 0 var(--primary-blue) inset; /* Fokus di garis bawah */
-    border-bottom-color: transparent;
-}
-
-/* [MODIFIKASI] Display Jumlah (tanpa background/shadow) */
-.amount-display {
-    flex-grow: 1;
-    background: transparent; /* Hapus background */
-    padding: 8px 12px 10px 12px; /* Sesuaikan padding */
-    border-radius: 0; /* Hapus radius */
-    text-align: right;
-    font-size: 28px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    box-shadow: none; /* Hapus shadow */
-    height: 100%;
-    min-height: auto; /* Hapus min-height */
-}
-.dark .amount-display {
-    background: transparent;
-    color: #ffffff;
-}
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
             .app-container { max-width: 480px; margin: 0 auto; height: 100vh; }
@@ -1382,6 +1282,42 @@
                 </div>
         </div>
     </div>
+    <div id="tx-modal-overlay" class="tx-modal-overlay" onclick="closeTransactionModal()">
+        <div class="tx-modal-content" onclick="event.stopPropagation()">
+            <div class="tx-modal-header">
+                <button class="tx-modal-close" onclick="closeTransactionModal()"><i class="fas fa-times"></i></button>
+                <div class="tx-modal-actions">
+                    <button id="tx-modal-delete-btn"><i class="fas fa-trash"></i></button>
+                    <button id="tx-modal-edit-btn"><i class="fas fa-edit"></i></button>
+                </div>
+            </div>
+            <div class="tx-modal-body">
+                <div class="tx-modal-category">
+                    <span id="tx-modal-icon" class="category-icon" style="background: var(--light-purple);">🍔</span>
+                    <span id="tx-modal-category-name">Nama Kategori</span>
+                </div>
+                <div class="tx-modal-amount" id="tx-modal-amount">-Rp8.000</div>
+                <div class="tx-modal-details">
+                    <div class="detail-item">
+                        <span>Tanggal:</span>
+                        <span id="tx-modal-date">5/11/2025 15.40.19</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Akun:</span>
+                        <span id="tx-modal-account">akun bawaan</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Buku:</span>
+                        <span id="tx-modal-wallet">Manda</span>
+                    </div>
+                    <div class="detail-item notes">
+                        <span>Catatan:</span>
+                        <span id="tx-modal-notes">Belanja</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="date-modal-overlay" class="tx-modal-overlay" onclick="closeDateModal()">
         <div class="tx-modal-content" onclick="event.stopPropagation()">
             <div id="date-modal-content"></div>
@@ -1400,6 +1336,18 @@
         </div>
     </div>
 
+    <div id="category-modal-overlay" class="tx-modal-overlay" onclick="closeCategorySelector()">
+        <div class="tx-modal-content" onclick="event.stopPropagation()">
+            <div class="tx-modal-header">
+                <h3 style="font-weight: 600;">Pilih Kategori</h3>
+                <button class="tx-modal-close" onclick="closeCategorySelector()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="tx-modal-body" style="padding: 15px 15px 20px 15px; max-height: 60vh; overflow-y: auto;">
+                <div id="category-modal-list">
+                    </div>
+            </div>
+        </div>
+    </div>
 
 <div id="invite-modal-overlay" class="tx-modal-overlay" onclick="closeInviteModal()">
         <div class="tx-modal-content" onclick="event.stopPropagation()">
@@ -1522,7 +1470,6 @@
         </div>
     </div>
 </div>
-
 <script>
 const sessionToken = localStorage.getItem('sessionToken');
         if (!sessionToken) {
@@ -1981,19 +1928,9 @@ function closeTransactionModal() {
             allAccounts.forEach(acc => {
                 const item = document.createElement('div');
                 item.className = 'modal-list-item';
-                // [PERBAIKAN] Tampilkan ikon FA (atau emoji) dari data akun jika ada, jika tidak, ikon default
-                const icon = acc.icon || 'fas fa-wallet'; // Ganti 'fas fa-wallet' dengan ikon default Anda
-                
-                // Cek apakah ikon adalah FontAwesome (dimulai dengan 'fa-') atau emoji
-                let iconHtml;
-                if (icon.startsWith('fa-')) {
-                    iconHtml = `<div class="icon"><i class="${icon}"></i></div>`;
-                } else {
-                    // Anggap sebagai emoji jika bukan FontAwesome
-                    iconHtml = `<div class="icon" style="font-size: 20px;">${icon}</div>`;
-                }
-
-                item.innerHTML = `${iconHtml} <span>${acc.name}</span>`;
+                // [PERBAIKAN] Tampilkan inisial 2 huruf, bukan ikon FA
+                const initial = acc.name.substring(0, 2).toUpperCase();
+                item.innerHTML = `<div class="icon" style="font-weight: 600; font-size: 16px;">${initial}</div> <span>${acc.name}</span>`;
                 
                 if (acc.id === selectedAccountId) {
                     item.classList.add('active');
@@ -2003,11 +1940,14 @@ function closeTransactionModal() {
             });
             accountModal.classList.add('visible');
         }
-
+        
         function selectAccountFromModal(account) {
             selectedAccountId = account.id;
             // Update tampilan di create.html
-            updateAccountIcon(selectedAccountId); // [PERBAIKAN] Panggil helper ikon
+            document.getElementById('account-name-display').textContent = account.name;
+            const initial = account.name.substring(0, 2).toUpperCase();
+            document.getElementById('account-icon-display').outerHTML = `<span id="account-icon-display" class="icon" style="font-weight: 600; font-size: 12px; background: var(--light-purple); color: var(--primary-blue); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center;">${initial}</span>`;
+            
             closeAccountSwitcher();
         }
 
@@ -2352,6 +2292,7 @@ function renderDateModalCalendar() {
                 dialogResolve = null; // Reset
             }
         }
+
         /**
          * [BARU] Pengganti kustom untuk alert() dan confirm()
          * @param {object} options - { title, text, confirmText, cancelText, isDestructive }
@@ -2441,8 +2382,19 @@ function renderDateModalCalendar() {
             document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); 
             document.getElementById(type + 'Btn').classList.add('active'); 
             
+            // [PERUBAHAN] Reset pemilih kategori baru
             selectedCategory = null; 
-            loadCategories(); // [PENTING] Panggil fungsi ini lagi
+            document.getElementById('category-name-display').textContent = 'Pilih Kategori';
+            document.getElementById('category-icon-display').textContent = '';
+
+            // [PERUBAHAN] Ubah warna label jumlah
+            const amountLabel = document.getElementById('amount-label');
+            if (type === 'expense') {
+                amountLabel.style.color = 'var(--expense-red)';
+            } else {
+                amountLabel.style.color = 'var(--income-green)';
+            }
+            // loadCategories(); // Dihapus karena tidak ada grid lagi
         }
         function updateDisplay() {
             const amountDisplay = document.getElementById('amountDisplay');
@@ -2470,96 +2422,6 @@ function renderDateModalCalendar() {
         function changeButtonToCheck() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn check'; actionBtn.innerHTML = '<i class="fas fa-check"></i>'; }}
         function calculateResult() { try { let expression = calcValue.replace(/×/g, '*').replace(/÷/g, '/'); const result = eval(expression); calcValue = String(result); waitingForEquals = false; changeButtonToCheck(); updateDisplay(); } catch (e) { calcValue = '0'; updateDisplay(); } }
         function clearCalc() { calcValue = '0'; waitingForEquals = false; changeButtonToCheck(); updateDisplay(); }
-        function loadCategories() {
-            // [PERBAIKAN] Filter dari 'allCategories' global, sesuaikan 'type'
-            const typeToFilter = currentType.toUpperCase(); // 'expense' -> 'EXPENSE'
-            const categories = allCategories.filter(cat => cat.type === typeToFilter);
-
-            const recommendedGrid = document.getElementById('recommendedGrid');
-            const uncategorizedGrid = document.getElementById('uncategorizedGrid');
-            if(!recommendedGrid || !uncategorizedGrid) return;
-            
-            recommendedGrid.innerHTML = '';
-            uncategorizedGrid.innerHTML = '';
-            
-            // Tampilkan 8 ikon di rekomendasi, sisanya di bawah
-            categories.slice(0, 8).forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat)));
-            categories.slice(8).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat)));
-        }
-        
-        function createCategoryElement(category) {
-            const div = document.createElement('div');
-            div.className = 'category-item';
-            div.onclick = () => selectCategory(category, div); // Panggil fungsi selectCategory lama
-            
-            const icon = category.icon || category.name.charAt(0).toUpperCase();
-            const defaultColor = 'var(--light-purple)'; // Warna default
-
-            div.innerHTML = `<div class="category-icon" style="background: ${defaultColor}">${icon}</div><div class="category-name">${category.name}</div>`;
-            
-            // Cek jika kategori ini adalah yang sedang dipilih (untuk mode edit)
-            if (selectedCategory && category.id === selectedCategory.id) {
-                div.classList.add('selected');
-            }
-            return div;
-        }
-        
-        // [DIKEMBALIKAN] Fungsi lama untuk memilih kategori dari grid
-        function selectCategory(category, element) { 
-            selectedCategory = category; 
-            document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); 
-            element.classList.add('selected'); 
-        }
-
-        // [DIKEMBALIKAN] Fungsi helper untuk update ikon akun di halaman /create (Versi FA Icon)
-        function updateAccountIcon(accountId) {
-            const account = allAccounts.find(acc => acc.id === accountId);
-            if (!account) return;
-
-            const accountIconEl = document.getElementById('account-icon-display');
-            if (accountIconEl) {
-                // Ganti ikon FA (nanti bisa diganti inisial jika mau)
-                // Untuk saat ini kita pakai ikon kartu kredit saja
-                accountIconEl.className = 'fas fa-credit-card';
-            }
-        }
-        
-        function createCategoryElement(category) {
-            const div = document.createElement('div');
-            div.className = 'category-item';
-            div.onclick = () => selectCategory(category, div); // Panggil fungsi selectCategory lama
-            
-            const icon = category.icon || category.name.charAt(0).toUpperCase();
-            const defaultColor = 'var(--light-purple)'; // Warna default
-
-            div.innerHTML = `<div class="category-icon" style="background: ${defaultColor}">${icon}</div><div class="category-name">${category.name}</div>`;
-            
-            // Cek jika kategori ini adalah yang sedang dipilih (untuk mode edit)
-            if (selectedCategory && category.id === selectedCategory.id) {
-                div.classList.add('selected');
-            }
-            return div;
-        }
-        
-        // [DIKEMBALIKAN] Fungsi lama untuk memilih kategori dari grid
-        function selectCategory(category, element) { 
-            selectedCategory = category; 
-            document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); 
-            element.classList.add('selected'); 
-        }
-
-        // [DIKEMBALIKAN] Fungsi helper untuk update ikon akun di halaman /create (Versi FA Icon)
-        function updateAccountIcon(accountId) {
-            const account = allAccounts.find(acc => acc.id === accountId);
-            if (!account) return;
-
-            const accountIconEl = document.getElementById('account-icon-display');
-            if (accountIconEl) {
-                // Ganti ikon FA (nanti bisa diganti inisial jika mau)
-                // Untuk saat ini kita pakai ikon kartu kredit saja
-                accountIconEl.className = 'fas fa-credit-card';
-            }
-        }
         function loadCategories() {
             // [PERBAIKAN] Filter dari 'allCategories' global, sesuaikan 'type'
             const typeToFilter = currentType.toUpperCase(); // 'expense' -> 'EXPENSE'
@@ -2639,15 +2501,14 @@ function renderDateModalCalendar() {
                 // Endpoint mengharapkan format YYYY-MM-DD untuk tanggal
                 const transactionDate = selectedTransactionDate.toISOString().split('T')[0];
                 
-                const notes = currentNoteText;
+                const notes = document.getElementById('notes-input').value;
 
                 const payload = {
                     wallet_id: walletId,
-                    type: currentType.toUpperCase(),
-                    amount: amount, 
+                    type: currentType.toUpperCase(), // API mengharapkan 'EXPENSE' atau 'INCOME'
+                    amount: amount, // API Anda di 'queries.js' sudah menangani konversi ke sen
                     category_id: selectedCategory.id,
-                    // [MODIFIKASI] Gunakan 'notes' dari var global
-                    description: document.getElementById('notes-input').value || selectedCategory.name,
+                    description: notes || selectedCategory.name, // [PERBAIKAN] Gunakan catatan, atau nama kategori jika kosong
                     transaction_date: transactionDate,
                 };
 
@@ -2719,15 +2580,14 @@ function renderDateModalCalendar() {
 
                 const transactionDate = selectedTransactionDate.toISOString().split('T')[0];
                 
-                const notes = currentNoteText;
-
+                const notes = document.getElementById('notes-input').value;
+                
                 const payload = {
                     wallet_id: walletId,
                     type: currentType.toUpperCase(),
-                    amount: amount, 
+                    amount: amount, // Sudah dalam Rupiah
                     category_id: selectedCategory.id,
-                    // [MODIFIKASI] Gunakan 'notes' dari var global
-                   description: document.getElementById('notes-input').value || selectedCategory.name,
+                    description: notes || selectedCategory.name, // [PERBAIKAN] Gunakan catatan
                     transaction_date: transactionDate,
                 };
                 if (currentType === 'expense') {
@@ -3151,56 +3011,85 @@ function renderTransactionList(filteredTransactions) {
         document.getElementById('header-right-side')?.classList.remove('loading');
     }
 function initCreatePage() {
-    const txToEditJSON = sessionStorage.getItem('tx_for_edit');
-    const notesInputEl = document.getElementById('notes-input'); // Ambil elemen catatan
+            const txToEditJSON = sessionStorage.getItem('tx_for_edit');
+            
+            // Elemen UI Baru
+            const accountNameEl = document.getElementById('account-name-display');
+            const accountIconEl = document.getElementById('account-icon-display');
+            const categoryNameEl = document.getElementById('category-name-display');
+            const categoryIconEl = document.getElementById('category-icon-display');
+            const notesInputEl = document.getElementById('notes-input');
+            const amountLabel = document.getElementById('amount-label');
 
-    if (txToEditJSON) {
-        // === MODE EDIT ===
-        const tx = JSON.parse(txToEditJSON);
+            if (txToEditJSON) {
+                // === MODE EDIT ===
+                const tx = JSON.parse(txToEditJSON);
 
-        currentTransactionId = tx.id; 
-        currentType = tx.type;
-        calcValue = String(tx.amount); // Ambil amount
-        selectedAccountId = tx.account_id;
-        selectedCategory = allCategories.find(c => c.id === tx.category_id);
-        selectedTransactionDate = new Date(tx.date); 
+                currentTransactionId = tx.id; 
+                currentType = tx.type;
+                calcValue = String(tx.amount);
+                selectedAccountId = tx.account_id;
+                selectedCategory = allCategories.find(c => c.id === tx.category_id);
+                
+                // Set tanggal
+                selectedTransactionDate = new Date(tx.date); 
+                
+                // Set Tipe (Expense/Income)
+                document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active'));
+                document.getElementById(currentType + 'Btn').classList.add('active');
+                amountLabel.style.color = (currentType === 'expense') ? 'var(--expense-red)' : 'var(--income-green)';
 
-        // [MODIFIKASI] Isi catatan
-        if (notesInputEl) notesInputEl.value = tx.notes || ''; 
+                // Set Akun
+                const account = allAccounts.find(acc => acc.id === selectedAccountId);
+                if (account) {
+                    accountNameEl.textContent = account.name;
+                    const initial = account.name.substring(0, 2).toUpperCase();
+                    // Ganti ikon FA dengan span inisial
+                    accountIconEl.outerHTML = `<span id="account-icon-display" class="icon" style="font-weight: 600; font-size: 12px; background: var(--light-purple); color: var(--primary-blue); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center;">${initial}</span>`;
+                }
 
-        // Set Tipe (Expense/Income)
-        document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(currentType + 'Btn').classList.add('active');
+                // Set Kategori
+                if (selectedCategory) {
+                    categoryNameEl.textContent = selectedCategory.name;
+                    categoryIconEl.textContent = selectedCategory.icon || selectedCategory.name.charAt(0).toUpperCase();
+                }
 
-        loadCategories(); // Muat grid kategori (akan otomatis menandai yg aktif)
-        updateDisplay(); // Tampilkan amount
-        updateAccountIcon(selectedAccountId); // Update ikon FA di account-card
+                // [GOAL 1] Set Catatan
+                notesInputEl.value = tx.notes || '';
 
-        sessionStorage.removeItem('tx_for_edit');
+                sessionStorage.removeItem('tx_for_edit');
 
-    } else {
-        // === MODE BUAT BARU ===
-        currentTransactionId = null; 
-        currentType = 'expense';
-        selectedCategory = null;
-        selectedTransactionDate = new Date(); // Reset ke hari ini
-        if (notesInputEl) notesInputEl.value = ''; // [MODIFIKASI] Kosongkan catatan
-        clearCalc();
+            } else {
+                // === MODE BUAT BARU ===
+                currentTransactionId = null; 
+                currentType = 'expense';
+                selectedCategory = null;
+                selectedTransactionDate = new Date(); // Reset ke hari ini
+                clearCalc();
 
-        // Set Akun Default (jika belum ada)
-        if (!selectedAccountId && allAccounts.length > 0) {
-             const defaultAccount = allAccounts.find(a => a.type === 'ASSET') || allAccounts[0];
-             selectedAccountId = defaultAccount.id;
+                amountLabel.style.color = 'var(--expense-red)'; // Default
+
+                // Set Akun Default
+                const defaultAccount = allAccounts.find(a => a.type === 'ASSET') || allAccounts[0];
+                if (defaultAccount) {
+                    selectedAccountId = defaultAccount.id;
+                    accountNameEl.textContent = defaultAccount.name;
+                    const initial = defaultAccount.name.substring(0, 2).toUpperCase();
+                    accountIconEl.outerHTML = `<span id="account-icon-display" class="icon" style="font-weight: 600; font-size: 12px; background: var(--light-purple); color: var(--primary-blue); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center;">${initial}</span>`;
+                }
+
+                // Reset Kategori & Catatan
+                categoryNameEl.textContent = 'Pilih Kategori';
+                categoryIconEl.textContent = '';
+                notesInputEl.value = '';
+            }
+
+            updateDisplay(); // Tampilkan jumlah (0 atau dari editan)
+            updateCreateDateButton(); // Update teks tombol (misal: "TODAY")
+            console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
         }
-
-        loadCategories(); // Muat grid kategori
-        updateAccountIcon(selectedAccountId); // Update ikon FA
-    }
-
-    updateCreateDateButton(); // Update teks tombol (misal: "TODAY")
-    console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
-}      
-function initWalletPage() { 
+        
+        function initWalletPage() { 
             console.log("Halaman dompet dimuat."); 
             // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
             attachThemeToggle('.theme-toggle');
