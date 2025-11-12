@@ -205,7 +205,15 @@
         }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .header-top .left { display: flex; align-items: center; gap: 18px; }
-        .view-toggle-group { display: flex; align-items: center; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px; }
+        .view-toggle-group { 
+            display: flex; 
+            align-items: center; 
+            background: rgba(0,0,0,0.2); 
+            border-radius: 20px; 
+            padding: 4px; 
+            width: 140px; /* [PERBAIKAN] Paksa lebar agar sama dengan .skeleton-view-toggle */
+            justify-content: center; /* [TAMBAHAN] Agar tombol di dalamnya tetap rapi di tengah */
+        }
         .toggle-btn { background: transparent; border: none; color: white; padding: 8px 12px; border-radius: 16px; display: flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; transition: background-color 0.3s; white-space: nowrap; }
         .toggle-btn.active-view { background: rgba(255,255,255,0.2); }
         .toggle-btn span { display: inline-block; transition: max-width 0.3s ease-in-out, opacity 0.2s ease-in-out, margin-left 0.3s ease-in-out; max-width: 100px; opacity: 1; margin-left: 5px; overflow: hidden; }
