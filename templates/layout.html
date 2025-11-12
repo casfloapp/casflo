@@ -964,44 +964,7 @@
             border-color: #4b5563;
             color: white;
         }
-        .dark .tx-modal-body textarea::placeholder {
-            color: #9ca3af;
-        }
-        .dialog-modal-actions {
-            display: flex;
-            gap: 10px;
-            padding: 0 25px 25px 25px;
-            margin-top: 25px;
-        }
-        .dialog-modal-btn {
-            flex-grow: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .dialog-modal-btn.cancel {
-            background-color: var(--bg-gray);
-            color: var(--text-dark);
-        }
-        .dark .dialog-modal-btn.cancel {
-            background-color: #4b5563;
-            color: white;
-        }
-        .dialog-modal-btn.confirm {
-            background-color: var(--primary-blue);
-            color: white;
-        }
-        .dialog-modal-btn.confirm.destructive {
-            background-color: var(--expense-red);
-            color: white;
-        }
-        .form-card .submit-btn:disabled {
-            background-color: #9ca3af;
-            cursor: not-allowed;
-        }
+        
 
         /* [BARU] Style untuk pilihan Icon di Modal */
         .icon-selection-container-modal {
@@ -1112,67 +1075,6 @@
         }
         .modal-overlay{
             display: none;
-        }
-        .calculator-section.new-layout {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-bottom: 8px; /* Beri jarak ke tombol aksi */
-        }
-        .amount-container.new-style {
-            background: white;
-            border-radius: 12px;
-            padding: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .dark .amount-container.new-style {
-            background: #374151;
-        }
-
-        .amount-row {
-            display: flex;
-            gap: 10px;
-        }
-        .input-wrapper {
-            flex: 1; /* Lebar sama rata */
-            background: var(--bg-gray);
-            border-radius: 10px;
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-        .dark .input-wrapper {
-            background: #4b5563;
-        }
-        .input-wrapper .label {
-            font-size: 11px;
-            color: var(--text-light);
-            font-weight: 500;
-            display: block;
-            margin-bottom: 2px;
-        }
-        .input-wrapper .value-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-        .dark .input-wrapper .value-row {
-             color: #ffffff;
-        }
-        .input-wrapper .value-row .icon {
-            color: var(--text-light);
-            width: 16px;
-            text-align: center;
-        }
-        .input-wrapper .value-row .arrow {
-            color: var(--text-light);
-            font-size: 12px;
-            margin-left: auto;
         }
 
         /* [GOAL 1] Styling Input Catatan */
@@ -1369,6 +1271,90 @@
             background: transparent;
             color: #ffffff;
         }
+        .calculator-section { 
+    background: #f8f9fa; 
+    padding: 15px; 
+    border-top: 1px solid #e9ecef; 
+    flex-shrink: 0; 
+    display: grid; 
+    grid-template-rows: repeat(6, 1fr); 
+    gap: 8px; 
+}
+.amount-container { 
+    display: flex; 
+    gap: 8px; 
+}
+.amount-display { 
+    flex-grow: 1; 
+    background: white; 
+    padding: 0 12px; 
+    border-radius: 10px; 
+    text-align: right; 
+    font-size: 28px; 
+    font-weight: 700; 
+    display: flex; 
+    align-items: center; 
+    justify-content: flex-end; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+    height: 100%; 
+}
+/* [BARU] Wrapper untuk Catatan & Jumlah (dijadikan 1 kartu) */
+.notes-amount-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    overflow: hidden; /* Penting untuk rounded corners */
+}
+.dark .notes-amount-wrapper {
+    background: #374151;
+}
+
+/* [BARU - GOAL 1] Input Catatan (tanpa background) */
+.notes-input-field {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 10px 12px; /* Beri padding */
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--bg-gray); /* Garis pemisah */
+}
+.dark .notes-input-field {
+    color: white;
+    border-bottom-color: #4b5563; /* Garis pemisah mode gelap */
+}
+.dark .notes-input-field::placeholder {
+    color: #9ca3af;
+}
+.notes-input-field:focus {
+    outline: none;
+    box-shadow: 0 2px 0 0 var(--primary-blue) inset; /* Fokus di garis bawah */
+    border-bottom-color: transparent;
+}
+
+/* [MODIFIKASI] Display Jumlah (tanpa background/shadow) */
+.amount-display {
+    flex-grow: 1;
+    background: transparent; /* Hapus background */
+    padding: 8px 12px 10px 12px; /* Sesuaikan padding */
+    border-radius: 0; /* Hapus radius */
+    text-align: right;
+    font-size: 28px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    box-shadow: none; /* Hapus shadow */
+    height: 100%;
+    min-height: auto; /* Hapus min-height */
+}
+.dark .amount-display {
+    background: transparent;
+    color: #ffffff;
+}
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
             .app-container { max-width: 480px; margin: 0 auto; height: 100vh; }
@@ -1533,24 +1519,6 @@
         <div class="modal-buttons">
             <button class="btn btn-secondary" onclick="closeDeleteBookModal()">Batal</button>
             <button class="btn btn-danger" id="confirm-delete-book-btn">Hapus Buku</button>
-        </div>
-    </div>
-</div>
-<div id="note-modal-overlay" class="tx-modal-overlay" onclick="closeNoteModal()">
-    <div class="tx-modal-content" onclick="event.stopPropagation()">
-        <div class="tx-modal-header">
-            <h3 style="font-weight: 600;">Tulis Catatan</h3>
-            <button class="tx-modal-close" onclick="closeNoteModal()"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="tx-modal-body" style="padding: 15px 15px 20px 15px;">
-            <textarea id="note-modal-input" class="notes-input-field" 
-                        style="width: 100%; min-height: 100px; border: 1px solid #e0e0e0; padding: 10px; border-radius: 10px;" 
-                        placeholder="Tulis catatan Anda di sini..."></textarea>
-            
-            <div class="dialog-modal-actions" style="margin-top: 15px; padding: 0;">
-                    <button class="dialog-modal-btn cancel" onclick="closeNoteModal()">Batal</button>
-                    <button class="dialog-modal-btn confirm" onclick="saveNoteFromModal()">Simpan</button>
-            </div>
         </div>
     </div>
 </div>
@@ -2357,7 +2325,6 @@ function renderDateModalCalendar() {
         let currentTransactionId = null; // [BARU] Untuk modal detail
         let selectedTransactionDate = new Date(); // [BARU] Default ke hari ini
         let modalCalendarDate = new Date(); // [BARU] Untuk navigasi di modal
-        let currentNoteText = '';
 
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -2385,46 +2352,6 @@ function renderDateModalCalendar() {
                 dialogResolve = null; // Reset
             }
         }
-        function openNoteModal() {
-            const modal = document.getElementById('note-modal-overlay');
-            if (!modal) return;
-
-            // Ambil teks catatan saat ini dan masukkan ke textarea modal
-            const input = document.getElementById('note-modal-input');
-            if(input) input.value = currentNoteText; 
-
-            modal.classList.add('visible');
-        }
-
-        function closeNoteModal() {
-            const modal = document.getElementById('note-modal-overlay');
-            if (modal) modal.classList.remove('visible');
-        }
-
-        function saveNoteFromModal() {
-            const input = document.getElementById('note-modal-input');
-            if (!input) return;
-
-            currentNoteText = input.value; // Simpan ke var global
-
-            // Update teks preview di halaman create
-            const preview = document.getElementById('note-preview-text');
-            if (preview) {
-                const icon = document.querySelector('#open-note-modal-btn .fas');
-                if (currentNoteText) {
-                    preview.textContent = currentNoteText; // Tampilkan catatan
-                    preview.style.color = 'var(--text-dark)';
-                    if(icon) icon.style.color = 'var(--primary-blue)'; // Ubah warna ikon
-                } else {
-                    preview.textContent = 'Tulis catatan...'; // Kembali ke placeholder
-                    preview.style.color = 'var(--text-light)';
-                    if(icon) icon.style.color = 'var(--text-light)'; // Kembalikan warna ikon
-                }
-            }
-
-            closeNoteModal();
-        }
-
         /**
          * [BARU] Pengganti kustom untuk alert() dan confirm()
          * @param {object} options - { title, text, confirmText, cancelText, isDestructive }
@@ -2720,7 +2647,7 @@ function renderDateModalCalendar() {
                     amount: amount, 
                     category_id: selectedCategory.id,
                     // [MODIFIKASI] Gunakan 'notes' dari var global
-                    description: notes || selectedCategory.name, 
+                    description: document.getElementById('notes-input').value || selectedCategory.name,
                     transaction_date: transactionDate,
                 };
 
@@ -2800,7 +2727,7 @@ function renderDateModalCalendar() {
                     amount: amount, 
                     category_id: selectedCategory.id,
                     // [MODIFIKASI] Gunakan 'notes' dari var global
-                    description: notes || selectedCategory.name, 
+                   description: document.getElementById('notes-input').value || selectedCategory.name,
                     transaction_date: transactionDate,
                 };
                 if (currentType === 'expense') {
@@ -3223,8 +3150,9 @@ function renderTransactionList(filteredTransactions) {
         // [BARU] Tampilkan tombol header kanan setelah semua siap
         document.getElementById('header-right-side')?.classList.remove('loading');
     }
-        function initCreatePage() {
+function initCreatePage() {
     const txToEditJSON = sessionStorage.getItem('tx_for_edit');
+    const notesInputEl = document.getElementById('notes-input'); // Ambil elemen catatan
 
     if (txToEditJSON) {
         // === MODE EDIT ===
@@ -3232,18 +3160,21 @@ function renderTransactionList(filteredTransactions) {
 
         currentTransactionId = tx.id; 
         currentType = tx.type;
-        calcValue = String(tx.amount);
+        calcValue = String(tx.amount); // Ambil amount
         selectedAccountId = tx.account_id;
         selectedCategory = allCategories.find(c => c.id === tx.category_id);
         selectedTransactionDate = new Date(tx.date); 
-        currentNoteText = tx.notes || ''; // [MODIFIKASI] Simpan ke var global
 
+        // [MODIFIKASI] Isi catatan
+        if (notesInputEl) notesInputEl.value = tx.notes || ''; 
+
+        // Set Tipe (Expense/Income)
         document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active'));
         document.getElementById(currentType + 'Btn').classList.add('active');
 
-        loadCategories(); 
-        updateDisplay(); 
-        updateAccountIcon(selectedAccountId);
+        loadCategories(); // Muat grid kategori (akan otomatis menandai yg aktif)
+        updateDisplay(); // Tampilkan amount
+        updateAccountIcon(selectedAccountId); // Update ikon FA di account-card
 
         sessionStorage.removeItem('tx_for_edit');
 
@@ -3252,44 +3183,24 @@ function renderTransactionList(filteredTransactions) {
         currentTransactionId = null; 
         currentType = 'expense';
         selectedCategory = null;
-        selectedTransactionDate = new Date();
-        currentNoteText = ''; // [MODIFIKASI] Reset var global
+        selectedTransactionDate = new Date(); // Reset ke hari ini
+        if (notesInputEl) notesInputEl.value = ''; // [MODIFIKASI] Kosongkan catatan
         clearCalc();
 
+        // Set Akun Default (jika belum ada)
         if (!selectedAccountId && allAccounts.length > 0) {
              const defaultAccount = allAccounts.find(a => a.type === 'ASSET') || allAccounts[0];
              selectedAccountId = defaultAccount.id;
         }
 
-        loadCategories();
-        updateAccountIcon(selectedAccountId);
+        loadCategories(); // Muat grid kategori
+        updateAccountIcon(selectedAccountId); // Update ikon FA
     }
 
-    // [BAGIAN BARU] Pasang listener & update UI catatan
-    const openNoteBtn = document.getElementById('open-note-modal-btn');
-    if (openNoteBtn) {
-        openNoteBtn.addEventListener('click', openNoteModal);
-    }
-
-    const preview = document.getElementById('note-preview-text');
-    if (preview) {
-        const icon = document.querySelector('#open-note-modal-btn .fas');
-        if (currentNoteText) {
-            preview.textContent = currentNoteText;
-            preview.style.color = 'var(--text-dark)';
-            if(icon) icon.style.color = 'var(--primary-blue)';
-        } else {
-            preview.textContent = 'Tulis catatan...';
-            preview.style.color = 'var(--text-light)';
-            if(icon) icon.style.color = 'var(--text-light)';
-        }
-    }
-    // [AKHIR BAGIAN BARU]
-
-    updateCreateDateButton();
+    updateCreateDateButton(); // Update teks tombol (misal: "TODAY")
     console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
-}
-        function initWalletPage() { 
+}      
+function initWalletPage() { 
             console.log("Halaman dompet dimuat."); 
             // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
             attachThemeToggle('.theme-toggle');
