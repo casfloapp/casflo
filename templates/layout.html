@@ -425,23 +425,7 @@
         .amount-container { display: flex; gap: 8px; }
         .account-card { aspect-ratio: 1 / 1; height: 100%; background: var(--primary-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(102, 102, 234, 0.3); }
         .account-card i { color: white; font-size: 24px; }
-        .amount-display {
-            /* [PERBAIKAN KUNCI] Hapus flex-grow, beri lebar tetap */
-            flex: 0 0 140px; /* Lebar 140px, tidak bisa tumbuh, tidak bisa menyusut */
-
-            background: white;
-            padding: 0 12px;
-            border-radius: 10px;
-            text-align: right;
-            font-size: 32px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            border: 1px solid #f0f0f0;
-            height: 100%;
-            box-sizing: border-box; /* [TAMBAHAN] Pastikan padding tidak merusak lebar */
-        }
+        .amount-display { flex-grow: 1; background: white; padding: 0 12px; border-radius: 10px; text-align: right; font-size: 28px; font-weight: 700; display: flex; align-items: center; justify-content: flex-end; border: 1px solid #f0f0f0; height: 100%; }
         .top-action-bar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -1325,12 +1309,6 @@
     padding: 10px 12px;
     gap: 10px;
     border: 1px solid #f0f0f0;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    
-    /* [PERBAIKAN KUNCI] */
-    flex: 1; /* Biarkan wrapper ini mengambil sisa ruang */
-    min-width: 0; /* Izinkan wrapper ini mengecil & mengaktifkan ellipsis */
 }
 .note-input-wrapper i {
     color: var(--text-light);
@@ -1382,7 +1360,7 @@
     background:#FFFFFF;
     border-top: 1px solid #e0e0e0;
     display: grid;
-    /*gap: 8px; /* [FIX] Kembalikan gap 8px */
+    gap: 8px; /* [FIX] Kembalikan gap 8px */
     overflow: hidden;
     box-sizing: border-box;
     
