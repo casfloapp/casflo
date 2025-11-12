@@ -14,10 +14,10 @@
     <div class="calculator-section">
         
         <div class="amount-container">
-            <div class="note-input-wrapper">
+            <button type="button" class="note-input-wrapper" onclick="openNotesModal()">
                 <i class="fas fa-file-alt"></i>
-                <input type="text" id="transaction-notes" placeholder="Catatan...">
-            </div>
+                <span id="notes-display-preview" class="notes-preview-text" data-placeholder="Catatan..."></span>
+            </button>
             <div class="amount-display" id="amountDisplay">0</div>
         </div>
         

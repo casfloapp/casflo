@@ -1338,9 +1338,148 @@
     font-size: 32px; /* Perbesar */
 }
 
-/* HAPUS .account-card (sudah dipindah) */
-/* Hapus atau komentari blok CSS .account-card { ... } */
-/* .account-card { ... } */
+/* ====================================================== */
+/* [BARU] CSS UNTUK MODAL CATATAN (NOTES MODAL) */
+/* ====================================================== */
+.notes-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-gray); /* Latar belakang abu-abu */
+    display: none; /* Sembunyi secara default */
+    flex-direction: column;
+    z-index: 1002; /* Di atas modal lain tapi di bawah dialog */
+    max-width: 480px;
+    margin: 0 auto;
+    transform: translateY(100%); /* Mulai dari bawah */
+    transition: transform 0.3s ease-out;
+}
+.notes-modal-overlay.visible {
+    display: flex;
+    transform: translateY(0%);
+}
+.notes-modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background: white;
+}
+.notes-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+    flex-shrink: 0;
+}
+.notes-modal-header h3 {
+    font-weight: 600;
+    font-size: 16px;
+}
+.notes-modal-header .notes-modal-close,
+.notes-modal-header .notes-modal-save {
+    background: none;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.notes-modal-header .notes-modal-close {
+    color: var(--text-light);
+    font-size: 20px;
+}
+.notes-modal-header .notes-modal-save {
+    color: var(--primary-blue);
+}
+.notes-modal-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+.notes-modal-body textarea {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 10px;
+    background-color: var(--bg-gray);
+    border-radius: 10px;
+    resize: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+.suggestion-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 15px 0;
+    flex-shrink: 0;
+}
+.suggestion-pills button {
+    background: var(--light-purple);
+    color: var(--primary-blue);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* CSS untuk Tampilan Catatan di Kalkulator */
+.note-input-wrapper {
+    cursor: pointer; /* Ubah jadi bisa diklik */
+    transition: background-color 0.2s;
+}
+.note-input-wrapper:hover {
+    background-color: #f0f0f0;
+}
+.notes-preview-text {
+    font-size: 15px;
+    color: var(--text-dark);
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* Style untuk placeholder */
+.notes-preview-text:empty::before {
+    content: attr(data-placeholder);
+    color: var(--text-light);
+}
+
+.dark .notes-modal-overlay,
+.dark .notes-modal-content {
+    background-color: #1f2937; /* dark:bg-gray-800 */
+}
+.dark .notes-modal-header {
+    border-bottom-color: #4b5563;
+}
+.dark .notes-modal-header h3 {
+    color: white;
+}
+.dark .notes-modal-body textarea {
+    background-color: #374151;
+    color: white;
+}
+.dark .suggestion-pills button {
+    background-color: #4b5563;
+    color: #E6E6FA;
+}
+.dark .notes-preview-text {
+    color: white;
+}
+.dark .notes-preview-text:empty::before {
+    color: #9ca3af;
+}
+.dark .note-input-wrapper:hover {
+    background-color: #374151;
+}
 
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
@@ -1532,6 +1671,27 @@
         </div>
     </div>
 </div>
+<div id="notes-modal-overlay" class="notes-modal-overlay">
+    <div class="notes-modal-content">
+        <div class="notes-modal-header">
+            <button class="notes-modal-close" onclick="closeNotesModal(false)"><i class="fas fa-times"></i></button>
+            <h3>Catatan Transaksi</h3>
+            <button class="notes-modal-save" onclick="closeNotesModal(true)">Selesai</button>
+        </div>
+        <div class="notes-modal-body">
+            <textarea id="notes-modal-input" placeholder="Tulis catatan di sini..."></textarea>
+            
+            <div class="suggestion-pills">
+                <button onclick="addSuggestion('Sarapan')">Sarapan</button>
+                <button onclick="addSuggestion('Belanja Bulanan')">Belanja Bulanan</button>
+                <button onclick="addSuggestion('Transport')">Transport</button>
+                <button onclick="addSuggestion('Makan Siang')">Makan Siang</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialog-modal-overlay" class="tx-modal-overlay" onclick="closeDialog(false)">
+    </div>
 <script>
 const sessionToken = localStorage.getItem('sessionToken');
         if (!sessionToken) {
@@ -2241,6 +2401,7 @@ function renderDateModalCalendar() {
         let selectedCategory = null;
         let calcValue = '0';
         let waitingForEquals = false;
+        let currentNotes = '';
 
         let allCategories = [];
         let allAccounts = [];
@@ -2404,7 +2565,70 @@ function renderDateModalCalendar() {
             categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat)));
         }
         
+        /* ====================================================== */
+/* [BARU] FUNGSI-FUNGSI UNTUK MODAL CATATAN */
+/* ====================================================== */
+const notesModal = document.getElementById('notes-modal-overlay');
+const notesModalInput = document.getElementById('notes-modal-input');
+
+function openNotesModal() {
+    if (!notesModal || !notesModalInput) return;
+
+    // 1. Isi textarea dengan catatan yang ada
+    notesModalInput.value = currentNotes;
+    
+    // 2. Tampilkan modal
+    notesModal.classList.add('visible');
+    
+    // 3. [KUNCI] Fokus ke textarea untuk memunculkan keyboard
+    // Beri jeda sedikit agar transisi CSS selesai
+    setTimeout(() => {
+        notesModalInput.focus();
+    }, 350); // 350ms (sedikit di atas durasi transisi 0.3s)
+}
+
+/**
+ * Menutup modal catatan
+ * @param {boolean} shouldSave - Jika 'true', simpan teks. Jika 'false' (Batal), jangan simpan.
+ */
+function closeNotesModal(shouldSave = false) {
+    if (!notesModal || !notesModalInput) return;
+
+    if (shouldSave) {
+        // 1. Ambil teks dari modal dan simpan ke global
+        currentNotes = notesModalInput.value;
         
+        // 2. Update tampilan preview di kalkulator
+        const preview = document.getElementById('notes-display-preview');
+        if (preview) {
+            preview.textContent = currentNotes;
+        }
+    }
+    
+    // 3. Sembunyikan modal
+    notesModal.classList.remove('visible');
+    
+    // 4. (Opsional) Hapus fokus untuk sembunyikan keyboard
+    notesModalInput.blur();
+}
+
+/**
+ * [BARU] Helper untuk tombol suggestion pills
+ */
+function addSuggestion(text) {
+    if (!notesModalInput) return;
+    
+    // Tambahkan teks ke textarea dengan spasi
+    if (notesModalInput.value.trim() === '') {
+        notesModalInput.value = text;
+    } else {
+        notesModalInput.value += ` ${text}`;
+    }
+    notesModalInput.focus(); // Fokus kembali ke input
+}
+/* ====================================================== */
+/* AKHIR FUNGSI MODAL CATATAN */
+/* ====================================================== */
         
         function createCategoryElement(category) {
             const div = document.createElement('div');
@@ -2465,14 +2689,14 @@ function renderDateModalCalendar() {
                 // 2. Siapkan Payload (Body) sesuai spesifikasi API Anda
                 // Endpoint mengharapkan format YYYY-MM-DD untuk tanggal
                 const transactionDate = selectedTransactionDate.toISOString().split('T')[0];
-                const notes = document.getElementById('transaction-notes').value;
+                //const notes = document.getElementById('transaction-notes').value;
                 
                 const payload = {
                     wallet_id: walletId,
                     type: currentType.toUpperCase(), // API mengharapkan 'EXPENSE' atau 'INCOME'
                     amount: amount, // API Anda di 'queries.js' sudah menangani konversi ke sen
                     category_id: selectedCategory.id,
-                    description: notes || selectedCategory.name,
+                    description: currentNotes || selectedCategory.name,
                     transaction_date: transactionDate,
                 };
 
@@ -2507,8 +2731,8 @@ function renderDateModalCalendar() {
                 
                 // Reset kalkulator & navigasi kembali ke halaman utama
                 clearCalc(); 
-                const notesInput = document.getElementById('transaction-notes');
-                if (notesInput) notesInput.value = ''; // Reset input catatan
+                const notesPreview = document.getElementById('notes-display-preview'); // [TAMBAHKAN INI]
+                if (notesPreview) notesPreview.textContent = '';
                 navigate('/'); 
 
             } catch (error) {
@@ -2545,14 +2769,14 @@ function renderDateModalCalendar() {
                 }
 
                 const transactionDate = selectedTransactionDate.toISOString().split('T')[0];
-                const notes = document.getElementById('transaction-notes').value;
+                //const notes = document.getElementById('transaction-notes').value;
                 
                 const payload = {
                     wallet_id: walletId,
                     type: currentType.toUpperCase(),
                     amount: amount, // Sudah dalam Rupiah
                     category_id: selectedCategory.id,
-                    description: notes || selectedCategory.name,
+                    description: currentNotes || selectedCategory.name,
                     transaction_date: transactionDate,
                 };
 
@@ -2976,9 +3200,11 @@ function renderTransactionList(filteredTransactions) {
         // [BARU] Tampilkan tombol header kanan setelah semua siap
         document.getElementById('header-right-side')?.classList.remove('loading');
     }
-       function initCreatePage() {
+  // GANTI FUNGSI LAMA DENGAN INI
+function initCreatePage() {
+    // [MODIFIKASI] Ambil elemen preview
+    const notesPreview = document.getElementById('notes-display-preview');
     const txToEditJSON = sessionStorage.getItem('tx_for_edit');
-    const notesInput = document.getElementById('transaction-notes');
 
     if (txToEditJSON) {
         // === MODE EDIT ===
@@ -2989,8 +3215,8 @@ function renderTransactionList(filteredTransactions) {
         calcValue = String(tx.amount);
         selectedAccountId = tx.account_id;
         selectedCategory = allCategories.find(c => c.id === tx.category_id);
-        // [PERBAIKAN] Set tanggal dari transaksi yang diedit
         selectedTransactionDate = new Date(tx.date); 
+        currentNotes = tx.notes || ''; // [MODIFIKASI] Simpan ke var global
 
         document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active'));
         document.getElementById(currentType + 'Btn').classList.add('active');
@@ -2998,7 +3224,7 @@ function renderTransactionList(filteredTransactions) {
         loadCategories(); 
         updateDisplay(); 
         updateAccountIcon(selectedAccountId); 
-        if (notesInput) notesInput.value = tx.notes || '';
+        if (notesPreview) notesPreview.textContent = currentNotes; // [MODIFIKASI] Update preview
 
         sessionStorage.removeItem('tx_for_edit');
 
@@ -3007,17 +3233,17 @@ function renderTransactionList(filteredTransactions) {
         currentTransactionId = null; 
         currentType = 'expense';
         selectedCategory = null;
-        selectedTransactionDate = new Date(); // [PERBAIKAN] Reset ke hari ini
+        selectedTransactionDate = new Date(); 
+        currentNotes = ''; // [MODIFIKASI] Reset var global
         clearCalc();
         loadCategories(); 
         updateAccountIcon(selectedAccountId); 
-        if (notesInput) notesInput.value = '';
+        if (notesPreview) notesPreview.textContent = ''; // [MODIFIKASI] Kosongkan preview
     }
 
-    updateCreateDateButton(); // [BARU] Update teks tombol (misal: "TODAY")
+    updateCreateDateButton();
     console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
 }
-
         function initWalletPage() { 
             console.log("Halaman dompet dimuat."); 
             // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
