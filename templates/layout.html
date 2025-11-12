@@ -1339,37 +1339,36 @@
 }
 
 /* ====================================================== */
-/* [MODIFIKASI] CSS UNTUK MODAL CATATAN (NOTES MODAL) */
+/* [PERBAIKAN] CSS UNTUK MODAL CATATAN (BOTTOM SHEET) */
 /* ====================================================== */
 .notes-modal-overlay {
     position: fixed;
-    top: 0; /* Biarkan top 0 untuk overlay */
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.4); /* Latar belakang semi-transparan */
-    display: none; /* Sembunyi secara default */
-    align-items: flex-end; /* [PENTING] Dorong konten ke bawah */
+    background: rgba(0, 0, 0, 0.4); /* [FIX] Latar belakang redup */
+    display: none;
+    align-items: flex-end; /* [FIX] Dorong modal ke bawah */
     justify-content: center;
     z-index: 1002;
     max-width: 480px;
     margin: 0 auto;
-    animation: fadeIn 0.3s ease; /* Transisi fade-in untuk overlay */
+    animation: fadeIn 0.3s ease; /* Animasi untuk overlay */
 }
 .notes-modal-overlay.visible {
     display: flex;
 }
 .notes-modal-content {
-    /* Ini adalah 'card' yang slide dari bawah */
     background: white;
     width: 100%;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    border-top-left-radius: 20px; /* Sesuai screenshot */
+    border-top-right-radius: 20px; /* Sesuai screenshot */
     animation: slideUp 0.3s ease-out; /* Animasi slide dari bawah */
-    max-height: 90svh; /* Batas atas, jangan sampai mentok */
+    max-height: 90svh; /* Jangan penuhi layar */
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Penting untuk border-radius */
+    overflow: hidden;
 }
 .notes-modal-header {
     display: flex;
@@ -1382,6 +1381,8 @@
 .notes-modal-header h3 {
     font-weight: 600;
     font-size: 16px;
+    text-align: center;
+    flex-grow: 1; /* Biarkan judul di tengah */
 }
 .notes-modal-header .notes-modal-close,
 .notes-modal-header .notes-modal-save {
@@ -1390,22 +1391,25 @@
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
+    flex-basis: 50px; /* Beri lebar agar judul tetap di tengah */
 }
 .notes-modal-header .notes-modal-close {
     color: var(--text-light);
     font-size: 20px;
+    text-align: left;
 }
 .notes-modal-header .notes-modal-save {
     color: var(--primary-blue);
+    text-align: right;
 }
 .notes-modal-body {
     display: flex;
     flex-direction: column;
     padding: 15px;
-    overflow-y: auto; /* Aktifkan scroll jika kontennya panjang */
+    overflow-y: auto;
 }
 .notes-modal-body textarea {
-    min-height: 150px; /* Beri tinggi minimal */
+    min-height: 150px; /* Tinggi minimal area teks */
     border: none;
     outline: none;
     width: 100%;
@@ -1421,7 +1425,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 15px 0 5px 0; /* Beri padding */
+    padding: 15px 0 5px 0;
     flex-shrink: 0;
 }
 .suggestion-pills button {
@@ -1477,13 +1481,6 @@
 .dark .notes-preview-text {
     color: white;
 }
-.dark .notes-preview-text:empty::before {
-    color: #9ca3af;
-}
-.dark .note-input-wrapper:hover {
-    background-color: #374151;
-}
-
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
             .app-container { max-width: 480px; margin: 0 auto; height: 100vh; }
