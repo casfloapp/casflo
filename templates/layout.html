@@ -2615,9 +2615,7 @@ function openNotesView() {
     loadNoteSuggestions(); 
 
     // 4. [KUNCI] Fokus ke textarea untuk memunculkan keyboard
-    setTimeout(() => {
-        notesModalInput.focus();
-    }, 50);
+    notesModalInput.focus();
 }
 
 function closeNotesView(shouldSave = false) {
