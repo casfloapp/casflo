@@ -407,8 +407,11 @@
             background-color: white;
             min-height: 0;
             
-            /* [TAMBAHKAN] Beri padding bawah se-tinggi kalkulator (50svh) */
-            padding-bottom: 50svh; 
+            /* [FIX] Sesuaikan dengan tinggi kalkulator */
+            padding-bottom: 50dvh;
+            @supports not (padding-bottom: 50dvh) {
+                padding-bottom: 50svh; /* Fallback */
+            }
         }
         .category-group { margin-bottom: 20px; }
         .group-title { font-size: 12px; color: var(--text-light); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; }
@@ -424,7 +427,13 @@
         .account-card { aspect-ratio: 1 / 1; height: 100%; background: var(--primary-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(102, 102, 234, 0.3); }
         .account-card i { color: white; font-size: 24px; }
         .amount-display { flex-grow: 1; background: white; padding: 0 12px; border-radius: 10px; text-align: right; font-size: 28px; font-weight: 700; display: flex; align-items: center; justify-content: flex-end; border: 1px solid #f0f0f0; height: 100%; }
-        .top-action-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .top-action-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px; /* [FIX] Kurangi gap */
+            grid-row: 1; /* [FIX] Baris 1 di dalam #calculator-view */
+        }
+        
         .action-btn { background: white; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 24px; }
         .action-btn.personal { background: #f8f9fa; color: #6c757d; }
         .action-btn.today { background: #e3f2fd; color: #1976d2; }
@@ -434,8 +443,9 @@
         .calc-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px; /* <-- MENJADI 6px */
+            gap: 6px; /* [FIX] Kurangi gap */
             grid-auto-rows: 1fr;
+            grid-row: 2; /* [FIX] Baris 2 di dalam #calculator-view */
         }
         .calc-btn { background: white; border: none; border-radius: 10px; font-size: 24px; font-weight: 600; cursor: pointer; color: var(--text-dark); box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; }
         .calc-btn .fas { font-size: 24px; }
@@ -1357,29 +1367,32 @@
 /* [PERBAIKAN FINAL] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
 /* ====================================================== */
 .calculator-section {
-    /* [PERUBAHAN KUNCI] Atur posisi fixed di bawah */
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     
-    /* [BARU] Batasi lebar dan tengahkan di desktop */
     max-width: 480px; 
     margin: 0 auto;
 
-    /* [PERUBAHAN KUNCI] Tentukan tinggi 50% layar */
-    height: 50svh; 
+    /* [FIX] Gunakan dsvh (dynamic small viewport height) jika didukung, fallback ke svh */
+    height: 50dvh; /* 50% dari tinggi layar dinamis */
+    @supports not (height: 50dvh) {
+        height: 50svh; /* Fallback untuk browser lama */
+    }
     
-    /* [KEMBALIKAN] Pulihkan padding asli 15px */
-    padding: 15px; 
+    /* [FIX] Kurangi padding dan gap agar muat */
+    padding: 10px; 
     
-    /* Styling seperti sebelumnya */
     background: #FFFFFF;
     border-top: 1px solid #e0e0e0;
-    display: grid; /* Tetap grid, bukan flex */
-    gap: 8px; /* [KEMBALIKAN] Pulihkan gap asli 8px */
+    display: grid;
+    gap: 6px; /* [FIX] Kurangi gap */
     overflow: hidden;
     box-sizing: border-box;
+    
+    /* [BARU] Pastikan grid-template-rows ada di sini */
+    grid-template-rows: auto 1fr; /* Baris amount-container & sisa ruang */
 }
 
 /* [HAPUS] Hapus #calc-content-wrapper */
@@ -1387,14 +1400,18 @@
 /* View Kalkulator (Default) */
 #calculator-view {
     display: grid; 
-    grid-template-rows: auto 1fr 4fr; /* Proporsi tombol aksi (1) vs grid (4) */
-    gap: 8px; /* [KEMBALIKAN] Pulihkan gap 8px */
+    /* [FIX] amount-container di parent, ini sisa ruangnya */
+    grid-template-rows: auto 1fr; /* top-action-bar & calc-grid */
+    gap: 6px; /* [FIX] Kurangi gap */
     height: 100%;
-    /* Hapus padding, sudah di parent (.calculator-section) */
     box-sizing: border-box; 
+    
+    /* [BARU] Tentukan bahwa view ini mengisi baris ke-2 dari parent */
+    grid-row: 2;
+    overflow: hidden; /* Pastikan tidak tumpah */
 }
 /* [MODIFIKASI] Sesuaikan grid-row */
-#calculator-view .amount-container {
+.calculator-section .amount-container {
     grid-row: 1;
 }
 #calculator-view .top-action-bar {
@@ -1406,11 +1423,13 @@
 
 /* View Catatan (Default Tersembunyi) */
 #notes-view {
-    display: none; /* Sembunyi by default */
+    display: none; 
     flex-direction: column;
     height: 100%;
     width: 100%;
     background: white;
+    /* [BARU] Pastikan ini menutupi SEMUA baris di .calculator-section */
+    grid-row: 1 / span 2; 
 }
 .dark #notes-view {
     background: #1f2937;
@@ -1421,7 +1440,7 @@
     padding: 0; /* [BARU] Hapus padding saat notes-view aktif */
 }
 .calculator-section.notes-active #calculator-view {
-    display: none; /* Sembunyikan kalkulator */
+    display: none; 
 }
 .calculator-section.notes-active #notes-view {
     display: flex; /* Tampilkan view catatan */
