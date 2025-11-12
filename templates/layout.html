@@ -772,16 +772,41 @@
             background: #111827; /* Samarkan dengan bg body gelap */
             border-radius: 18px;
         }
-        /* [BARU] Skeleton for Header Right Side */
+        
+        .skeleton-theme-toggle {
+            width: 32px;  /* Sama dengan w-8 di theme-toggle */
+            height: 32px; /* Sama dengan h-8 di theme-toggle */
+            background: rgba(0,0,0,0.1);
+            border-radius: 50%; /* Sama dengan rounded-full */
+            flex-shrink: 0; /* Mencegah elemen menyusut */
+        }
+        .skeleton-view-toggle {
+            /* Ukuran dari skeleton Anda sebelumnya, ini sudah pas */
+            width: 140px; 
+            height: 32px; /* Sama dengan h-8 (tinggi 2.5rem/40px di .toggle-btn dikurangi padding) */
+            background: rgba(0,0,0,0.1);
+            border-radius: 20px; /* Sama dengan rounded-20px di .view-toggle-group */
+            flex-shrink: 0;
+        }
+
+        /* 2. Atur logika show/hide BARU */
+        
+        /* Saat loading, sembunyikan konten asli */
         .right.loading .theme-toggle,
         .right.loading .view-toggle-group {
             display: none;
         }
-        .right .skeleton-placeholder {
+        
+        /* Saat TIDAK loading, sembunyikan skeleton */
+        .right:not(.loading) .skeleton-theme-toggle,
+        .right:not(.loading) .skeleton-view-toggle {
             display: none;
         }
+        
+        /* Hapus aturan .skeleton-placeholder yang lama (sudah tidak dipakai) */
+        .right .skeleton-placeholder,
         .right.loading .skeleton-placeholder {
-            display: flex;
+            display: none !important;
         }
 
         .div-spinner {
