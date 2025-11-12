@@ -422,6 +422,7 @@
         .category-item.selected .category-icon { background: rgba(255,255,255,0.2) !important; color: white !important; }
         .category-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; font-size: 20px; }
         .category-name { font-size: 11px; text-align: center; }
+        .calculator-section { background: #f8f9fa; padding: 15px; border-top: 1px solid #e9ecef; flex-shrink: 0; display: grid; grid-template-rows: repeat(6, 1fr); gap: 8px; }
         .amount-container { display: flex; gap: 8px; }
         .account-card { aspect-ratio: 1 / 1; height: 100%; background: var(--primary-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(102, 102, 234, 0.3); }
         .account-card i { color: white; font-size: 24px; }
@@ -1270,8 +1271,28 @@
     background: var(--primary-blue);
     color: white;
 }
+/* GANTI CSS UNTUK .calculator-section dan .calc-btn */
+.calculator-section {
+    background: #FFFFFF; /* Latar putih */
+    padding: 15px;
+    border-top: 1px solid #e0e0e0; /* Garis tipis */
+    flex-shrink: 0;
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    gap: 8px;
+}
+.dark .calculator-section {
+    background: #1f2937; /* Latar gelap */
+    border-top-color: #4b5563;
+}
 
-
+.calc-btn {
+    background: white; /* Tombol angka putih */
+    color: var(--text-dark);
+    font-size: 28px; /* Perbesar angka */
+    box-shadow: none; /* Hapus shadow */
+    border: 1px solid #f0f0f0; /* Border tipis */
+}
 .dark .calc-btn {
     background: #374151; /* dark:bg-gray-700 */
     color: #d1d5db;
@@ -1353,7 +1374,7 @@
     
     max-width: 480px; 
     margin: 0 auto;
-    height: 370px;
+        height: 370px;
     
     padding: 15px; /* [FIX] Kembalikan padding 15px */
     
@@ -1556,7 +1577,7 @@
             body { background-color: #e9ecef; }
             .app-container { max-width: 480px; margin: 0 auto; height: 100vh; }
             .add-view { max-width: 480px; }
-            /*.calculator-section { padding: 5px; gap: 12px; }*/
+            .calculator-section { padding: 5px; gap: 12px; }
             .amount-display { font-size: 36px; }
             .calc-btn, .action-btn { font-size: 28px; min-height: 50px; border-radius: 12px; }
             .calc-btn .fas { font-size: 28px; }
