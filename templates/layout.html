@@ -215,11 +215,11 @@
             width: 140px; /* [PERBAIKAN] Paksa lebar agar sama dengan .skeleton-view-toggle */
             justify-content: center; /* [TAMBAHAN] Agar tombol di dalamnya tetap rapi di tengah */
         }
-        .toggle-btn { background: transparent; border: none; color: white; padding: 8px 12px; border-radius: 16px; display: flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; transition: background-color 0.3s; white-space: nowrap; }
+        .toggle-btn { background: transparent; border: none; color: white; padding: 8px 12px; border-radius: 16px; display: flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; transition: background-color 0.3s; white-space: nowrap; flex-grow: 1; justify-content: center; }
         .toggle-btn.active-view { background: rgba(255,255,255,0.1); }
         .toggle-btn span { display: inline-block; transition: max-width 0.3s ease-in-out, opacity 0.2s ease-in-out, margin-left 0.3s ease-in-out; max-width: 100px; opacity: 1; margin-left: 5px; overflow: hidden; }
         .toggle-btn:not(.active-view) span { max-width: 0; opacity: 0; margin-left: 0; }
-        .toggle-btn:not(.active-view) { padding: 8px 10px; }
+        /*.toggle-btn:not(.active-view) { padding: 8px 10px; }*/
         .header-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; }
         .header-actions {
             display: flex;
