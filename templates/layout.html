@@ -1391,34 +1391,39 @@
 }
 
 /* [HAPUS] Hapus #calc-content-wrapper */
-
 /* View Kalkulator (Default) */
 #calculator-view {
     display: grid; 
-    /* [PERBAIKAN KUNCI] 1 bagian untuk aksi, 4 bagian untuk grid angka */
-    grid-template-rows: 1fr 4fr; 
-    gap: 8px; /* [FIX] Kembalikan ke 8px */
+    /* [PERBAIKAN] 1 baris untuk amount/catatan, 1 baris untuk sisa grid tombol */
+    grid-template-rows: auto 1fr; 
+    gap: 8px; 
     height: 100%;
     box-sizing: border-box; 
     grid-row: 2;
     overflow: hidden;
 }
-/* [MODIFIKASI] Sesuaikan grid-row */
+
 #calculator-view .amount-container {
-    grid-row: 1;
-}
-#calculator-view .top-action-bar {
-    grid-row: 2; /* [PENTING] Ini harus '2' */
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-row: 1; /* Baris 1: Amount/Catatan */
+    display: flex; /* Biarkan sejajar */
     gap: 8px;
+    /* Tinggi akan otomatis (auto) */
 }
-#calculator-view .calc-grid {
-    grid-row: 3; /* [PENTING] Ini harus '3' */
+
+/* [PERBAIKAN] HAPUS aturan untuk .top-action-bar dan .calc-grid di dalam #calculator-view */
+/*
+#calculator-view .top-action-bar { ... Dihapus ... }
+#calculator-view .calc-grid { ... Dihapus ... }
+*/
+
+/* [PERBAIKAN] CSS BARU untuk grid 5x4 yang digabung */
+.unified-calc-grid {
+    grid-row: 2; /* Baris 2: Semua tombol */
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr); /* 4 kolom */
+    grid-template-rows: repeat(5, 1fr);    /* 5 baris */
     gap: 8px;
-    grid-auto-rows: 1fr;
+    height: 100%; /* Memenuhi sisa ruang */
 }
 
 /* View Catatan (Default Tersembunyi) */
@@ -1569,7 +1574,7 @@
 .calc-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px; /* [KEMBALIKAN] Pulihkan gap 8px */
+    gap: 8px; 
     grid-auto-rows: 1fr;
 }
         @media (min-width: 480px) {
