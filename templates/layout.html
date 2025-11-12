@@ -421,7 +421,12 @@
         .action-btn.add { background: var(--income-green); color: white; }
         .action-btn.check { background: var(--income-green); color: white; }
         .action-btn.equals { background: var(--primary-blue); color: white; }
-        .calc-grid { grid-row: 3 / 7; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; grid-auto-rows: 1fr; }
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px; /* <-- MENJADI 6px */
+            grid-auto-rows: 1fr;
+        }
         .calc-btn { background: white; border: none; border-radius: 10px; font-size: 24px; font-weight: 600; cursor: pointer; color: var(--text-dark); box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; }
         .calc-btn .fas { font-size: 24px; }
         .calc-btn.operator { background: #f1f3f5; color: #495057; }
@@ -1342,29 +1347,24 @@
 /* [PERBAIKAN FINAL] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
 /* ====================================================== */
 .calculator-section {
-    background: #FFFFFF;
-    border-top: 1px solid #e0e0e0;
-    flex-shrink: 0; /* Penting: Jangan biarkan ini menyusut */
-    display: grid; /* Biarkan grid agar child bisa mengisi 100% */
-    
-    /* [PERMINTAAN KUNCI] Atur tinggi 45% dari layar */
-    height: 47svh; /* 45% of small viewport height */
-
+    background: #FFFFFF; 
+    padding: 10px; /* <-- MENJADI 10px */
+    border-top: 1px solid #e0e0e0; 
+    flex-shrink: 0;
+    display: grid;
+    height: 45svh;
     position: relative;
     overflow: hidden;
-    padding: 0; /* [FIX] Padding dipindah ke child */
 }
 
 /* [HAPUS] Hapus #calc-content-wrapper */
 
 /* View Kalkulator (Default) */
 #calculator-view {
-    display: grid;
-    /* [PERBAIKAN] Bagi sisa ruang: 1 bagian untuk action-bar, 4 bagian untuk calc-grid */
-    grid-template-rows: auto 1fr 4fr; /* amount-container, top-action-bar, calc-grid */
-    gap: 8px;
+    display: grid; 
+    grid-template-rows: auto 1fr 4fr;
+    gap: 6px; /* <-- MENJADI 6px */
     height: 100%;
-    padding: 15px; 
     box-sizing: border-box; 
 }
 /* [MODIFIKASI] Sesuaikan grid-row */
