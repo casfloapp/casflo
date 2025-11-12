@@ -1105,6 +1105,197 @@
         .modal-overlay{
             display: none;
         }
+        /* GANTI CSS UNTUK .type-selector-header dan .type-btn-header */
+.type-selector-header {
+    display: flex;
+    background: transparent; /* Hapus background abu-abu */
+    border-radius: 0;
+    padding: 0;
+    gap: 10px; /* Beri jarak antar pills */
+}
+.type-btn-header {
+    padding: 8px 16px;
+    border: 1px solid #ddd; /* Border abu-abu */
+    background: transparent;
+    border-radius: 22px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-light);
+    transition: all 0.2s ease;
+}
+.type-btn-header.active {
+    background: white; /* Ini akan di-override */
+    color: white;
+    box-shadow: none; /* Hapus shadow */
+    border-color: transparent; /* Hapus border */
+}
+.type-btn-header.expense.active {
+    background-color: var(--expense-red);
+    color: white;
+    border-color: var(--expense-red);
+}
+.type-btn-header.income.active {
+    background-color: var(--income-green);
+    color: white;
+    border-color: var(--income-green);
+}
+.dark .type-btn-header {
+    border-color: #4b5563; /* dark:border-gray-600 */
+    color: #9ca3af; /* dark:text-gray-400 */
+}
+.dark .type-btn-header.expense.active,
+.dark .type-btn-header.income.active {
+    color: white; /* Warna sudah diatur di atas */
+}
+/* GANTI CSS UNTUK .type-selector-header dan .type-btn-header */
+.type-selector-header {
+    display: flex;
+    background: transparent; /* Hapus background abu-abu */
+    border-radius: 0;
+    padding: 0;
+    gap: 10px; /* Beri jarak antar pills */
+}
+.type-btn-header {
+    padding: 8px 16px;
+    border: 1px solid #ddd; /* Border abu-abu */
+    background: transparent;
+    border-radius: 22px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-light);
+    transition: all 0.2s ease;
+}
+.type-btn-header.active {
+    background: white; /* Ini akan di-override */
+    color: white;
+    box-shadow: none; /* Hapus shadow */
+    border-color: transparent; /* Hapus border */
+}
+.type-btn-header.expense.active {
+    background-color: var(--expense-red);
+    color: white;
+    border-color: var(--expense-red);
+}
+.type-btn-header.income.active {
+    background-color: var(--income-green);
+    color: white;
+    border-color: var(--income-green);
+}
+.dark .type-btn-header {
+    border-color: #4b5563; /* dark:border-gray-600 */
+    color: #9ca3af; /* dark:text-gray-400 */
+}
+.dark .type-btn-header.expense.active,
+.dark .type-btn-header.income.active {
+    color: white; /* Warna sudah diatur di atas */
+}
+/* GANTI CSS UNTUK .action-btn */
+.action-btn {
+    background: #f0f0f0; /* Latar abu-abu muda */
+    color: #555; /* Teks gelap */
+    font-size: 20px; /* Kecilkan ikon sedikit */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.dark .action-btn {
+    background: #374151; /* dark:bg-gray-700 */
+    color: #d1d5db; /* dark:text-gray-300 */
+    box-shadow: none;
+}
+
+/* [BARU] Tombol akun (menggantikan .personal) */
+.action-btn.account {
+    background: #f0f0f0;
+    color: var(--primary-blue);
+    font-size: 24px; /* Ikon akun sedikit lebih besar */
+}
+.dark .action-btn.account {
+    background: #374151;
+}
+
+/* HAPUS .action-btn.personal (sudah diganti .account) */
+/* .action-btn.personal { ... } */
+
+/* MODIFIKASI Tombol Aksi lain */
+.action-btn.today {
+    background: #E6E6FA; /* var(--light-purple) */
+    color: var(--primary-blue);
+    font-size: 13px;
+    font-weight: 600;
+}
+.dark .action-btn.today {
+    background: #4b5563; /* dark:border-gray-600 */
+    color: white;
+}
+.action-btn.add {
+    background: #51CF66; /* var(--income-green) */
+    color: white;
+}
+.action-btn.check {
+    background: #51CF66; /* var(--income-green) */
+    color: white;
+}
+.action-btn.equals {
+    background: var(--primary-blue);
+    color: white;
+}
+/* GANTI CSS UNTUK .calculator-section dan .calc-btn */
+.calculator-section {
+    background: #FFFFFF; /* Latar putih */
+    padding: 15px;
+    border-top: 1px solid #e0e0e0; /* Garis tipis */
+    flex-shrink: 0;
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    gap: 8px;
+}
+.dark .calculator-section {
+    background: #1f2937; /* Latar gelap */
+    border-top-color: #4b5563;
+}
+
+.calc-btn {
+    background: white; /* Tombol angka putih */
+    color: var(--text-dark);
+    font-size: 28px; /* Perbesar angka */
+    box-shadow: none; /* Hapus shadow */
+    border: 1px solid #f0f0f0; /* Border tipis */
+}
+.dark .calc-btn {
+    background: #374151; /* dark:bg-gray-700 */
+    color: #d1d5db;
+    border-color: #4b5563;
+}
+
+.calc-btn.operator {
+    background: #f8f9fa; /* Latar abu-abu */
+    color: var(--primary-blue); /* Warna biru */
+    font-size: 24px;
+    border-color: #f0f0f0;
+}
+.dark .calc-btn.operator {
+    background: #4b5563;
+    color: #E6E6FA; /* light purple */
+    border-color: #4b5563;
+}
+
+.calc-btn.delete {
+    background: #ffe3e3; /* Merah muda */
+    color: var(--expense-red);
+    border-color: #f0f0f0;
+}
+.dark .calc-btn.delete {
+    background: #5c2c2c; /* Merah gelap */
+    color: var(--expense-red);
+    border-color: #4b5563;
+}
 
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
@@ -2235,7 +2426,7 @@ function renderDateModalCalendar() {
                     type: currentType.toUpperCase(), // API mengharapkan 'EXPENSE' atau 'INCOME'
                     amount: amount, // API Anda di 'queries.js' sudah menangani konversi ke sen
                     category_id: selectedCategory.id,
-                    description: selectedCategory.name, // Anda bisa tambahkan input deskripsi terpisah nanti
+                    description: notes || selectedCategory.name,
                     transaction_date: transactionDate,
                 };
 
@@ -2270,6 +2461,8 @@ function renderDateModalCalendar() {
                 
                 // Reset kalkulator & navigasi kembali ke halaman utama
                 clearCalc(); 
+                const notesInput = document.getElementById('transaction-notes');
+                if (notesInput) notesInput.value = ''; // Reset input catatan
                 navigate('/'); 
 
             } catch (error) {
@@ -2312,7 +2505,7 @@ function renderDateModalCalendar() {
                     type: currentType.toUpperCase(),
                     amount: amount, // Sudah dalam Rupiah
                     category_id: selectedCategory.id,
-                    description: selectedCategory.name, // TODO: Tambah input deskripsi
+                    description: notes || selectedCategory.name,
                     transaction_date: transactionDate,
                 };
 
@@ -2738,6 +2931,7 @@ function renderTransactionList(filteredTransactions) {
     }
        function initCreatePage() {
     const txToEditJSON = sessionStorage.getItem('tx_for_edit');
+    const notesInput = document.getElementById('transaction-notes');
 
     if (txToEditJSON) {
         // === MODE EDIT ===
@@ -2757,6 +2951,7 @@ function renderTransactionList(filteredTransactions) {
         loadCategories(); 
         updateDisplay(); 
         updateAccountIcon(selectedAccountId); 
+        if (notesInput) notesInput.value = tx.notes || '';
 
         sessionStorage.removeItem('tx_for_edit');
 
@@ -2769,6 +2964,7 @@ function renderTransactionList(filteredTransactions) {
         clearCalc();
         loadCategories(); 
         updateAccountIcon(selectedAccountId); 
+        if (notesInput) notesInput.value = '';
     }
 
     updateCreateDateButton(); // [BARU] Update teks tombol (misal: "TODAY")
