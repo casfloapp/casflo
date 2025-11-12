@@ -1339,77 +1339,80 @@
 }
 
 /* ====================================================== */
-/* [PERBAIKAN] CSS UNTUK MODAL CATATAN (BOTTOM SHEET) */
+/* [BARU] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
 /* ====================================================== */
-.notes-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4); /* [FIX] Latar belakang redup */
-    display: none;
-    align-items: flex-end; /* [FIX] Dorong modal ke bawah */
-    justify-content: center;
-    z-index: 1002;
-    max-width: 480px;
-    margin: 0 auto;
-    animation: fadeIn 0.3s ease; /* Animasi untuk overlay */
+.calculator-section {
+    position: relative; /* Konteks untuk view di dalamnya */
+    overflow: hidden; /* Sembunyikan transisi */
 }
-.notes-modal-overlay.visible {
-    display: flex;
+
+/* View Kalkulator (Default) */
+#calculator-view {
+    display: grid; /* Layout grid seperti sebelumnya */
+    grid-template-rows: repeat(6, 1fr);
+    gap: 8px;
+    height: 100%;
 }
-.notes-modal-content {
-    background: white;
-    width: 100%;
-    border-top-left-radius: 20px; /* Sesuai screenshot */
-    border-top-right-radius: 20px; /* Sesuai screenshot */
-    animation: slideUp 0.3s ease-out; /* Animasi slide dari bawah */
-    max-height: 90svh; /* Jangan penuhi layar */
-    display: flex;
+
+/* View Catatan (Default Tersembunyi) */
+#notes-view {
+    display: none; /* Sembunyi by default */
     flex-direction: column;
-    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    background: white; /* Latar putih agar menimpa */
 }
-.notes-modal-header {
+.dark #notes-view {
+    background: #1f2937; /* Latar gelap agar menimpa */
+}
+
+/* Logika Tampilan Saat Catatan Aktif */
+.calculator-section.notes-active #calculator-view {
+    display: none; /* Sembunyikan kalkulator */
+}
+.calculator-section.notes-active #notes-view {
+    display: flex; /* Tampilkan view catatan */
+}
+
+/* Styling di dalam Notes View */
+.notes-view-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    padding: 10px 15px; /* Sedikit lebih kecil */
     border-bottom: 1px solid #e9ecef;
     flex-shrink: 0;
 }
-.notes-modal-header h3 {
+.dark .notes-view-header {
+    border-bottom-color: #4b5563;
+}
+.notes-view-header h3 {
     font-weight: 600;
     font-size: 16px;
     text-align: center;
-    flex-grow: 1; /* Biarkan judul di tengah */
+    flex-grow: 1;
 }
-.notes-modal-header .notes-modal-close,
-.notes-modal-header .notes-modal-save {
+.notes-view-header .notes-view-save {
     background: none;
     border: none;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    flex-basis: 50px; /* Beri lebar agar judul tetap di tengah */
-}
-.notes-modal-header .notes-modal-close {
-    color: var(--text-light);
-    font-size: 20px;
-    text-align: left;
-}
-.notes-modal-header .notes-modal-save {
     color: var(--primary-blue);
+    flex-basis: 50px;
     text-align: right;
 }
-.notes-modal-body {
+
+.notes-view-body {
     display: flex;
     flex-direction: column;
     padding: 15px;
-    overflow-y: auto;
+    overflow: hidden; /* Parent scroll */
+    flex-grow: 1;
 }
-.notes-modal-body textarea {
-    min-height: 150px; /* Tinggi minimal area teks */
+.notes-view-body textarea {
+    min-height: 80px; /* [PERMINTAAN] Textarea pendek */
+    flex-shrink: 0; /* Jangan biarkan dia menyusut */
     border: none;
     outline: none;
     width: 100%;
@@ -1421,12 +1424,27 @@
     resize: none;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
+.dark .notes-view-body textarea {
+    background-color: #374151;
+    color: white;
+}
+
+.suggestion-pills-container {
+    flex-grow: 1; /* [PERMINTAAN] Ambil sisa ruang */
+    overflow-y: auto; /* Buat area sugesti bisa scroll */
+    padding-top: 15px;
+}
+.suggestion-pills-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
 .suggestion-pills {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 15px 0 5px 0;
-    flex-shrink: 0;
 }
 .suggestion-pills button {
     background: var(--light-purple);
@@ -1437,6 +1455,10 @@
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
+}
+.dark .suggestion-pills button {
+    background-color: #4b5563;
+    color: #E6E6FA;
 }
 
 /* CSS untuk Tampilan Catatan di Kalkulator (Tidak Berubah) */
@@ -1459,27 +1481,14 @@
     content: attr(data-placeholder);
     color: var(--text-light);
 }
-
-/* Mode Gelap (Tidak Berubah) */
-.dark .notes-modal-content {
-    background-color: #1f2937;
-}
-.dark .notes-modal-header {
-    border-bottom-color: #4b5563;
-}
-.dark .notes-modal-header h3 {
-    color: white;
-}
-.dark .notes-modal-body textarea {
+.dark .note-input-wrapper:hover {
     background-color: #374151;
-    color: white;
-}
-.dark .suggestion-pills button {
-    background-color: #4b5563;
-    color: #E6E6FA;
 }
 .dark .notes-preview-text {
     color: white;
+}
+.dark .notes-preview-text:empty::before {
+    color: #9ca3af;
 }
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
@@ -1671,27 +1680,7 @@
         </div>
     </div>
 </div>
-<div id="notes-modal-overlay" class="notes-modal-overlay">
-    <div class="notes-modal-content">
-        <div class="notes-modal-header">
-            <button class="notes-modal-close" onclick="closeNotesModal(false)"><i class="fas fa-times"></i></button>
-            <h3>Catatan Transaksi</h3>
-            <button class="notes-modal-save" onclick="closeNotesModal(true)">Selesai</button>
-        </div>
-        <div class="notes-modal-body">
-            <textarea id="notes-modal-input" placeholder="Tulis catatan di sini..."></textarea>
-            
-            <div class="suggestion-pills">
-                <button onclick="addSuggestion('Sarapan')">Sarapan</button>
-                <button onclick="addSuggestion('Belanja Bulanan')">Belanja Bulanan</button>
-                <button onclick="addSuggestion('Transport')">Transport</button>
-                <button onclick="addSuggestion('Makan Siang')">Makan Siang</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="dialog-modal-overlay" class="tx-modal-overlay" onclick="closeDialog(false)">
-    </div>
+
 <script>
 const sessionToken = localStorage.getItem('sessionToken');
         if (!sessionToken) {
@@ -2566,34 +2555,39 @@ function renderDateModalCalendar() {
             categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat)));
         }
         
-        /* ====================================================== */
-/* [BARU] FUNGSI-FUNGSI UNTUK MODAL CATATAN */
+ /* ====================================================== */
+/* [MODIFIKASI] FUNGSI-FUNGSI UNTUK NOTES-VIEW */
 /* ====================================================== */
-const notesModal = document.getElementById('notes-modal-overlay');
 const notesModalInput = document.getElementById('notes-modal-input');
+// [MODIFIKASI] Kita targetkan 'main-calculator-section' dari create.html
+const calcSection = document.getElementById('main-calculator-section'); 
 
-function openNotesModal() {
-    if (!notesModal || !notesModalInput) return;
+// [MODIFIKASI] Ganti nama fungsi (dan hapus modal)
+function openNotesView() {
+    if (!calcSection || !notesModalInput) return;
 
     // 1. Isi textarea dengan catatan yang ada
     notesModalInput.value = currentNotes;
-
-    // 2. Tampilkan modal
-    notesModal.classList.add('visible');
-
-    // 3. [BARU] Muat sugesti dinamis
+    
+    // 2. [MODIFIKASI] Tampilkan view dengan menambah kelas
+    calcSection.classList.add('notes-active');
+    
+    // 3. Muat sugesti dinamis
     loadNoteSuggestions(); 
 
     // 4. [KUNCI] Fokus ke textarea untuk memunculkan keyboard
-    notesModalInput.focus();
+    // Kita beri jeda sedikit agar UI update dulu
+    setTimeout(() => {
+        notesModalInput.focus();
+    }, 50); // Transisi instan, 50ms cukup
 }
 
 /**
- * Menutup modal catatan
+ * [MODIFIKASI] Menutup view catatan
  * @param {boolean} shouldSave - Jika 'true', simpan teks. Jika 'false' (Batal), jangan simpan.
  */
-function closeNotesModal(shouldSave = false) {
-    if (!notesModal || !notesModalInput) return;
+function closeNotesView(shouldSave = false) {
+    if (!calcSection || !notesModalInput) return;
 
     if (shouldSave) {
         // 1. Ambil teks dari modal dan simpan ke global
@@ -2606,15 +2600,15 @@ function closeNotesModal(shouldSave = false) {
         }
     }
     
-    // 3. Sembunyikan modal
-    notesModal.classList.remove('visible');
+    // 3. [MODIFIKASI] Sembunyikan view dengan menghapus kelas
+    calcSection.classList.remove('notes-active');
     
-    // 4. (Opsional) Hapus fokus untuk sembunyikan keyboard
+    // 4. Hapus fokus untuk sembunyikan keyboard
     notesModalInput.blur();
 }
 
 /**
- * [BARU] Helper untuk tombol suggestion pills
+ * Helper untuk tombol suggestion pills (Tidak Berubah)
  */
 function addSuggestion(text) {
     if (!notesModalInput) return;
@@ -2629,7 +2623,7 @@ function addSuggestion(text) {
 }
 
 /**
- * [BARU] Menyimpan catatan ke daftar sugesti di localStorage
+ * Menyimpan catatan ke daftar sugesti di localStorage (Tidak Berubah)
  */
 function saveNoteSuggestion(note) {
     if (!note || note.trim().length < 3) return; // Jangan simpan catatan kosong/pendek
@@ -2638,14 +2632,11 @@ function saveNoteSuggestion(note) {
         const rawData = localStorage.getItem(NOTE_SUGGESTIONS_KEY);
         const suggestions = rawData ? JSON.parse(rawData) : [];
         
-        // Gunakan Set untuk handling data unik
         const uniqueSuggestions = new Set(suggestions);
         
-        // Hapus dulu jika ada, agar bisa ditambahkan lagi di akhir (jadi yang terbaru)
         uniqueSuggestions.delete(note.trim()); 
         uniqueSuggestions.add(note.trim());
         
-        // Ubah kembali ke array, ambil 10 terbaru
         let newList = Array.from(uniqueSuggestions);
         if (newList.length > 10) {
             newList = newList.slice(newList.length - 10); // Ambil 10 terakhir
@@ -2659,10 +2650,11 @@ function saveNoteSuggestion(note) {
 }
 
 /**
- * [BARU] Memuat sugesti catatan dan menampilkannya di modal
+ * Memuat sugesti catatan dan menampilkannya di modal
  */
 function loadNoteSuggestions() {
-    const container = document.querySelector('.suggestion-pills');
+    // [MODIFIKASI] Ganti selector ke ID baru
+    const container = document.getElementById('suggestion-pills-container');
     if (!container) return;
 
     container.innerHTML = ''; // Kosongkan
@@ -2687,7 +2679,7 @@ function loadNoteSuggestions() {
     });
 }
 /* ====================================================== */
-/* AKHIR FUNGSI MODAL CATATAN */
+/* AKHIR BLOK FUNGSI CATATAN */
 /* ====================================================== */
         
         function createCategoryElement(category) {
