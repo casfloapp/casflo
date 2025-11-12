@@ -1296,6 +1296,56 @@
     color: var(--expense-red);
     border-color: #4b5563;
 }
+/* TAMBAHKAN CSS BARU INI */
+.amount-container {
+    display: flex;
+    gap: 8px;
+    flex-direction: column; /* [PENTING] Mengubah jadi 2 baris */
+}
+.note-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 10px;
+    padding: 10px 12px;
+    gap: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.note-input-wrapper i {
+    color: var(--text-light);
+    font-size: 14px;
+}
+.note-input-wrapper input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    width: 100%;
+    color: var(--text-dark);
+}
+.note-input-wrapper input::placeholder {
+    color: var(--text-light);
+}
+.dark .note-input-wrapper {
+    background: #374151; /* dark:bg-gray-700 */
+    box-shadow: none;
+}
+.dark .note-input-wrapper input {
+    color: white;
+}
+.dark .note-input-wrapper input::placeholder {
+    color: #9ca3af; /* dark:text-gray-400 */
+}
+
+/* MODIFIKASI .amount-display */
+.amount-display {
+    width: 100%; /* Ambil lebar penuh */
+    font-size: 32px; /* Perbesar */
+}
+
+/* HAPUS .account-card (sudah dipindah) */
+/* Hapus atau komentari blok CSS .account-card { ... } */
+/* .account-card { ... } */
 
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
