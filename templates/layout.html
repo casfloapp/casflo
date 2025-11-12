@@ -1400,25 +1400,29 @@
 /* View Kalkulator (Default) */
 #calculator-view {
     display: grid; 
-    /* [FIX] amount-container di parent, ini sisa ruangnya */
-    grid-template-rows: auto 1fr; /* top-action-bar & calc-grid */
-    gap: 6px; /* [FIX] Kurangi gap */
+    /* [PERBAIKAN] Baris 1 (amount) auto, Baris 2 (aksi) 1fr, Baris 3 (grid) 4fr */
+    grid-template-rows: auto 1fr 4fr; 
+    gap: 8px; 
     height: 100%;
     box-sizing: border-box; 
-    
-    /* [BARU] Tentukan bahwa view ini mengisi baris ke-2 dari parent */
-    grid-row: 2;
-    overflow: hidden; /* Pastikan tidak tumpah */
+    /* Hapus 'grid-row' jika ada */
 }
 /* [MODIFIKASI] Sesuaikan grid-row */
-.calculator-section .amount-container {
+#calculator-view .amount-container {
     grid-row: 1;
 }
 #calculator-view .top-action-bar {
-    grid-row: 2;
+    grid-row: 2; /* [PENTING] Ini harus '2' */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
 }
 #calculator-view .calc-grid {
-    grid-row: 3;
+    grid-row: 3; /* [PENTING] Ini harus '3' */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    grid-auto-rows: 1fr;
 }
 
 /* View Catatan (Default Tersembunyi) */
