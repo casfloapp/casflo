@@ -1254,6 +1254,56 @@
             background-color: var(--primary-blue);
             color: white;
         }
+        /* [BARU] Wrapper untuk Catatan & Jumlah */
+        .notes-amount-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        /* [BARU - GOAL 1] Input Catatan */
+        .notes-input-field {
+            width: 100%;
+            border: none;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .dark .notes-input-field {
+            background: #374151;
+            color: white;
+        }
+        .dark .notes-input-field::placeholder {
+            color: #9ca3af;
+        }
+        .notes-input-field:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-blue);
+        }
+
+        /* [MODIFIKASI] Pastikan amount-display yang lama pas */
+        .amount-display {
+            flex-grow: 1;
+            background: white;
+            padding: 0 12px;
+            border-radius: 10px;
+            text-align: right;
+            font-size: 28px; /* Ukuran font disesuaikan agar pas */
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            height: 100%;
+            min-height: 44px; /* Samakan tinggi minimal */
+        }
+        .dark .amount-display {
+            background: #374151;
+            color: #ffffff;
+        }
 
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
@@ -1336,7 +1386,6 @@
         </div>
     </div>
 
-    <div id="category-modal-overlay" class="tx-modal-overlay" onclick="closeCategorySelector()">
         <div class="tx-modal-content" onclick="event.stopPropagation()">
             <div class="tx-modal-header">
                 <h3 style="font-weight: 600;">Pilih Kategori</h3>
@@ -1928,9 +1977,8 @@ function closeTransactionModal() {
             allAccounts.forEach(acc => {
                 const item = document.createElement('div');
                 item.className = 'modal-list-item';
-                // [PERBAIKAN] Tampilkan inisial 2 huruf, bukan ikon FA
-                const initial = acc.name.substring(0, 2).toUpperCase();
-                item.innerHTML = `<div class="icon" style="font-weight: 600; font-size: 16px;">${initial}</div> <span>${acc.name}</span>`;
+                // [PERBAIKAN] Tampilkan ikon FA, bukan inisial
+                item.innerHTML = `<div class="icon"><i class="fas fa-wallet"></i></div> <span>${acc.name}</span>`;
                 
                 if (acc.id === selectedAccountId) {
                     item.classList.add('active');
@@ -1940,14 +1988,11 @@ function closeTransactionModal() {
             });
             accountModal.classList.add('visible');
         }
-        
+
         function selectAccountFromModal(account) {
             selectedAccountId = account.id;
             // Update tampilan di create.html
-            document.getElementById('account-name-display').textContent = account.name;
-            const initial = account.name.substring(0, 2).toUpperCase();
-            document.getElementById('account-icon-display').outerHTML = `<span id="account-icon-display" class="icon" style="font-weight: 600; font-size: 12px; background: var(--light-purple); color: var(--primary-blue); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center;">${initial}</span>`;
-            
+            updateAccountIcon(selectedAccountId); // [PERBAIKAN] Panggil helper ikon
             closeAccountSwitcher();
         }
 
@@ -2382,19 +2427,8 @@ function renderDateModalCalendar() {
             document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); 
             document.getElementById(type + 'Btn').classList.add('active'); 
             
-            // [PERUBAHAN] Reset pemilih kategori baru
             selectedCategory = null; 
-            document.getElementById('category-name-display').textContent = 'Pilih Kategori';
-            document.getElementById('category-icon-display').textContent = '';
-
-            // [PERUBAHAN] Ubah warna label jumlah
-            const amountLabel = document.getElementById('amount-label');
-            if (type === 'expense') {
-                amountLabel.style.color = 'var(--expense-red)';
-            } else {
-                amountLabel.style.color = 'var(--income-green)';
-            }
-            // loadCategories(); // Dihapus karena tidak ada grid lagi
+            loadCategories(); // [PENTING] Panggil fungsi ini lagi
         }
         function updateDisplay() {
             const amountDisplay = document.getElementById('amountDisplay');
@@ -2422,6 +2456,59 @@ function renderDateModalCalendar() {
         function changeButtonToCheck() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn check'; actionBtn.innerHTML = '<i class="fas fa-check"></i>'; }}
         function calculateResult() { try { let expression = calcValue.replace(/×/g, '*').replace(/÷/g, '/'); const result = eval(expression); calcValue = String(result); waitingForEquals = false; changeButtonToCheck(); updateDisplay(); } catch (e) { calcValue = '0'; updateDisplay(); } }
         function clearCalc() { calcValue = '0'; waitingForEquals = false; changeButtonToCheck(); updateDisplay(); }
+        function loadCategories() {
+            // [PERBAIKAN] Filter dari 'allCategories' global, sesuaikan 'type'
+            const typeToFilter = currentType.toUpperCase(); // 'expense' -> 'EXPENSE'
+            const categories = allCategories.filter(cat => cat.type === typeToFilter);
+
+            const recommendedGrid = document.getElementById('recommendedGrid');
+            const uncategorizedGrid = document.getElementById('uncategorizedGrid');
+            if(!recommendedGrid || !uncategorizedGrid) return;
+            
+            recommendedGrid.innerHTML = '';
+            uncategorizedGrid.innerHTML = '';
+            
+            // Tampilkan 8 ikon di rekomendasi, sisanya di bawah
+            categories.slice(0, 8).forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat)));
+            categories.slice(8).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat)));
+        }
+        
+        function createCategoryElement(category) {
+            const div = document.createElement('div');
+            div.className = 'category-item';
+            div.onclick = () => selectCategory(category, div); // Panggil fungsi selectCategory lama
+            
+            const icon = category.icon || category.name.charAt(0).toUpperCase();
+            const defaultColor = 'var(--light-purple)'; // Warna default
+
+            div.innerHTML = `<div class="category-icon" style="background: ${defaultColor}">${icon}</div><div class="category-name">${category.name}</div>`;
+            
+            // Cek jika kategori ini adalah yang sedang dipilih (untuk mode edit)
+            if (selectedCategory && category.id === selectedCategory.id) {
+                div.classList.add('selected');
+            }
+            return div;
+        }
+        
+        // [DIKEMBALIKAN] Fungsi lama untuk memilih kategori dari grid
+        function selectCategory(category, element) { 
+            selectedCategory = category; 
+            document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); 
+            element.classList.add('selected'); 
+        }
+
+        // [DIKEMBALIKAN] Fungsi helper untuk update ikon akun di halaman /create (Versi FA Icon)
+        function updateAccountIcon(accountId) {
+            const account = allAccounts.find(acc => acc.id === accountId);
+            if (!account) return;
+
+            const accountIconEl = document.getElementById('account-icon-display');
+            if (accountIconEl) {
+                // Ganti ikon FA (nanti bisa diganti inisial jika mau)
+                // Untuk saat ini kita pakai ikon kartu kredit saja
+                accountIconEl.className = 'fas fa-credit-card';
+            }
+        }
         function loadCategories() {
             // [PERBAIKAN] Filter dari 'allCategories' global, sesuaikan 'type'
             const typeToFilter = currentType.toUpperCase(); // 'expense' -> 'EXPENSE'
@@ -2508,7 +2595,7 @@ function renderDateModalCalendar() {
                     type: currentType.toUpperCase(), // API mengharapkan 'EXPENSE' atau 'INCOME'
                     amount: amount, // API Anda di 'queries.js' sudah menangani konversi ke sen
                     category_id: selectedCategory.id,
-                    description: notes || selectedCategory.name, // [PERBAIKAN] Gunakan catatan, atau nama kategori jika kosong
+                    description: document.getElementById('notes-input').value || selectedCategory.name,
                     transaction_date: transactionDate,
                 };
 
@@ -2587,7 +2674,7 @@ function renderDateModalCalendar() {
                     type: currentType.toUpperCase(),
                     amount: amount, // Sudah dalam Rupiah
                     category_id: selectedCategory.id,
-                    description: notes || selectedCategory.name, // [PERBAIKAN] Gunakan catatan
+                    description: document.getElementById('notes-input').value || selectedCategory.name,
                     transaction_date: transactionDate,
                 };
                 if (currentType === 'expense') {
@@ -3010,16 +3097,9 @@ function renderTransactionList(filteredTransactions) {
         // [BARU] Tampilkan tombol header kanan setelah semua siap
         document.getElementById('header-right-side')?.classList.remove('loading');
     }
-function initCreatePage() {
+        function initCreatePage() {
             const txToEditJSON = sessionStorage.getItem('tx_for_edit');
-            
-            // Elemen UI Baru
-            const accountNameEl = document.getElementById('account-name-display');
-            const accountIconEl = document.getElementById('account-icon-display');
-            const categoryNameEl = document.getElementById('category-name-display');
-            const categoryIconEl = document.getElementById('category-icon-display');
             const notesInputEl = document.getElementById('notes-input');
-            const amountLabel = document.getElementById('amount-label');
 
             if (txToEditJSON) {
                 // === MODE EDIT ===
@@ -3027,35 +3107,21 @@ function initCreatePage() {
 
                 currentTransactionId = tx.id; 
                 currentType = tx.type;
-                calcValue = String(tx.amount);
+                calcValue = String(tx.amount); // Ambil amount
                 selectedAccountId = tx.account_id;
                 selectedCategory = allCategories.find(c => c.id === tx.category_id);
-                
-                // Set tanggal
                 selectedTransactionDate = new Date(tx.date); 
                 
+                // [GOAL 1] Isi catatan
+                if (notesInputEl) notesInputEl.value = tx.notes || ''; 
+
                 // Set Tipe (Expense/Income)
                 document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active'));
                 document.getElementById(currentType + 'Btn').classList.add('active');
-                amountLabel.style.color = (currentType === 'expense') ? 'var(--expense-red)' : 'var(--income-green)';
 
-                // Set Akun
-                const account = allAccounts.find(acc => acc.id === selectedAccountId);
-                if (account) {
-                    accountNameEl.textContent = account.name;
-                    const initial = account.name.substring(0, 2).toUpperCase();
-                    // Ganti ikon FA dengan span inisial
-                    accountIconEl.outerHTML = `<span id="account-icon-display" class="icon" style="font-weight: 600; font-size: 12px; background: var(--light-purple); color: var(--primary-blue); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center;">${initial}</span>`;
-                }
-
-                // Set Kategori
-                if (selectedCategory) {
-                    categoryNameEl.textContent = selectedCategory.name;
-                    categoryIconEl.textContent = selectedCategory.icon || selectedCategory.name.charAt(0).toUpperCase();
-                }
-
-                // [GOAL 1] Set Catatan
-                notesInputEl.value = tx.notes || '';
+                loadCategories(); // Muat grid kategori (akan otomatis menandai yg aktif)
+                updateDisplay(); // Tampilkan amount
+                updateAccountIcon(selectedAccountId); // Update ikon FA di account-card
 
                 sessionStorage.removeItem('tx_for_edit');
 
@@ -3065,26 +3131,19 @@ function initCreatePage() {
                 currentType = 'expense';
                 selectedCategory = null;
                 selectedTransactionDate = new Date(); // Reset ke hari ini
+                if (notesInputEl) notesInputEl.value = ''; // [GOAL 1] Kosongkan catatan
                 clearCalc();
-
-                amountLabel.style.color = 'var(--expense-red)'; // Default
-
-                // Set Akun Default
-                const defaultAccount = allAccounts.find(a => a.type === 'ASSET') || allAccounts[0];
-                if (defaultAccount) {
-                    selectedAccountId = defaultAccount.id;
-                    accountNameEl.textContent = defaultAccount.name;
-                    const initial = defaultAccount.name.substring(0, 2).toUpperCase();
-                    accountIconEl.outerHTML = `<span id="account-icon-display" class="icon" style="font-weight: 600; font-size: 12px; background: var(--light-purple); color: var(--primary-blue); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center;">${initial}</span>`;
+                
+                // Set Akun Default (jika belum ada)
+                if (!selectedAccountId && allAccounts.length > 0) {
+                     const defaultAccount = allAccounts.find(a => a.type === 'ASSET') || allAccounts[0];
+                     selectedAccountId = defaultAccount.id;
                 }
-
-                // Reset Kategori & Catatan
-                categoryNameEl.textContent = 'Pilih Kategori';
-                categoryIconEl.textContent = '';
-                notesInputEl.value = '';
+                
+                loadCategories(); // Muat grid kategori
+                updateAccountIcon(selectedAccountId); // Update ikon FA
             }
 
-            updateDisplay(); // Tampilkan jumlah (0 atau dari editan)
             updateCreateDateButton(); // Update teks tombol (misal: "TODAY")
             console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
         }
