@@ -19,7 +19,10 @@
             </div>
             
             <div class="notes-amount-wrapper">
-                <input type="text" id="notes-input" class="notes-input-field" placeholder="Tulis catatan...">
+                <div class="notes-input-field" id="open-note-modal-btn" style="cursor: pointer; display: flex; align-items: center; gap: 10px; min-height: 44px;">
+                    <i class="fas fa-sticky-note" style="color: var(--text-light); margin-left: 2px;"></i>
+                    <span id="note-preview-text" style="color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Tulis catatan...</span>
+                </div>
                 <div class="amount-display" id="amountDisplay">0</div>
             </div>
         </div>
