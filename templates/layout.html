@@ -1329,6 +1329,12 @@
     padding: 10px 12px;
     gap: 10px;
     border: 1px solid #f0f0f0;
+    
+    /* [PERBAIKAN] */
+    flex-grow: 1;  /* Ambil sisa ruang */
+    min-width: 0;  /* Izinkan untuk menyusut & ellipsis */
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 .note-input-wrapper i {
     color: var(--text-light);
@@ -1358,10 +1364,26 @@
 
 /* MODIFIKASI .amount-display */
 .amount-display {
-    width: 100%; /* Ambil lebar penuh */
+    /* width: 100%; [DIHAPUS] */
     font-size: 32px; /* Perbesar */
-}
 
+    /* [PERBAIKAN] Atur agar lebar tidak fleksibel */
+    flex-grow: 0;   /* JANGAN tumbuh */
+    flex-shrink: 0; /* JANGAN menyusut */
+    flex-basis: auto; /* Lebar berdasarkan konten */
+    min-width: 100px; /* Beri lebar minimum untuk angka */
+
+    /* [DIKEMBALIKAN] Properti dari aturan .amount-display lama */
+    background: white; 
+    padding: 0 12px; 
+    border-radius: 10px; 
+    text-align: right; 
+    font-weight: 700; 
+    display: flex; 
+    align-items: center; 
+    justify-content: flex-end; 
+    border: 1px solid #f0f0f0; 
+}
 /* ====================================================== */
 /* [PERBAIKAN FINAL] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
 /* ====================================================== */
