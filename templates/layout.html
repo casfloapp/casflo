@@ -1332,42 +1332,6 @@
                 </div>
         </div>
     </div>
-    <div id="tx-modal-overlay" class="tx-modal-overlay" onclick="closeTransactionModal()">
-        <div class="tx-modal-content" onclick="event.stopPropagation()">
-            <div class="tx-modal-header">
-                <button class="tx-modal-close" onclick="closeTransactionModal()"><i class="fas fa-times"></i></button>
-                <div class="tx-modal-actions">
-                    <button id="tx-modal-delete-btn"><i class="fas fa-trash"></i></button>
-                    <button id="tx-modal-edit-btn"><i class="fas fa-edit"></i></button>
-                </div>
-            </div>
-            <div class="tx-modal-body">
-                <div class="tx-modal-category">
-                    <span id="tx-modal-icon" class="category-icon" style="background: var(--light-purple);">🍔</span>
-                    <span id="tx-modal-category-name">Nama Kategori</span>
-                </div>
-                <div class="tx-modal-amount" id="tx-modal-amount">-Rp8.000</div>
-                <div class="tx-modal-details">
-                    <div class="detail-item">
-                        <span>Tanggal:</span>
-                        <span id="tx-modal-date">5/11/2025 15.40.19</span>
-                    </div>
-                    <div class="detail-item">
-                        <span>Akun:</span>
-                        <span id="tx-modal-account">akun bawaan</span>
-                    </div>
-                    <div class="detail-item">
-                        <span>Buku:</span>
-                        <span id="tx-modal-wallet">Manda</span>
-                    </div>
-                    <div class="detail-item notes">
-                        <span>Catatan:</span>
-                        <span id="tx-modal-notes">Belanja</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div id="date-modal-overlay" class="tx-modal-overlay" onclick="closeDateModal()">
         <div class="tx-modal-content" onclick="event.stopPropagation()">
             <div id="date-modal-content"></div>
@@ -3147,7 +3111,7 @@ function renderTransactionList(filteredTransactions) {
             updateCreateDateButton(); // Update teks tombol (misal: "TODAY")
             console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
         }
-        
+
         function initWalletPage() { 
             console.log("Halaman dompet dimuat."); 
             // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
