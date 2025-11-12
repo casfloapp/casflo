@@ -1339,19 +1339,39 @@
 }
 
 /* ====================================================== */
-/* [BARU] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
+/* [PERBAIKAN] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
 /* ====================================================== */
 .calculator-section {
+    /* [MODIFIKASI] Ubah dari grid menjadi flex column */
+    display: flex;
+    flex-direction: column;
+    /* Hapus 'grid-template-rows' jika ada */
+}
+
+/* [BARU] Wrapper untuk konten yang diganti */
+#calc-content-wrapper {
     position: relative; /* Konteks untuk view di dalamnya */
+    flex-grow: 1; /* Ambil sisa tinggi */
+    display: grid; /* Tetap grid agar bisa diisi penuh */
     overflow: hidden; /* Sembunyikan transisi */
 }
 
 /* View Kalkulator (Default) */
 #calculator-view {
     display: grid; /* Layout grid seperti sebelumnya */
-    grid-template-rows: repeat(6, 1fr);
+    /* [MODIFIKASI] Hapus grid-row: 3 / 7 */
+    grid-template-rows: auto 1fr; /* Baris aksi & grid kalkulator */
     gap: 8px;
     height: 100%;
+    /* Atur ulang padding jika perlu, tapi seharusnya sudah pas dari parent */
+}
+/* [MODIFIKASI] Sesuaikan top-action-bar dan calc-grid */
+#calculator-view .top-action-bar {
+    grid-row: 1;
+}
+#calculator-view .calc-grid {
+    grid-row: 2;
+    /* Hapus 'grid-row: 3 / 7' dari CSS .calc-grid */
 }
 
 /* View Catatan (Default Tersembunyi) */
@@ -1360,10 +1380,10 @@
     flex-direction: column;
     height: 100%;
     width: 100%;
-    background: white; /* Latar putih agar menimpa */
+    background: white;
 }
 .dark #notes-view {
-    background: #1f2937; /* Latar gelap agar menimpa */
+    background: #1f2937;
 }
 
 /* Logika Tampilan Saat Catatan Aktif */
@@ -1379,11 +1399,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px; /* Sedikit lebih kecil */
+    padding: 10px 15px;
     border-bottom: 1px solid #e9ecef;
     flex-shrink: 0;
+    background-color: white;
 }
 .dark .notes-view-header {
+    background-color: #1f2937;
     border-bottom-color: #4b5563;
 }
 .notes-view-header h3 {
@@ -1461,7 +1483,7 @@
     color: #E6E6FA;
 }
 
-/* CSS untuk Tampilan Catatan di Kalkulator (Tidak Berubah) */
+/* CSS untuk Tampilan Catatan di Kalkulator */
 .note-input-wrapper {
     cursor: pointer;
     transition: background-color 0.2s;
@@ -1489,6 +1511,15 @@
 }
 .dark .notes-preview-text:empty::before {
     color: #9ca3af;
+}
+
+/* [PERBAIKAN] Sesuaikan CSS .calc-grid */
+.calc-grid {
+    /* Hapus 'grid-row: 3 / 7;' */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    grid-auto-rows: 1fr;
 }
         @media (min-width: 480px) {
             body { background-color: #e9ecef; }
@@ -2555,16 +2586,20 @@ function renderDateModalCalendar() {
             categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat)));
         }
         
- /* ====================================================== */
+/* ====================================================== */
 /* [MODIFIKASI] FUNGSI-FUNGSI UNTUK NOTES-VIEW */
 /* ====================================================== */
+// const notesModal = ... // Hapus variabel modal
 const notesModalInput = document.getElementById('notes-modal-input');
-// [MODIFIKASI] Kita targetkan 'main-calculator-section' dari create.html
-const calcSection = document.getElementById('main-calculator-section'); 
 
 // [MODIFIKASI] Ganti nama fungsi (dan hapus modal)
 function openNotesView() {
-    if (!calcSection || !notesModalInput) return;
+    // [MODIFIKASI] Kita targetkan 'main-calculator-section' dari create.html
+    const calcSection = document.getElementById('main-calculator-section'); 
+    if (!calcSection || !notesModalInput) {
+        console.error("Gagal menemukan #main-calculator-section atau #notes-modal-input");
+        return;
+    }
 
     // 1. Isi textarea dengan catatan yang ada
     notesModalInput.value = currentNotes;
@@ -2587,6 +2622,7 @@ function openNotesView() {
  * @param {boolean} shouldSave - Jika 'true', simpan teks. Jika 'false' (Batal), jangan simpan.
  */
 function closeNotesView(shouldSave = false) {
+    const calcSection = document.getElementById('main-calculator-section');
     if (!calcSection || !notesModalInput) return;
 
     if (shouldSave) {
@@ -2613,20 +2649,19 @@ function closeNotesView(shouldSave = false) {
 function addSuggestion(text) {
     if (!notesModalInput) return;
     
-    // Tambahkan teks ke textarea dengan spasi
     if (notesModalInput.value.trim() === '') {
         notesModalInput.value = text;
     } else {
         notesModalInput.value += ` ${text}`;
     }
-    notesModalInput.focus(); // Fokus kembali ke input
+    notesModalInput.focus();
 }
 
 /**
  * Menyimpan catatan ke daftar sugesti di localStorage (Tidak Berubah)
  */
 function saveNoteSuggestion(note) {
-    if (!note || note.trim().length < 3) return; // Jangan simpan catatan kosong/pendek
+    if (!note || note.trim().length < 3) return; 
 
     try {
         const rawData = localStorage.getItem(NOTE_SUGGESTIONS_KEY);
@@ -2639,7 +2674,7 @@ function saveNoteSuggestion(note) {
         
         let newList = Array.from(uniqueSuggestions);
         if (newList.length > 10) {
-            newList = newList.slice(newList.length - 10); // Ambil 10 terakhir
+            newList = newList.slice(newList.length - 10);
         }
         
         localStorage.setItem(NOTE_SUGGESTIONS_KEY, JSON.stringify(newList));
@@ -2650,28 +2685,26 @@ function saveNoteSuggestion(note) {
 }
 
 /**
- * Memuat sugesti catatan dan menampilkannya di modal
+ * Memuat sugesti catatan dan menampilkannya
  */
 function loadNoteSuggestions() {
-    // [MODIFIKASI] Ganti selector ke ID baru
     const container = document.getElementById('suggestion-pills-container');
     if (!container) return;
 
-    container.innerHTML = ''; // Kosongkan
+    container.innerHTML = '';
     let suggestions = [];
     try {
         const rawData = localStorage.getItem(NOTE_SUGGESTIONS_KEY);
         suggestions = rawData ? JSON.parse(rawData) : [];
     } catch (e) {
-        suggestions = []; // Reset jika JSON rusak
+        suggestions = [];
     }
 
-    // Tambahkan default jika masih kosong
     if (suggestions.length === 0) {
-        suggestions = ['Sarapan', 'Belanja Bulanan', 'Transport'];
+        suggestions = ['Sarapan', 'Belanja Bulanan', 'Transport', 'Makan Siang'];
     }
 
-    suggestions.reverse().forEach(note => { // Tampilkan yang terbaru dulu
+    suggestions.reverse().forEach(note => {
         const btn = document.createElement('button');
         btn.textContent = note;
         btn.onclick = () => addSuggestion(note);
