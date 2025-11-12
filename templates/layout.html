@@ -426,6 +426,80 @@
         .calc-btn .fas { font-size: 24px; }
         .calc-btn.operator { background: #f1f3f5; color: #495057; }
         .calc-btn.delete { background: #ffe3e3; color: var(--expense-red); }
+        /* [BARU] Wrapper untuk Catatan & Jumlah (dijadikan 1 kartu) */
+        .notes-amount-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden; /* Penting untuk rounded corners */
+        }
+        .dark .notes-amount-wrapper {
+            background: #374151;
+        }
+
+        /* [BARU - GOAL 1] Kontainer Input Catatan (dengan ikon) */
+        .notes-input-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px; /* Padding untuk kontainer */
+            border-bottom: 1px solid var(--bg-gray); /* Garis pemisah */
+        }
+        .dark .notes-input-container {
+            border-bottom-color: #4b5563; /* Garis pemisah mode gelap */
+        }
+        .notes-icon {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        .dark .notes-icon {
+            color: #9ca3af;
+        }
+        
+        /* Input Catatan (tanpa background/border) */
+        .notes-input-field {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 0; /* Padding sudah di-handle parent */
+            font-size: 14px;
+            font-weight: 500;
+            text-align: left; /* Sesuai permintaan */
+            color: var(--text-dark);
+        }
+        .dark .notes-input-field {
+            color: white;
+        }
+        .dark .notes-input-field::placeholder {
+            color: #9ca3af;
+        }
+        .notes-input-field:focus {
+            outline: none;
+        }
+
+        /* [MODIFIKASI] Display Jumlah (tanpa background/shadow) */
+        .amount-display {
+            flex-grow: 1;
+            background: transparent; /* Hapus background */
+            padding: 8px 12px 10px 12px; /* Sesuaikan padding */
+            border-radius: 0; /* Hapus radius */
+            text-align: right;
+            font-size: 28px; /* Ukuran font disesuaikan agar pas */
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            box-shadow: none; /* Hapus shadow */
+            height: 100%;
+            min-height: auto; /* Hapus min-height */
+        }
+        .dark .amount-display {
+            background: transparent;
+            color: #ffffff;
+        }
         .wallet-header { background: white; padding: 20px; font-size: 18px; font-weight: 600; text-align: center;}
         .total-balance-card .label { font-size: 14px; color: var(--text-light); margin-bottom: 5px; text-align: center; }
         .total-balance-card .amount { font-size: 32px; font-weight: 700; text-align: center; color: var(--primary-blue); }
@@ -2235,7 +2309,7 @@ function renderDateModalCalendar() {
                     type: currentType.toUpperCase(), // API mengharapkan 'EXPENSE' atau 'INCOME'
                     amount: amount, // API Anda di 'queries.js' sudah menangani konversi ke sen
                     category_id: selectedCategory.id,
-                    description: selectedCategory.name, // Anda bisa tambahkan input deskripsi terpisah nanti
+                    description: document.getElementById('notes-input').value || selectedCategory.name,
                     transaction_date: transactionDate,
                 };
 
@@ -2312,7 +2386,7 @@ function renderDateModalCalendar() {
                     type: currentType.toUpperCase(),
                     amount: amount, // Sudah dalam Rupiah
                     category_id: selectedCategory.id,
-                    description: selectedCategory.name, // TODO: Tambah input deskripsi
+                    description: document.getElementById('notes-input').value || selectedCategory.name,
                     transaction_date: transactionDate,
                 };
 
@@ -2758,6 +2832,9 @@ function renderTransactionList(filteredTransactions) {
         updateDisplay(); 
         updateAccountIcon(selectedAccountId); 
 
+        const notesInputEl = document.getElementById('notes-input');
+                if (notesInputEl) notesInputEl.value = tx.notes || '';
+
         sessionStorage.removeItem('tx_for_edit');
 
     } else {
@@ -2767,6 +2844,8 @@ function renderTransactionList(filteredTransactions) {
         selectedCategory = null;
         selectedTransactionDate = new Date(); // [PERBAIKAN] Reset ke hari ini
         clearCalc();
+        const notesInputEl = document.getElementById('notes-input');
+                if (notesInputEl) notesInputEl.value = '';
         loadCategories(); 
         updateAccountIcon(selectedAccountId); 
     }
