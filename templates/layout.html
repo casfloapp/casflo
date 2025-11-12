@@ -1360,13 +1360,12 @@
 /* View Kalkulator (Default) */
 #calculator-view {
     display: grid;
-    grid-template-rows: auto auto 1fr; /* amount-container, top-action-bar, calc-grid */
+    /* [PERBAIKAN] Bagi sisa ruang: 1 bagian untuk action-bar, 4 bagian untuk calc-grid */
+    grid-template-rows: auto 1fr 4fr; /* amount-container, top-action-bar, calc-grid */
     gap: 8px;
     height: 100%;
-    
-    /* [BARU] Tambahkan padding di sini */
     padding: 15px; 
-    box-sizing: border-box; /* Pastikan padding tidak merusak layout */
+    box-sizing: border-box; 
 }
 /* [MODIFIKASI] Sesuaikan grid-row */
 #calculator-view .amount-container {
