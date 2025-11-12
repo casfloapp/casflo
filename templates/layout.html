@@ -1342,11 +1342,17 @@
 /* [PERBAIKAN FINAL] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
 /* ====================================================== */
 .calculator-section {
+    background: #FFFFFF;
+    border-top: 1px solid #e0e0e0;
+    flex-shrink: 0; /* Penting: Jangan biarkan ini menyusut */
+    display: grid; /* Biarkan grid agar child bisa mengisi 100% */
+    
+    /* [PERMINTAAN KUNCI] Atur tinggi 45% dari layar */
+    height: 45svh; /* 45% of small viewport height */
+
     position: relative;
-    /* [MODIFIKASI] Ubah dari flex column menjadi grid */
-    display: grid;
-    /* Hapus 'grid-template-rows' dari sini */
-    padding: 15px; /* Padding dipindahkan ke sini */
+    overflow: hidden;
+    padding: 0; /* [FIX] Padding dipindah ke child */
 }
 
 /* [HAPUS] Hapus #calc-content-wrapper */
@@ -1354,10 +1360,13 @@
 /* View Kalkulator (Default) */
 #calculator-view {
     display: grid;
-    /* [MODIFIKASI] Sesuaikan grid-template-rows */
     grid-template-rows: auto auto 1fr; /* amount-container, top-action-bar, calc-grid */
     gap: 8px;
     height: 100%;
+    
+    /* [BARU] Tambahkan padding di sini */
+    padding: 15px; 
+    box-sizing: border-box; /* Pastikan padding tidak merusak layout */
 }
 /* [MODIFIKASI] Sesuaikan grid-row */
 #calculator-view .amount-container {
