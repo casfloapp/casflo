@@ -410,7 +410,7 @@
             /* [FIX] Sesuaikan dengan tinggi kalkulator */
             padding-bottom: 50dvh;
             @supports not (padding-bottom: 50dvh) {
-                padding-bottom: 50svh; /* Fallback */
+                padding-bottom: 50vh; /* Fallback */
             }
         }
         .category-group { margin-bottom: 20px; }
@@ -430,8 +430,8 @@
         .top-action-bar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px; /* [FIX] Kurangi gap */
-            grid-row: 1; /* [FIX] Baris 1 di dalam #calculator-view */
+            gap: 8px; /* [FIX] Kembalikan ke 8px */
+            grid-row: 1; /* [PENTING] Pastikan ini 1 */
         }
         
         .action-btn { background: white; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 24px; }
@@ -443,9 +443,9 @@
         .calc-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px; /* [FIX] Kurangi gap */
+            gap: 8px; /* [FIX] Kembalikan ke 8px */
             grid-auto-rows: 1fr;
-            grid-row: 2; /* [FIX] Baris 2 di dalam #calculator-view */
+            grid-row: 2; /* [PENTING] Pastikan ini 2 */
         }
         .calc-btn { background: white; border: none; border-radius: 10px; font-size: 24px; font-weight: 600; cursor: pointer; color: var(--text-dark); box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; }
         .calc-btn .fas { font-size: 24px; }
@@ -1375,24 +1375,24 @@
     max-width: 480px; 
     margin: 0 auto;
 
-    /* [FIX] Gunakan dsvh (dynamic small viewport height) jika didukung, fallback ke svh */
-    height: 50dvh; /* 50% dari tinggi layar dinamis */
+    height: 50dvh; /* [FIX] Gunakan 'dvh' (dynamic viewport height) */
     @supports not (height: 50dvh) {
-        height: 50svh; /* Fallback untuk browser lama */
+        height: 50vh; /* Fallback */
     }
     
-    /* [FIX] Kurangi padding dan gap agar muat */
-    padding: 10px; 
+    padding: 15px; /* [FIX] Kembalikan padding 15px */
     
-    background: #FFFFFF;
+    background:#FFFFFF;
     border-top: 1px solid #e0e0e0;
     display: grid;
-    gap: 6px; /* [FIX] Kurangi gap */
+    gap: 8px; /* [FIX] Kembalikan gap 8px */
     overflow: hidden;
     box-sizing: border-box;
     
-    /* [BARU] Pastikan grid-template-rows ada di sini */
-    grid-template-rows: auto 1fr; /* Baris amount-container & sisa ruang */
+    grid-template-rows: auto 1fr; 
+    
+    /* [KUNCI] Tambahkan padding-bottom untuk Home Bar iPhone */
+    padding-bottom: calc(15px + env(safe-area-inset-bottom));
 }
 
 /* [HAPUS] Hapus #calc-content-wrapper */
@@ -1400,12 +1400,13 @@
 /* View Kalkulator (Default) */
 #calculator-view {
     display: grid; 
-    /* [PERBAIKAN] Baris 1 (amount) auto, Baris 2 (aksi) 1fr, Baris 3 (grid) 4fr */
-    grid-template-rows: auto 1fr 4fr; 
-    gap: 8px; 
+    /* [PERBAIKAN KUNCI] 1 bagian untuk aksi, 4 bagian untuk grid angka */
+    grid-template-rows: 1fr 4fr; 
+    gap: 8px; /* [FIX] Kembalikan ke 8px */
     height: 100%;
     box-sizing: border-box; 
-    /* Hapus 'grid-row' jika ada */
+    grid-row: 2;
+    overflow: hidden;
 }
 /* [MODIFIKASI] Sesuaikan grid-row */
 #calculator-view .amount-container {
