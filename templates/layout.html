@@ -170,8 +170,9 @@
         .dark .type-btn-header.expense.active { color: var(--expense-red); }
         .dark .type-btn-header.income.active { color: var(--income-green); }
         .dark .calculator-section {
-            background: #1f2937;
+            background: #1f2937; /* Latar gelap */
             border-top-color: #4b5563;
+            /* Semua properti (position, height, dll) di-inherit dari .calculator-section utama */
         }
         .dark .amount-display, .dark .action-btn, .dark .calc-btn {
             background: #374151;
@@ -399,7 +400,16 @@
         .type-btn-header.active { background: white; color: var(--text-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .type-btn-header.expense.active { color: var(--expense-red); }
         .type-btn-header.income.active { color: var(--income-green); }
-        .categories-section { flex-grow: 1; overflow-y: auto; padding: 20px; background-color: white; min-height: 0; }
+        .categories-section {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: white;
+            min-height: 0;
+            
+            /* [TAMBAHKAN] Beri padding bawah se-tinggi kalkulator (50svh) */
+            padding-bottom: 50svh; 
+        }
         .category-group { margin-bottom: 20px; }
         .group-title { font-size: 12px; color: var(--text-light); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; }
         .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; }
@@ -1347,14 +1357,29 @@
 /* [PERBAIKAN FINAL] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
 /* ====================================================== */
 .calculator-section {
-    background: #FFFFFF; 
-    padding: 10px; /* <-- MENJADI 10px */
-    border-top: 1px solid #e0e0e0; 
-    flex-shrink: 0;
-    display: grid;
-    height: 45svh;
-    position: relative;
+    /* [PERUBAHAN KUNCI] Atur posisi fixed di bawah */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    /* [BARU] Batasi lebar dan tengahkan di desktop */
+    max-width: 480px; 
+    margin: 0 auto;
+
+    /* [PERUBAHAN KUNCI] Tentukan tinggi 50% layar */
+    height: 50svh; 
+    
+    /* [KEMBALIKAN] Pulihkan padding asli 15px */
+    padding: 15px; 
+    
+    /* Styling seperti sebelumnya */
+    background: #FFFFFF;
+    border-top: 1px solid #e0e0e0;
+    display: grid; /* Tetap grid, bukan flex */
+    gap: 8px; /* [KEMBALIKAN] Pulihkan gap asli 8px */
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 /* [HAPUS] Hapus #calc-content-wrapper */
@@ -1362,9 +1387,10 @@
 /* View Kalkulator (Default) */
 #calculator-view {
     display: grid; 
-    grid-template-rows: auto 1fr 4fr;
-    gap: 6px; /* <-- MENJADI 6px */
+    grid-template-rows: auto 1fr 4fr; /* Proporsi tombol aksi (1) vs grid (4) */
+    gap: 8px; /* [KEMBALIKAN] Pulihkan gap 8px */
     height: 100%;
+    /* Hapus padding, sudah di parent (.calculator-section) */
     box-sizing: border-box; 
 }
 /* [MODIFIKASI] Sesuaikan grid-row */
@@ -1524,7 +1550,7 @@
 .calc-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 6px; /* <-- MENJADI 6px */
+    gap: 8px; /* [KEMBALIKAN] Pulihkan gap 8px */
     grid-auto-rows: 1fr;
 }
         @media (min-width: 480px) {
