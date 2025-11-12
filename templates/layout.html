@@ -1339,39 +1339,35 @@
 }
 
 /* ====================================================== */
-/* [PERBAIKAN] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
+/* [PERBAIKAN FINAL] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
 /* ====================================================== */
 .calculator-section {
-    /* [MODIFIKASI] Ubah dari grid menjadi flex column */
-    display: flex;
-    flex-direction: column;
-    /* Hapus 'grid-template-rows' jika ada */
+    position: relative;
+    /* [MODIFIKASI] Ubah dari flex column menjadi grid */
+    display: grid;
+    /* Hapus 'grid-template-rows' dari sini */
+    padding: 15px; /* Padding dipindahkan ke sini */
 }
 
-/* [BARU] Wrapper untuk konten yang diganti */
-#calc-content-wrapper {
-    position: relative; /* Konteks untuk view di dalamnya */
-    flex-grow: 1; /* Ambil sisa tinggi */
-    display: grid; /* Tetap grid agar bisa diisi penuh */
-    overflow: hidden; /* Sembunyikan transisi */
-}
+/* [HAPUS] Hapus #calc-content-wrapper */
 
 /* View Kalkulator (Default) */
 #calculator-view {
-    display: grid; /* Layout grid seperti sebelumnya */
-    /* [MODIFIKASI] Hapus grid-row: 3 / 7 */
-    grid-template-rows: auto 1fr; /* Baris aksi & grid kalkulator */
+    display: grid;
+    /* [MODIFIKASI] Sesuaikan grid-template-rows */
+    grid-template-rows: auto auto 1fr; /* amount-container, top-action-bar, calc-grid */
     gap: 8px;
     height: 100%;
-    /* Atur ulang padding jika perlu, tapi seharusnya sudah pas dari parent */
 }
-/* [MODIFIKASI] Sesuaikan top-action-bar dan calc-grid */
-#calculator-view .top-action-bar {
+/* [MODIFIKASI] Sesuaikan grid-row */
+#calculator-view .amount-container {
     grid-row: 1;
 }
-#calculator-view .calc-grid {
+#calculator-view .top-action-bar {
     grid-row: 2;
-    /* Hapus 'grid-row: 3 / 7' dari CSS .calc-grid */
+}
+#calculator-view .calc-grid {
+    grid-row: 3;
 }
 
 /* View Catatan (Default Tersembunyi) */
@@ -1387,6 +1383,9 @@
 }
 
 /* Logika Tampilan Saat Catatan Aktif */
+.calculator-section.notes-active {
+    padding: 0; /* [BARU] Hapus padding saat notes-view aktif */
+}
 .calculator-section.notes-active #calculator-view {
     display: none; /* Sembunyikan kalkulator */
 }
@@ -1399,7 +1398,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px;
+    padding: 15px 20px; /* Padding untuk header catatan */
     border-bottom: 1px solid #e9ecef;
     flex-shrink: 0;
     background-color: white;
@@ -1429,12 +1428,12 @@
     display: flex;
     flex-direction: column;
     padding: 15px;
-    overflow: hidden; /* Parent scroll */
+    overflow: hidden;
     flex-grow: 1;
 }
 .notes-view-body textarea {
-    min-height: 80px; /* [PERMINTAAN] Textarea pendek */
-    flex-shrink: 0; /* Jangan biarkan dia menyusut */
+    min-height: 80px; /* Textarea pendek */
+    flex-shrink: 0;
     border: none;
     outline: none;
     width: 100%;
@@ -1452,8 +1451,8 @@
 }
 
 .suggestion-pills-container {
-    flex-grow: 1; /* [PERMINTAAN] Ambil sisa ruang */
-    overflow-y: auto; /* Buat area sugesti bisa scroll */
+    flex-grow: 1; /* Ambil sisa ruang */
+    overflow-y: auto; /* Area sugesti bisa scroll */
     padding-top: 15px;
 }
 .suggestion-pills-title {
@@ -1483,7 +1482,7 @@
     color: #E6E6FA;
 }
 
-/* CSS untuk Tampilan Catatan di Kalkulator */
+/* CSS untuk Tampilan Catatan di Kalkulator (Tidak Berubah) */
 .note-input-wrapper {
     cursor: pointer;
     transition: background-color 0.2s;
@@ -1513,9 +1512,8 @@
     color: #9ca3af;
 }
 
-/* [PERBAIKAN] Sesuaikan CSS .calc-grid */
+/* [MODIFIKASI] Hapus 'grid-row' dari .calc-grid */
 .calc-grid {
-    /* Hapus 'grid-row: 3 / 7;' */
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 8px;
@@ -2587,14 +2585,11 @@ function renderDateModalCalendar() {
         }
         
 /* ====================================================== */
-/* [MODIFIKASI] FUNGSI-FUNGSI UNTUK NOTES-VIEW */
+/* FUNGSI-FUNGSI UNTUK NOTES-VIEW */
 /* ====================================================== */
-// const notesModal = ... // Hapus variabel modal
 const notesModalInput = document.getElementById('notes-modal-input');
 
-// [MODIFIKASI] Ganti nama fungsi (dan hapus modal)
 function openNotesView() {
-    // [MODIFIKASI] Kita targetkan 'main-calculator-section' dari create.html
     const calcSection = document.getElementById('main-calculator-section'); 
     if (!calcSection || !notesModalInput) {
         console.error("Gagal menemukan #main-calculator-section atau #notes-modal-input");
@@ -2604,23 +2599,18 @@ function openNotesView() {
     // 1. Isi textarea dengan catatan yang ada
     notesModalInput.value = currentNotes;
     
-    // 2. [MODIFIKASI] Tampilkan view dengan menambah kelas
+    // 2. Tampilkan view dengan menambah kelas
     calcSection.classList.add('notes-active');
     
     // 3. Muat sugesti dinamis
     loadNoteSuggestions(); 
 
     // 4. [KUNCI] Fokus ke textarea untuk memunculkan keyboard
-    // Kita beri jeda sedikit agar UI update dulu
     setTimeout(() => {
         notesModalInput.focus();
-    }, 50); // Transisi instan, 50ms cukup
+    }, 50);
 }
 
-/**
- * [MODIFIKASI] Menutup view catatan
- * @param {boolean} shouldSave - Jika 'true', simpan teks. Jika 'false' (Batal), jangan simpan.
- */
 function closeNotesView(shouldSave = false) {
     const calcSection = document.getElementById('main-calculator-section');
     if (!calcSection || !notesModalInput) return;
@@ -2636,16 +2626,13 @@ function closeNotesView(shouldSave = false) {
         }
     }
     
-    // 3. [MODIFIKASI] Sembunyikan view dengan menghapus kelas
+    // 3. Sembunyikan view dengan menghapus kelas
     calcSection.classList.remove('notes-active');
     
     // 4. Hapus fokus untuk sembunyikan keyboard
     notesModalInput.blur();
 }
 
-/**
- * Helper untuk tombol suggestion pills (Tidak Berubah)
- */
 function addSuggestion(text) {
     if (!notesModalInput) return;
     
@@ -2657,9 +2644,6 @@ function addSuggestion(text) {
     notesModalInput.focus();
 }
 
-/**
- * Menyimpan catatan ke daftar sugesti di localStorage (Tidak Berubah)
- */
 function saveNoteSuggestion(note) {
     if (!note || note.trim().length < 3) return; 
 
@@ -2684,9 +2668,6 @@ function saveNoteSuggestion(note) {
     }
 }
 
-/**
- * Memuat sugesti catatan dan menampilkannya
- */
 function loadNoteSuggestions() {
     const container = document.getElementById('suggestion-pills-container');
     if (!container) return;
