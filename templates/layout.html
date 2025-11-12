@@ -208,7 +208,7 @@
         .view-toggle-group { 
             display: flex; 
             align-items: center; 
-            background: rgba(255,255,255,0.1); 
+            background: rgba(255,255,255,255,0.1); 
             border-radius: 20px; 
             padding: 4px; 
             height: 43px;
@@ -783,8 +783,8 @@
         }
         
         .skeleton-theme-toggle {
-            width: 43px;  /* [PERBAIKAN] Samakan dengan tinggi .view-toggle-group */
-            height: 43px; /* [PERBAIKAN] Samakan dengan tinggi .view-toggle-group */
+            width: 32px;  /* Sama dengan w-8 di theme-toggle */
+            height: 32px; /* Sama dengan h-8 di theme-toggle */
             background: rgba(255,255,255,0.1);
             border-radius: 50%; /* Sama dengan rounded-full */
             flex-shrink: 0; /* Mencegah elemen menyusut */
@@ -796,10 +796,6 @@
             background: rgba(255,255,255,0.1);
             border-radius: 20px; /* Sama dengan rounded-20px di .view-toggle-group */
             flex-shrink: 0;
-        }
-        .theme-toggle {
-            width: 43px;
-            height: 43px;
         }
 
         /* 2. Atur logika show/hide BARU */
