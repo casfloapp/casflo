@@ -2790,7 +2790,7 @@ function closeNotesView(shouldSave = false) {
     calcSection.classList.remove('notes-active');
     
     // 4. Hapus fokus untuk sembunyikan keyboard
-    notesModalInput.focus();
+    notesModalInput.blur();
 }
 
 function addSuggestion(text) {
