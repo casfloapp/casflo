@@ -2798,6 +2798,28 @@ function saveNoteSuggestion(note) {
         console.error("Gagal menyimpan sugesti catatan:", e);
     }
 }
+/* [PERBAIKAN DIMULAI] TAMBAHKAN FUNGSI BARU DI BAWAH INI */
+        function deleteNoteSuggestion(noteToDelete) {
+            if (!noteToDelete) return;
+            console.log("Menghapus sugesti:", noteToDelete);
+            try {
+                const rawData = localStorage.getItem(NOTE_SUGGESTIONS_KEY);
+                let suggestions = rawData ? JSON.parse(rawData) : [];
+                
+                // Filter array untuk menghapus catatan yang dipilih
+                suggestions = suggestions.filter(note => note !== noteToDelete);
+                
+                // Simpan kembali array yang sudah bersih ke localStorage
+                localStorage.setItem(NOTE_SUGGESTIONS_KEY, JSON.stringify(suggestions));
+
+                // Muat ulang daftar sugesti di UI
+                loadNoteSuggestions();
+
+            } catch (e) {
+                console.error("Gagal menghapus sugesti catatan:", e);
+            }
+        }
+        /* [PERBAIKAN SELESAI] */
 
 function loadNoteSuggestions() {
     const container = document.getElementById('suggestion-pills-container');
@@ -2819,7 +2841,29 @@ function loadNoteSuggestions() {
     suggestions.reverse().forEach(note => {
         const btn = document.createElement('button');
         btn.textContent = note;
+        
+        // Aksi klik biasa: menambahkan teks ke catatan
         btn.onclick = () => addSuggestion(note);
+
+        /* [PERBAIKAN DIMULAI] TAMBAHKAN EVENT LISTENER UNTUK HAPUS */
+        // Aksi tekan lama (long-press) / klik kanan: hapus sugesti
+        btn.oncontextmenu = async (e) => {
+            e.preventDefault(); // Mencegah menu klik kanan muncul
+            
+            const confirmed = await showDialog({
+                title: 'Hapus Sugesti',
+                text: `Anda yakin ingin menghapus sugesti "${note}"?`,
+                confirmText: 'Hapus',
+                cancelText: 'Batal',
+                isDestructive: true
+            });
+
+            if (confirmed) {
+                deleteNoteSuggestion(note);
+            }
+        };
+        /* [PERBAIKAN SELESAI] */
+
         container.appendChild(btn);
     });
 }
