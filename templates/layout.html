@@ -1338,8 +1338,8 @@
     /* width: 100%; */ /* <-- HAPUS BARIS INI */
     /* padding-right: calc(70% + 8px); */ /* <-- HAPUS BARIS INI */
 
-    min-width: 0;       /* Tetap ada */
-    overflow-x: hidden;   /* Tetap ada (untuk memotong teks) */
+    min-width: 0;       
+    overflow-x: auto;   /* <-- KEMBALIKAN KE AUTO */
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -1382,9 +1382,9 @@
             /* bottom: 0; */            
 
             min-width: 0;     
-            overflow-x: hidden; /* <-- UBAH DARI 'auto' MENJADI 'hidden' */
+            overflow-x: auto; /* <-- KEMBALIKAN KE AUTO */
             white-space: nowrap; 
-            text-overflow: ellipsis; /* <-- TAMBAHKAN BARIS INI */
+            /* text-overflow: ellipsis; */ /* <-- HAPUS BARIS INI */
 
             /* Properti styling (dikembalikan dari aturan lama) */
             background: white; 
@@ -1585,21 +1585,21 @@
     background-color: #f0f0f0;
 }
 .notes-preview-text {
-    font-size: 15px;
-    color: var(--text-dark);
-    white-space: nowrap; /* Teks tidak boleh turun baris */
-    padding-right: 10px; 
-    
-    /* [PERBAIKAN BARU UNTUK ELLIPSIS] */
-    display: block;           /* 1. Diperlukan untuk text-overflow */
-    overflow: hidden;         /* 2. Sembunyikan teks yang berlebih */
-    text-overflow: ellipsis;  /* 3. Tampilkan "..." */
+            font-size: 15px;
+            color: var(--text-dark);
+            white-space: nowrap; /* Teks tidak boleh turun baris */
+            padding-right: 10px; /* Beri jarak di akhir scroll */
 
-    /* Hapus properti flex yang tidak relevan */
-    /* flex-grow: 1; */
-    /* flex-shrink: 1; */
-    /* min-width: 0; */
-                    }
+            /* [PERBAIKAN] Kembalikan properti flex */
+            flex-grow: 1;     /* 1. Biarkan elemen ini tumbuh */
+            flex-shrink: 1;   /* 2. Izinkan elemen ini menyusut */
+            min-width: 0;     /* 3. Kunci agar overflow induknya aktif */
+
+            /* Hapus properti ellipsis */
+            /* display: block; */
+            /* overflow: hidden; */
+            /* text-overflow: ellipsis; */
+        }
 .notes-preview-text:empty::before {
     content: attr(data-placeholder);
     color: var(--text-light);
