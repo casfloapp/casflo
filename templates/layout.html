@@ -1330,8 +1330,8 @@
     gap: 10px;
     border: 1px solid #f0f0f0;
 
-    /* [PERBAIKAN] Atur lebar 30%, min-width, dan overflow */
-    flex: 0 0 30%;    /* Lebar tetap 30% (grow:0, shrink:0, basis:30%) */
+    /* [PERBAIKAN] Atur lebar 60%, min-width, dan overflow */
+    flex: 0 0 60%;    /* Lebar tetap 60% (grow:0, shrink:0, basis:60%) */
     min-width: 0;       /* Izinkan untuk menyusut */
     overflow-x: auto;   /* Aktifkan scroll horizontal */
     cursor: pointer;
@@ -1367,12 +1367,12 @@
 .amount-display {
     font-size: 32px; /* Perbesar */
 
-    /* [PERBAIKAN] Atur lebar 70% dan properti overflow */
-    flex: 0 0 70%;  /* Atur lebar 70% (grow:0, shrink:0, basis:70%) */
-    min-width: 0;     /* Wajib untuk text-overflow */
-    overflow: hidden; /* Sembunyikan angka yang meluap */
+    /* [PERBAIKAN] Atur lebar 40% dan overflow-x: auto */
+    flex: 0 0 40%;  /* Atur lebar 40% (grow:0, shrink:0, basis:40%) */
+    min-width: 0;     /* Wajib untuk scroll */
+    overflow-x: auto; /* [PERMINTAAN ANDA] Buat agar bisa di-scroll */
     white-space: nowrap;
-    text-overflow: ellipsis; /* Potong angka jika terlalu panjang */
+    /* text-overflow: ellipsis; [DIHAPUS] */
 
     /* Properti styling (dikembalikan dari aturan lama) */
     background: white; 
@@ -1582,6 +1582,7 @@
     
     /* [PERBAIKAN] */
     flex-shrink: 0; /* Pastikan teks tidak menyusut/wrap */
+    padding-right: 10px; /* Beri jarak di akhir scroll */
 }
 .notes-preview-text:empty::before {
     content: attr(data-placeholder);
