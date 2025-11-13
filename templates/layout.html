@@ -1571,17 +1571,16 @@
     background-color: #f0f0f0;
 }
 .notes-preview-text {
-    font-size: 15px;
-    color: var(--text-dark);
-    /* width: 100%; [DIHAPUS] */
-    white-space: nowrap; /* Teks tidak boleh turun baris */
-    /* overflow: hidden; [DIHAPUS] */
-    /* text-overflow: ellipsis; [DIHAPUS] */
-    
-    /* [PERBAIKAN] */
-    flex-shrink: 0; /* Pastikan teks tidak menyusut/wrap */
-    padding-right: 10px; /* Beri jarak di akhir scroll */
-}
+            font-size: 15px;
+            color: var(--text-dark);
+            white-space: nowrap; /* Teks tidak boleh turun baris */
+            padding-right: 10px; /* Beri jarak di akhir scroll */
+
+            /* [PERBAIKAN] */
+            flex-grow: 1;     /* 1. Biarkan elemen ini tumbuh mengisi sisa ruang di dalam wrapper */
+            flex-shrink: 1;   /* 2. Izinkan elemen ini menyusut jika perlu */
+            min-width: 0;     /* 3. [KUNCI] Izinkan menyusut di bawah ukuran kontennya, agar overflow-x induknya (note-input-wrapper) aktif */
+        }
 .notes-preview-text:empty::before {
     content: attr(data-placeholder);
     color: var(--text-light);
