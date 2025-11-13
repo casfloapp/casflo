@@ -2693,7 +2693,7 @@ function renderDateModalCalendar() {
             amountDisplay.textContent = displayValue;
 
             // [PERBAIKAN DITAMBAHKAN DI SINI]
-            adjustFontSize(); // Panggil fungsi scaling
+            adjustAmountFontSize(); // Panggil fungsi scaling
         }
         function checkWaitingForEquals() { const hasOperator = ['+', '-', '*', '/'].some(op => calcValue.includes(op)); if (!hasOperator) { waitingForEquals = false; changeButtonToCheck(); } }
         function changeButtonToEquals() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn equals'; actionBtn.innerHTML = '<i class="fas fa-equals"></i>'; }}
