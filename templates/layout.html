@@ -1333,7 +1333,7 @@
     gap: 10px;
     border: 1px solid #f0f0f0;
     
-    flex: 0 0 calc(30% - 4px); /* [DIKEMBALIKAN] Lebar 30% */
+    flex: 0 0 calc(40% - 4px); /* [DIKEMBALIKAN] Lebar 30% */
 
     min-width: 0;       
     overflow-x: auto;   /* [DIKEMBALIKAN] Scroll jika catatan panjang */
@@ -1368,9 +1368,9 @@
 
 /* MODIFIKASI .amount-display */
         .amount-display {
-            font-size: 28px; 
+            font-size: 21px; 
 
-            flex: 0 0 calc(70% - 4px); /* [DIKEMBALIKAN] Lebar 70% */
+            flex: 0 0 calc(60% - 4px); /* [DIKEMBALIKAN] Lebar 70% */
             
             min-width: 0;     
             overflow-x: auto;   /* [DIKEMBALIKAN] Scroll jika nominal panjang */
@@ -2596,7 +2596,7 @@ function renderDateModalCalendar() {
             const operators = ['+', '-', '*', '/'];
 
             // [PERBAIKAN BATAS KARAKTER NOMINAL]
-            if (calcValue.length >= 11 && !operators.includes(value)) {
+            if (calcValue.length >= 12 && !operators.includes(value)) {
                 // Jika sudah 10 karakter, hanya izinkan input operator.
                 // Angka dan titik akan diblok.
                 return; 
