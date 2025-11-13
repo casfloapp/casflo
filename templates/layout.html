@@ -1588,13 +1588,12 @@
             font-size: 15px;
             color: var(--text-dark);
             white-space: nowrap; /* Teks tidak boleh turun baris */
-            padding-right: 10px; /* Beri jarak di akhir scroll */
-
-            /* [PERBAIKAN] Kembalikan properti flex */
-            flex-grow: 1;     /* 1. Biarkan elemen ini tumbuh */
-            flex-shrink: 1;   /* 2. Izinkan elemen ini menyusut */
-            min-width: 0;     /* 3. Kunci agar overflow induknya aktif */
-
+            padding-right: 10px; 
+            
+            /* [PERBAIKAN BARU UNTUK ELLIPSIS] */
+            display: block;           /* 1. Diperlukan untuk text-overflow */
+            overflow: hidden;         /* 2. Sembunyikan teks yang berlebih */
+            text-overflow: ellipsis;  /* 3. Tampilkan "..." */
             /* Hapus properti ellipsis */
             /* display: block; */
             /* overflow: hidden; */
