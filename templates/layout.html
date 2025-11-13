@@ -373,12 +373,37 @@
         /* [PERBAIKAN] Aturan di bawah ini DIHAPUS karena menyebabkan jarak atas tidak rata */
         /* .transaction-item:first-of-type { padding-top: 5px; } */
         .transaction-item .icon { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; flex-shrink: 0; }
-        .transaction-item .details { flex-grow: 1; }
-        .transaction-item .details .category { font-weight: 600; font-size: 15px; }
-        .transaction-item .details .notes { font-size: 12px; color: var(--text-light); }
-        .transaction-item .info { text-align: right; }
-        .transaction-item .info .amount { font-weight: 700; color: var(--expense-red); font-size: 15px; }
-        .transaction-item .info .account { font-size: 12px; color: var(--text-light); }
+        .transaction-item .details { flex-grow: 1; overflow: hidden; }
+        .transaction-item .details .category { 
+            font-weight: 600; 
+            font-size: 15px; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        .transaction-item .details .notes { 
+            font-size: 12px; 
+            color: var(--text-light); 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        .transaction-item .info { text-align: right; flex-shrink: 0; }
+        .transaction-item .info .amount { 
+            font-weight: 700; 
+            color: var(--expense-red); 
+            font-size: 15px; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        .transaction-item .info .account { 
+            font-size: 12px; 
+            color: var(--text-light); 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
         .fab { position: fixed; bottom: 100px; right: 20px; width: 56px; height: 56px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.15); cursor: pointer; color: var(--primary-blue); z-index: 15; text-decoration: none; }
         .fab i { font-size: 22px; }
         .bottom-nav { border-top-left-radius: 25px;border-top-right-radius: 25px;position: fixed; max-width: 480px; margin: 0 auto; bottom: 0; left: 0; right: 0; width: 100%; background: white; height: 80px; display: flex; justify-content: space-around; align-items: center; padding-bottom: 0px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 10; }
@@ -1517,7 +1542,7 @@
     flex-grow: 1;
 }
 .notes-view-body textarea {
-    min-height: 80px; /* Textarea pendek */
+    max-height: 80px; /* Textarea pendek */
     flex-shrink: 0;
     border: none;
     outline: none;
