@@ -1625,6 +1625,35 @@
     color: #9ca3af;
 }
 
+/* [BARU] Mengatur tombol agar bisa menampung ikon 'x' */
+        .suggestion-pills button {
+            display: inline-flex;
+            align-items: center;
+            padding-right: 10px; /* Beri sedikit ruang untuk tombol 'x' */
+        }
+
+        /* [BARU] Styling untuk tombol 'x' di dalam pill */
+        .suggestion-delete-btn {
+            font-size: 10px;
+            color: var(--primary-blue);
+            background-color: rgba(0,0,0,0.05);
+            border-radius: 50%;
+            padding: 4px 5px; /* Membuatnya sedikit oval/bulat */
+            margin-left: 8px;
+            line-height: 1; /* Memastikan 'x' di tengah */
+            transition: background-color 0.2s;
+        }
+        .suggestion-delete-btn:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+        .dark .suggestion-delete-btn {
+            color: #E6E6FA; /* light purple */
+            background-color: rgba(255,255,255,0.1);
+        }
+        .dark .suggestion-delete-btn:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
 /* [MODIFIKASI] Hapus 'grid-row' dari .calc-grid */
 .calc-grid {
     display: grid;
@@ -2840,15 +2869,22 @@ function loadNoteSuggestions() {
 
     suggestions.reverse().forEach(note => {
         const btn = document.createElement('button');
-        btn.textContent = note;
         
-        // Aksi klik biasa: menambahkan teks ke catatan
+        // [DIUBAH] Gunakan innerHTML untuk menambahkan teks dan ikon 'x'
+        btn.innerHTML = `
+            <span>${note}</span>
+            <i class_name="fas fa-times suggestion-delete-btn"></i>
+        `;
+        
+        // Aksi klik biasa pada tombol: menambahkan teks ke catatan
         btn.onclick = () => addSuggestion(note);
 
-        /* [PERBAIKAN DIMULAI] TAMBAHKAN EVENT LISTENER UNTUK HAPUS */
-        // Aksi tekan lama (long-press) / klik kanan: hapus sugesti
-        btn.oncontextmenu = async (e) => {
-            e.preventDefault(); // Mencegah menu klik kanan muncul
+        // [DIUBAH] Temukan tombol 'x' di dalam pill
+        const deleteBtn = btn.querySelector('.suggestion-delete-btn');
+        
+        // Tambahkan event klik HANYA ke tombol 'x'
+        deleteBtn.onclick = async (e) => {
+            e.stopPropagation(); // Mencegah event klik tombol utama (addSuggestion)
             
             const confirmed = await showDialog({
                 title: 'Hapus Sugesti',
@@ -2859,11 +2895,10 @@ function loadNoteSuggestions() {
             });
 
             if (confirmed) {
-                deleteNoteSuggestion(note);
+                deleteNoteSuggestion(note); // Panggil fungsi hapus yang sudah ada
             }
         };
-        /* [PERBAIKAN SELESAI] */
-
+        
         container.appendChild(btn);
     });
 }
