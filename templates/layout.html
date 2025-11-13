@@ -1330,8 +1330,8 @@
     gap: 10px;
     border: 1px solid #f0f0f0;
 
-    /* [PERBAIKAN] Atur lebar 60%, min-width, dan overflow */
-    flex: 0 0 calc(60% - 4px); /* [PERBAIKAN] 60% dikurangi setengah gap (4px) */
+    /* [PERBAIKAN] Atur lebar 30%, min-width, dan overflow */
+    flex: 0 0 calc(30% - 4px); /* [DIUBAH] dari 60% menjadi 30% */
     min-width: 0;       /* Izinkan untuk menyusut */
     overflow-x: auto;   /* Aktifkan scroll horizontal */
     cursor: pointer;
@@ -1367,12 +1367,10 @@
 .amount-display {
     font-size: 32px; /* Perbesar */
 
-    /* [PERBAIKAN] Atur lebar 40% dan overflow-x: auto */
-    flex: 0 0 calc(40% - 4px); /* [PERBAIKAN] 40% dikurangi setengah gap (4px) */
+    /* [PERBAIKAN] Atur lebar 70% dan overflow-x: auto */
+    flex: 0 0 calc(70% - 4px); /* [DIUBAH] dari 40% menjadi 70% */
     min-width: 0;     /* Wajib untuk scroll */
     overflow-x: auto; /* [PERMINTAAN ANDA] Buat agar bisa di-scroll */
-    white-space: nowrap;
-    /* text-overflow: ellipsis; [DIHAPUS] */
 
     /* Properti styling (dikembalikan dari aturan lama) */
     background: white; 
