@@ -2749,10 +2749,11 @@ function renderDateModalCalendar() {
 /* ====================================================== */
 /* FUNGSI-FUNGSI UNTUK NOTES-VIEW */
 /* ====================================================== */
-const notesModalInput = document.getElementById('notes-modal-input');
 
 function openNotesView() {
     const calcSection = document.getElementById('main-calculator-section'); 
+    const notesModalInput = document.getElementById('notes-modal-input'); /* [DIPINDAH KE SINI] */
+    
     if (!calcSection || !notesModalInput) {
         console.error("Gagal menemukan #main-calculator-section atau #notes-modal-input");
         return;
@@ -2773,6 +2774,7 @@ function openNotesView() {
 
 function closeNotesView(shouldSave = false) {
     const calcSection = document.getElementById('main-calculator-section');
+    const notesModalInput = document.getElementById('notes-modal-input'); /* [DITAMBAH] */
     if (!calcSection || !notesModalInput) return;
 
     if (shouldSave) {
@@ -2794,6 +2796,7 @@ function closeNotesView(shouldSave = false) {
 }
 
 function addSuggestion(text) {
+    const notesModalInput = document.getElementById('notes-modal-input'); /* [DITAMBAH] */
     if (!notesModalInput) return;
     
     if (notesModalInput.value.trim() === '') {
