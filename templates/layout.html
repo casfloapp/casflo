@@ -425,8 +425,8 @@
         .calculator-section { background: #f8f9fa; padding: 15px; border-top: 1px solid #e9ecef; flex-shrink: 0; display: grid; grid-template-rows: repeat(6, 1fr);}
         .amount-container { 
             display: flex; 
-            gap: 8px; /* <-- KEMBALIKAN BARIS INI */
-            position: relative; 
+            gap: 8px;
+            /* position: relative; */ /* <-- HAPUS BARIS INI */
         }
         .account-card { aspect-ratio: 1 / 1; height: 100%; background: var(--primary-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(102, 102, 234, 0.3); }
         .account-card i { color: white; font-size: 24px; }
@@ -1333,11 +1333,13 @@
     padding: 10px 12px;
     gap: 10px;
     border: 1px solid #f0f0f0;
-           width: 100%; 
-            padding-right: calc(70% + 8px); 
-            min-width: 0;       
-            overflow-x: hidden;   /* <-- DIUBAH DARI AUTO */
-            cursor: pointer;
+     /* [PERBAIKAN] Kembalikan ke flex 30% */
+    flex: 0 0 calc(30% - 4px); /* <-- GANTI DENGAN BARIS INI */
+    /* width: 100%; */ /* <-- HAPUS BARIS INI */
+    /* padding-right: calc(70% + 8px); */ /* <-- HAPUS BARIS INI */
+
+    min-width: 0;       /* Tetap ada */
+    overflow-x: hidden;   /* Tetap ada (untuk memotong teks) */
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -1371,17 +1373,17 @@
 .amount-display {
     font-size: 32px; /* Perbesar */
 
-            /* [PERBAIKAN] Mengembalikan ke layout flex 70% */
-            flex: 0 0 calc(70% - 4px); /* <-- TAMBAHKAN BARIS INI */
-            /* width: 70%; */           /* <-- HAPUS BARIS INI */
-            /* position: absolute; */   /* <-- HAPUS BARIS INI */
-            /* right: 0; */             /* <-- HAPUS BARIS INI */
-            /* top: 0; */               /* <-- HAPUS BARIS INI */
-            /* bottom: 0; */            /* <-- HAPUS BARIS INI */
+    /* [PERBAIKAN] Kembalikan ke flex 70% */
+    flex: 0 0 calc(70% - 4px); /* <-- TAMBAHKAN BARIS INI */
+    /* width: 70%; */           /* <-- HAPUS BARIS INI */
+    /* position: absolute; */   /* <-- HAPUS BARIS INI */
+    /* right: 0; */             /* <-- HAPUS BARIS INI */
+    /* top: 0; */               /* <-- HAPUS BARIS INI */
+    /* bottom: 0; */            /* <-- HAPUS BARIS INI */
 
-            min-width: 0;     /* Tetap ada */
-            overflow-x: auto; /* Tetap ada */
-            white-space: nowrap; /* <-- TAMBAHAN KUNCI UNTUK ANGKA */
+    min-width: 0;     /* Tetap ada */
+    overflow-x: auto; /* Tetap ada */
+    white-space: nowrap; /* Tetap ada */
 
     /* Properti styling (dikembalikan dari aturan lama) */
     background: white; 
@@ -1583,19 +1585,19 @@
 }
 .notes-preview-text {
     font-size: 15px;
-            color: var(--text-dark);
-            white-space: nowrap; /* Teks tidak boleh turun baris */
-            padding-right: 10px; 
-            
-            /* [PERBAIKAN BARU UNTUK ELLIPSIS] */
-            display: block;           /* 1. Diperlukan untuk text-overflow */
-            overflow: hidden;         /* 2. Sembunyikan teks yang berlebih */
-            text-overflow: ellipsis;  /* 3. Tampilkan "..." */
+    color: var(--text-dark);
+    white-space: nowrap; /* Teks tidak boleh turun baris */
+    padding-right: 10px; 
+    
+    /* [PERBAIKAN BARU UNTUK ELLIPSIS] */
+    display: block;           /* 1. Diperlukan untuk text-overflow */
+    overflow: hidden;         /* 2. Sembunyikan teks yang berlebih */
+    text-overflow: ellipsis;  /* 3. Tampilkan "..." */
 
-            /* Hapus properti flex yang tidak relevan */
-            /* flex-grow: 1; */
-            /* flex-shrink: 1; */
-            /* min-width: 0; */
+    /* Hapus properti flex yang tidak relevan */
+    /* flex-grow: 1; */
+    /* flex-shrink: 1; */
+    /* min-width: 0; */
                     }
 .notes-preview-text:empty::before {
     content: attr(data-placeholder);
