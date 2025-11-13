@@ -1331,7 +1331,7 @@
     border: 1px solid #f0f0f0;
 
     /* [PERBAIKAN] Atur lebar 60%, min-width, dan overflow */
-    flex: 0 0 60%;    /* Lebar tetap 60% (grow:0, shrink:0, basis:60%) */
+    flex: 0 0 calc(60% - 4px); /* [PERBAIKAN] 60% dikurangi setengah gap (4px) */
     min-width: 0;       /* Izinkan untuk menyusut */
     overflow-x: auto;   /* Aktifkan scroll horizontal */
     cursor: pointer;
@@ -1368,7 +1368,7 @@
     font-size: 32px; /* Perbesar */
 
     /* [PERBAIKAN] Atur lebar 40% dan overflow-x: auto */
-    flex: 0 0 40%;  /* Atur lebar 40% (grow:0, shrink:0, basis:40%) */
+    flex: 0 0 calc(40% - 4px); /* [PERBAIKAN] 40% dikurangi setengah gap (4px) */
     min-width: 0;     /* Wajib untuk scroll */
     overflow-x: auto; /* [PERMINTAAN ANDA] Buat agar bisa di-scroll */
     white-space: nowrap;
