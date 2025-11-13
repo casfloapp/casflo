@@ -1333,15 +1333,14 @@
     padding: 10px 12px;
     gap: 10px;
     border: 1px solid #f0f0f0;
-    /* [PERBAIKAN] Kembalikan ke flex 30% */
-    flex: 0 0 calc(30% - 4px); /* <-- GANTI DENGAN BARIS INI */
-    /* width: 100%; */ /* <-- HAPUS BARIS INI */
-    /* padding-right: calc(70% + 8px); */ /* <-- HAPUS BARIS INI */
+    
+    width: 100%; /* [DIUBAH] Menjadi lebar penuh */
 
     min-width: 0;       
-    overflow-x: auto;   /* <-- KEMBALIKAN KE AUTO */
+    overflow: hidden;   /* [DIUBAH] Sembunyikan overflow, tidak perlu scroll */
     cursor: pointer;
     transition: background-color 0.2s;
+    height: 48px; /* [DITAMBAH] Beri tinggi tetap agar rapi */
 }
 .note-input-wrapper i {
     color: var(--text-light);
@@ -1371,20 +1370,14 @@
 
 /* MODIFIKASI .amount-display */
         .amount-display {
-            font-size: 32px; /* Perbesar */
+            font-size: 32px; /* Ukuran font maks, JS akan mengatur sisanya */
 
-            /* [PERBAIKAN] Mengembalikan ke layout flex 70% */
-            flex: 0 0 calc(70% - 4px); 
-            /* width: 70%; */           
-            /* position: absolute; */   
-            /* right: 0; */             
-            /* top: 0; */               
-            /* bottom: 0; */            
-
+            width: 100%; /* [DIUBAH] Menjadi lebar penuh */
+            
             min-width: 0;     
-            overflow-x: auto; /* <-- KEMBALIKAN KE AUTO */
+            overflow: hidden; /* [DIUBAH] Sembunyikan overflow */
             white-space: nowrap; 
-            /* text-overflow: ellipsis; */ /* <-- HAPUS BARIS INI */
+            /* text-overflow: ellipsis; */ /* Hapus ini agar angka tidak terpotong "..." */
 
             /* Properti styling (dikembalikan dari aturan lama) */
             background: white; 
@@ -1396,8 +1389,8 @@
             align-items: center; 
             justify-content: flex-end; 
             border: 1px solid #f0f0f0; 
+            height: 60px; /* [DITAMBAH] Beri tinggi tetap yang lebih besar */
         }
-
 /* ====================================================== */
 /* [PERBAIKAN FINAL] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
 /* ====================================================== */
@@ -1441,7 +1434,8 @@
 
 #calculator-view .amount-container {
     grid-row: 1; /* Baris 1: Amount/Catatan */
-    display: flex; /* Biarkan sejajar */
+    display: flex;
+    flex-direction: column; /* [DIUBAH] Menjadi tumpukan vertikal */
     gap: 8px;
     /* Tinggi akan otomatis (auto) */
 }
@@ -1591,13 +1585,9 @@
             padding-right: 10px; 
             
             /* [PERBAIKAN BARU UNTUK ELLIPSIS] */
-            display: block;           /* 1. Diperlukan untuk text-overflow */
-            overflow: hidden;         /* 2. Sembunyikan teks yang berlebih */
-            text-overflow: ellipsis;  /* 3. Tampilkan "..." */
-            /* Hapus properti ellipsis */
-            /* display: block; */
-            /* overflow: hidden; */
-            /* text-overflow: ellipsis; */
+            display: block;           /* [DIUBAH] Aktifkan baris ini */
+            overflow: hidden;         /* [DIUBAH] Aktifkan baris ini */
+            text-overflow: ellipsis;  /* [DIUBAH] Aktifkan baris ini */
         }
 .notes-preview-text:empty::before {
     content: attr(data-placeholder);
@@ -2656,6 +2646,28 @@ function renderDateModalCalendar() {
             }
             updateDisplay();
         }
+        function adjustFontSize() {
+            const amountDisplay = document.getElementById("amountDisplay");
+            
+            // 1. Tentukan ukuran font maks & min
+            const maxFontSize = 48; // misal 48px
+            const minFontSize = 20; // misal 20px
+            let currentFontSize = maxFontSize;
+
+            // 2. Reset ke ukuran font terbesar dulu
+            amountDisplay.style.fontSize = `${currentFontSize}px`;
+
+            // 3. Cek apakah teksnya 'overflow' (kepanjangan)
+            // scrollWidth = lebar total teks
+            // clientWidth = lebar kotak yang terlihat
+            while (amountDisplay.scrollWidth > amountDisplay.clientWidth && currentFontSize > minFontSize) {
+                
+                // 4. Jika kepanjangan, kecilkan font-nya 1px
+                currentFontSize--;
+                amountDisplay.style.fontSize = `${currentFontSize}px`;
+            }
+        }
+
         function deleteLast() { calcValue = calcValue.slice(0, -1) || '0'; checkWaitingForEquals(); updateDisplay(); }
         function handleActionClick() { 
             if (waitingForEquals) {
@@ -2671,7 +2683,7 @@ function renderDateModalCalendar() {
             const amountDisplay = document.getElementById('amountDisplay');
             if (!amountDisplay) return;
 
-            // ... (semua logika formatting angka Anda tetap di sini) ...
+            // ... (logika formatting angka) ...
             let parts = calcValue.split('.');
             let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             let displayValue;
@@ -2682,6 +2694,9 @@ function renderDateModalCalendar() {
             }
             
             amountDisplay.textContent = displayValue;
+
+            // [PERBAIKAN DITAMBAHKAN DI SINI]
+            adjustFontSize(); // Panggil fungsi scaling
         }
         function checkWaitingForEquals() { const hasOperator = ['+', '-', '*', '/'].some(op => calcValue.includes(op)); if (!hasOperator) { waitingForEquals = false; changeButtonToCheck(); } }
         function changeButtonToEquals() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn equals'; actionBtn.innerHTML = '<i class="fas fa-equals"></i>'; }}
