@@ -1371,18 +1371,15 @@
 
 /* MODIFIKASI .amount-display */
 .amount-display {
-    font-size: 32px; /* Perbesar */
+            font-size: 32px; /* Ini akan menjadi ukuran font MAKSIMUM */
+            flex: 0 0 calc(70% - 4px); 
+            min-width: 0;     
+            /* overflow-x: auto; */   /* <-- HAPUS */
+            /* white-space: nowrap; */ /* <-- HAPUS */
 
-    /* [PERBAIKAN] Kembalikan ke flex 70% */
-    flex: 0 0 calc(70% - 4px); /* <-- TAMBAHKAN BARIS INI */
-    /* width: 70%; */           /* <-- HAPUS BARIS INI */
-    /* position: absolute; */   /* <-- HAPUS BARIS INI */
-    /* right: 0; */             /* <-- HAPUS BARIS INI */
-    /* top: 0; */               /* <-- HAPUS BARIS INI */
-    /* bottom: 0; */            /* <-- HAPUS BARIS INI */
-
-    min-width: 0;     /* Tetap ada */
-    overflow-x: auto; /* Tetap ada */
+            /* [BARU] Aturan untuk memotong teks jika GAGAL mengecil */
+            overflow: hidden;
+            text-overflow: ellipsis;
     white-space: nowrap; /* Tetap ada */
     /* Properti styling (dikembalikan dari aturan lama) */
     background: white; 
@@ -1907,6 +1904,29 @@ const sessionToken = localStorage.getItem('sessionToken');
         }
 
         // --- [AKHIR BAGIAN 0.5] ---
+
+        /**
+         * [BARU] Fungsi helper untuk menyesuaikan font size nominal secara dinamis
+         */
+        function adjustAmountFontSize() {
+            const amountDisplay = document.getElementById('amountDisplay');
+            if (!amountDisplay) return;
+
+            const maxFontSize = 32; // Ukuran font maksimum (dalam px)
+            const minFontSize = 18; // Ukuran font minimum (dalam px)
+            let currentFontSize = maxFontSize;
+
+            // 1. Reset font size ke maksimum dulu
+            amountDisplay.style.fontSize = maxFontSize + 'px';
+
+            // 2. Cek apakah teksnya meluap (scrollWidth > clientWidth)
+            // Kita beri sedikit padding (misal 10px) agar tidak terlalu mepet
+            while (amountDisplay.scrollWidth > (amountDisplay.clientWidth - 10) && currentFontSize > minFontSize) {
+                // Jika meluap, kecilkan font size
+                currentFontSize--;
+                amountDisplay.style.fontSize = currentFontSize + 'px';
+            }
+        }
 
         /**
          * [BARU] Helper global untuk format mata uang & set font size
@@ -2645,22 +2665,20 @@ function renderDateModalCalendar() {
             const amountDisplay = document.getElementById('amountDisplay');
             if (!amountDisplay) return;
 
-            // Pisahkan bagian integer dan desimal
+            // ... (semua logika formatting angka Anda tetap di sini) ...
             let parts = calcValue.split('.');
-            
-            // Format bagian integer (sebelum koma) dengan titik pemisah ribuan
             let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            
             let displayValue;
             if (parts.length > 1) {
-                // Jika ada desimal, gabungkan dengan KOMA
                 displayValue = integerPart + ',' + (parts[1] || '');
             } else {
-                // Jika tidak ada desimal
                 displayValue = integerPart;
             }
             
             amountDisplay.textContent = displayValue;
+
+            // [PERBAIKAN] Panggil fungsi pengecil font di sini
+            adjustAmountFontSize();
         }
         function checkWaitingForEquals() { const hasOperator = ['+', '-', '*', '/'].some(op => calcValue.includes(op)); if (!hasOperator) { waitingForEquals = false; changeButtonToCheck(); } }
         function changeButtonToEquals() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn equals'; actionBtn.innerHTML = '<i class="fas fa-equals"></i>'; }}
