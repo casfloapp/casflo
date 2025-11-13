@@ -1430,11 +1430,12 @@
 }
 
 #calculator-view .amount-container {
-    grid-row: 1; /* Baris 1: Amount/Catatan */
-    display: flex;
-    /* flex-direction: column; <-- DIHAPUS */
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
-    /* Tinggi akan otomatis (auto) */
+    height: 100%;
+    justify-content: space-between;
 }
 /* [PERBAIKAN] HAPUS aturan untuk .top-action-bar dan .calc-grid di dalam #calculator-view */
 /*
