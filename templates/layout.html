@@ -1371,15 +1371,15 @@
 
 /* MODIFIKASI .amount-display */
 .amount-display {
-            font-size: 32px; /* Ini akan menjadi ukuran font MAKSIMUM */
-            flex: 0 0 calc(70% - 4px); 
-            min-width: 0;     
-            /* overflow-x: auto; */   /* <-- HAPUS */
-            /* white-space: nowrap; */ /* <-- HAPUS */
+            font-size: 32px; /* Perbesar */
 
-            /* [BARU] Aturan untuk memotong teks jika GAGAL mengecil */
-            overflow: hidden;
-            text-overflow: ellipsis;
+            /* [PERBAIKAN] Mengembalikan ke layout flex 70% */
+            flex: 0 0 calc(70% - 4px); 
+            
+            min-width: 0;     
+            overflow-x: hidden; /* <-- DIUBAH DARI AUTO */
+            white-space: nowrap; 
+            text-overflow: ellipsis; /* <-- TAMBAHAN KUNCI */
     white-space: nowrap; /* Tetap ada */
     /* Properti styling (dikembalikan dari aturan lama) */
     background: white; 
@@ -1908,6 +1908,9 @@ const sessionToken = localStorage.getItem('sessionToken');
         /**
          * [BARU] Fungsi helper untuk menyesuaikan font size nominal secara dinamis
          */
+     /**
+         * [BARU] Fungsi helper untuk menyesuaikan font size nominal secara dinamis
+         */
         function adjustAmountFontSize() {
             const amountDisplay = document.getElementById('amountDisplay');
             if (!amountDisplay) return;
@@ -1927,7 +1930,6 @@ const sessionToken = localStorage.getItem('sessionToken');
                 amountDisplay.style.fontSize = currentFontSize + 'px';
             }
         }
-
         /**
          * [BARU] Helper global untuk format mata uang & set font size
          * @param {HTMLElement} wrapper - Elemen pembungkus (.loading atau parent)
@@ -2676,9 +2678,6 @@ function renderDateModalCalendar() {
             }
             
             amountDisplay.textContent = displayValue;
-
-            // [PERBAIKAN] Panggil fungsi pengecil font di sini
-            adjustAmountFontSize();
         }
         function checkWaitingForEquals() { const hasOperator = ['+', '-', '*', '/'].some(op => calcValue.includes(op)); if (!hasOperator) { waitingForEquals = false; changeButtonToCheck(); } }
         function changeButtonToEquals() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn equals'; actionBtn.innerHTML = '<i class="fas fa-equals"></i>'; }}
