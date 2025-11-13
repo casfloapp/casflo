@@ -1333,13 +1333,11 @@
     padding: 10px 12px;
     gap: 10px;
     border: 1px solid #f0f0f0;
-            /* [PERBAIKAN] Mengembalikan ke layout flex 30% */
-            flex: 0 0 calc(30% - 4px); /* <-- TAMBAHKAN BARIS INI */
-            /* width: 100%; */ /* <-- HAPUS BARIS INI */
-            /* padding-right: calc(70% + 8px); */ /* <-- HAPUS BARIS INI */
-
-            min-width: 0;       /* Tetap diperlukan */
-            overflow-x: auto;   /* Tetap diperlukan */
+           width: 100%; 
+            padding-right: calc(70% + 8px); 
+            min-width: 0;       
+            overflow-x: hidden;   /* <-- DIUBAH DARI AUTO */
+            cursor: pointer;
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -1584,16 +1582,21 @@
     background-color: #f0f0f0;
 }
 .notes-preview-text {
-            font-size: 15px;
+    font-size: 15px;
             color: var(--text-dark);
             white-space: nowrap; /* Teks tidak boleh turun baris */
-            padding-right: 10px; /* Beri jarak di akhir scroll */
+            padding-right: 10px; 
+            
+            /* [PERBAIKAN BARU UNTUK ELLIPSIS] */
+            display: block;           /* 1. Diperlukan untuk text-overflow */
+            overflow: hidden;         /* 2. Sembunyikan teks yang berlebih */
+            text-overflow: ellipsis;  /* 3. Tampilkan "..." */
 
-            /* [PERBAIKAN] */
-            flex-grow: 1;     /* 1. Biarkan elemen ini tumbuh mengisi sisa ruang di dalam wrapper */
-            flex-shrink: 1;   /* 2. Izinkan elemen ini menyusut jika perlu */
-            min-width: 0;     /* 3. [KUNCI] Izinkan menyusut di bawah ukuran kontennya, agar overflow-x induknya (note-input-wrapper) aktif */
-        }
+            /* Hapus properti flex yang tidak relevan */
+            /* flex-grow: 1; */
+            /* flex-shrink: 1; */
+            /* min-width: 0; */
+                    }
 .notes-preview-text:empty::before {
     content: attr(data-placeholder);
     color: var(--text-light);
