@@ -1370,28 +1370,33 @@
 }
 
 /* MODIFIKASI .amount-display */
-.amount-display {
+        .amount-display {
             font-size: 32px; /* Perbesar */
 
             /* [PERBAIKAN] Mengembalikan ke layout flex 70% */
             flex: 0 0 calc(70% - 4px); 
-            
+            /* width: 70%; */           
+            /* position: absolute; */   
+            /* right: 0; */             
+            /* top: 0; */               
+            /* bottom: 0; */            
+
             min-width: 0;     
-            overflow-x: hidden; /* <-- DIUBAH DARI AUTO */
+            overflow-x: hidden; /* <-- UBAH DARI 'auto' MENJADI 'hidden' */
             white-space: nowrap; 
-            text-overflow: ellipsis; /* <-- TAMBAHAN KUNCI */
-    white-space: nowrap; /* Tetap ada */
-    /* Properti styling (dikembalikan dari aturan lama) */
-    background: white; 
-    padding: 0 12px; 
-    border-radius: 10px; 
-    text-align: right; 
-    font-weight: 700; 
-    display: flex; 
-    align-items: center; 
-    justify-content: flex-end; 
-    border: 1px solid #f0f0f0; 
-}
+            text-overflow: ellipsis; /* <-- TAMBAHKAN BARIS INI */
+
+            /* Properti styling (dikembalikan dari aturan lama) */
+            background: white; 
+            padding: 0 12px; 
+            border-radius: 10px; 
+            text-align: right; 
+            font-weight: 700; 
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-end; 
+            border: 1px solid #f0f0f0; 
+        }
 
 /* ====================================================== */
 /* [PERBAIKAN FINAL] CSS UNTUK NOTES-VIEW (PENGGANTI MODAL) */
