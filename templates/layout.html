@@ -2595,14 +2595,6 @@ function renderDateModalCalendar() {
         }
         function appendToCalc(value) {
             const operators = ['+', '-', '*', '/'];
-
-            // [PERBAIKAN BATAS KARAKTER NOMINAL]
-            if (calcValue.length >= 12 && !operators.includes(value)) {
-                // Jika sudah 10 karakter, hanya izinkan input operator.
-                // Angka dan titik akan diblok.
-                return; 
-            }
-            // [AKHIR PERBAIKAN]
             
             if (operators.includes(value)) {
                 waitingForEquals = true;
