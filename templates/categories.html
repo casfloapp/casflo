@@ -1,87 +1,137 @@
 <style>
-    /* CSS Khusus untuk Halaman Kategori */
-    .category-page-container {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        height: 100svh;
-        max-width: 480px;
-        margin: 0 auto;
-    }
-    .category-header {
-        background: var(--primary-blue);
-        color: white;
-        padding: 20px;
-        flex-shrink: 0;
-        z-index: 10;
-        border-bottom-left-radius: 25px;
-        border-bottom-right-radius: 25px;
-    }
-    .category-header-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 18px;
-        font-weight: 600;
-    }
-    .category-header-top .back-link {
-        color: white;
-        text-decoration: none;
-        font-size: 20px;
-    }
-    .category-content {
-        flex-grow: 1;
-        overflow-y: auto;
-        padding: 20px;
-        padding-bottom: 100px;
-    }
-    .category-list-card {
-        background-color: white;
-        border-radius: 18px;
-        padding: 0 20px;
-        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
-        margin-bottom: 15px;
-    }
-    .dark .category-list-card { background-color: #374151; }
-    
-    .category-item {
-        display: flex;
-        align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px solid var(--bg-gray);
-    }
-    .category-item:last-child { border-bottom: none; }
-    .dark .category-item { border-bottom-color: #4b5563; }
-    
-    .category-item-icon {
-        font-size: 22px;
-        width: 45px;
-        height: 45px;
-        background-color: var(--bg-gray);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        margin-right: 12px;
-    }
-    .dark .category-item-icon { background-color: #4b5563; }
-    
-    .category-item-details {
-        flex-grow: 1;
-        overflow: hidden;
-        font-weight: 600;
-        color: var(--text-dark);
-    }
-    .dark .category-item-details { color: white; }
-    
-    .category-item-actions { display: flex; gap: 15px; }
-    .category-item-actions button {
-        background: none; border: none; font-size: 16px;
-        color: var(--text-light); cursor: pointer;
-    }
-    .category-item-actions .delete { color: var(--expense-red); }
+/* [BARU] CSS untuk Halaman Kategori */
+        .category-page-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            height: 100svh;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .category-header {
+            background: var(--primary-blue);
+            color: white;
+            padding: 20px;
+            flex-shrink: 0;
+            z-index: 10;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+        }
+        .category-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .category-header-top .back-link {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        .category-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
 
+        /* Card untuk 'Tambah Kategori' */
+        .category-form-card {
+            background-color: white;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+        }
+        .dark .category-form-card { background-color: #374151; }
+        .category-form-card .form-title {
+            font-weight: 600; margin-bottom: 15px; color: var(--text-dark);
+        }
+        .dark .category-form-card .form-title { color: white; }
+        .category-form-card .form-group { margin-bottom: 15px; }
+        .category-form-card label {
+            display: block; font-size: 13px; font-weight: 500;
+            color: var(--text-light); margin-bottom: 8px;
+        }
+        .category-form-card .input-field,
+        .category-form-card .select-field {
+            width: 100%; padding: 12px; border: 1px solid #e0e0e0;
+            border-radius: 10px; background-color: var(--bg-gray);
+            font-size: 14px;
+        }
+        .dark .category-form-card .input-field,
+        .dark .category-form-card .select-field {
+            background-color: #4b5563; border-color: #4b5563; color: white;
+        }
+        .category-form-card .submit-btn {
+            width: 100%; background: var(--primary-blue); color: white;
+            border: none; padding: 12px; border-radius: 10px;
+            font-weight: 600; cursor: pointer;
+        }
+        .category-form-card .submit-btn:disabled {
+             background-color: #9ca3af; cursor: not-allowed;
+        }
+        .category-form-card #category-message {
+            font-size: 13px; margin-top: 10px; text-align: center;
+        }
+        #category-message.success { color: var(--income-green); }
+        #category-message.error { color: var(--expense-red); }
+
+        /* Card untuk Daftar Kategori */
+        .category-list-card {
+            background-color: white;
+            border-radius: 18px;
+            padding: 0 20px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+            margin-bottom: 15px;
+        }
+        .dark .category-list-card { background-color: #374151; }
+        
+        .category-list-title {
+            font-size: 16px; font-weight: 600; color: var(--text-dark);
+            padding: 15px 0 10px 0;
+            border-bottom: 1px solid var(--bg-gray);
+        }
+        .dark .category-list-title { color: white; border-bottom-color: #4b5563; }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--bg-gray);
+        }
+        .category-item:last-child { border-bottom: none; }
+        .dark .category-item { border-bottom-color: #4b5563; }
+        
+        .category-item-icon {
+            font-size: 22px;
+            width: 45px;
+            height: 45px;
+            background-color: var(--bg-gray);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 12px;
+        }
+        .dark .category-item-icon { background-color: #4b5563; }
+        
+        .category-item-details {
+            flex-grow: 1;
+            overflow: hidden;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .dark .category-item-details { color: white; }
+        
+        .category-item-actions { display: flex; gap: 15px; }
+        .category-item-actions button {
+            background: none; border: none; font-size: 16px;
+            color: var(--text-light); cursor: pointer;
+        }
+        .category-item-actions .delete { color: var(--expense-red); }
 </style>
 
 <div class="category-page-container">
@@ -89,13 +139,35 @@
         <div class="category-header-top">
             <a href="/more" class="back-link"><i class="fas fa-chevron-left"></i></a>
             <span>Manajemen Kategori</span>
-            <a href="#" class="back-link" style="font-size: 22px;">
-                <i class="fas fa-plus"></i>
-            </a> 
+            <span style="width: 20px;"></span> 
         </div>
     </header>
 
     <main class="category-content">
+        
+        <form class="category-form-card" id="create-category-form">
+            <h3 class="form-title">Tambah Kategori Baru</h3>
+            <div class="form-group" style="display: flex; gap: 10px;">
+                <div style="width: 60px;">
+                     <label for="category-icon">Ikon</label>
+                     <input type="text" id="category-icon" class="input-field" maxlength="2" placeholder="📁" style="text-align: center; font-size: 20px; padding: 10px 5px;">
+                </div>
+                <div style="flex-grow: 1;">
+                    <label for="category-name">Nama Kategori</label>
+                    <input type="text" id="category-name" class="input-field" placeholder="cth: Gaji, Makan, dll" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="category-type">Tipe Kategori</label>
+                <select id="category-type" class="select-field">
+                    <option value="EXPENSE">Pengeluaran (Expense)</option>
+                    <option value="INCOME">Pemasukan (Income)</option>
+                </select>
+            </div>
+            <button type="submit" class="submit-btn">Tambah Kategori</button>
+            <div id="category-message"></div>
+        </form>
+
         <div id="category-list-section">
             <div style="text-align: center; padding: 20px; color: var(--text-light);">
                 <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
