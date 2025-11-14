@@ -1,0 +1,473 @@
+<style>
+    /* CSS Global (di-copy dari layout.html untuk halaman ini) */
+    :root {
+        --primary-blue: #4A47A3;
+        --light-purple: #E6E6FA;
+        --text-dark: #333;
+        --text-light: #888;
+        --expense-red: #E84545;
+        --income-green: #51CF66;
+        --bg-gray: #f4f5f9;
+    }
+    .dark body { background-color: #111827; }
+    .dark .category-page-container { background-color: #111827; }
+
+    /* CSS Khusus untuk Halaman Kategori */
+    .category-page-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100svh;
+        max-width: 480px;
+        margin: 0 auto;
+        background-color: var(--bg-gray);
+    }
+    .category-header {
+        background: var(--primary-blue);
+        color: white;
+        padding: 20px;
+        flex-shrink: 0;
+        z-index: 10;
+        border-bottom-left-radius: 25px;
+        border-bottom-right-radius: 25px;
+    }
+    .category-header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .category-header-top .back-link {
+        color: white;
+        text-decoration: none;
+        font-size: 20px;
+    }
+
+    /* Styling Tab Primer (Pengeluaran/Pemasukan) */
+    .primary-tab-container {
+        display: flex;
+        justify-content: center;
+        flex-grow: 1;
+        background-color: white;
+        padding-top: 15px;
+        flex-shrink: 0;
+        border-bottom: 1px solid var(--bg-gray);
+    }
+    .dark .primary-tab-container {
+        background-color: #1f2937;
+        border-bottom-color: #374151;
+    }
+    .primary-tab-btn {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-light);
+        background: none;
+        border: none;
+        padding: 8px 16px;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-grow: 1;
+        text-align: center;
+        max-width: 50%;
+    }
+    .primary-tab-btn.active {
+        color: var(--text-dark);
+        border-bottom-color: var(--primary-blue);
+    }
+    .dark .primary-tab-btn { color: #9ca3af; }
+    .dark .primary-tab-btn.active { color: white; border-bottom-color: white; }
+
+    /* Konten Utama */
+    .category-content {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 15px 20px 100px 20px;
+    }
+    
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Card untuk Daftar Kategori */
+    .category-list-card {
+        background-color: white;
+        border-radius: 18px;
+        padding: 0 20px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+        margin-bottom: 15px;
+    }
+    .dark .category-list-card { background-color: #374151; }
+    
+    .category-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--bg-gray);
+    }
+    .category-item:last-child { border-bottom: none; }
+    .dark .category-item { border-bottom-color: #4b5563; }
+    
+    .category-item-icon {
+        font-size: 22px;
+        width: 45px;
+        height: 45px;
+        background-color: var(--bg-gray);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+    .dark .category-item-icon { background-color: #4b5563; }
+    
+    .category-item-details {
+        flex-grow: 1;
+        overflow: hidden;
+        font-weight: 600;
+        color: var(--text-dark);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .dark .category-item-details { color: white; }
+    
+    .category-item-actions { display: flex; gap: 15px; }
+    .category-item-actions button {
+        background: none; border: none; font-size: 16px;
+        color: var(--text-light); cursor: pointer;
+    }
+    .category-item-actions .delete { color: var(--expense-red); }
+
+    /* Spinner (di-copy dari layout.html) */
+    .inline-spinner {
+        display: none; width: 1rem; height: 1rem;
+        border: 2px solid var(--primary-blue);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.8s ease-in-out infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* CSS untuk Modal (di-copy dari layout.html) */
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
+        display: block; font-size: 13px; font-weight: 500;
+        color: var(--text-light); margin-bottom: 8px;
+    }
+    .form-group .input-field,
+    .form-group .select-field {
+        width: 100%; padding: 12px; border: 1px solid #e0e0e0;
+        border-radius: 10px; background-color: var(--bg-gray);
+        font-size: 14px;
+    }
+    .dark .form-group .input-field,
+    .dark .form-group .select-field {
+        background-color: #4b5563; border-color: #4b5563; color: white;
+    }
+    .form-group .submit-btn {
+        width: 100%; background: var(--primary-blue); color: white;
+        border: none; padding: 12px; border-radius: 10px;
+        font-weight: 600; cursor: pointer; display: inline-flex;
+        align-items: center; justify-content: center; gap: 8px;
+    }
+    .form-group .submit-btn:disabled {
+        background-color: #9ca3af; cursor: not-allowed;
+    }
+    #modal-category-message {
+        font-size: 13px; margin-top: 10px; text-align: center;
+    }
+    #modal-category-message.success { color: var(--income-green); }
+    #modal-category-message.error { color: var(--expense-red); }
+
+    .icon-input-modal {
+        width: 60px !important; text-align: center;
+        font-size: 24px !important; padding: 5px 10px !important;
+        border: 1px solid #e0e0e0; border-radius: 10px;
+        background-color: var(--bg-gray);
+    }
+    .dark .icon-input-modal {
+        background-color: #4b5563; border-color: #4b5563; color: white;
+    }
+</style>
+
+<div class="category-page-container">
+    <header class="category-header">
+        <div class="category-header-top">
+            <a href="/more" class="back-link"><i class="fas fa-chevron-left"></i></a>
+            <span>Manajemen Kategori</span>
+            <a href="#" class="back-link" style="font-size: 22px;" onclick="openAddCategoryModal()">
+                <i class="fas fa-plus"></i>
+            </a> 
+        </div>
+    </header>
+
+    <div class="primary-tab-container">
+        <button class="primary-tab-btn active" id="cat-tab-expense" onclick="selectCategoryTab('EXPENSE')">Pengeluaran</button>
+        <button class="primary-tab-btn" id="cat-tab-income" onclick="selectCategoryTab('INCOME')">Pemasukan</button>
+    </div>
+
+    <main class="category-content">
+        
+        <div class="tab-panel active" id="category-panel-EXPENSE">
+            <div class="category-list-card" id="category-list-EXPENSE">
+                </div>
+        </div>
+
+        <div class="tab-panel" id="category-panel-INCOME">
+            <div class="category-list-card" id="category-list-INCOME">
+                </div>
+        </div>
+        
+        <div id="category-list-message" style="text-align: center; padding: 20px; color: var(--text-light);">
+            <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
+            <span style="margin-left: 10px;">Memuat kategori...</span>
+        </div>
+
+    </main>
+
+    <footer class="bottom-nav">
+        <a href="/" class="nav-item"><i class="fas fa-book"></i><span>Transaksi</span></a>
+        <a href="/wallet" class="nav-item"><i class="fas fa-wallet"></i><span>Akun</span></a>
+        <a href="/analysis" class="nav-item"><i class="fas fa-chart-pie"></i><span>Analisis</span></a>
+        <a href="/more" class="nav-item active"><i class="fas fa-ellipsis-h"></i><span>Lebih</span></a>
+    </footer>
+</div>
+
+<div id="category-modal-overlay" class="tx-modal-overlay" onclick="closeCategoryModal()">
+    <div class="tx-modal-content" onclick="event.stopPropagation()">
+        <div class="tx-modal-header">
+            <h3 id="category-modal-title" style="font-weight: 600; font-size: 18px;">Tambah Kategori</h3>
+            <button class="tx-modal-close" onclick="closeCategoryModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="tx-modal-body" style="padding-top: 15px;">
+            <form id="category-form">
+                <input type="hidden" id="category-id">
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <div style="width: 60px;">
+                         <label for="category-icon">Ikon</label>
+                         <input type="text" id="category-icon" class="icon-input-modal" maxlength="2" placeholder="📁">
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <label for="category-name">Nama Kategori</label>
+                        <input type="text" id="category-name" class="input-field" placeholder="cth: Gaji, Makan, dll" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="category-type">Tipe Kategori</label>
+                    <select id="category-type" class="select-field">
+                        <option value="EXPENSE">Pengeluaran (Expense)</option>
+                        <option value="INCOME">Pemasukan (Income)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="submit-btn" id="category-submit-btn">
+                        <span class="loading-spinner" id="category-spinner"></span>
+                        <span>Simpan</span>
+                    </button>
+                </div>
+                <div id="modal-category-message"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Skrip ini HANYA akan berjalan di halaman /categories
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        const walletId = localStorage.getItem('currentWalletId');
+        const listContainerExpense = document.getElementById('category-list-EXPENSE');
+        const listContainerIncome = document.getElementById('category-list-INCOME');
+        const messageEl = document.getElementById('category-list-message');
+        
+        const modal = document.getElementById('category-modal-overlay');
+        const form = document.getElementById('category-form');
+        const modalTitle = document.getElementById('category-modal-title');
+        const categoryIdInput = document.getElementById('category-id');
+        const categoryIconInput = document.getElementById('category-icon');
+        const categoryNameInput = document.getElementById('category-name');
+        const categoryTypeInput = document.getElementById('category-type');
+        const submitBtn = document.getElementById('category-submit-btn');
+        const spinner = document.getElementById('category-spinner');
+        const modalMessage = document.getElementById('modal-category-message');
+
+        // Fungsi untuk memuat dan merender daftar kategori
+        async function loadAndRenderCategories() {
+            if (!listContainerExpense || !listContainerIncome || !walletId) {
+                console.error("Elemen penting tidak ditemukan.");
+                if (messageEl) messageEl.textContent = "Gagal memuat halaman.";
+                return;
+            }
+
+            messageEl.innerHTML = `<span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>`;
+            messageEl.style.display = 'block';
+            listContainerExpense.innerHTML = '';
+            listContainerIncome.innerHTML = '';
+
+            try {
+                const categories = await fetchApi(`/wallets/${walletId}/categories`);
+                
+                // [PENTING] Update variabel global allCategories agar halaman 'create' juga terupdate
+                // Kita perlu pastikan variabel ini global, jadi kita attach ke 'window'
+                window.allCategories = categories;
+                
+                const expenses = categories.filter(c => c.type === 'EXPENSE');
+                const income = categories.filter(c => c.type === 'INCOME');
+                
+                if (expenses.length === 0 && income.length === 0) {
+                     messageEl.textContent = "Anda belum memiliki kategori.";
+                     return;
+                }
+
+                // Render Kategori Pengeluaran
+                if (expenses.length > 0) {
+                    expenses.forEach(cat => {
+                        listContainerExpense.appendChild(createCategoryRow(cat));
+                    });
+                } else {
+                    listContainerExpense.innerHTML = `<div style="padding: 15px 0; text-align: center; color: var(--text-light); font-size: 14px;">Belum ada kategori pengeluaran.</div>`;
+                }
+
+                // Render Kategori Pemasukan
+                if (income.length > 0) {
+                    income.forEach(cat => {
+                        listContainerIncome.appendChild(createCategoryRow(cat));
+                    });
+                } else {
+                    listContainerIncome.innerHTML = `<div style="padding: 15px 0; text-align: center; color: var(--text-light); font-size: 14px;">Belum ada kategori pemasukan.</div>`;
+                }
+                
+                messageEl.style.display = 'none'; // Sembunyikan loading jika sukses
+
+            } catch (error) {
+                messageEl.textContent = "Gagal memuat kategori.";
+                console.error(error);
+            }
+        }
+
+        // Fungsi untuk membuat 1 baris kategori
+        function createCategoryRow(category) {
+            const item = document.createElement('div');
+            item.className = 'category-item';
+            item.innerHTML = `
+                <span class="category-item-icon">${category.icon || '📁'}</span>
+                <span class="category-item-details">${category.name}</span>
+                <div class="category-item-actions">
+                    <button class="edit" onclick="openEditCategoryModal('${category.id}', '${category.name}', '${category.icon || '📁'}', '${category.type}')"><i class="fas fa-edit"></i></button>
+                    <button class="delete" onclick="handleDeleteCategory('${category.id}', '${category.name}')"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            return item;
+        }
+
+        // --- Kontrol Modal ---
+        window.openAddCategoryModal = () => {
+            form.reset();
+            modalTitle.textContent = 'Tambah Kategori';
+            categoryIdInput.value = '';
+            categoryIconInput.placeholder = '📁';
+            submitBtn.querySelector('span:not(.loading-spinner)').textContent = 'Tambah';
+            modalMessage.textContent = '';
+            modalMessage.className = '';
+            modal.classList.add('visible');
+        }
+
+        window.closeCategoryModal = () => {
+            modal.classList.remove('visible');
+        }
+
+        window.openEditCategoryModal = (id, name, icon, type) => {
+            form.reset();
+            modalTitle.textContent = 'Edit Kategori';
+            categoryIdInput.value = id;
+            categoryIconInput.value = icon;
+            categoryNameInput.value = name;
+            categoryTypeInput.value = type;
+            submitBtn.querySelector('span:not(.loading-spinner)').textContent = 'Simpan';
+            modalMessage.textContent = '';
+            modalMessage.className = '';
+            modal.classList.add('visible');
+        }
+
+        // --- Kontrol Tab ---
+        window.selectCategoryTab = (type) => {
+            document.getElementById('cat-tab-expense').classList.toggle('active', type === 'EXPENSE');
+            document.getElementById('cat-tab-income').classList.toggle('active', type === 'INCOME');
+            
+            document.getElementById('category-panel-EXPENSE').classList.toggle('active', type === 'EXPENSE');
+            document.getElementById('category-panel-INCOME').classList.toggle('active', type === 'INCOME');
+        }
+
+        // --- Aksi Form (Tambah/Edit) ---
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = categoryIdInput.value;
+            const payload = {
+                name: categoryNameInput.value,
+                icon: categoryIconInput.value || '📁',
+                type: categoryTypeInput.value
+            };
+
+            const isEdit = id !== '';
+            const url = isEdit ? `/wallets/${walletId}/categories/${id}` : `/wallets/${walletId}/categories`;
+            const method = isEdit ? 'PUT' : 'POST';
+
+            submitBtn.disabled = true;
+            spinner.classList.add('active');
+            modalMessage.textContent = '';
+            modalMessage.className = '';
+
+            try {
+                await fetchApi(url, {
+                    method: method,
+                    body: JSON.stringify(payload)
+                });
+                
+                modalMessage.textContent = `Kategori berhasil ${isEdit ? 'diperbarui' : 'ditambahkan'}.`;
+                modalMessage.className = 'success';
+                
+                loadAndRenderCategories(); // Muat ulang daftar di background
+
+                setTimeout(() => {
+                    closeCategoryModal();
+                }, 1000);
+
+            } catch (error) {
+                modalMessage.textContent = error.message;
+                modalMessage.className = 'error';
+            } finally {
+                submitBtn.disabled = false;
+                spinner.classList.remove('active');
+            }
+        });
+
+        // --- Aksi Hapus ---
+        window.handleDeleteCategory = async (categoryId, categoryName) => {
+            if (!categoryId || !walletId) return;
+
+            const confirmed = await showDialog({
+                title: 'Hapus Kategori',
+                text: `Anda yakin ingin menghapus "${categoryName}"?\nSemua transaksi terkait akan kehilangan kategorinya.`,
+                confirmText: 'Hapus',
+                cancelText: 'Batal',
+                isDestructive: true
+            });
+
+            if (!confirmed) return;
+
+            try {
+                await fetchApi(`/wallets/${walletId}/categories/${categoryId}`, {
+                    method: 'DELETE'
+                });
+                loadAndRenderCategories(); // Muat ulang daftar
+            } catch (error) {
+                showDialog({ title: 'Error', text: 'Gagal menghapus kategori: ' + error.message });
+            }
+        }
+        
+        // Muat data saat halaman dibuka
+        loadAndRenderCategories();
+    });
+</script>

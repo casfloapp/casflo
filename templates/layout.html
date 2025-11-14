@@ -4695,136 +4695,7 @@ async function handleDeleteMember(walletId, userId) {
                 modal.classList.remove('visible');
             }
         }
-
-/* [DIUBAH TOTAL] Fungsi inisialisasi untuk categories.html */
-        function initCategoriesPage() {
-            console.log("Halaman Kategori (v2) diinisialisasi.");
-            const walletId = localStorage.getItem('currentWalletId');
-            const listContainerExpense = document.getElementById('category-list-EXPENSE');
-            const listContainerIncome = document.getElementById('category-list-INCOME');
-            const messageEl = document.getElementById('category-list-message');
-
-            if (!listContainerExpense || !listContainerIncome || !walletId) {
-                console.error("Elemen penting tidak ditemukan.");
-                if (messageEl) messageEl.textContent = "Gagal memuat halaman.";
-                return;
-            }
-
-            // Fungsi untuk memuat dan merender daftar kategori
-            async function loadAndRenderCategories() {
-                messageEl.innerHTML = `<span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>`;
-                messageEl.style.display = 'block';
-                listContainerExpense.innerHTML = '';
-                listContainerIncome.innerHTML = '';
-
-                try {
-                    // Selalu ambil data terbaru dari API saat masuk halaman ini
-                    const categories = await fetchApi(`/wallets/${walletId}/categories`);
-                    
-                    // [PENTING] Update variabel global
-                    allCategories = categories;
-                    
-                    const expenses = categories.filter(c => c.type === 'EXPENSE');
-                    const income = categories.filter(c => c.type === 'INCOME');
-                    
-                    if (expenses.length === 0 && income.length === 0) {
-                         messageEl.textContent = "Anda belum memiliki kategori.";
-                         return;
-                    }
-
-                    // Render Kategori Pengeluaran
-                    if (expenses.length > 0) {
-                        expenses.forEach(cat => {
-                            listContainerExpense.appendChild(createCategoryRow(cat));
-                        });
-                    } else {
-                        listContainerExpense.innerHTML = `<div style="padding: 15px 0; text-align: center; color: var(--text-light); font-size: 14px;">Belum ada kategori pengeluaran.</div>`;
-                    }
-
-                    // Render Kategori Pemasukan
-                    if (income.length > 0) {
-                        income.forEach(cat => {
-                            listContainerIncome.appendChild(createCategoryRow(cat));
-                        });
-                    } else {
-                        listContainerIncome.innerHTML = `<div style="padding: 15px 0; text-align: center; color: var(--text-light); font-size: 14px;">Belum ada kategori pemasukan.</div>`;
-                    }
-                    
-                    messageEl.style.display = 'none'; // Sembunyikan loading jika sukses
-
-                } catch (error) {
-                    messageEl.textContent = "Gagal memuat kategori.";
-                    console.error(error);
-                }
-            }
-
-            // Fungsi untuk membuat 1 baris kategori
-            function createCategoryRow(category) {
-                const item = document.createElement('div');
-                item.className = 'category-item';
-                item.innerHTML = `
-                    <span class="category-item-icon">${category.icon || '📁'}</span>
-                    <span class="category-item-details">${category.name}</span>
-                    <div class="category-item-actions">
-                        <button class="edit" onclick="handleEditCategory('${category.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="delete" onclick="handleDeleteCategory('${category.id}', '${category.name}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-                return item;
-            }
-
-            // Muat data saat halaman dibuka
-            loadAndRenderCategories();
-        }
-
-        /* [BARU] Fungsi Global untuk pindah tab di halaman kategori */
-        function selectCategoryTab(type) {
-            document.getElementById('cat-tab-expense').classList.toggle('active', type === 'EXPENSE');
-            document.getElementById('cat-tab-income').classList.toggle('active', type === 'INCOME');
-            
-            document.getElementById('category-panel-EXPENSE').classList.toggle('active', type === 'EXPENSE');
-            document.getElementById('category-panel-INCOME').classList.toggle('active', type === 'INCOME');
-        }
-
-        /* [BARU] Fungsi Global placeholder untuk Edit Kategori */
-        function handleEditCategory(categoryId) {
-            // TODO: Buat modal untuk edit kategori
-            showDialog({title: 'Fitur Belum Tersedia', text: 'Fungsi untuk mengedit kategori akan ditambahkan nanti.'});
-        }
-
-        /* [BARU] Fungsi Global placeholder untuk Tambah Kategori */
-        function openAddCategoryModal() {
-            // TODO: Buat modal untuk tambah kategori
-            showDialog({title: 'Fitur Belum Tersedia', text: 'Fungsi untuk menambah kategori akan ditambahkan nanti.'});
-        }
-
-        /* [MODIFIKASI] Fungsi Hapus Kategori tetap sama, pastikan ada */
-        async function handleDeleteCategory(categoryId, categoryName) {
-            const walletId = localStorage.getItem('currentWalletId');
-            if (!categoryId || !walletId) return;
-
-            const confirmed = await showDialog({
-                title: 'Hapus Kategori',
-                text: `Anda yakin ingin menghapus "${categoryName}"?\nSemua transaksi terkait akan kehilangan kategorinya.`,
-                confirmText: 'Hapus',
-                cancelText: 'Batal',
-                isDestructive: true
-            });
-
-            if (!confirmed) return;
-
-            try {
-                await fetchApi(`/wallets/${walletId}/categories/${categoryId}`, {
-                    method: 'DELETE'
-                });
-                
-                // Panggil ulang initCategoriesPage untuk me-refresh
-                initCategoriesPage(); 
-            
-            } catch (error) {
-                showDialog({ title: 'Error', text: 'Gagal menghapus kategori: ' + error.message });
-            }
-        }
+      
         /* [BARU] Fungsi untuk submit edit buku (pengganti handleRenameBook) */
         async function handleModalEditSubmit(event) {
             event.preventDefault();
@@ -5025,7 +4896,7 @@ function initBooksPage() {
             // [DIUBAH]
             else if (path === '/books') { initBooksPage(); } // <-- Ganti dari /member
             else if (path === '/create-wallet') { initCreateWalletPage(); }
-            else if (path === '/categories') { initCategoriesPage(); }
+            else if (path === '/categories') { /* Dihapus, ditangani di dalam categories.html */ } 
         }
 
         function executePageScript(newContentElement) {
