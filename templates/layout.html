@@ -3831,50 +3831,50 @@ function initWalletPage() {
             }, 100);
         }
 
-        function initMorePage() {
-            currentType = 'expense';
-            selectedCategory = null;
-            clearCalc();
-          
-            console.log("Halaman More dimuat.");
-        
-            const logoutButton = document.getElementById('logout-btn');
-        
-            if (logoutButton) {
-                logoutButton.addEventListener('click', async () => { // <--- [PERBAIKAN] Tambahkan 'async' di sini
-                    console.log("Tombol Logout diklik.");
-                    
-                    const confirmed = await showDialog({ // <--- SEKARANG VALID
-                        title: 'Logout',
-                        text: 'Apakah Anda yakin ingin logout?',
-                        confirmText: 'Logout',
-                        cancelText: 'Batal',
-                        isDestructive: true
-                    });
-                    
-                    if (confirmed) {
-                        // 1. Hapus session token dari localStorage
-                        localStorage.removeItem('sessionToken');
-                        
-                        // 2. Arahkan pengguna kembali ke halaman login (reload penuh)
-                        window.location.href = '/login';
-                    }
-                });
+// Di dalam file layout.html Anda
+
+// --- CARI FUNGSI INI ---
+function initMorePage() {
+    // Versi di screenshot Anda mungkin memiliki 'loadCategories()' di sini
+    // loadCategories(); // <-- [HAPUS BARIS INI]
+
+    // Versi yang benar (seperti di file yang Anda unggah) adalah seperti ini:
+    currentType = 'expense';
+    selectedCategory = null;
+    clearCalc();
+  
+    console.log("Halaman More dimuat.");
+
+    const logoutButton = document.getElementById('logout-btn');
+
+    if (logoutButton) {
+        logoutButton.addEventListener('click', async () => { 
+            console.log("Tombol Logout diklik.");
+            
+            const confirmed = await showDialog({
+                title: 'Logout',
+                text: 'Apakah Anda yakin ingin logout?',
+                confirmText: 'Logout',
+                cancelText: 'Batal',
+                isDestructive: true
+            });
+            
+            if (confirmed) {
+                localStorage.removeItem('sessionToken');
+                window.location.href = '/login';
             }
+        });
+    }
 
-            const gridItems = document.querySelectorAll('.more-grid .grid-item');
-            if (gridItems.length > 0) {
-                gridItems.forEach((item, index) => {
-                    // Terapkan penundaan (delay) untuk setiap item
-                    // 50ms * index = 0ms, 50ms, 100ms, dst.
-                    setTimeout(() => {
-                        item.classList.add('visible');
-                    }, index * 50); // Penundaan 50ms per item
-                });
-            }
-
-        }
-
+    const gridItems = document.querySelectorAll('.more-grid .grid-item');
+    if (gridItems.length > 0) {
+        gridItems.forEach((item, index) => {
+            setTimeout(() => {
+                item.classList.add('visible');
+            }, index * 50); 
+        });
+    }
+}
 // === [FUNGSI-FUNGSI BARU UNTUK books.html] ===
 
 /**

@@ -89,50 +89,76 @@
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    /* Card untuk Daftar Kategori */
+    /* [PERBAIKAN] Card untuk Daftar Kategori diubah menjadi Grid */
     .category-list-card {
         background-color: white;
         border-radius: 18px;
-        padding: 0 20px;
+        padding: 20px; /* Memberi padding di dalam card */
         box-shadow: 0 4px 25px rgba(0,0,0,0.06);
         margin-bottom: 15px;
+
+        /* [BARU] Tampilan grid seperti di screenshot */
+        display: grid;
+        /* [BARU] Buat kolom, min 80px, isi sisa ruang (biasanya 3-4 kolom) */
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); 
+        gap: 20px; /* Jarak antar item */
     }
     .dark .category-list-card { background-color: #374151; }
     
+    /* [PERBAIKAN] Mengubah .category-item menjadi tumpukan vertikal */
     .category-item {
         display: flex;
-        align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px solid var(--bg-gray);
+        flex-direction: column; /* Tumpuk ke bawah */
+        align-items: center;    /* Pusatkan horizontal */
+        justify-content: center;
+        padding: 10px 5px;
+        border-bottom: none; /* Hapus border */
+        border-radius: 10px;
+        transition: background-color 0.2s;
     }
+    .category-item:hover {
+        background-color: var(--bg-gray);
+    }
+    .dark .category-item:hover {
+        background-color: #4b5563;
+    }
+
     .category-item:last-child { border-bottom: none; }
-    .dark .category-item { border-bottom-color: #4b5563; }
+    .dark .category-item { border-bottom-color: transparent; }
     
     .category-item-icon {
-        font-size: 22px;
-        width: 45px;
-        height: 45px;
+        font-size: 28px; /* Sedikit lebih besar */
+        width: 50px;
+        height: 50px;
         background-color: var(--bg-gray);
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        margin-right: 12px;
+        margin-right: 0; /* Hapus margin kanan */
+        margin-bottom: 8px; /* Beri jarak ke nama */
     }
     .dark .category-item-icon { background-color: #4b5563; }
     
     .category-item-details {
-        flex-grow: 1;
+        flex-grow: 0; /* Hapus flex-grow */
         overflow: hidden;
         font-weight: 600;
         color: var(--text-dark);
         white-space: nowrap;
         text-overflow: ellipsis;
+        margin-bottom: 10px; /* Jarak ke tombol */
+        text-align: center;
+        width: 100%;
     }
     .dark .category-item-details { color: white; }
     
-    .category-item-actions { display: flex; gap: 15px; }
+    .category-item-actions { 
+        display: flex; 
+        gap: 15px;
+        justify-content: center; /* [BARU] Pusatkan tombol */
+    }
     .category-item-actions button {
         background: none; border: none; font-size: 16px;
         color: var(--text-light); cursor: pointer;
@@ -246,7 +272,7 @@
                 <div class="form-group" style="display: flex; gap: 10px;">
                     <div style="width: 60px;">
                          <label for="category-icon">Ikon</label>
-                         <input type="text" id="category-icon" class="icon-input-modal" maxlength="2" placeholder="📁">
+                         <input type="text" id="category-icon" class="icon-input-modal" maxlength="2" placeholder="刀">
                     </div>
                     <div style="flex-grow: 1;">
                         <label for="category-name">Nama Kategori</label>
@@ -352,10 +378,10 @@
             const item = document.createElement('div');
             item.className = 'category-item';
             item.innerHTML = `
-                <span class="category-item-icon">${category.icon || '📁'}</span>
+                <span class="category-item-icon">${category.icon || '刀'}</span>
                 <span class="category-item-details">${category.name}</span>
                 <div class="category-item-actions">
-                    <button class="edit" onclick="openEditCategoryModal('${category.id}', '${category.name}', '${category.icon || '📁'}', '${category.type}')"><i class="fas fa-edit"></i></button>
+                    <button class="edit" onclick="openEditCategoryModal('${category.id}', '${category.name}', '${category.icon || '刀'}', '${category.type}')"><i class="fas fa-edit"></i></button>
                     <button class="delete" onclick="handleDeleteCategory('${category.id}', '${category.name}')"><i class="fas fa-trash"></i></button>
                 </div>
             `;
@@ -367,7 +393,7 @@
             form.reset();
             modalTitle.textContent = 'Tambah Kategori';
             categoryIdInput.value = '';
-            categoryIconInput.placeholder = '📁';
+            categoryIconInput.placeholder = '刀';
             submitBtn.querySelector('span:not(.loading-spinner)').textContent = 'Tambah';
             modalMessage.textContent = '';
             modalMessage.className = '';
@@ -406,7 +432,7 @@
             const id = categoryIdInput.value;
             const payload = {
                 name: categoryNameInput.value,
-                icon: categoryIconInput.value || '📁',
+                icon: categoryIconInput.value || '刀',
                 type: categoryTypeInput.value
             };
 
