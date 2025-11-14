@@ -1218,99 +1218,115 @@
         .modal-overlay{
             display: none;
         }
-        /* GANTI CSS UNTUK .type-selector-header dan .type-btn-header */
-.type-selector-header {
-    display: flex;
-    background: transparent; /* Hapus background abu-abu */
-    border-radius: 0;
-    padding: 0;
-    gap: 10px; /* Beri jarak antar pills */
-}
-.type-btn-header {
-    padding: 8px 16px;
-    border: 1px solid #ddd; /* Border abu-abu */
-    background: transparent;
-    border-radius: 22px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: var(--text-light);
-    transition: all 0.2s ease;
-}
-.type-btn-header.active {
-    background: white; /* Ini akan di-override */
-    color: white;
-    box-shadow: none; /* Hapus shadow */
-    border-color: transparent; /* Hapus border */
-}
-.type-btn-header.expense.active {
-    background-color: var(--expense-red);
-    color: white;
-    border-color: var(--expense-red);
-}
-.type-btn-header.income.active {
-    background-color: var(--income-green);
-    color: white;
-    border-color: var(--income-green);
-}
-.dark .type-btn-header {
-    border-color: #4b5563; /* dark:border-gray-600 */
-    color: #9ca3af; /* dark:text-gray-400 */
-}
-.dark .type-btn-header.expense.active,
-.dark .type-btn-header.income.active {
-    color: white; /* Warna sudah diatur di atas */
-}
-/* GANTI CSS UNTUK .type-selector-header dan .type-btn-header */
-.type-selector-header {
-    display: flex;
-    background: transparent; /* Hapus background abu-abu */
-    border-radius: 0;
-    padding: 0;
-    gap: 10px; /* Beri jarak antar pills */
-}
-.type-btn-header {
-    padding: 8px 16px;
-    border: 1px solid #ddd; /* Border abu-abu */
-    background: transparent;
-    border-radius: 22px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: var(--text-light);
-    transition: all 0.2s ease;
-}
-.type-btn-header.active {
-    background: white; /* Ini akan di-override */
-    color: white;
-    box-shadow: none; /* Hapus shadow */
-    border-color: transparent; /* Hapus border */
-}
-.type-btn-header.expense.active {
-    background-color: var(--expense-red);
-    color: white;
-    border-color: var(--expense-red);
-}
-.type-btn-header.income.active {
-    background-color: var(--income-green);
-    color: white;
-    border-color: var(--income-green);
-}
-.dark .type-btn-header {
-    border-color: #4b5563; /* dark:border-gray-600 */
-    color: #9ca3af; /* dark:text-gray-400 */
-}
-.dark .type-btn-header.expense.active,
-.dark .type-btn-header.income.active {
-    color: white; /* Warna sudah diatur di atas */
-}
-/* GANTI CSS UNTUK .action-btn */
+/* [BARU] CSS untuk Tab Primer (Pengeluaran/Pemasukan) */
+        .add-header {
+            justify-content: space-between; /* Pastikan tombol X di kanan */
+        }
+        .primary-tab-container {
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+            margin-left: 24px; /* Seimbangkan dengan tombol close */
+        }
+        .primary-tab-btn {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-light);
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .primary-tab-btn.active {
+            color: var(--text-dark);
+            border-bottom-color: var(--primary-blue);
+        }
+        .dark .primary-tab-btn { color: #9ca3af; }
+        .dark .primary-tab-btn.active { color: white; border-bottom-color: white; }
+        
+        /* [BARU] Kontainer Panel Kategori */
+        .category-panel-container {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden; /* Penting untuk transisi panel */
+        }
+        .category-panel {
+            display: none; /* Sembunyi by default */
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+        .category-panel.active {
+            display: flex; /* Tampil jika aktif */
+        }
+
+        /* [BARU] CSS untuk Tab Sekunder (Direkomendasikan/Grup/Semua) */
+        .secondary-tab-container {
+            display: flex;
+            flex-shrink: 0;
+            gap: 10px;
+            padding: 10px 20px 0 20px;
+            background-color: white;
+            overflow-x: auto; /* Aktifkan scroll jika grupnya banyak */
+            border-bottom: 1px solid var(--bg-gray);
+        }
+        .dark .secondary-tab-container {
+            background-color: #374151;
+            border-bottom-color: #4b5563;
+        }
+        .secondary-tab-btn {
+            padding: 8px 12px;
+            border: none;
+            background: var(--bg-gray);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .secondary-tab-btn.active {
+            background: var(--light-purple);
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+        .dark .secondary-tab-btn {
+            background: #4b5563;
+            color: #d1d5db;
+        }
+        .dark .secondary-tab-btn.active {
+            background: #1f2937;
+            color: white;
+        }
+
+        /* [MODIFIKASI] categories-section sekarang dibungkus */
+        .categories-section-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+             /* Ini penting agar kalkulator tidak menutupi konten */
+            padding-bottom: 410px; 
+            background-color: white;
+        }
+        .dark .categories-section-wrapper { background-color: #374151; }
+
+        .categories-section {
+            /* flex-grow: 1; <-- DIHAPUS */
+            /* overflow-y: auto; <-- DIHAPUS */
+            padding: 20px;
+            /* background-color: white; <-- DIHAPUS */
+            min-height: 0;
+            padding-bottom: 50px; /* Beri padding bawah sedikit */
+            display: none; /* Sembunyi by default */
+        }
+        .categories-section.active {
+            display: block; /* Tampil jika aktif */
+        }
+        /* Hapus style background lama */
+        .dark .categories-section { background-color: transparent; }
+
 .action-btn {
     background: #f0f0f0; /* Latar abu-abu muda */
     color: #555; /* Teks gelap */
@@ -2858,7 +2874,40 @@ function renderDateModalCalendar() {
                 addBtn.innerHTML = '<i class="fas fa-plus"></i>';
             }
         }
-        function selectType(type) { currentType = type; document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); document.getElementById(type + 'Btn').classList.add('active'); selectedCategory = null; loadCategories(); }
+        /* [BARU] Fungsi untuk Tab Primer (Pengeluaran/Pemasukan) */
+        function selectPrimaryTab(type) {
+            currentType = type;
+            selectedCategory = null; // Reset pilihan kategori saat ganti tab
+            document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected'));
+
+            // Ganti tombol aktif
+            document.getElementById('primary-tab-expense').classList.toggle('active', type === 'expense');
+            document.getElementById('primary-tab-income').classList.toggle('active', type === 'income');
+            
+            // Ganti panel aktif
+            document.getElementById('expense-panel').classList.toggle('active', type === 'expense');
+            document.getElementById('income-panel').classList.toggle('active', type === 'income');
+        }
+
+        /* [BARU] Fungsi untuk Sub-Tab (Direkomendasikan/Semua) */
+        function selectSecondaryTab(btn, tabId) {
+            // Non-aktifkan semua tombol di dalam container yang sama
+            const tabContainer = btn.parentElement;
+            tabContainer.querySelectorAll('.secondary-tab-btn').forEach(button => {
+                button.classList.remove('active');
+            });
+            // Aktifkan tombol yang diklik
+            btn.classList.add('active');
+
+            // Non-aktifkan semua panel di dalam wrapper yang sama
+            const sectionWrapper = tabContainer.nextElementSibling;
+            sectionWrapper.querySelectorAll('.categories-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Aktifkan panel yang sesuai
+            document.getElementById(tabId).classList.add('active');
+        }
+        
         function updateDisplay() {
             const amountDisplay = document.getElementById('amountDisplay');
             if (!amountDisplay) return;
@@ -2883,21 +2932,61 @@ function renderDateModalCalendar() {
         function changeButtonToCheck() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn check'; actionBtn.innerHTML = '<i class="fas fa-check"></i>'; }}
         function calculateResult() { try { let expression = calcValue.replace(/×/g, '*').replace(/÷/g, '/'); const result = eval(expression); calcValue = String(result); waitingForEquals = false; changeButtonToCheck(); updateDisplay(); } catch (e) { calcValue = '0'; updateDisplay(); } }
         function clearCalc() { calcValue = '0'; waitingForEquals = false; changeButtonToCheck(); updateDisplay(); }
-        function loadCategories() {
-            // [PERBAIKAN] Filter dari 'allCategories' global, sesuaikan 'type'
-            const typeToFilter = currentType.toUpperCase(); // 'expense' -> 'EXPENSE'
-            const categories = allCategories.filter(cat => cat.type === typeToFilter);
+        /* [DIUBAH] Fungsi ini sekarang dipanggil sekali di init untuk mengisi SEMUA grid */
+        function renderAllCategories() {
+            // 1. Filter Kategori
+            const expenses = allCategories.filter(cat => cat.type === 'EXPENSE');
+            const income = allCategories.filter(cat => cat.type === 'INCOME');
 
-            const recommendedGrid = document.getElementById('recommendedGrid');
-            const uncategorizedGrid = document.getElementById('uncategorizedGrid');
-            if(!recommendedGrid || !uncategorizedGrid) return;
+            // 2. Ambil semua Grid
+            const recGridExpense = document.getElementById('recommendedGrid-expense');
+            const allGridExpense = document.getElementById('allGrid-expense');
+            const recGridIncome = document.getElementById('recommendedGrid-income');
+            const allGridIncome = document.getElementById('allGrid-income');
+
+            if (!recGridExpense || !allGridExpense || !recGridIncome || !allGridIncome) {
+                console.error("Grid kategori tidak lengkap, render dibatalkan.");
+                return;
+            }
+
+            // 3. Bersihkan semua Grid
+            recGridExpense.innerHTML = '';
+            allGridExpense.innerHTML = '';
+            recGridIncome.innerHTML = '';
+            allGridIncome.innerHTML = '';
+
+            // 4. Isi Grid Pengeluaran
+            // TODO: Ganti .slice(0, 4) dengan logika rekomendasi sebenarnya
+            expenses.slice(0, 4).forEach(cat => recGridExpense.appendChild(createCategoryElement(cat)));
+            expenses.forEach(cat => allGridExpense.appendChild(createCategoryElement(cat)));
+
+            // 5. Isi Grid Pemasukan
+            // TODO: Ganti .slice(0, 4) dengan logika rekomendasi sebenarnya
+            income.slice(0, 4).forEach(cat => recGridIncome.appendChild(createCategoryElement(cat)));
+            income.forEach(cat => allGridIncome.appendChild(createCategoryElement(cat)));
+        }
+        
+        function createCategoryElement(category) {
+            const div = document.createElement('div');
+            div.className = 'category-item';
+            div.onclick = () => selectCategory(category, div);
             
-            recommendedGrid.innerHTML = '';
-            uncategorizedGrid.innerHTML = '';
+            const icon = category.icon || category.name.charAt(0).toUpperCase();
+            // [PERBAIKAN LAYOUT] Hapus background dari ikon
+            div.innerHTML = `<div class="category-icon">${icon}</div><div class="category-name">${category.name}</div>`;
             
-            // Logika slice dan render tetap sama
-            categories.slice(0, 4).forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat)));
-            categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat)));
+            if (selectedCategory && category.id === selectedCategory.id) {
+                div.classList.add('selected');
+            }
+            return div;
+        }
+        
+        /* [DIUBAH] selectCategory sekarang lebih sederhana */
+        function selectCategory(category, element) { 
+            selectedCategory = category; 
+            // Hapus 'selected' dari SEMUA kategori di kedua panel
+            document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); 
+            element.classList.add('selected'); 
         }
         
 /* ====================================================== */
@@ -3588,29 +3677,44 @@ function renderTransactionList(filteredTransactions) {
     }
   // GANTI FUNGSI LAMA DENGAN INI
 function initCreatePage() {
-    // [MODIFIKASI] Ambil elemen preview
     const notesPreview = document.getElementById('notes-display-preview');
     const txToEditJSON = sessionStorage.getItem('tx_for_edit');
+
+    // [BARU] Render SEMUA kategori (expense & income) di background
+    renderAllCategories();
 
     if (txToEditJSON) {
         // === MODE EDIT ===
         const tx = JSON.parse(txToEditJSON);
-
         currentTransactionId = tx.id; 
-        currentType = tx.type;
+        currentType = tx.type; // 'expense' atau 'income'
         calcValue = String(tx.amount);
         selectedAccountId = tx.account_id;
         selectedCategory = allCategories.find(c => c.id === tx.category_id);
         selectedTransactionDate = new Date(tx.date); 
-        currentNotes = tx.notes || ''; // [MODIFIKASI] Simpan ke var global
+        currentNotes = tx.notes || ''; 
 
-        document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(currentType + 'Btn').classList.add('active');
-
-        loadCategories(); 
+        // [DIUBAH] Panggil selectPrimaryTab untuk atur UI
+        selectPrimaryTab(currentType);
+        
         updateDisplay(); 
         updateAccountIcon(selectedAccountId); 
-        if (notesPreview) notesPreview.textContent = currentNotes; // [MODIFIKASI] Update preview
+        if (notesPreview) notesPreview.textContent = currentNotes;
+        
+        // Pilih kategori yang sedang diedit
+        setTimeout(() => {
+            const activePanel = document.querySelector(`.category-panel.active`);
+            if (activePanel && selectedCategory) {
+                // Cek di grid "Semua"
+                const catElement = activePanel.querySelector(`#allGrid-${currentType} [onclick*="'${selectedCategory.id}'"]`);
+                if (catElement) {
+                    catElement.classList.add('selected');
+                    // Jika kategori ada di 'Semua', pindah ke tab 'Semua'
+                    const allTabBtn = activePanel.querySelector('.secondary-tab-btn:last-child');
+                    if(allTabBtn) selectSecondaryTab(allTabBtn, `allGrid-${currentType}`);
+                }
+            }
+        }, 0); // Beri jeda agar UI selesai render
 
         sessionStorage.removeItem('tx_for_edit');
 
@@ -3620,17 +3724,23 @@ function initCreatePage() {
         currentType = 'expense';
         selectedCategory = null;
         selectedTransactionDate = new Date(); 
-        currentNotes = ''; // [MODIFIKASI] Reset var global
+        currentNotes = ''; 
         clearCalc();
-        loadCategories(); 
+        
+        // Atur tab default ke Pengeluaran & Direkomendasikan
+        selectPrimaryTab('expense'); 
+        const defaultTab = document.querySelector('#expense-panel .secondary-tab-btn');
+        if(defaultTab) selectSecondaryTab(defaultTab, 'expense-recommended');
+
         updateAccountIcon(selectedAccountId); 
-        if (notesPreview) notesPreview.textContent = ''; // [MODIFIKASI] Kosongkan preview
+        if (notesPreview) notesPreview.textContent = ''; 
     }
 
     updateCreateDateButton();
     console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
 }
-        function initWalletPage() { 
+  
+function initWalletPage() { 
             console.log("Halaman dompet dimuat."); 
             // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
             attachThemeToggle('.theme-toggle');
@@ -4586,59 +4696,65 @@ async function handleDeleteMember(walletId, userId) {
             }
         }
 
-        // [BARU] Fungsi inisialisasi untuk categories.html
+/* [DIUBAH TOTAL] Fungsi inisialisasi untuk categories.html */
         function initCategoriesPage() {
-            console.log("Halaman Kategori diinisialisasi.");
-            const form = document.getElementById('create-category-form');
-            const listSection = document.getElementById('category-list-section');
+            console.log("Halaman Kategori (v2) diinisialisasi.");
             const walletId = localStorage.getItem('currentWalletId');
+            const listContainerExpense = document.getElementById('category-list-EXPENSE');
+            const listContainerIncome = document.getElementById('category-list-INCOME');
+            const messageEl = document.getElementById('category-list-message');
 
-            if (!listSection || !walletId) {
-                console.error("Tidak bisa memuat kategori, listSection atau walletId tidak ada.");
+            if (!listContainerExpense || !listContainerIncome || !walletId) {
+                console.error("Elemen penting tidak ditemukan.");
+                if (messageEl) messageEl.textContent = "Gagal memuat halaman.";
                 return;
             }
 
             // Fungsi untuk memuat dan merender daftar kategori
             async function loadAndRenderCategories() {
-                listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-light);"><span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span></div>`;
-                
+                messageEl.innerHTML = `<span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>`;
+                messageEl.style.display = 'block';
+                listContainerExpense.innerHTML = '';
+                listContainerIncome.innerHTML = '';
+
                 try {
                     // Selalu ambil data terbaru dari API saat masuk halaman ini
                     const categories = await fetchApi(`/wallets/${walletId}/categories`);
                     
-                    // [PENTING] Update variabel global agar halaman 'create' juga terupdate
+                    // [PENTING] Update variabel global
                     allCategories = categories;
                     
-                    // Pisahkan berdasarkan Tipe
                     const expenses = categories.filter(c => c.type === 'EXPENSE');
                     const income = categories.filter(c => c.type === 'INCOME');
                     
-                    listSection.innerHTML = ''; // Bersihkan spinner
+                    if (expenses.length === 0 && income.length === 0) {
+                         messageEl.textContent = "Anda belum memiliki kategori.";
+                         return;
+                    }
 
                     // Render Kategori Pengeluaran
                     if (expenses.length > 0) {
-                        const expenseCard = document.createElement('div');
-                        expenseCard.className = 'category-list-card';
-                        expenseCard.innerHTML = `<h3 class="category-list-title">Pengeluaran</h3>`;
                         expenses.forEach(cat => {
-                            expenseCard.appendChild(createCategoryRow(cat));
+                            listContainerExpense.appendChild(createCategoryRow(cat));
                         });
-                        listSection.appendChild(expenseCard);
+                    } else {
+                        listContainerExpense.innerHTML = `<div style="padding: 15px 0; text-align: center; color: var(--text-light); font-size: 14px;">Belum ada kategori pengeluaran.</div>`;
                     }
 
                     // Render Kategori Pemasukan
                     if (income.length > 0) {
-                        const incomeCard = document.createElement('div');
-                        incomeCard.className = 'category-list-card';
-                        incomeCard.innerHTML = `<h3 class="category-list-title">Pemasukan</h3>`;
                         income.forEach(cat => {
-                            incomeCard.appendChild(createCategoryRow(cat));
+                            listContainerIncome.appendChild(createCategoryRow(cat));
                         });
-                        listSection.appendChild(incomeCard);
+                    } else {
+                        listContainerIncome.innerHTML = `<div style="padding: 15px 0; text-align: center; color: var(--text-light); font-size: 14px;">Belum ada kategori pemasukan.</div>`;
                     }
+                    
+                    messageEl.style.display = 'none'; // Sembunyikan loading jika sukses
 
                 } catch (error) {
-                    listSection.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--expense-red);">Gagal memuat kategori.</div>`;
+                    messageEl.textContent = "Gagal memuat kategori.";
+                    console.error(error);
                 }
             }
 
@@ -4650,59 +4766,39 @@ async function handleDeleteMember(walletId, userId) {
                     <span class="category-item-icon">${category.icon || '📁'}</span>
                     <span class="category-item-details">${category.name}</span>
                     <div class="category-item-actions">
+                        <button class="edit" onclick="handleEditCategory('${category.id}')"><i class="fas fa-edit"></i></button>
                         <button class="delete" onclick="handleDeleteCategory('${category.id}', '${category.name}')"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
-                // Catatan: Tombol edit belum difungsikan di contoh ini
                 return item;
-            }
-
-            // Fungsi untuk menangani submit form
-            async function handleCategorySubmit(e) {
-                e.preventDefault();
-                const name = document.getElementById('category-name').value;
-                const icon = document.getElementById('category-icon').value || '📁';
-                const type = document.getElementById('category-type').value;
-                const messageEl = document.getElementById('category-message');
-                const submitBtn = form.querySelector('button[type="submit"]');
-
-                if (!name || !type) return;
-
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Menyimpan...';
-                messageEl.textContent = '';
-                messageEl.className = '';
-
-                try {
-                    await fetchApi(`/wallets/${walletId}/categories`, {
-                        method: 'POST',
-                        body: JSON.stringify({ name, icon, type })
-                    });
-                    
-                    messageEl.textContent = 'Kategori berhasil disimpan.';
-                    messageEl.className = 'success';
-                    form.reset(); // Kosongkan form
-                    loadAndRenderCategories(); // Muat ulang daftar
-
-                } catch (error) {
-                    messageEl.textContent = error.message;
-                    messageEl.className = 'error';
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Tambah Kategori';
-                }
-            }
-
-            // Pasang listener ke form
-            if (form) {
-                form.addEventListener('submit', handleCategorySubmit);
             }
 
             // Muat data saat halaman dibuka
             loadAndRenderCategories();
         }
 
-        // [BARU] Fungsi untuk Hapus Kategori (dibuat global agar bisa dipanggil dari onclick)
+        /* [BARU] Fungsi Global untuk pindah tab di halaman kategori */
+        function selectCategoryTab(type) {
+            document.getElementById('cat-tab-expense').classList.toggle('active', type === 'EXPENSE');
+            document.getElementById('cat-tab-income').classList.toggle('active', type === 'INCOME');
+            
+            document.getElementById('category-panel-EXPENSE').classList.toggle('active', type === 'EXPENSE');
+            document.getElementById('category-panel-INCOME').classList.toggle('active', type === 'INCOME');
+        }
+
+        /* [BARU] Fungsi Global placeholder untuk Edit Kategori */
+        function handleEditCategory(categoryId) {
+            // TODO: Buat modal untuk edit kategori
+            showDialog({title: 'Fitur Belum Tersedia', text: 'Fungsi untuk mengedit kategori akan ditambahkan nanti.'});
+        }
+
+        /* [BARU] Fungsi Global placeholder untuk Tambah Kategori */
+        function openAddCategoryModal() {
+            // TODO: Buat modal untuk tambah kategori
+            showDialog({title: 'Fitur Belum Tersedia', text: 'Fungsi untuk menambah kategori akan ditambahkan nanti.'});
+        }
+
+        /* [MODIFIKASI] Fungsi Hapus Kategori tetap sama, pastikan ada */
         async function handleDeleteCategory(categoryId, categoryName) {
             const walletId = localStorage.getItem('currentWalletId');
             if (!categoryId || !walletId) return;
@@ -4729,7 +4825,6 @@ async function handleDeleteMember(walletId, userId) {
                 showDialog({ title: 'Error', text: 'Gagal menghapus kategori: ' + error.message });
             }
         }
-
         /* [BARU] Fungsi untuk submit edit buku (pengganti handleRenameBook) */
         async function handleModalEditSubmit(event) {
             event.preventDefault();
