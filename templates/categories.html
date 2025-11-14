@@ -61,8 +61,8 @@
 
     .primary-tab-btn {
         font-size: 14px;
-        font-weight: 500; /* [DIUBAH] Font weight lebih tipis */
-        background: white; /* [DIUBAH] Background inactive */
+        font-weight: 500; 
+        background: white; /* [DIUBAH] Inactive = putih */
         border: 1px solid #e0e0e0; /* [BARU] Border tipis */
         padding: 10px 16px; 
         border-bottom: none; 
@@ -78,39 +78,32 @@
         gap: 8px;
     }
 
-    /* [BARU] Style Tombol Pengeluaran (Inactive) */
+    /* [DIUBAH] Style Tombol Pengeluaran (Inactive) */
     .primary-tab-btn.expense-tab {
-        color: var(--expense-red);
+        color: var(--text-dark); /* Teks inactive jadi gelap */
     }
     .primary-tab-btn.expense-tab .icon-expense {
-        color: var(--expense-red);
-    }
-    /* Style Tombol Pengeluaran (Active) */
-    .primary-tab-btn.expense-tab.active {
-        background: var(--expense-red);
-        border-color: var(--expense-red);
-        color: white;
-        font-weight: 600;
-    }
-    .primary-tab-btn.expense-tab.active .icon-expense {
-        color: white;
+        color: var(--expense-red); /* Ikon tetap merah */
     }
 
-    /* [BARU] Style Tombol Pemasukan (Inactive) */
+    /* [DIUBAH] Style Tombol Pemasukan (Inactive) */
     .primary-tab-btn.income-tab {
-        color: var(--income-green);
+        color: var(--text-dark); /* Teks inactive jadi gelap */
     }
     .primary-tab-btn.income-tab .icon-income {
-        color: var(--income-green);
+        color: var(--income-green); /* Ikon tetap hijau */
     }
-    /* Style Tombol Pemasukan (Active) */
-    .primary-tab-btn.income-tab.active {
-        background: var(--income-green);
-        border-color: var(--income-green);
-        color: white;
+
+    /* [DIUBAH] Style Tombol ACTIVE (jadi ungu) */
+    .primary-tab-btn.active {
+        background: var(--primary-blue); /* Latar ungu */
+        border-color: var(--primary-blue);
+        color: white; /* Teks putih */
         font-weight: 600;
     }
-    .primary-tab-btn.income-tab.active .icon-income {
+    /* Ikon di tombol active jadi putih */
+    .primary-tab-btn.active .icon-expense,
+    .primary-tab-btn.active .icon-income {
         color: white;
     }
 
@@ -118,25 +111,21 @@
     .dark .primary-tab-btn {
         background: #374151;
         border-color: #4b5563;
+        color: #d1d5db; /* Teks inactive jadi terang */
     }
     
-    .dark .primary-tab-btn.expense-tab { color: var(--expense-red); }
     .dark .primary-tab-btn.expense-tab .icon-expense { color: var(--expense-red); }
-    .dark .primary-tab-btn.expense-tab.active {
-        background: var(--expense-red);
-        border-color: var(--expense-red);
-        color: white;
-    }
-    .dark .primary-tab-btn.expense-tab.active .icon-expense { color: white; }
-
-    .dark .primary-tab-btn.income-tab { color: var(--income-green); }
     .dark .primary-tab-btn.income-tab .icon-income { color: var(--income-green); }
-    .dark .primary-tab-btn.income-tab.active {
-        background: var(--income-green);
-        border-color: var(--income-green);
+
+    .dark .primary-tab-btn.active {
+        background: var(--primary-blue);
+        border-color: var(--primary-blue);
         color: white;
     }
-    .dark .primary-tab-btn.income-tab.active .icon-income { color: white; }
+    .dark .primary-tab-btn.active .icon-expense,
+    .dark .primary-tab-btn.active .icon-income {
+        color: white;
+    }
     /* [AKHIR PERBAIKAN] */
 
 
