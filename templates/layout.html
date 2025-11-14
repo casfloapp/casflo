@@ -2858,22 +2858,7 @@ function renderDateModalCalendar() {
                 addBtn.innerHTML = '<i class="fas fa-plus"></i>';
             }
         }
-        function selectPrimaryTab(type) {
-            currentType = type;
-            selectedCategory = null; // Reset pilihan kategori saat ganti tab
-
-            // Ganti tombol aktif
-            document.getElementById('primary-tab-expense').classList.toggle('active', type === 'expense');
-            document.getElementById('primary-tab-income').classList.toggle('active', type === 'income');
-            
-            // Ganti panel aktif
-            document.getElementById('expense-panel').classList.toggle('active', type === 'expense');
-            document.getElementById('income-panel').classList.toggle('active', type === 'income');
-
-            // Render kategori untuk tab yang baru dipilih
-            // (Data sudah dimuat di initCreatePage, jadi ini hanya render)
-            renderCategories(type);
-        }
+        function selectType(type) { currentType = type; document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active')); document.getElementById(type + 'Btn').classList.add('active'); selectedCategory = null; loadCategories(); }
         function updateDisplay() {
             const amountDisplay = document.getElementById('amountDisplay');
             if (!amountDisplay) return;
@@ -2898,38 +2883,21 @@ function renderDateModalCalendar() {
         function changeButtonToCheck() { const actionBtn = document.getElementById('actionBtn'); if(actionBtn) { actionBtn.className = 'action-btn check'; actionBtn.innerHTML = '<i class="fas fa-check"></i>'; }}
         function calculateResult() { try { let expression = calcValue.replace(/×/g, '*').replace(/÷/g, '/'); const result = eval(expression); calcValue = String(result); waitingForEquals = false; changeButtonToCheck(); updateDisplay(); } catch (e) { calcValue = '0'; updateDisplay(); } }
         function clearCalc() { calcValue = '0'; waitingForEquals = false; changeButtonToCheck(); updateDisplay(); }
-        // [FUNGSI BARU] Ini hanya merender kategori ke panel yang sesuai
-        function renderCategories(type) {
-            const typeToFilter = type.toUpperCase(); // 'EXPENSE' atau 'INCOME'
+        function loadCategories() {
+            // [PERBAIKAN] Filter dari 'allCategories' global, sesuaikan 'type'
+            const typeToFilter = currentType.toUpperCase(); // 'expense' -> 'EXPENSE'
             const categories = allCategories.filter(cat => cat.type === typeToFilter);
 
-            // Tentukan grid target berdasarkan 'type'
-            const recommendedGrid = document.getElementById(`recommendedGrid-${type}`);
-            const uncategorizedGrid = document.getElementById(`uncategorizedGrid-${type}`);
-            
-            if(!recommendedGrid || !uncategorizedGrid) {
-                console.error(`Grid untuk tipe ${type} tidak ditemukan.`);
-                return;
-            }
+            const recommendedGrid = document.getElementById('recommendedGrid');
+            const uncategorizedGrid = document.getElementById('uncategorizedGrid');
+            if(!recommendedGrid || !uncategorizedGrid) return;
             
             recommendedGrid.innerHTML = '';
             uncategorizedGrid.innerHTML = '';
             
-            // Filter kategori "Rekomendasi" (misal: 4 teratas)
-            // TODO: API harusnya menyediakan mana yg rekomendasi
-            const recommended = categories.slice(0, 4);
-            const uncategorized = categories.slice(4);
-
-            recommended.forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat)));
-            uncategorized.forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat)));
-        }
-
-        // [FUNGSI BARU] Menggantikan `loadCategories`
-        function selectCategory(category, element) { 
-            selectedCategory = category; 
-            // Hapus 'selected' dari SEMUA kategori di kedua panel
-            document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected')); 
-            element.classList.add('selected'); 
+            // Logika slice dan render tetap sama
+            categories.slice(0, 4).forEach(cat => recommendedGrid.appendChild(createCategoryElement(cat)));
+            categories.slice(4).forEach(cat => uncategorizedGrid.appendChild(createCategoryElement(cat)));
         }
         
 /* ====================================================== */
@@ -3620,40 +3588,29 @@ function renderTransactionList(filteredTransactions) {
     }
   // GANTI FUNGSI LAMA DENGAN INI
 function initCreatePage() {
+    // [MODIFIKASI] Ambil elemen preview
     const notesPreview = document.getElementById('notes-display-preview');
     const txToEditJSON = sessionStorage.getItem('tx_for_edit');
-
-    // [BARU] Render kategori untuk kedua tab di background
-    // Ini penting agar data siap saat user berganti tab
-    renderCategories('expense');
-    renderCategories('income');
 
     if (txToEditJSON) {
         // === MODE EDIT ===
         const tx = JSON.parse(txToEditJSON);
+
         currentTransactionId = tx.id; 
-        currentType = tx.type; // 'expense' atau 'income'
+        currentType = tx.type;
         calcValue = String(tx.amount);
         selectedAccountId = tx.account_id;
         selectedCategory = allCategories.find(c => c.id === tx.category_id);
         selectedTransactionDate = new Date(tx.date); 
-        currentNotes = tx.notes || ''; 
+        currentNotes = tx.notes || ''; // [MODIFIKASI] Simpan ke var global
 
-        // [DIUBAH] Panggil selectPrimaryTab untuk atur UI
-        selectPrimaryTab(currentType);
-        
+        document.querySelectorAll('.type-btn-header').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(currentType + 'Btn').classList.add('active');
+
+        loadCategories(); 
         updateDisplay(); 
         updateAccountIcon(selectedAccountId); 
-        if (notesPreview) notesPreview.textContent = currentNotes;
-        
-        // [DIUBAH] Pilih kategori yang sedang diedit
-        setTimeout(() => {
-            const activePanel = document.querySelector(`.tab-panel.active`);
-            if (activePanel && selectedCategory) {
-                const catElement = activePanel.querySelector(`[onclick*="'${selectedCategory.id}'"]`);
-                if (catElement) catElement.classList.add('selected');
-            }
-        }, 0); // Beri jeda agar UI selesai render
+        if (notesPreview) notesPreview.textContent = currentNotes; // [MODIFIKASI] Update preview
 
         sessionStorage.removeItem('tx_for_edit');
 
@@ -3663,21 +3620,17 @@ function initCreatePage() {
         currentType = 'expense';
         selectedCategory = null;
         selectedTransactionDate = new Date(); 
-        currentNotes = ''; 
+        currentNotes = ''; // [MODIFIKASI] Reset var global
         clearCalc();
-        
-        // [DIUBAH] Atur tab default ke Pengeluaran
-        selectPrimaryTab('expense'); 
-
+        loadCategories(); 
         updateAccountIcon(selectedAccountId); 
-        if (notesPreview) notesPreview.textContent = ''; 
+        if (notesPreview) notesPreview.textContent = ''; // [MODIFIKASI] Kosongkan preview
     }
 
     updateCreateDateButton();
     console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
-}      
-
-function initWalletPage() { 
+}
+        function initWalletPage() { 
             console.log("Halaman dompet dimuat."); 
             // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
             attachThemeToggle('.theme-toggle');
