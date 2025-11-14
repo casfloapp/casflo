@@ -13,6 +13,7 @@ import authCallbackPage from './templates/auth-callback.html'; // Untuk login Go
 import createWalletPage from './templates/create-wallet.html'; // <-- [BARU] Impor ini
 import memberContent from './templates/member.html';
 import booksContent from './templates/books.html';
+import categoriesContent from './templates/categories.html';
 
 
 export default {
@@ -58,6 +59,9 @@ export default {
                 break;
             case '/create-wallet': // <-- [DITAMBAHKAN]
                 pageContent = createWalletPage;
+                break;
+            case '/categories': /* [BLOK BARU DITAMBAHKAN] */
+                pageContent = categoriesContent;
                 break;
             default:
                 pageContent = mainContent;

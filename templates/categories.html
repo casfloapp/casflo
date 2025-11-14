@@ -1,0 +1,113 @@
+<style>
+    /* CSS Khusus untuk Halaman Kategori */
+    .category-page-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100svh;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    .category-header {
+        background: var(--primary-blue);
+        color: white;
+        padding: 20px;
+        flex-shrink: 0;
+        z-index: 10;
+        border-bottom-left-radius: 25px;
+        border-bottom-right-radius: 25px;
+    }
+    .category-header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .category-header-top .back-link {
+        color: white;
+        text-decoration: none;
+        font-size: 20px;
+    }
+    .category-content {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 20px;
+        padding-bottom: 100px;
+    }
+    .category-list-card {
+        background-color: white;
+        border-radius: 18px;
+        padding: 0 20px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+        margin-bottom: 15px;
+    }
+    .dark .category-list-card { background-color: #374151; }
+    
+    .category-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--bg-gray);
+    }
+    .category-item:last-child { border-bottom: none; }
+    .dark .category-item { border-bottom-color: #4b5563; }
+    
+    .category-item-icon {
+        font-size: 22px;
+        width: 45px;
+        height: 45px;
+        background-color: var(--bg-gray);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+    .dark .category-item-icon { background-color: #4b5563; }
+    
+    .category-item-details {
+        flex-grow: 1;
+        overflow: hidden;
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+    .dark .category-item-details { color: white; }
+    
+    .category-item-actions { display: flex; gap: 15px; }
+    .category-item-actions button {
+        background: none; border: none; font-size: 16px;
+        color: var(--text-light); cursor: pointer;
+    }
+    .category-item-actions .delete { color: var(--expense-red); }
+
+</style>
+
+<div class="category-page-container">
+    <header class="category-header">
+        <div class="category-header-top">
+            <a href="/more" class="back-link"><i class="fas fa-chevron-left"></i></a>
+            <span>Manajemen Kategori</span>
+            <a href="#" class="back-link" style="font-size: 22px;">
+                <i class="fas fa-plus"></i>
+            </a> 
+        </div>
+    </header>
+
+    <main class="category-content">
+        <div id="category-list-section">
+            <div style="text-align: center; padding: 20px; color: var(--text-light);">
+                <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
+                <span style="margin-left: 10px;">Memuat kategori...</span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bottom-nav">
+        <a href="/" class="nav-item"><i class="fas fa-book"></i><span>Transaksi</span></a>
+        <a href="/wallet" class="nav-item"><i class="fas fa-wallet"></i><span>Akun</span></a>
+        <a href="/analysis" class="nav-item"><i class="fas fa-chart-pie"></i><span>Analisis</span></a>
+        <a href="/more" class="nav-item active"><i class="fas fa-ellipsis-h"></i><span>Lebih</span></a>
+    </footer>
+</div>
