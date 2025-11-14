@@ -44,15 +44,17 @@
         font-size: 20px;
     }
 
-    /* Styling Tab Primer (Pengeluaran/Pemasukan) */
+    /* [PERBAIKAN] Styling Tab Primer (Pengeluaran/Pemasukan) */
     .primary-tab-container {
         display: flex;
         justify-content: center;
         flex-grow: 1;
         background-color: white;
-        padding-top: 15px;
+        /* [DIUBAH] Padding dan gap untuk tombol */
+        padding: 15px 20px 10px 20px;
         flex-shrink: 0;
         border-bottom: 1px solid var(--bg-gray);
+        gap: 10px; /* Jarak antar tombol */
     }
     .dark .primary-tab-container {
         background-color: #1f2937;
@@ -60,24 +62,56 @@
     }
     .primary-tab-btn {
         font-size: 14px;
-        font-weight: 600;
-        color: var(--text-light);
-        background: none;
+        font-weight: 500; /* [DIUBAH] Font weight lebih tipis */
+        color: var(--text-dark); /* [DIUBAH] Warna teks inactive */
+        background: var(--bg-gray); /* [DIUBAH] Background inactive */
         border: none;
-        padding: 8px 16px;
-        border-bottom: 3px solid transparent;
+        padding: 10px 16px; /* [DIUBAH] Padding */
+        border-bottom: none; /* [DIUBAH] Hapus border bottom */
         cursor: pointer;
         transition: all 0.2s ease;
         flex-grow: 1;
         text-align: center;
         max-width: 50%;
+        border-radius: 12px; /* [BARU] Tombol jadi rounded */
+
+        /* [BARU] Flex untuk ikon dan teks */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
     }
     .primary-tab-btn.active {
-        color: var(--text-dark);
-        border-bottom-color: var(--primary-blue);
+        color: white; /* [DIUBAH] Teks active jadi putih */
+        background: var(--primary-blue); /* [DIUBAH] Background active */
+        border-bottom-color: transparent; /* Pastikan tidak ada border */
+        font-weight: 600; /* Dibuat sedikit tebal saat aktif */
     }
-    .dark .primary-tab-btn { color: #9ca3af; }
-    .dark .primary-tab-btn.active { color: white; border-bottom-color: white; }
+    
+    /* [PERBAIKAN] CSS Dark Mode untuk Tombol */
+    .dark .primary-tab-btn {
+        color: #d1d5db;
+        background: #374151;
+    }
+    .dark .primary-tab-btn.active {
+        color: white;
+        background-color: var(--primary-blue);
+    }
+    
+    /* [BARU] CSS untuk Ikon Tombol */
+    .primary-tab-btn .icon-expense {
+        color: var(--expense-red);
+    }
+    .primary-tab-btn .icon-income {
+        color: var(--income-green);
+    }
+    /* Saat tombol aktif, ikon jadi putih */
+    .primary-tab-btn.active .icon-expense,
+    .primary-tab-btn.active .icon-income {
+        color: white;
+    }
+    /* [AKHIR PERBAIKAN] */
+
 
     /* Konten Utama */
     .category-content {
@@ -124,12 +158,10 @@
     .dark .category-item { border-bottom-color: transparent; }
     
     .category-item-icon {
-        /* [PERBAIKAN] Ukuran font disamakan dengan create.html */
-        font-size: 36px; 
+        font-size: 36px; /* Ukuran font disamakan dengan create.html */
         width: 50px;
         height: 50px;
-        /* [PERBAIKAN] Warna background disamakan dengan create.html */
-        background-color: var(--light-purple); 
+        background-color: var(--light-purple); /* Warna background disamakan */
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -139,7 +171,7 @@
         margin-bottom: 8px;
     }
     .dark .category-item-icon { 
-        background-color: #4b5563; /* Konsisten dengan dark mode create-wallet */
+        background-color: #4b5563; 
     }
     
     .category-item-details {
@@ -230,8 +262,14 @@
     </header>
 
     <div class="primary-tab-container">
-        <button class="primary-tab-btn active" id="cat-tab-expense" onclick="selectCategoryTab('EXPENSE')">Pengeluaran</button>
-        <button class="primary-tab-btn" id="cat-tab-income" onclick="selectCategoryTab('INCOME')">Pemasukan</button>
+        <button class="primary-tab-btn active" id="cat-tab-expense" onclick="selectCategoryTab('EXPENSE')">
+            <i class="fas fa-minus icon-expense"></i>
+            <span>Pengeluaran</span>
+        </button>
+        <button class="primary-tab-btn" id="cat-tab-income" onclick="selectCategoryTab('INCOME')">
+            <i class="fas fa-plus icon-income"></i>
+            <span>Pemasukan</span>
+        </button>
     </div>
 
     <main class="category-content">
