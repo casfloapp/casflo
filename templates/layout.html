@@ -418,7 +418,28 @@
         .add-header { padding: 20px; border-bottom: 1px solid #e9ecef; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background-color: white; }
         .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); text-decoration: none; }
         
-        
+        .primary-tab-btn {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .primary-tab-btn.active {
+            color: var(--text-dark);
+            border-bottom-color: var(--primary-blue);
+        }
+        .dark .primary-tab-btn {
+            color: #9ca3af;
+        }
+        .dark .primary-tab-btn.active {
+            color: white;
+            border-bottom-color: white;
+        }
         
         /* [BARU] CSS untuk Konten/Panel Tab */
         .tab-panel-container {
@@ -4963,7 +4984,7 @@ function initBooksPage() {
             // [DIUBAH]
             else if (path === '/books') { initBooksPage(); } // <-- Ganti dari /member
             else if (path === '/create-wallet') { initCreateWalletPage(); }
-            else if (path === '/categories') { initCategoriesPage(); } 
+            else if (path === '/categories') { /* Dihapus, ditangani di dalam categories.html */ } 
         }
 
         function executePageScript(newContentElement) {
