@@ -3739,11 +3739,20 @@ function initMorePage() {
         function initCategoriesPage() {
             console.log("Halaman Kategori diinisialisasi.");
             
+            // --- [PERBAIKAN] Ambil elemen baru ---
             const walletId = localStorage.getItem('currentWalletId');
             const listContainerExpense = document.getElementById('category-list-EXPENSE');
             const listContainerIncome = document.getElementById('category-list-INCOME');
-            const messageEl = document.getElementById('category-list-message');
             
+            // Panel yang membungkus kartu
+            const panelExpense = document.getElementById('category-panel-EXPENSE');
+            const panelIncome = document.getElementById('category-panel-INCOME');
+            
+            // Spinner dan Error
+            const spinnerEl = document.getElementById('category-list-preloader');
+            const errorEl = document.getElementById('category-list-error');
+            
+            // Elemen Modal (tidak berubah)
             const modal = document.getElementById('category-modal-overlay');
             const form = document.getElementById('category-form');
             const modalTitle = document.getElementById('category-modal-title');
@@ -3759,12 +3768,16 @@ function initMorePage() {
             async function loadAndRenderCategories() {
                 if (!listContainerExpense || !listContainerIncome || !walletId) {
                     console.error("Elemen penting tidak ditemukan.");
-                    if (messageEl) messageEl.textContent = "Gagal memuat halaman.";
+                    if (errorEl) errorEl.textContent = "Gagal memuat halaman.";
                     return;
                 }
 
-                messageEl.innerHTML = `<span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>`;
-                messageEl.style.display = 'block';
+                // [PERBAIKAN] Tampilkan spinner, sembunyikan error dan panel
+                spinnerEl.style.display = 'flex';
+                errorEl.style.display = 'none';
+                panelExpense.style.display = 'none';
+                panelIncome.style.display = 'none';
+
                 listContainerExpense.innerHTML = '';
                 listContainerIncome.innerHTML = '';
 
@@ -3777,7 +3790,10 @@ function initMorePage() {
                     const income = categories.filter(c => c.type === 'INCOME');
                     
                     if (expenses.length === 0 && income.length === 0) {
-                         messageEl.textContent = "Anda belum memiliki kategori.";
+                         // [PERBAIKAN] Tampilkan pesan error jika tidak ada kategori
+                         spinnerEl.style.display = 'none';
+                         errorEl.textContent = "Anda belum memiliki kategori.";
+                         errorEl.style.display = 'block';
                          return;
                     }
 
@@ -3786,7 +3802,6 @@ function initMorePage() {
                             listContainerExpense.appendChild(createCategoryRow(cat));
                         });
                     } else {
-                        // [PERBAIKAN] Pesan ini harus di-render di dalam card agar padding-nya benar
                         const noExpenseMsg = document.createElement('div');
                         noExpenseMsg.style = "padding: 15px 0; text-align: center; color: var(--text-light); font-size: 14px; grid-column: 1 / -1;";
                         noExpenseMsg.textContent = "Belum ada kategori pengeluaran.";
@@ -3804,10 +3819,21 @@ function initMorePage() {
                         listContainerIncome.appendChild(noIncomeMsg);
                     }
                     
-                    messageEl.style.display = 'none'; 
+                    // [PERBAIKAN] Sembunyikan spinner dan tampilkan panel default
+                    spinnerEl.style.display = 'none'; 
+                    // Tampilkan panel yang seharusnya aktif (sesuai tab)
+                    const activeTab = document.querySelector('.primary-tab-btn.active');
+                    if (activeTab.id === 'cat-tab-income') {
+                        panelIncome.style.display = 'block';
+                    } else {
+                        panelExpense.style.display = 'block';
+                    }
 
                 } catch (error) {
-                    messageEl.textContent = "Gagal memuat kategori.";
+                    // [PERBAIKAN] Tampilkan pesan error
+                    spinnerEl.style.display = 'none';
+                    errorEl.textContent = "Gagal memuat kategori.";
+                    errorEl.style.display = 'block';
                     console.error(error);
                 }
             }
@@ -3828,7 +3854,6 @@ function initMorePage() {
             }
 
             // --- Kontrol Modal ---
-            // [PENTING] Kita attach ke window agar bisa diakses dari HTML
             window.openAddCategoryModal = () => {
                 form.reset();
                 modalTitle.textContent = 'Tambah Kategori';
@@ -3862,8 +3887,11 @@ function initMorePage() {
                 document.getElementById('cat-tab-expense').classList.toggle('active', type === 'EXPENSE');
                 document.getElementById('cat-tab-income').classList.toggle('active', type === 'INCOME');
                 
-                document.getElementById('category-panel-EXPENSE').classList.toggle('active', type === 'EXPENSE');
-                document.getElementById('category-panel-INCOME').classList.toggle('active', type === 'INCOME');
+                // [PERBAIKAN] Cek apakah data sudah dimuat sebelum mengganti panel
+                if (spinnerEl.style.display === 'none') {
+                    panelExpense.style.display = (type === 'EXPENSE') ? 'block' : 'none';
+                    panelIncome.style.display = (type === 'INCOME') ? 'block' : 'none';
+                }
             }
 
             // --- Aksi Form (Tambah/Edit) ---
