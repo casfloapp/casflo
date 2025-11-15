@@ -210,39 +210,25 @@
         <a href="/" class="close-btn"><i class="fas fa-times"></i></a>
     </div>
 
-    <div class="category-panel-container">
-        <div class="category-panel active" id="expense-panel">
-            <div class="secondary-tab-container">
-                <button class="secondary-tab-btn active" onclick="selectSecondaryTab(this, 'expense-recommended')">✨ Rekomendasi</button>
-                <button class="secondary-tab-btn" onclick="selectSecondaryTab(this, 'expense-all')">📑 Semua</button>
-                <a href="/categories" class="category-settings-btn">⚙️ Pengaturan</a>
+<main class="transfer-content">
+        <div class="account-transfer-box">
+            <div class="account-selector">
+                <span class="account-label">Dari</span>
+                <button class="account-select-btn" id="from-account-btn" onclick="selectFromAccount()">
+                    <span class="account-icon" id="from-account-icon">Rp</span>
+                    <span class="account-name" id="from-account-name">Pilih Akun Asal...</span>
+                </button>
             </div>
-            <div class="categories-section-wrapper">
-                <div class="categories-section active" id="expense-recommended">
-                    <div class="category-grid" id="recommendedGrid-expense"></div>
-                </div>
-                <div class="categories-section" id="expense-all">
-                    <div class="category-grid" id="allGrid-expense"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="category-panel" id="income-panel">
-            <div class="secondary-tab-container">
-                <button class="secondary-tab-btn active" onclick="selectSecondaryTab(this, 'income-recommended')">✨ Rekomendasi</button>
-                <button class="secondary-tab-btn" onclick="selectSecondaryTab(this, 'income-all')">📑 Semua</button>
-                <a href="/categories" class="category-settings-btn">⚙️ Pengaturan</a>
-            </div>
-            <div class="categories-section-wrapper">
-                <div class="categories-section active" id="income-recommended">
-                    <div class="category-grid" id="recommendedGrid-income"></div>
-                </div>
-                <div class="categories-section" id="income-all">
-                    <div class="category-grid" id="allGrid-income"></div>
-                </div>
+            
+            <div class="account-selector">
+                <span class="account-label">Ke</span>
+                <button class="account-select-btn" id="to-account-btn" onclick="selectToAccount()">
+                    <span class="account-icon" id="to-account-icon">Rp</span>
+                    <span class="account-name" id="to-account-name">Pilih Akun Tujuan...</span>
+                </button>
             </div>
         </div>
-    </div>
+    </main>
     
     <div class="calculator-section" id="main-calculator-section">
         <div id="calculator-view">
