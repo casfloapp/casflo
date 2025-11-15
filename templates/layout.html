@@ -3736,23 +3736,20 @@ function initMorePage() {
 }
 
 // [BARU] Fungsi inisialisasi untuk /categories
+// [BARU] Fungsi inisialisasi untuk /categories
         function initCategoriesPage() {
             console.log("Halaman Kategori diinisialisasi.");
             
-            // --- [PERBAIKAN] Ambil elemen baru ---
             const walletId = localStorage.getItem('currentWalletId');
             const listContainerExpense = document.getElementById('category-list-EXPENSE');
             const listContainerIncome = document.getElementById('category-list-INCOME');
             
-            // Panel yang membungkus kartu
             const panelExpense = document.getElementById('category-panel-EXPENSE');
             const panelIncome = document.getElementById('category-panel-INCOME');
             
-            // Spinner dan Error
             const spinnerEl = document.getElementById('category-list-preloader');
             const errorEl = document.getElementById('category-list-error');
             
-            // Elemen Modal (tidak berubah)
             const modal = document.getElementById('category-modal-overlay');
             const form = document.getElementById('category-form');
             const modalTitle = document.getElementById('category-modal-title');
@@ -3772,7 +3769,6 @@ function initMorePage() {
                     return;
                 }
 
-                // [PERBAIKAN] Tampilkan spinner, sembunyikan error dan panel
                 spinnerEl.style.display = 'flex';
                 errorEl.style.display = 'none';
                 panelExpense.style.display = 'none';
@@ -3790,7 +3786,6 @@ function initMorePage() {
                     const income = categories.filter(c => c.type === 'INCOME');
                     
                     if (expenses.length === 0 && income.length === 0) {
-                         // [PERBAIKAN] Tampilkan pesan error jika tidak ada kategori
                          spinnerEl.style.display = 'none';
                          errorEl.textContent = "Anda belum memiliki kategori.";
                          errorEl.style.display = 'block';
@@ -3819,9 +3814,8 @@ function initMorePage() {
                         listContainerIncome.appendChild(noIncomeMsg);
                     }
                     
-                    // [PERBAIKAN] Sembunyikan spinner dan tampilkan panel default
                     spinnerEl.style.display = 'none'; 
-                    // Tampilkan panel yang seharusnya aktif (sesuai tab)
+                    
                     const activeTab = document.querySelector('.primary-tab-btn.active');
                     if (activeTab.id === 'cat-tab-income') {
                         panelIncome.style.display = 'block';
@@ -3829,8 +3823,16 @@ function initMorePage() {
                         panelExpense.style.display = 'block';
                     }
 
+                    // [BARU] Terapkan animasi staggered fade-in
+                    // Kita harus query SEMUA item di kedua panel
+                    const gridItems = document.querySelectorAll('.category-grid-container .category-item');
+                    gridItems.forEach((item, index) => {
+                        setTimeout(() => {
+                            item.classList.add('visible');
+                        }, index * 40); // Penundaan 40ms per item
+                    });
+
                 } catch (error) {
-                    // [PERBAIKAN] Tampilkan pesan error
                     spinnerEl.style.display = 'none';
                     errorEl.textContent = "Gagal memuat kategori.";
                     errorEl.style.display = 'block';
@@ -3842,6 +3844,9 @@ function initMorePage() {
             function createCategoryRow(category) {
                 const item = document.createElement('div');
                 item.className = 'category-item';
+                
+                // [PERBAIKAN] Gunakan .category-item-icon (bukan .icon)
+                // dan .category-item-details (bukan .name)
                 item.innerHTML = `
                     <span class="category-item-icon">${category.icon || '刀'}</span>
                     <span class="category-item-details">${category.name}</span>
@@ -3887,7 +3892,6 @@ function initMorePage() {
                 document.getElementById('cat-tab-expense').classList.toggle('active', type === 'EXPENSE');
                 document.getElementById('cat-tab-income').classList.toggle('active', type === 'INCOME');
                 
-                // [PERBAIKAN] Cek apakah data sudah dimuat sebelum mengganti panel
                 if (spinnerEl.style.display === 'none') {
                     panelExpense.style.display = (type === 'EXPENSE') ? 'block' : 'none';
                     panelIncome.style.display = (type === 'INCOME') ? 'block' : 'none';
@@ -3964,6 +3968,7 @@ function initMorePage() {
             // Muat data saat halaman dibuka
             loadAndRenderCategories();
         }
+
 // === [FUNGSI-FUNGSI BARU UNTUK books.html] ===
 
 /**

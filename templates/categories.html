@@ -118,20 +118,15 @@
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    /* [PERBAIKAN] Hapus .category-list-card */
-    /* .category-list-card { ... } */
-
-    /* [BARU] Buat kontainer grid pengganti */
     .category-grid-container {
         display: grid;
-        /* Ambil style grid dari 'more.html' */
         grid-template-columns: repeat(auto-fit, minmax(95px, 1fr)); 
-        gap: 15px; /* Jarak antar kartu */
+        gap: 15px;
     }
 
-    /* [PERBAIKAN] .category-item sekarang adalah KARTU */
+    /* [PERBAIKAN] .category-item sekarang adalah KARTU + Animasi */
     .category-item {
-        background-color: white; /* Jadi kartu putih */
+        background-color: white;
         border-radius: 18px;
         padding: 15px;
         text-align: center;
@@ -142,15 +137,26 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        aspect-ratio: 1 / 1; /* Jaga tetap persegi */
+        aspect-ratio: 1 / 1;
         box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
         border-bottom: none;
+        
+        /* [BARU] Properti Awal Animasi */
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.4s ease-out, transform 0.4s ease-out;
     }
+    /* [BARU] Kelas untuk memicu animasi */
+    .category-item.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
     .category-item:hover {
-        background-color: #f8f9fa; /* Hover sedikit abu-abu */
+        background-color: #f8f9fa;
     }
     .dark .category-item {
-        background-color: #374151; /* dark:bg-gray-700 */
+        background-color: #374151;
         color: #d1d5db;
         box-shadow: none;
     }
@@ -161,44 +167,83 @@
         border-bottom: none; 
     }
     
-    /* [PERBAIKAN] Ikon sekarang tanpa background */
     .category-item-icon {
         font-size: 36px;
-        margin-bottom: 10px;
-        /* Hapus semua style background, width, height, radius */
+        width: 50px;
+        height: 50px;
+        background-color: var(--light-purple);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-right: 0;
+        margin-bottom: 8px;
     }
     .dark .category-item-icon { 
-        /* Hapus background dark mode */
+        background-color: #4b5563; 
     }
     
-    /* [PERBAIKAN] Label teks di bawah ikon */
     .category-item-details {
         font-size: 12px;
-        font-weight: 500; /* Tidak terlalu tebal */
+        font-weight: 500;
         color: var(--text-dark);
-        margin-bottom: 10px; /* Jarak ke tombol */
+        margin-bottom: 10px;
         text-align: center;
         width: 100%;
-        /* Hapus properti yg tidak perlu */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; 
     }
     .dark .category-item-details { color: white; }
     
-    /* [PERBAIKAN] Tombol edit/delete di bawah label */
     .category-item-actions { 
         display: flex; 
         gap: 15px;
         justify-content: center;
     }
+    /* [PERBAIKAN] Mengubah tombol menjadi kotak */
     .category-item-actions button {
-        background: none; 
+        background: var(--bg-gray); /* [DIUBAH] Latar belakang kotak */
         border: none; 
-        font-size: 14px; /* Perkecil ikon tombol */
+        font-size: 13px; /* [DIUBAH] Perkecil ikon */
         color: var(--text-light); 
         cursor: pointer;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
     }
-    .category-item-actions .delete { color: var(--expense-red); }
+    .category-item-actions button:hover {
+        background-color: #e0e0e0; /* Hover lebih gelap */
+    }
+    .category-item-actions button.delete {
+        color: var(--expense-red); /* Ikon delete merah */
+    }
+    .category-item-actions button.delete:hover {
+        background-color: #ffe3e3; /* Latar delete hover merah muda */
+    }
+    
+    .dark .category-item-actions button {
+        background-color: #4b5563;
+        color: #d1d5db;
+    }
+    .dark .category-item-actions button:hover {
+        background-color: #5a6678;
+    }
+    .dark .category-item-actions button.delete {
+        color: var(--expense-red);
+    }
+    .dark .category-item-actions button.delete:hover {
+        background-color: #5c2c2c;
+    }
+    /* [AKHIR PERBAIKAN TOMBOL] */
 
-    /* [PERBAIKAN] Spinner Preloader Halaman */
+
+    /* Spinner Preloader Halaman */
     #category-list-preloader {
         display: none;
         align-items: center;
@@ -235,7 +280,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* CSS untuk Modal (Tidak Berubah) */
+    /* CSS untuk Modal */
     .form-group { margin-bottom: 15px; }
     .form-group label {
         display: block; font-size: 13px; font-weight: 500;
