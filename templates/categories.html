@@ -44,7 +44,7 @@
         font-size: 20px;
     }
 
-    /* Styling Tab Primer (Pengeluaran/Pemasukan) */
+    /* Styling Tab Primer (Tombol Ungu/Putih) */
     .primary-tab-container {
         display: flex;
         justify-content: center;
@@ -58,7 +58,6 @@
         background-color: #111827;
         border-bottom-color: #111827;
     }
-
     .primary-tab-btn {
         font-size: 14px;
         font-weight: 500;
@@ -113,91 +112,103 @@
         flex-grow: 1;
         overflow-y: auto;
         padding: 15px 20px 100px 20px;
-        position: relative; 
+        position: relative;
     }
     
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    /* Card untuk Daftar Kategori (Grid) */
-    .category-list-card {
-        background-color: white;
-        border-radius: 18px;
-        padding: 20px;
-        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
-        margin-bottom: 15px;
+    /* [PERBAIKAN] Hapus .category-list-card */
+    /* .category-list-card { ... } */
+
+    /* [BARU] Buat kontainer grid pengganti */
+    .category-grid-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); 
-        gap: 20px;
+        /* Ambil style grid dari 'more.html' */
+        grid-template-columns: repeat(auto-fit, minmax(95px, 1fr)); 
+        gap: 15px; /* Jarak antar kartu */
     }
-    .dark .category-list-card { background-color: #374151; }
-    
-    /* Item Kategori (Tumpukan Vertikal) */
+
+    /* [PERBAIKAN] .category-item sekarang adalah KARTU */
     .category-item {
+        background-color: white; /* Jadi kartu putih */
+        border-radius: 18px;
+        padding: 15px;
+        text-align: center;
+        text-decoration: none;
+        color: var(--text-dark);
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 10px 5px;
+        aspect-ratio: 1 / 1; /* Jaga tetap persegi */
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
         border-bottom: none;
-        border-radius: 10px;
-        transition: background-color 0.2s;
     }
-    .category-item:hover { background-color: var(--bg-gray); }
-    .dark .category-item:hover { background-color: #4b5563; }
-    .category-item:last-child { border-bottom: none; }
-    .dark .category-item { border-bottom-color: transparent; }
+    .category-item:hover {
+        background-color: #f8f9fa; /* Hover sedikit abu-abu */
+    }
+    .dark .category-item {
+        background-color: #374151; /* dark:bg-gray-700 */
+        color: #d1d5db;
+        box-shadow: none;
+    }
+    .dark .category-item:hover {
+        background-color: #4b5563;
+    }
+    .category-item:last-child { 
+        border-bottom: none; 
+    }
     
+    /* [PERBAIKAN] Ikon sekarang tanpa background */
     .category-item-icon {
         font-size: 36px;
-        width: 50px;
-        height: 50px;
-        background-color: var(--light-purple);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        margin-right: 0;
-        margin-bottom: 8px;
-    }
-    .dark .category-item-icon { background-color: #4b5563; }
-    
-    .category-item-details {
-        flex-grow: 0;
-        overflow: hidden;
-        font-weight: 600;
-        color: var(--text-dark);
-        white-space: nowrap;
-        text-overflow: ellipsis;
         margin-bottom: 10px;
+        /* Hapus semua style background, width, height, radius */
+    }
+    .dark .category-item-icon { 
+        /* Hapus background dark mode */
+    }
+    
+    /* [PERBAIKAN] Label teks di bawah ikon */
+    .category-item-details {
+        font-size: 12px;
+        font-weight: 500; /* Tidak terlalu tebal */
+        color: var(--text-dark);
+        margin-bottom: 10px; /* Jarak ke tombol */
         text-align: center;
         width: 100%;
+        /* Hapus properti yg tidak perlu */
     }
     .dark .category-item-details { color: white; }
     
+    /* [PERBAIKAN] Tombol edit/delete di bawah label */
     .category-item-actions { 
         display: flex; 
         gap: 15px;
         justify-content: center;
     }
     .category-item-actions button {
-        background: none; border: none; font-size: 16px;
-        color: var(--text-light); cursor: pointer;
+        background: none; 
+        border: none; 
+        font-size: 14px; /* Perkecil ikon tombol */
+        color: var(--text-light); 
+        cursor: pointer;
     }
     .category-item-actions .delete { color: var(--expense-red); }
 
-    /* [PERBAIKAN] Spinner untuk Preloader Halaman */
+    /* [PERBAIKAN] Spinner Preloader Halaman */
     #category-list-preloader {
-        display: none; /* Sembunyi by default, JS akan menampilkannya */
+        display: none;
         align-items: center;
         justify-content: center;
         width: 100%;
-        padding: 60px 20px; /* Beri jarak atas-bawah */
+        padding: 60px 20px;
     }
     #category-list-preloader .inline-spinner {
-        display: inline-block; /* Pastikan terlihat */
-        width: 30px; /* Perbesar spinner */
+        display: inline-block;
+        width: 30px;
         height: 30px;
         border-width: 3px;
         border-color: var(--primary-blue);
@@ -209,15 +220,12 @@
         border-color: white;
         border-top-color: transparent;
     }
-    /* [BARU] Div untuk pesan error */
     #category-list-error {
-        display: none; /* Sembunyi by default */
+        display: none;
         text-align: center;
         padding: 40px 20px;
         color: var(--expense-red);
     }
-
-    /* Spinner di dalam Modal */
     .loading-spinner {
         display: none; width: 1rem; height: 1rem;
         border: 2px solid white;
@@ -227,7 +235,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* CSS untuk Modal */
+    /* CSS untuk Modal (Tidak Berubah) */
     .form-group { margin-bottom: 15px; }
     .form-group label {
         display: block; font-size: 13px; font-weight: 500;
@@ -257,7 +265,6 @@
     }
     #modal-category-message.success { color: var(--income-green); }
     #modal-category-message.error { color: var(--expense-red); }
-
     .icon-input-modal {
         width: 60px !important; text-align: center;
         font-size: 24px !important; padding: 5px 10px !important;
@@ -300,16 +307,16 @@
         <div id="category-list-error"></div>
 
         <div class="tab-panel active" id="category-panel-EXPENSE" style="display: none;">
-            <div class="category-list-card" id="category-list-EXPENSE">
+            <div class="category-grid-container" id="category-list-EXPENSE">
                 </div>
         </div>
 
         <div class="tab-panel" id="category-panel-INCOME" style="display: none;">
-            <div class="category-list-card" id="category-list-INCOME">
+            <div class="category-grid-container" id="category-list-INCOME">
                 </div>
         </div>
         
-        </main>
+    </main>
 
     <footer class="bottom-nav">
         <a href="/" class="nav-item"><i class="fas fa-book"></i><span>Transaksi</span></a>
