@@ -124,7 +124,7 @@
         gap: 15px;
     }
 
-    /* [PERBAIKAN] .category-item sekarang adalah KARTU + Animasi */
+    /* .category-item (Kartu) */
     .category-item {
         background-color: white;
         border-radius: 18px;
@@ -140,18 +140,14 @@
         aspect-ratio: 1 / 1;
         box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
         border-bottom: none;
-        
-        /* [BARU] Properti Awal Animasi */
         opacity: 0;
         transform: translateY(20px);
         transition: opacity 0.4s ease-out, transform 0.4s ease-out;
     }
-    /* [BARU] Kelas untuk memicu animasi */
     .category-item.visible {
         opacity: 1;
         transform: translateY(0);
     }
-
     .category-item:hover {
         background-color: #f8f9fa;
     }
@@ -202,11 +198,10 @@
         gap: 15px;
         justify-content: center;
     }
-    /* [PERBAIKAN] Mengubah tombol menjadi kotak */
     .category-item-actions button {
-        background: var(--bg-gray); /* [DIUBAH] Latar belakang kotak */
+        background: var(--bg-gray);
         border: none; 
-        font-size: 13px; /* [DIUBAH] Perkecil ikon */
+        font-size: 13px;
         color: var(--text-light); 
         cursor: pointer;
         width: 28px;
@@ -218,13 +213,13 @@
         transition: background-color 0.2s;
     }
     .category-item-actions button:hover {
-        background-color: #e0e0e0; /* Hover lebih gelap */
+        background-color: #e0e0e0;
     }
     .category-item-actions button.delete {
-        color: var(--expense-red); /* Ikon delete merah */
+        color: var(--expense-red);
     }
     .category-item-actions button.delete:hover {
-        background-color: #ffe3e3; /* Latar delete hover merah muda */
+        background-color: #ffe3e3;
     }
     
     .dark .category-item-actions button {
@@ -240,8 +235,6 @@
     .dark .category-item-actions button.delete:hover {
         background-color: #5c2c2c;
     }
-    /* [AKHIR PERBAIKAN TOMBOL] */
-
 
     /* Spinner Preloader Halaman */
     #category-list-preloader {
@@ -280,22 +273,63 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* CSS untuk Modal */
+    /* [PERBAIKAN KUNCI] CSS untuk Modal */
     .form-group { margin-bottom: 15px; }
     .form-group label {
         display: block; font-size: 13px; font-weight: 500;
         color: var(--text-light); margin-bottom: 8px;
     }
-    .form-group .input-field,
-    .form-group .select-field {
-        width: 100%; padding: 12px; border: 1px solid #e0e0e0;
-        border-radius: 10px; background-color: var(--bg-gray);
+    
+    /* Style Input Field (Nama Kategori, Ikon) */
+    .form-group .input-field {
+        width: 100%; 
+        padding: 12px; 
+        border: 1px solid #e0e0e0;
+        border-radius: 10px; 
+        background-color: var(--bg-gray);
         font-size: 14px;
     }
-    .dark .form-group .input-field,
-    .dark .form-group .select-field {
-        background-color: #4b5563; border-color: #4b5563; color: white;
+
+    /* Style Select Field (Tipe Kategori) */
+    .form-group .select-field {
+        width: 100%; 
+        padding: 12px; 
+        border: 1px solid #e0e0e0;
+        border-radius: 10px; 
+        background-color: var(--bg-gray);
+        font-size: 14px;
+        
+        /* Hapus tampilan asli browser */
+        -webkit-appearance: none;
+        appearance: none;
+        
+        /* Tambah ruang untuk panah kustom */
+        padding-right: 40px; 
+        
+        /* Panah kustom (chevron down) warna abu-abu */
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23888%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20%2F%3E%3C%2Fsvg%3E');
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1.25em 1.25em;
     }
+
+    /* Dark Mode untuk Input */
+    .dark .form-group .input-field {
+        background-color: #4b5563; 
+        border-color: #4b5563; 
+        color: white;
+    }
+    
+    /* Dark Mode untuk Select */
+    .dark .form-group .select-field {
+        background-color: #4b5563; 
+        border-color: #4b5563; 
+        color: white;
+        /* Ganti panah SVG jadi warna putih */
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23FFFFFF%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20%2F%3E%3C%2Fsvg%3E');
+    }
+    /* [AKHIR PERBAIKAN CSS MODAL] */
+    
     .form-group .submit-btn {
         width: 100%; background: var(--primary-blue); color: white;
         border: none; padding: 12px; border-radius: 10px;
@@ -310,14 +344,12 @@
     }
     #modal-category-message.success { color: var(--income-green); }
     #modal-category-message.error { color: var(--expense-red); }
+
+    /* Ini sudah benar, adalah style untuk input ikon */
     .icon-input-modal {
         width: 60px !important; text-align: center;
         font-size: 24px !important; padding: 5px 10px !important;
-        border: 1px solid #e0e0e0; border-radius: 10px;
-        background-color: var(--bg-gray);
-    }
-    .dark .icon-input-modal {
-        background-color: #4b5563; border-color: #4b5563; color: white;
+        /* Ini adalah bagian dari .input-field, jadi sudah otomatis ter-style */
     }
 </style>
 
@@ -383,7 +415,7 @@
                 <div class="form-group" style="display: flex; gap: 10px;">
                     <div style="width: 60px;">
                          <label for="category-icon">Ikon</label>
-                         <input type="text" id="category-icon" class="icon-input-modal" maxlength="2" placeholder="刀">
+                         <input type="text" id="category-icon" class="input-field icon-input-modal" maxlength="2" placeholder="刀">
                     </div>
                     <div style="flex-grow: 1;">
                         <label for="category-name">Nama Kategori</label>
