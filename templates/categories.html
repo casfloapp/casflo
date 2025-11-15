@@ -42,6 +42,11 @@
         color: white;
         text-decoration: none;
         font-size: 20px;
+        /* [BARU] Menambahkan style agar <button> terlihat seperti link */
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
     }
 
     /* Styling Tab Primer (Tombol Ungu/Putih) */
@@ -64,6 +69,7 @@
         background: white;
         border: 1px solid #e9ecef;
         padding: 10px 16px;
+        border-bottom: none;
         cursor: pointer;
         transition: all 0.2s ease;
         flex-grow: 1;
@@ -272,14 +278,13 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* [PERBAIKAN KUNCI] CSS untuk Modal */
+    /* CSS untuk Modal */
     .form-group { margin-bottom: 15px; }
     .form-group label {
         display: block; font-size: 13px; font-weight: 500;
         color: var(--text-light); margin-bottom: 8px;
     }
     
-    /* Style Input Field (Nama Kategori, Ikon) */
     .form-group .input-field {
         width: 100%; 
         padding: 12px; 
@@ -289,7 +294,6 @@
         font-size: 14px;
     }
 
-    /* Style Select Field (Tipe Kategori) */
     .form-group .select-field {
         width: 100%; 
         padding: 12px; 
@@ -297,37 +301,27 @@
         border-radius: 10px; 
         background-color: var(--bg-gray);
         font-size: 14px;
-        
-        /* Hapus tampilan asli browser */
         -webkit-appearance: none;
         appearance: none;
-        
-        /* Tambah ruang untuk panah kustom */
         padding-right: 40px; 
-        
-        /* Panah kustom (chevron down) warna abu-abu */
         background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23888%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20%2F%3E%3C%2Fsvg%3E');
         background-repeat: no-repeat;
         background-position: right 0.75rem center;
         background-size: 1.25em 1.25em;
     }
 
-    /* Dark Mode untuk Input */
     .dark .form-group .input-field {
         background-color: #4b5563; 
         border-color: #4b5563; 
         color: white;
     }
     
-    /* Dark Mode untuk Select */
     .dark .form-group .select-field {
         background-color: #4b5563; 
         border-color: #4b5563; 
         color: white;
-        /* Ganti panah SVG jadi warna putih */
         background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23FFFFFF%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20%2F%3E%3C%2Fsvg%3E');
     }
-    /* [AKHIR PERBAIKAN CSS MODAL] */
     
     .form-group .submit-btn {
         width: 100%; background: var(--primary-blue); color: white;
@@ -344,20 +338,18 @@
     #modal-category-message.success { color: var(--income-green); }
     #modal-category-message.error { color: var(--expense-red); }
 
-    /* Ini sudah benar, adalah style untuk input ikon */
     .icon-input-modal {
         width: 60px !important; text-align: center;
         font-size: 24px !important; padding: 5px 10px !important;
-        /* Ini adalah bagian dari .input-field, jadi sudah otomatis ter-style */
     }
 </style>
-
-
 
 <div class="category-page-container">
     <header class="category-header">
         <div class="category-header-top">
-            <a href="/more" class="back-link"><i class="fas fa-chevron-left"></i></a>
+            <button onclick="history.back()" class="back-link">
+                <i class="fas fa-chevron-left"></i>
+            </button>
             <span>Manajemen Kategori</span>
             <a href="#" class="back-link" style="font-size: 22px;" onclick="openAddCategoryModal()">
                 <i class="fas fa-plus"></i>
@@ -415,8 +407,8 @@
                 <input type="hidden" id="category-id">
                 <div class="form-group" style="display: flex; gap: 10px;">
                     <div style="width: 60px;">
-                         <label for="category-icon">Ikon</label>
-                         <input type="text" id="category-icon" class="input-field icon-input-modal" maxlength="2" placeholder="">
+                         <label for="category-icon">Ikon (Bisa diganti)</label>
+                         <input type="text" id="category-icon" class="input-field icon-input-modal" maxlength="2" placeholder="📚">
                     </div>
                     <div style="flex-grow: 1;">
                         <label for="category-name">Nama Kategori</label>
