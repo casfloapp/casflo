@@ -1,0 +1,205 @@
+<style>
+    /* CSS untuk Halaman Transfer */
+    .transfer-view {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100svh;
+        max-width: 480px;
+        margin: 0 auto;
+        background-color: var(--bg-gray);
+    }
+    .dark .transfer-view {
+        background-color: #111827;
+    }
+    
+    /* Header (mirip create.html tapi lebih simpel) */
+    .add-header {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        flex-shrink: 0;
+        z-index: 100;
+        gap: 10px;
+    }
+    .dark .add-header {
+        background-color: #1f2937;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .add-header .close-btn, .add-header .check-btn {
+        font-size: 20px;
+        color: var(--text-light);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        flex-shrink: 0;
+        text-decoration: none;
+    }
+    .dark .add-header .close-btn, .dark .add-header .check-btn { color: #d1d5db; }
+    .add-header .header-title-transfer {
+        flex-grow: 1;
+        text-align: center;
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--text-dark);
+    }
+    .dark .add-header .header-title-transfer { color: white; }
+
+    /* Konten Transfer (Akun) */
+    .transfer-content {
+        padding: 20px;
+        flex-grow: 1;
+        overflow-y: auto;
+        padding-bottom: 410px; /* Ruang untuk kalkulator */
+    }
+    
+    .account-transfer-box {
+        background-color: white;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+        display: flex;
+        flex-direction: column;
+        gap: 15px; /* Jarak antara 'Dari' dan 'Ke' */
+    }
+    .dark .account-transfer-box {
+        background-color: #374151;
+    }
+    
+    .account-selector {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .account-label {
+        width: 30px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-light);
+        flex-shrink: 0;
+    }
+    
+    .account-select-btn {
+        flex-grow: 1;
+        background-color: var(--bg-gray);
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+    .dark .account-select-btn {
+        background-color: #4b5563;
+        border-color: #4b5563;
+    }
+    
+    .account-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        background-color: var(--light-purple);
+        color: var(--primary-blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+    .dark .account-icon {
+        background-color: #374151;
+        color: white;
+    }
+    
+    .account-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+    .dark .account-name { color: white; }
+
+</style>
+
+<div class="add-view active">
+    <div class="add-header">
+        <a href="/" class="close-btn"><i class="fas fa-times"></i></a>
+        <span class="header-title-transfer">Transfer</span>
+        <button class="check-btn" id="headerActionBtn"><i class="fas fa-check"></i></button>
+    </div>
+
+    <main class="transfer-content">
+        <div class="account-transfer-box">
+            <div class="account-selector">
+                <span class="account-label">Dari</span>
+                <button class="account-select-btn" id="from-account-btn" onclick="selectFromAccount()">
+                    <span class="account-icon" id="from-account-icon">Rp</span>
+                    <span class="account-name" id="from-account-name">Pilih Akun Asal...</span>
+                </button>
+            </div>
+            
+            <div class="account-selector">
+                <span class="account-label">Ke</span>
+                <button class="account-select-btn" id="to-account-btn" onclick="selectToAccount()">
+                    <span class="account-icon" id="to-account-icon">Rp</span>
+                    <span class="account-name" id="to-account-name">Pilih Akun Tujuan...</span>
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <div class="calculator-section" id="main-calculator-section">
+        <div id="calculator-view">
+            <div class="amount-container">
+                <button type="button" class="note-input-wrapper" onclick="openNotesView()">
+                    <i class="fas fa-file-alt"></i>
+                    <span id="notes-display-preview" class="notes-preview-text" data-placeholder="Catatan..."></span>
+                </button>
+                <div class="amount-display" id="amountDisplay">0</div>
+            </div>
+            <div class="unified-calc-grid">
+                <button class="action-btn account" onclick="selectAccount()"><i class="fas fa-credit-card" id="account-icon-display"></i></button>
+                <button class="action-btn today" onclick="selectDate()"><span id="create-date-display">TODAY</span></button>
+                
+                <button class="action-btn check" id="actionBtn" onclick="handleActionClick()">
+                    <i class="fas fa-check"></i>
+                </button>
+                
+                <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
+                <button class="calc-btn" onclick="appendToCalc('7')">7</button>
+                <button class="calc-btn" onclick="appendToCalc('8')">8</button>
+                <button class="calc-btn" onclick="appendToCalc('9')">9</button>
+                <button class="calc-btn operator" onclick="appendToCalc('/')">÷</button>
+                <button class="calc-btn" onclick="appendToCalc('4')">4</button>
+                <button class="calc-btn" onclick="appendToCalc('5')">5</button>
+                <button class="calc-btn" onclick="appendToCalc('6')">6</button>
+                <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+                <button class="calc-btn" onclick="appendToCalc('1')">1</button>
+                <button class="calc-btn" onclick="appendToCalc('2')">2</button>
+                <button class="calc-btn" onclick="appendToCalc('3')">3</button>
+                <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+                <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+                <button class="calc-btn" onclick="appendToCalc('0')">0</button>
+                <button class="calc-btn delete" onclick="deleteLast()"><i class="fas fa-backspace"></i></button>
+            </div>
+        </div>
+        <div id="notes-view">
+             <div class="notes-view-header">
+                <h3>Catatan Transaksi</h3>
+                <button class="notes-view-save" onclick="closeNotesView(true)">Selesai</button>
+            </div>
+            <div class="notes-view-body">
+                <textarea id="notes-modal-input" placeholder="Tulis catatan di sini max 50 char" maxlength="50"></textarea>
+                <div class="suggestion-pills-container">
+                    <div class="suggestion-pills-title">Sugesti Catatan</div>
+                    <div class="suggestion-pills" id="suggestion-pills-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

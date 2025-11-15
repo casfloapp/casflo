@@ -14,6 +14,7 @@ import createWalletPage from './templates/create-wallet.html'; // <-- [BARU] Imp
 import memberContent from './templates/member.html';
 import booksContent from './templates/books.html';
 import categoriesContent from './templates/categories.html';
+import transferContent from './templates/transfer.html';
 
 
 export default {
@@ -33,6 +34,7 @@ export default {
         if (path === '/auth/callback') {
             return new Response(authCallbackPage, { headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
         }
+        
 
         let pageContent;
         switch (path) {
@@ -62,6 +64,9 @@ export default {
                 break;
             case '/categories': /* [BLOK BARU DITAMBAHKAN] */
                 pageContent = categoriesContent;
+                break;
+            case '/transfer': // [BARU] Tambahkan case untuk /transfer
+                pageContent = transferContent;
                 break;
             default:
                 pageContent = mainContent;

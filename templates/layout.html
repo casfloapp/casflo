@@ -3598,7 +3598,38 @@ function initCreatePage() {
     updateCreateDateButton();
     console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
 }
-  
+
+function initTransferPage() {
+            console.log("Halaman Transfer diinisialisasi.");
+            // Karena kalkulatornya di-copy, kita perlu panggil fungsi-fungsi ini
+            // agar kalkulator di halaman transfer berfungsi.
+            // Kita juga set ID transaksi ke null, karena ini bukan mode edit.
+            currentTransactionId = null; 
+            selectedTransactionDate = new Date(); 
+            currentNotes = ''; 
+            clearCalc();
+            
+            updateCreateDateButton();
+            
+            // [BARU] Pasang listener ke tombol Selesai di header
+            const headerCheckBtn = document.getElementById('headerActionBtn');
+            if (headerCheckBtn) {
+                headerCheckBtn.onclick = handleHeaderActionClick; // Panggil fungsi simpan
+            }
+
+            // [BARU] Logika untuk memilih akun (perlu diimplementasikan)
+            // Anda bisa copy-paste fungsi modal dari project Anda sebelumnya
+            window.selectFromAccount = () => {
+                // TODO: Buka modal untuk memilih akun 'Dari'
+                alert('Pilih Akun Asal');
+            };
+            
+            window.selectToAccount = () => {
+                // TODO: Buka modal untuk memilih akun 'Ke'
+                alert('Pilih Akun Tujuan');
+            };
+        }
+
 function initWalletPage() { 
             console.log("Halaman dompet dimuat."); 
             // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini
@@ -4991,6 +5022,8 @@ function initBooksPage() {
             else if (path === '/books') { initBooksPage(); } // <-- Ganti dari /member
             else if (path === '/create-wallet') { initCreateWalletPage(); }
             else if (path === '/categories') { initCategoriesPage(); } 
+            else if (path === '/transfer') { initTransferPage(); }
+
         }
 
         function executePageScript(newContentElement) {
