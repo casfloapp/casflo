@@ -44,80 +44,77 @@
         font-size: 20px;
     }
 
-    /* [PERBAIKAN TOTAL] Styling Tab Primer (Pengeluaran/Pemasukan) */
+    /* Styling Tab Primer (Pengeluaran/Pemasukan) */
     .primary-tab-container {
         display: flex;
         justify-content: center;
-        background-color: var(--bg-gray); /* [DIUBAH] Samakan dgn body */
+        background-color: var(--bg-gray);
         padding: 15px 20px 10px 20px;
         flex-shrink: 0;
         border-bottom: 1px solid var(--bg-gray);
-        gap: 10px; /* Jarak antar tombol */
+        gap: 10px;
     }
     .dark .primary-tab-container {
-        background-color: #111827; /* [DIUBAH] Samakan dgn body dark */
+        background-color: #111827;
         border-bottom-color: #111827;
     }
 
     .primary-tab-btn {
         font-size: 14px;
-        font-weight: 500; /* [DIUBAH] Font weight normal (tidak tebal) */
-        background: white; /* [DIUBAH] Inactive = putih */
-        border: 1px solid #e9ecef; /* [BARU] Border tipis abu-abu */
-        padding: 10px 16px; 
+        font-weight: 500;
+        background: white;
+        border: 1px solid #e9ecef;
+        padding: 10px 16px;
+        border-bottom: none;
         cursor: pointer;
         transition: all 0.2s ease;
         flex-grow: 1;
         text-align: center;
         max-width: 50%;
-        border-radius: 12px; 
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
     }
 
-    /* [DIUBAH] Style Tombol Pengeluaran (Inactive) */
     .primary-tab-btn.expense-tab {
-        color: var(--text-dark); /* Teks inactive jadi gelap */
+        color: var(--text-dark);
     }
     .primary-tab-btn.expense-tab .icon-expense {
-        color: var(--expense-red); /* Ikon tetap merah */
+        color: var(--expense-red);
     }
 
-    /* [DIUBAH] Style Tombol Pemasukan (Inactive) */
     .primary-tab-btn.income-tab {
-        color: var(--text-dark); /* Teks inactive jadi gelap */
+        color: var(--text-dark);
     }
     .primary-tab-btn.income-tab .icon-income {
-        color: var(--income-green); /* Ikon tetap hijau */
+        color: var(--income-green);
     }
 
-    /* [DIUBAH] Style Tombol ACTIVE (jadi ungu) */
     .primary-tab-btn.active {
-        background: var(--primary-blue); /* Latar ungu */
+        background: var(--primary-blue);
         border-color: var(--primary-blue);
-        color: white; /* Teks putih */
-        font-weight: 600; /* Sedikit tebal saat aktif */
+        color: white;
+        font-weight: 600;
     }
-    /* Ikon di tombol active jadi putih */
     .primary-tab-btn.active .icon-expense,
     .primary-tab-btn.active .icon-income {
         color: white;
     }
 
-    /* [PERBAIKAN] CSS Dark Mode untuk Tombol */
+    /* Dark Mode untuk Tombol */
     .dark .primary-tab-btn {
-        background: #374151; /* Inactive = abu-abu gelap */
-        border-color: #4b5563; /* Border inactive */
-        color: #d1d5db; /* Teks inactive jadi terang */
+        background: #374151;
+        border-color: #4b5563;
+        color: #d1d5db;
     }
     
     .dark .primary-tab-btn.expense-tab .icon-expense { color: var(--expense-red); }
     .dark .primary-tab-btn.income-tab .icon-income { color: var(--income-green); }
 
     .dark .primary-tab-btn.active {
-        background: var(--primary-blue); /* Active = ungu */
+        background: var(--primary-blue);
         border-color: var(--primary-blue);
         color: white;
     }
@@ -125,14 +122,13 @@
     .dark .primary-tab-btn.active .icon-income {
         color: white;
     }
-    /* [AKHIR PERBAIKAN] */
-
 
     /* Konten Utama */
     .category-content {
         flex-grow: 1;
         overflow-y: auto;
         padding: 15px 20px 100px 20px;
+        position: relative; /* Penting untuk positioning spinner */
     }
     
     .tab-panel { display: none; }
@@ -146,7 +142,7 @@
         box-shadow: 0 4px 25px rgba(0,0,0,0.06);
         margin-bottom: 15px;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); 
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); 
         gap: 20px;
     }
     .dark .category-list-card { background-color: #374151; }
@@ -192,14 +188,13 @@
     .category-item-details {
         flex-grow: 0;
         overflow: hidden;
-        font-weight: 200;
+        font-weight: 600;
         color: var(--text-dark);
         white-space: nowrap;
         text-overflow: ellipsis;
         margin-bottom: 10px;
         text-align: center;
         width: 100%;
-        font-size: small;
     }
     .dark .category-item-details { color: white; }
     
@@ -214,10 +209,36 @@
     }
     .category-item-actions .delete { color: var(--expense-red); }
 
-    /* Spinner */
-    .inline-spinner {
-        display: none; width: 1rem; height: 1rem;
-        border: 2px solid var(--primary-blue);
+    /* [PERBAIKAN] Spinner untuk Preloader */
+    .full-content-spinner {
+        position: absolute; /* Posisikan absolut di dalam category-content */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Pusatkan spinner */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px; /* Ukuran spinner */
+        height: 30px;
+        border: 3px solid var(--primary-blue);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.8s ease-in-out infinite;
+        z-index: 10;
+        /* Tambahkan background agar terlihat jelas di atas konten */
+        background-color: transparent; 
+    }
+    .dark .full-content-spinner {
+        border-color: white; /* Spinner putih di dark mode */
+        border-top-color: transparent;
+    }
+
+    /* Sembunyikan spinner internal di tombol modal jika ada */
+    .loading-spinner {
+        display: none;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid white;
         border-top-color: transparent;
         border-radius: 50%;
         animation: spin 0.8s ease-in-out infinite;
@@ -300,10 +321,7 @@
                 </div>
         </div>
         
-        <div id="category-list-message" style="text-align: center; padding: 20px; color: var(--text-light);">
-            <span class="inline-spinner" style="display: inline-block; border-color: var(--primary-blue); border-top-color: transparent;"></span>
-            <span style="margin-left: 10px;">Memuat kategori...</span>
-        </div>
+        <div class="full-content-spinner" id="category-list-spinner"></div>
 
     </main>
 
