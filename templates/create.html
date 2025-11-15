@@ -54,16 +54,25 @@
         font-size: 13px;
         font-weight: 500;
         cursor: pointer;
-        transition: background-color 0.2s, color 0.2s;
+        /* [DIUBAH] Menambahkan transisi untuk flex-grow dan padding */
+        transition: background-color 0.2s, color 0.2s, flex-grow 0.3s ease-in-out, padding 0.3s ease-in-out;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 5px;
         text-decoration: none;
+        white-space: nowrap; /* [DITAMBAHKAN] Mencegah teks turun baris */
     }
     .dark .tab-button { color: #d1d5db; }
 
+    /* [BARU] Tombol yang tidak aktif akan menyusut */
+    .tab-button:not(.active) {
+        flex-grow: 0;
+        padding: 8px 12px; /* Padding simetris untuk ikon */
+    }
+
     .tab-button.active {
+        flex-grow: 1; /* [DITAMBAHKAN] Pastikan tombol aktif mengembang */
         background-color: white;
         color: var(--primary-blue);
         font-weight: 600;
@@ -72,6 +81,22 @@
     .dark .tab-button.active {
         background-color: #1f2937;
         color: white;
+    }
+
+    /* [BARU] Logika untuk animasi hide/show teks span */
+    .tab-button span {
+        display: inline-block;
+        transition: max-width 0.3s ease-in-out, opacity 0.2s ease-in-out, margin-left 0.3s ease-in-out;
+        max-width: 100px; /* Lebar maks untuk teks */
+        opacity: 1;
+        margin-left: 5px; /* Jarak dari ikon */
+        overflow: hidden;
+    }
+    
+    .tab-button:not(.active) span {
+        max-width: 0; /* Sembunyikan teks */
+        opacity: 0;
+        margin-left: 0; /* Hapus jarak */
     }
 
     /* Ikon di dalam tab-button */
