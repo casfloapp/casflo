@@ -2652,42 +2652,19 @@ function renderDateModalCalendar() {
         }
 
         function deleteLast() { calcValue = calcValue.slice(0, -1) || '0'; checkWaitingForEquals(); updateDisplay(); }
-        async function handleActionClick() { 
+        
+        function handleActionClick() { 
+            // Fungsi ini dipanggil oleh tombol check di grid kalkulator,
+            // yang sekarang kita sembunyikan.
+            // Kita ubah panggilannya ke tombol header
             if (waitingForEquals) {
                 calculateResult(); 
                 return;
             }
-            
-            const checkBtn = document.getElementById('actionBtn');
-            if (!checkBtn) return;
-
-            // 1. Tampilkan preloader
-            checkBtn.disabled = true;
-            checkBtn.innerHTML = '<span class="loading-spinner active"></span>';
-            
-            try {
-                if (currentTransactionId) {
-                    await updateTransaction(); // Asumsikan updateTransaction juga diubah (jika belum, bisa error)
-                } else {
-                    await saveTransaction(); // Panggil fungsi simpan yang baru
-                }
-                
-                // 2. Sukses: Reset UI dan tutup halaman
-                clearCalc(); 
-                currentNotes = ''; 
-                const notesPreview = document.getElementById('notes-display-preview');
-                if (notesPreview) notesPreview.textContent = '';
-                
-                navigate('/'); // Navigasi pulang
-
-            } catch (error) {
-                // 3. Gagal: Tampilkan error dan pulihkan tombol
-                showDialog({ title: 'Error', text: error.message });
-                checkBtn.disabled = false;
-                checkBtn.innerHTML = '<i class="fas fa-check"></i>';
-            } 
-            // 'finally' tidak diperlukan karena halaman akan navigasi jika sukses
+            // Panggil fungsi header sebagai gantinya
+            handleHeaderActionClick();
         }
+        
         async function addNewItem() {
             if (waitingForEquals) {
                 calculateResult();
@@ -2734,18 +2711,177 @@ function renderDateModalCalendar() {
             }
         }
         /* [BARU] Fungsi untuk Tab Primer (Pengeluaran/Pemasukan) */
-        function selectPrimaryTab(type) {
-            currentType = type;
-            selectedCategory = null; // Reset pilihan kategori saat ganti tab
-            document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected'));
+function selectPrimaryTab(tabName) {
+            // Jangan lakukan apa-apa jika tab sudah aktif
+            if (currentType === tabName) return; 
 
-            // Ganti tombol aktif
-            document.getElementById('primary-tab-expense').classList.toggle('active', type === 'expense');
-            document.getElementById('primary-tab-income').classList.toggle('active', type === 'income');
+            currentType = tabName; // 'expense', 'income', atau 'transfer'
             
-            // Ganti panel aktif
-            document.getElementById('expense-panel').classList.toggle('active', type === 'expense');
-            document.getElementById('income-panel').classList.toggle('active', type === 'income');
+            // Atur tombol header
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            const selectedTabButton = document.getElementById(`primary-tab-${tabName}`);
+            if (selectedTabButton) {
+                selectedTabButton.classList.add('active');
+            }
+
+            // Atur container utama
+            const addView = document.getElementById('add-view-container');
+            const categoryPanels = document.getElementById('category-panel-container');
+            const transferPanel = document.getElementById('transfer-content-wrapper');
+
+            if (tabName === 'transfer') {
+                addView.classList.add('transfer-active');
+                categoryPanels.style.display = 'none';
+                transferPanel.style.display = 'flex';
+            } else {
+                addView.classList.remove('transfer-active');
+                categoryPanels.style.display = 'block';
+                transferPanel.style.display = 'none';
+                
+                // Atur panel kategori internal
+                document.querySelectorAll('.category-panel').forEach(panel => panel.classList.remove('active'));
+                const selectedPanel = document.getElementById(`${tabName}-panel`);
+                if (selectedPanel) {
+                    selectedPanel.classList.add('active');
+                }
+            }
+            
+            // Reset pilihan kategori saat ganti tab utama
+            selectedCategory = null; 
+            document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected'));
+        }
+
+        // [BARU] Logika untuk Halaman Transfer
+        function setupTransferAccounts() {
+            if (!allAccounts || allAccounts.length === 0) {
+                console.warn("Daftar akun (allAccounts) kosong. Tidak dapat setup transfer.");
+                return;
+            }
+            
+            // Set default: akun pertama sebagai 'Dari'
+            const defaultFromAccount = allAccounts[0];
+            fromAccountId = defaultFromAccount.id;
+            const fromIcon = document.getElementById('from-account-icon');
+            const fromName = document.getElementById('from-account-name');
+            if(fromIcon) fromIcon.textContent = defaultFromAccount.name.substring(0, 2).toUpperCase();
+            if(fromName) fromName.textContent = defaultFromAccount.name;
+
+            // Set default: akun kedua (jika ada) sebagai 'Ke'
+            if (allAccounts.length > 1) {
+                const defaultToAccount = allAccounts[1];
+                toAccountId = defaultToAccount.id;
+                const toIcon = document.getElementById('to-account-icon');
+                const toName = document.getElementById('to-account-name');
+                if(toIcon) toIcon.textContent = defaultToAccount.name.substring(0, 2).toUpperCase();
+                if(toName) toName.textContent = defaultToAccount.name;
+            }
+        }
+
+        function selectTransferAccount(type) {
+            // 'type' adalah 'from' atau 'to'
+            // TODO: Ganti 'alert' ini dengan modal pemilih akun Anda
+            
+            // Ini adalah contoh cara kerjanya jika Anda punya modal:
+            // openAccountSelectorModal(type, (selectedAccount) => {
+            //     if (type === 'from') {
+            //         fromAccountId = selectedAccount.id;
+            //         document.getElementById('from-account-icon').textContent = selectedAccount.name.substring(0, 2).toUpperCase();
+            //         document.getElementById('from-account-name').textContent = selectedAccount.name;
+            //     } else {
+            //         toAccountId = selectedAccount.id;
+            //         document.getElementById('to-account-icon').textContent = selectedAccount.name.substring(0, 2).toUpperCase();
+            //         document.getElementById('to-account-name').textContent = selectedAccount.name;
+            //     }
+            // });
+            
+            alert(`Fungsi untuk memilih akun '${type}' belum dibuat.`);
+        }
+
+
+        // [PERBAIKAN] Arahkan tombol 'Selesai' di header ke fungsi yang tepat
+        async function handleHeaderActionClick() {
+            // Panggil fungsi saveTransaction (yang lama) jika bukan transfer
+            if (currentType === 'expense' || currentType === 'income') {
+                const checkBtn = document.getElementById('headerActionBtn');
+                if (!checkBtn) return;
+
+                // 1. Tampilkan preloader
+                checkBtn.disabled = true;
+                checkBtn.innerHTML = '<span class="loading-spinner active" style="border-color: var(--primary-blue); border-top-color: transparent;"></span>';
+                
+                try {
+                    if (currentTransactionId) {
+                        await updateTransaction();
+                    } else {
+                        await saveTransaction(); // Ini adalah fungsi lama Anda
+                    }
+                    
+                    clearCalc(); 
+                    currentNotes = ''; 
+                    const notesPreview = document.getElementById('notes-display-preview');
+                    if (notesPreview) notesPreview.textContent = '';
+                    
+                    navigate('/'); // Navigasi pulang
+
+                } catch (error) {
+                    showDialog({ title: 'Error', text: error.message });
+                    checkBtn.disabled = false;
+                    checkBtn.innerHTML = '<i class="fas fa-check"></i>';
+                }
+            } else if (currentType === 'transfer') {
+                await handleSaveTransfer();
+            }
+        }
+
+        // [BARU] Fungsi untuk menyimpan transfer
+        async function handleSaveTransfer() {
+            const amount = parseFloat(calcValue);
+            if (isNaN(amount) || amount <= 0) {
+                showDialog({ title: 'Input Tidak Valid', text: 'Masukkan jumlah yang valid.' });
+                return;
+            }
+            if (!fromAccountId || !toAccountId) {
+                showDialog({ title: 'Input Tidak Lengkap', text: 'Pilih akun asal dan tujuan.' });
+                return;
+            }
+            if (fromAccountId === toAccountId) {
+                showDialog({ title: 'Input Tidak Valid', text: 'Akun asal dan tujuan tidak boleh sama.' });
+                return;
+            }
+
+            const headerCheckBtn = document.getElementById('headerActionBtn');
+            headerCheckBtn.disabled = true;
+            headerCheckBtn.innerHTML = '<span class="loading-spinner active" style="border-color: var(--primary-blue); border-top-color: transparent;"></span>';
+
+            try {
+                const walletId = localStorage.getItem('currentWalletId');
+                const payload = {
+                    wallet_id: walletId,
+                    type: 'TRANSFER',
+                    amount: amount,
+                    from_account_id: fromAccountId,
+                    to_account_id: toAccountId,
+                    description: currentNotes || 'Transfer',
+                    transaction_date: selectedTransactionDate.toISOString().split('T')[0],
+                };
+                
+                // Panggil API (asumsi endpoint ada di /transfer)
+                // ANDA HARUS MEMBUAT ENDPOINT API INI DI BACKEND ANDA
+                await fetchApi(`/wallets/${walletId}/transactions/transfer`, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                // Sukses
+                clearCalc();
+                currentNotes = '';
+                navigate('/');
+
+            } catch (error) {
+                showDialog({ title: 'Error', text: error.message });
+                headerCheckBtn.disabled = false;
+                headerCheckBtn.innerHTML = '<i class="fas fa-check"></i>';
+            }
         }
 
         /* [BARU] Fungsi untuk Sub-Tab (Direkomendasikan/Semua) */
@@ -3535,99 +3671,75 @@ function renderTransactionList(filteredTransactions) {
         document.getElementById('header-right-side')?.classList.remove('loading');
     }
   // GANTI FUNGSI LAMA DENGAN INI
-function initCreatePage() {
-    const notesPreview = document.getElementById('notes-display-preview');
-    const txToEditJSON = sessionStorage.getItem('tx_for_edit');
+// [BARU] Variabel untuk transfer
+        let fromAccountId = null;
+        let toAccountId = null;
 
-    // [BARU] Render SEMUA kategori (expense & income) di background
-    renderAllCategories();
+        function initCreatePage() {
+            const notesPreview = document.getElementById('notes-display-preview');
+            const txToEditJSON = sessionStorage.getItem('tx_for_edit');
 
-    if (txToEditJSON) {
-        // === MODE EDIT ===
-        const tx = JSON.parse(txToEditJSON);
-        currentTransactionId = tx.id; 
-        currentType = tx.type; // 'expense' atau 'income'
-        calcValue = String(tx.amount);
-        selectedAccountId = tx.account_id;
-        selectedCategory = allCategories.find(c => c.id === tx.category_id);
-        selectedTransactionDate = new Date(tx.date); 
-        currentNotes = tx.notes || ''; 
-
-        // [DIUBAH] Panggil selectPrimaryTab untuk atur UI
-        selectPrimaryTab(currentType);
-        
-        updateDisplay(); 
-        updateAccountIcon(selectedAccountId); 
-        if (notesPreview) notesPreview.textContent = currentNotes;
-        
-        // Pilih kategori yang sedang diedit
-        setTimeout(() => {
-            const activePanel = document.querySelector(`.category-panel.active`);
-            if (activePanel && selectedCategory) {
-                // Cek di grid "Semua"
-                const catElement = activePanel.querySelector(`#allGrid-${currentType} [onclick*="'${selectedCategory.id}'"]`);
-                if (catElement) {
-                    catElement.classList.add('selected');
-                    // Jika kategori ada di 'Semua', pindah ke tab 'Semua'
-                    const allTabBtn = activePanel.querySelector('.secondary-tab-btn:last-child');
-                    if(allTabBtn) selectSecondaryTab(allTabBtn, `allGrid-${currentType}`);
-                }
-            }
-        }, 0); // Beri jeda agar UI selesai render
-
-        sessionStorage.removeItem('tx_for_edit');
-
-    } else {
-        // === MODE BUAT BARU ===
-        currentTransactionId = null; 
-        currentType = 'expense';
-        selectedCategory = null;
-        selectedTransactionDate = new Date(); 
-        currentNotes = ''; 
-        clearCalc();
-        
-        // Atur tab default ke Pengeluaran & Direkomendasikan
-        selectPrimaryTab('expense'); 
-        const defaultTab = document.querySelector('#expense-panel .secondary-tab-btn');
-        if(defaultTab) selectSecondaryTab(defaultTab, 'expense-recommended');
-
-        updateAccountIcon(selectedAccountId); 
-        if (notesPreview) notesPreview.textContent = ''; 
-    }
-
-    updateCreateDateButton();
-    console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
-}
-
-function initTransferPage() {
-            console.log("Halaman Transfer diinisialisasi.");
-            // Karena kalkulatornya di-copy, kita perlu panggil fungsi-fungsi ini
-            // agar kalkulator di halaman transfer berfungsi.
-            // Kita juga set ID transaksi ke null, karena ini bukan mode edit.
-            currentTransactionId = null; 
-            selectedTransactionDate = new Date(); 
-            currentNotes = ''; 
-            clearCalc();
-            
-            updateCreateDateButton();
-            
-            // [BARU] Pasang listener ke tombol Selesai di header
-            const headerCheckBtn = document.getElementById('headerActionBtn');
-            if (headerCheckBtn) {
-                headerCheckBtn.onclick = handleHeaderActionClick; // Panggil fungsi simpan
+            if (window.renderAllCategories) {
+                window.renderAllCategories();
+            } else {
+                console.error("Fungsi global 'renderAllCategories' tidak ditemukan.");
             }
 
-            // [BARU] Logika untuk memilih akun (perlu diimplementasikan)
-            // Anda bisa copy-paste fungsi modal dari project Anda sebelumnya
-            window.selectFromAccount = () => {
-                // TODO: Buka modal untuk memilih akun 'Dari'
-                alert('Pilih Akun Asal');
-            };
+            if (txToEditJSON) {
+                // === MODE EDIT ===
+                const tx = JSON.parse(txToEditJSON);
+                currentTransactionId = tx.id; 
+                currentType = tx.type; // 'expense' atau 'income'
+                calcValue = String(tx.amount);
+                selectedAccountId = tx.account_id;
+                selectedCategory = window.allCategories.find(c => c.id === tx.category_id);
+                selectedTransactionDate = new Date(tx.date); 
+                currentNotes = tx.notes || ''; 
+
+                selectPrimaryTab(currentType);
+                
+                if (window.updateDisplay) window.updateDisplay(); 
+                if (window.updateAccountIcon) window.updateAccountIcon(selectedAccountId); 
+                if (notesPreview) notesPreview.textContent = currentNotes;
+                
+                setTimeout(() => {
+                    const activePanel = document.querySelector(`.category-panel.active`);
+                    if (activePanel && selectedCategory) {
+                        const catElement = activePanel.querySelector(`#allGrid-${currentType} [onclick*="'${selectedCategory.id}'"]`);
+                        if (catElement) {
+                            catElement.classList.add('selected');
+                            const allTabBtn = activePanel.querySelector('.secondary-tab-btn:last-child');
+                            if(allTabBtn) selectSecondaryTab(allTabBtn, `allGrid-${currentType}`);
+                        }
+                    }
+                }, 0);
+
+                sessionStorage.removeItem('tx_for_edit');
+
+            } else {
+                // === MODE BUAT BARU ===
+                currentTransactionId = null; 
+                currentType = 'expense';
+                selectedCategory = null;
+                selectedTransactionDate = new Date(); 
+                currentNotes = ''; 
+                if (window.clearCalc) window.clearCalc();
+                
+                selectPrimaryTab('expense'); // Default ke 'expense'
+                
+                const defaultTab = document.querySelector('#expense-panel .secondary-tab-btn');
+                if(defaultTab) selectSecondaryTab(defaultTab, 'expense-recommended');
+
+                if (window.updateAccountIcon) window.updateAccountIcon(selectedAccountId); 
+                if (notesPreview) notesPreview.textContent = ''; 
+            }
+
+            if (window.updateCreateDateButton) window.updateCreateDateButton();
             
-            window.selectToAccount = () => {
-                // TODO: Buka modal untuk memilih akun 'Ke'
-                alert('Pilih Akun Tujuan');
-            };
+            // [BARU] Inisialisasi tombol akun untuk transfer
+            setupTransferAccounts();
+
+            console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
         }
 
 function initWalletPage() { 
@@ -5022,7 +5134,6 @@ function initBooksPage() {
             else if (path === '/books') { initBooksPage(); } // <-- Ganti dari /member
             else if (path === '/create-wallet') { initCreateWalletPage(); }
             else if (path === '/categories') { initCategoriesPage(); } 
-            else if (path === '/transfer') { initTransferPage(); }
 
         }
 
