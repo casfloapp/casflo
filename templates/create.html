@@ -732,7 +732,7 @@
     </div>
 
     
-    <div class="calculator-section" id="main-calculator-section">
+      <div class="calculator-section" id="main-calculator-section">
         <div id="calculator-view">
             <div class="amount-container">
                 <button type="button" class="note-input-wrapper" onclick="openNotesView()">
@@ -745,9 +745,7 @@
                 <button class="action-btn account" onclick="selectAccount()"><i class="fas fa-credit-card" id="account-icon-display"></i></button>
                 <button class="action-btn today" onclick="selectDate()"><span id="create-date-display">TODAY</span></button>
                 <button class="action-btn add" id="addBtn" onclick="addNewItem()"><i class="fas fa-plus"></i></button>
-                <button class="action-btn check" id="actionBtn" onclick="handleActionClick()" style="display: none;">
-                    <i class="fas fa-check"></i>
-                </button>
+                <button class="action-btn check" id="actionBtn" onclick="handleActionClick()"><i class="fas fa-check"></i></button>
                 <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
                 <button class="calc-btn" onclick="appendToCalc('7')">7</button>
                 <button class="calc-btn" onclick="appendToCalc('8')">8</button>
