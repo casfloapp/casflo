@@ -2664,7 +2664,7 @@ function renderDateModalCalendar() {
             // Panggil fungsi header sebagai gantinya
             handleHeaderActionClick();
         }
-        
+
         async function addNewItem() {
             if (waitingForEquals) {
                 calculateResult();
@@ -2751,7 +2751,7 @@ function selectPrimaryTab(tabName) {
             document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected'));
         }
 
-        // [BARU] Logika untuk Halaman Transfer
+// [BARU] Logika untuk Halaman Transfer
         function setupTransferAccounts() {
             if (!allAccounts || allAccounts.length === 0) {
                 console.warn("Daftar akun (allAccounts) kosong. Tidak dapat setup transfer.");
@@ -2777,6 +2777,113 @@ function selectPrimaryTab(tabName) {
             }
         }
 
+        function selectTransferAccount(type) {
+            // 'type' adalah 'from' atau 'to'
+            // TODO: Ganti 'alert' ini dengan modal pemilih akun Anda
+            
+            // Ini adalah contoh cara kerjanya jika Anda punya modal:
+            // openAccountSelectorModal(type, (selectedAccount) => {
+            //     if (type === 'from') {
+            //         fromAccountId = selectedAccount.id;
+            //         document.getElementById('from-account-icon').textContent = selectedAccount.name.substring(0, 2).toUpperCase();
+            //         document.getElementById('from-account-name').textContent = selectedAccount.name;
+            //     } else {
+            //         toAccountId = selectedAccount.id;
+            //         document.getElementById('to-account-icon').textContent = selectedAccount.name.substring(0, 2).toUpperCase();
+            //         document.getElementById('to-account-name').textContent = selectedAccount.name;
+            //     }
+            // });
+            
+            alert(`Fungsi untuk memilih akun '${type}' belum dibuat.`);
+        }
+
+
+        // [PERBAIKAN] Arahkan tombol 'Selesai' di header ke fungsi yang tepat
+        async function handleHeaderActionClick() {
+            // Panggil fungsi saveTransaction (yang lama) jika bukan transfer
+            if (currentType === 'expense' || currentType === 'income') {
+                const checkBtn = document.getElementById('headerActionBtn');
+                if (!checkBtn) return;
+
+                // 1. Tampilkan preloader
+                checkBtn.disabled = true;
+                checkBtn.innerHTML = '<span class="loading-spinner active" style="border-color: var(--primary-blue); border-top-color: transparent;"></span>';
+                
+                try {
+                    if (currentTransactionId) {
+                        await updateTransaction();
+                    } else {
+                        await saveTransaction(); // Ini adalah fungsi lama Anda
+                    }
+                    
+                    clearCalc(); 
+                    currentNotes = ''; 
+                    const notesPreview = document.getElementById('notes-display-preview');
+                    if (notesPreview) notesPreview.textContent = '';
+                    
+                    navigate('/'); // Navigasi pulang
+
+                } catch (error) {
+                    showDialog({ title: 'Error', text: error.message });
+                    checkBtn.disabled = false;
+                    checkBtn.innerHTML = '<i class="fas fa-check"></i>';
+                }
+            } else if (currentType === 'transfer') {
+                await handleSaveTransfer();
+            }
+        }
+
+        // [BARU] Fungsi untuk menyimpan transfer
+        async function handleSaveTransfer() {
+            const amount = parseFloat(calcValue);
+            if (isNaN(amount) || amount <= 0) {
+                showDialog({ title: 'Input Tidak Valid', text: 'Masukkan jumlah yang valid.' });
+                return;
+            }
+            if (!fromAccountId || !toAccountId) {
+                showDialog({ title: 'Input Tidak Lengkap', text: 'Pilih akun asal dan tujuan.' });
+                return;
+            }
+            if (fromAccountId === toAccountId) {
+                showDialog({ title: 'Input Tidak Valid', text: 'Akun asal dan tujuan tidak boleh sama.' });
+                return;
+            }
+
+            const headerCheckBtn = document.getElementById('headerActionBtn');
+            headerCheckBtn.disabled = true;
+            headerCheckBtn.innerHTML = '<span class="loading-spinner active" style="border-color: var(--primary-blue); border-top-color: transparent;"></span>';
+
+            try {
+                const walletId = localStorage.getItem('currentWalletId');
+                const payload = {
+                    wallet_id: walletId,
+                    type: 'TRANSFER',
+                    amount: amount,
+                    from_account_id: fromAccountId,
+                    to_account_id: toAccountId,
+                    description: currentNotes || 'Transfer',
+                    transaction_date: selectedTransactionDate.toISOString().split('T')[0],
+                };
+                
+                // Panggil API (asumsi endpoint ada di /transfer)
+                // ANDA HARUS MEMBUAT ENDPOINT API INI DI BACKEND ANDA
+                await fetchApi(`/wallets/${walletId}/transactions/transfer`, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                // Sukses
+                clearCalc();
+                currentNotes = '';
+                navigate('/');
+
+            } catch (error) {
+                showDialog({ title: 'Error', text: error.message });
+                headerCheckBtn.disabled = false;
+                headerCheckBtn.innerHTML = '<i class="fas fa-check"></i>';
+            }
+        }
+        
         function selectTransferAccount(type) {
             // 'type' adalah 'from' atau 'to'
             // TODO: Ganti 'alert' ini dengan modal pemilih akun Anda
@@ -3675,7 +3782,7 @@ function renderTransactionList(filteredTransactions) {
         let fromAccountId = null;
         let toAccountId = null;
 
-        function initCreatePage() {
+function initCreatePage() {
             const notesPreview = document.getElementById('notes-display-preview');
             const txToEditJSON = sessionStorage.getItem('tx_for_edit');
 
@@ -3741,7 +3848,6 @@ function renderTransactionList(filteredTransactions) {
 
             console.log(`Halaman Create dimuat (Mode: ${currentTransactionId ? 'Edit' : 'Baru'})`);
         }
-
 function initWalletPage() { 
             console.log("Halaman dompet dimuat."); 
             // [BARU] Pasang listener untuk tombol mode gelap/terang di halaman ini

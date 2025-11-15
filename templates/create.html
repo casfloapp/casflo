@@ -4,11 +4,11 @@
         display: flex;
         align-items: center;
         padding: 10px 15px;
-        background-color: white; /* Header background putih */
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Sedikit shadow */
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         flex-shrink: 0;
         z-index: 100;
-        gap: 10px; /* Jarak antar elemen header */
+        gap: 10px;
     }
     .dark .add-header {
         background-color: #1f2937;
@@ -22,7 +22,7 @@
         border: none;
         cursor: pointer;
         padding: 5px;
-        flex-shrink: 0; /* Jangan menyusut */
+        flex-shrink: 0;
         text-decoration: none;
     }
     .dark .close-btn, .dark .check-btn { color: #d1d5db; }
@@ -40,7 +40,7 @@
         background-color: var(--bg-gray);
         border-radius: 12px;
         padding: 5px;
-        flex-grow: 1; /* Agar group ini mengambil ruang tersisa */
+        flex-grow: 1;
     }
     .dark .tab-button-group { background-color: #374151; }
 
@@ -48,18 +48,18 @@
         flex-grow: 1;
         padding: 8px 10px;
         border: none;
-        border-radius: 9px; /* Lebih kecil dari group */
+        border-radius: 9px;
         background-color: transparent;
         color: var(--text-dark);
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 500;
         cursor: pointer;
         transition: background-color 0.2s, color 0.2s;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 5px; /* Jarak ikon dan teks */
-        text-decoration: none; /* Untuk tombol transfer yang jadi <a> */
+        gap: 5px;
+        text-decoration: none;
     }
     .dark .tab-button { color: #d1d5db; }
 
@@ -74,26 +74,27 @@
         color: white;
     }
 
-    /* Ikon di dalam tab-button */
-    .tab-button i {
-        font-size: 14px;
-    }
+    .tab-button i { font-size: 14px; }
     .tab-button.expense-tab.active i { color: var(--expense-red); }
     .tab-button.income-tab.active i { color: var(--income-green); }
-    .tab-button.transfer-tab { 
-        color: var(--text-dark); /* Selalu biru, walau tidak aktif */
-    }
-    .dark .tab-button.transfer-tab {
-        color: #d1d5db;
-    }
-    
-    /* [AKHIR PERBAIKAN] */
-        
+    .tab-button.transfer-tab { color: var(--text-dark); }
+    .dark .tab-button.transfer-tab { color: #d1d5db; }
+    .tab-button.transfer-tab.active { color: var(--primary-blue); }
+    .dark .tab-button.transfer-tab.active { color: white; }
+    /* [AKHIR CSS HEADER] */
+
+    /* Kontainer Panel Kategori (untuk Pengeluaran/Pemasukan) */
     .category-panel-container {
+        display: none; /* [DIUBAH] Sembunyi by default */
+        flex-direction: column;
         flex-grow: 1;
         position: relative;
         overflow: hidden;
     }
+    .category-panel-container.active {
+        display: flex; /* [BARU] Tampil jika aktif */
+    }
+    
     .category-panel {
         display: none;
         flex-direction: column;
@@ -105,13 +106,96 @@
         display: flex;
     }
 
+    /* [BARU] Kontainer Panel Transfer */
+    .transfer-content-wrapper {
+        display: none; /* Sembunyi by default */
+        flex-direction: column;
+        flex-grow: 1;
+        background-color: var(--bg-gray);
+        padding-bottom: 390px; /* Beri ruang untuk kalkulator */
+    }
+    .dark .transfer-content-wrapper {
+        background-color: #111827;
+    }
+    .transfer-content {
+        padding: 20px;
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+    .account-transfer-box {
+        background-color: white;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .dark .account-transfer-box {
+        background-color: #374151;
+    }
+    .account-selector {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .account-label {
+        width: 30px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-light);
+        flex-shrink: 0;
+    }
+    .account-select-btn {
+        flex-grow: 1;
+        background-color: var(--bg-gray);
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+    .dark .account-select-btn {
+        background-color: #4b5563;
+        border-color: #4b5563;
+    }
+    .account-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        background-color: var(--light-purple);
+        color: var(--primary-blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+    .dark .account-icon {
+        background-color: #374151;
+        color: white;
+    }
+    .account-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+    .dark .account-name { color: white; }
+    /* [AKHIR CSS TRANSFER] */
+
+
+    /* Styling Tab Sekunder (Direkomendasikan/Grup/Semua) */
     .secondary-tab-container {
         display: flex;
         flex-shrink: 0;
         gap: 10px;
-        padding: 10px 20px 10px 20px;
+        padding: 10px 20px 0 20px;
         background-color: white;
         overflow-x: auto;
+        border-bottom: 1px solid var(--bg-gray);
         align-items: center;
     }
     .dark .secondary-tab-container {
@@ -123,7 +207,7 @@
         border: none;
         background: var(--bg-gray);
         border-radius: 10px;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 500;
         color: var(--text-dark);
         cursor: pointer;
@@ -149,7 +233,7 @@
         border: none;
         background: var(--bg-gray);
         border-radius: 10px;
-        font-size: 11px;
+        font-size: 14px;
         font-weight: 500;
         color: var(--text-dark);
         cursor: pointer;
@@ -160,21 +244,16 @@
         gap: 6px;
         flex-shrink: 0;
     }
-    .category-settings-btn:hover {
-        background: #e0e0e0;
-    }
     .dark .category-settings-btn {
         background: #4b5563;
         color: #d1d5db;
     }
-    .dark .category-settings-btn:hover {
-        background: #5a6678;
-    }
 
+    /* Wrapper untuk Kategori Grid */
     .categories-section-wrapper {
         flex-grow: 1;
         overflow-y: auto;
-        padding-bottom: 410px; 
+        padding-bottom: 410px; /* Sesuaikan dengan tinggi kalkulator */
         background-color: white;
     }
     .dark .categories-section-wrapper { background-color: #374151; }
@@ -189,10 +268,389 @@
         display: block;
     }
     .dark .categories-section { background-color: transparent; }
+
+    /* [BARU] Logika CSS untuk mode transfer */
+    .add-view.transfer-active .category-panel-container {
+        display: none;
+    }
+    .add-view.transfer-active .transfer-content-wrapper {
+        display: flex;
+    }
+    /* Sembunyikan tombol Akun dan Tambah+ saat mode transfer */
+    .add-view.transfer-active .calculator-section .action-btn.account,
+    .add-view.transfer-active .calculator-section .action-btn.add {
+        visibility: hidden;
+    }
+
+    /* Kategori Grid (dari layout.html) */
+    .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; }
+    .category-item { display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 10px; cursor: pointer; }
+    .category-item:hover { background: #f8f9fa; }
+    .dark .category-item:hover { background: #4b5563; }
+    .category-item.selected { background: var(--primary-blue); color: white; }
+    .category-item.selected .category-icon { background: rgba(255,255,255,0.2) !important; color: white !important; }
+    .category-icon { 
+        width: 50px; 
+        height: 50px; 
+        border-radius: 12px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        margin-bottom: 5px; 
+        font-size: 36px;
+        background: var(--light-purple); /* [DIUBAH] Tambahkan background */
+    }
+    .dark .category-icon { background-color: #4b5563; }
+    .category-name { font-size: 11px; text-align: center; }
+
+
+    /* [PERBAIKAN] CSS Kalkulator (dari layout.html) */
+    .calculator-section {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-width: 480px; 
+        margin: 0 auto;
+        padding: 15px;
+        background:#FFFFFF;
+        border-top: 1px solid #e0e0e0;
+        display: grid;
+        overflow: hidden;
+        box-sizing: border-box;
+        grid-template-rows: auto 1fr; 
+        padding-bottom: calc(15px + env(safe-area-inset-bottom));
+        z-index: 50;
+    }
+    .dark .calculator-section {
+        background: #1f2937;
+        border-top-color: #4b5563;
+    }
+    #calculator-view {
+        display: grid; 
+        grid-template-rows: auto 1fr; 
+        gap: 4px; 
+        height: 100%;
+        box-sizing: border-box; 
+        overflow: hidden;
+    }
+    #calculator-view .amount-container {
+        grid-row: 1;
+        display: grid;
+        grid-template-columns: 3fr 7fr;
+        gap: 8px;
+        height: 100%;
+        justify-content: space-between;
+    }
+    .unified-calc-grid {
+        grid-row: 2;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        gap: 8px;
+        height: 100%;
+    }
+    .note-input-wrapper {
+        cursor: pointer;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        background: white;
+        border-radius: 10px;
+        padding: 10px 10px;
+        gap: 10px;
+        border: 1px solid #f0f0f0;
+        flex: 1;
+        min-width: 0;       
+        overflow-x: auto;
+    }
+    .dark .note-input-wrapper {
+        background: #374151;
+        box-shadow: none;
+        border-color: #374151;
+    }
+    .note-input-wrapper i {
+        color: var(--text-light);
+        font-size: 14px;
+    }
+    .notes-preview-text {
+        font-size: 15px;
+        color: var(--text-dark);
+        white-space: nowrap;
+        padding-right: 10px; 
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .notes-preview-text:empty::before {
+        content: attr(data-placeholder);
+        color: var(--text-light);
+    }
+    .dark .notes-preview-text { color: white; }
+    .dark .notes-preview-text:empty::before { color: #9ca3af; }
+
+    .amount-display {
+        font-size: 28px; 
+        flex: 1;
+        min-width: 0;     
+        overflow-x: auto;
+        white-space: nowrap;
+        background: white; 
+        padding: 0 10px; 
+        border-radius: 10px; 
+        text-align: right; 
+        font-weight: 600; 
+        display: flex; 
+        align-items: center; 
+        justify-content: flex-end; 
+        border: 1px solid #f0f0f0; 
+    }
+    .dark .amount-display {
+        border-color: #374151;
+    }
+    .action-btn {
+        background: #f0f0f0;
+        color: #555;
+        font-size: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        border: 1px solid #f0f0f0;
+        border-radius: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .dark .action-btn {
+        background: #374151;
+        color: #d1d5db;
+        box-shadow: none;
+        border-color: #4b5563;
+    }
+    .action-btn.account {
+        background: #E6E6FA;
+        color: var(--primary-blue);
+        font-size: 24px;
+    }
+    .dark .action-btn.account {
+        background: #4b5563;
+        color: #ffffff;
+    }
+    .action-btn.today {
+        background: #E6E6FA;
+        color: var(--primary-blue);
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .dark .action-btn.today {
+        background: #4b5563;
+        color: white;
+    }
+    .action-btn.add {
+        background: #51CF66;
+        color: white;
+    }
+    .action-btn.check {
+        background: #51CF66;
+        color: white;
+        display: none;
+    }
+    .action-btn.equals {
+        background: var(--primary-blue);
+        color: white;
+    }
+    .calc-btn {
+        background: white;
+        color: var(--text-dark);
+        font-size: 28px;
+        box-shadow: none;
+        border: 1px solid #f0f0f0;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .dark .calc-btn {
+        background: #374151;
+        color: #d1d5db;
+        border-color: #4b5563;
+    }
+    .calc-btn.operator {
+        background: #f8f9fa;
+        color: var(--primary-blue);
+        font-size: 24px;
+        border-color: #f0f0f0;
+    }
+    .dark .calc-btn.operator {
+        background: #4b5563;
+        color: #E6E6FA;
+        border-color: #4b5563;
+    }
+    .calc-btn.delete {
+        background: #ffe3e3;
+        color: var(--expense-red);
+        border-color: #f0f0f0;
+    }
+    .dark .calc-btn.delete {
+        background: #5c2c2c;
+        color: var(--expense-red);
+        border-color: #4b5563;
+    }
+    .action-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    .action-btn .loading-spinner {
+        display: none; /* Disembunyikan, akan diaktifkan oleh JS */
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-top-color: #fff;
+        width: 1.2rem;
+        height: 1.2rem;
+        border-radius: 50%;
+        animation: spin 0.8s ease-in-out infinite;
+    }
+    .action-btn.account:disabled .loading-spinner,
+    .action-btn.today:disabled .loading-spinner {
+        border-color: rgba(0,0,0,0.2);
+        border-top-color: var(--primary-blue);
+    }
+    
+    /* CSS untuk Notes View */
+    #notes-view {
+        display: none; 
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        background: white;
+        grid-row: 1 / span 2; 
+    }
+    .dark #notes-view {
+        background: #1f2937;
+    }
+    .calculator-section.notes-active {
+        padding: 0;
+    }
+    .calculator-section.notes-active #calculator-view {
+        display: none; 
+    }
+    .calculator-section.notes-active #notes-view {
+        display: flex;
+    }
+    .notes-view-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid #e9ecef;
+        flex-shrink: 0;
+        background-color: white;
+    }
+    .dark .notes-view-header {
+        background-color: #1f2937;
+        border-bottom-color: #4b5563;
+    }
+    .notes-view-header h3 {
+        font-weight: 600;
+        font-size: 16px;
+        text-align: center;
+        flex-grow: 1;
+    }
+    .notes-view-header .notes-view-save {
+        background: none;
+        border: none;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        color: var(--primary-blue);
+        flex-basis: 50px;
+        text-align: right;
+    }
+    .notes-view-body {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        overflow: hidden;
+        flex-grow: 1;
+    }
+    .notes-view-body textarea {
+        max-height: 80px;
+        flex-shrink: 0;
+        border: none;
+        outline: none;
+        width: 100%;
+        font-size: 16px;
+        line-height: 1.6;
+        padding: 10px;
+        background-color: var(--bg-gray);
+        border-radius: 10px;
+        resize: none;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .dark .notes-view-body textarea {
+        background-color: #374151;
+        color: white;
+    }
+    .suggestion-pills-container {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding-top: 15px;
+    }
+    .suggestion-pills-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-light);
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+    .suggestion-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .suggestion-pills button {
+        background: var(--light-purple);
+        color: var(--primary-blue);
+        border: none;
+        border-radius: 20px;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        padding-right: 10px;
+    }
+    .dark .suggestion-pills button {
+        background-color: #4b5563;
+        color: #E6E6FA;
+    }
+    .suggestion-delete-btn {
+        font-size: 10px;
+        color: var(--primary-blue);
+        background-color: rgba(0,0,0,0.05);
+        border-radius: 50%;
+        padding: 4px 5px;
+        margin-left: 8px;
+        line-height: 1;
+        transition: background-color 0.2s;
+    }
+    .suggestion-delete-btn:hover {
+        background-color: rgba(0,0,0,0.1);
+    }
+    .dark .suggestion-delete-btn {
+        color: #E6E6FA;
+        background-color: rgba(255,255,255,0.1);
+    }
+    .dark .suggestion-delete-btn:hover {
+        background-color: rgba(255,255,255,0.2);
+    }
 </style>
 
-<div class="add-view active">
+<div class="add-view active" id="add-view-container">
     <div class="add-header">
+        <a href="/" class="close-btn"><i class="fas fa-times"></i></a>
+        
         <div class="tab-button-group">
             <button class="tab-button expense-tab active" id="primary-tab-expense" onclick="selectPrimaryTab('expense')">
                 <i class="fas fa-minus"></i>
@@ -202,20 +660,25 @@
                 <i class="fas fa-plus"></i>
                 <span>Pemasukan</span>
             </button>
-            <a href="/transfer" class="tab-button transfer-tab" id="primary-tab-transfer">
+            <button class="tab-button transfer-tab" id="primary-tab-transfer" onclick="selectPrimaryTab('transfer')">
                 <i class="fas fa-exchange-alt"></i>
                 <span>Transfer</span>
-            </a>
+            </button>
         </div>
-        <a href="/" class="close-btn"><i class="fas fa-times"></i></a>
+        
+        <button class="check-btn" id="headerActionBtn" onclick="handleHeaderActionClick()">
+            <i class="fas fa-check"></i>
+        </button>
     </div>
 
-    <div class="category-panel-container">
+    <div class="category-panel-container active" id="category-panel-container">
         <div class="category-panel active" id="expense-panel">
             <div class="secondary-tab-container">
-                <button class="secondary-tab-btn active" onclick="selectSecondaryTab(this, 'expense-recommended')">✨ Rekomendasi</button>
-                <button class="secondary-tab-btn" onclick="selectSecondaryTab(this, 'expense-all')">📑 Semua</button>
-                <a href="/categories" class="category-settings-btn">⚙️ Pengaturan</a>
+                <button class="secondary-tab-btn active" onclick="selectSecondaryTab(this, 'expense-recommended')">Direkomendasikan</button>
+                <button class="secondary-tab-btn" onclick="selectSecondaryTab(this, 'expense-all')">Semua</button>
+                <a href="/categories" class="category-settings-btn">
+                    <i class="fas fa-cog"></i>
+                </a>
             </div>
             <div class="categories-section-wrapper">
                 <div class="categories-section active" id="expense-recommended">
@@ -229,9 +692,11 @@
 
         <div class="category-panel" id="income-panel">
             <div class="secondary-tab-container">
-                <button class="secondary-tab-btn active" onclick="selectSecondaryTab(this, 'income-recommended')">✨ Rekomendasi</button>
-                <button class="secondary-tab-btn" onclick="selectSecondaryTab(this, 'income-all')">📑 Semua</button>
-                <a href="/categories" class="category-settings-btn">⚙️ Pengaturan</a>
+                <button class="secondary-tab-btn active" onclick="selectSecondaryTab(this, 'income-recommended')">Direkomendasikan</button>
+                <button class="secondary-tab-btn" onclick="selectSecondaryTab(this, 'income-all')">Semua</button>
+                <a href="/categories" class="category-settings-btn">
+                    <i class="fas fa-cog"></i>
+                </a>
             </div>
             <div class="categories-section-wrapper">
                 <div class="categories-section active" id="income-recommended">
@@ -243,6 +708,29 @@
             </div>
         </div>
     </div>
+    
+    <div class="transfer-content-wrapper" id="transfer-content-wrapper">
+        <main class="transfer-content">
+            <div class="account-transfer-box">
+                <div class="account-selector">
+                    <span class="account-label">Dari</span>
+                    <button class="account-select-btn" id="from-account-btn" onclick="selectTransferAccount('from')">
+                        <span class="account-icon" id="from-account-icon"></span>
+                        <span class="account-name" id="from-account-name">Pilih Akun Asal...</span>
+                    </button>
+                </div>
+                
+                <div class="account-selector">
+                    <span class="account-label">Ke</span>
+                    <button class="account-select-btn" id="to-account-btn" onclick="selectTransferAccount('to')">
+                        <span class="account-icon" id="to-account-icon"></span>
+                        <span class="account-name" id="to-account-name">Pilih Akun Tujuan...</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
     
     <div class="calculator-section" id="main-calculator-section">
         <div id="calculator-view">
@@ -257,7 +745,9 @@
                 <button class="action-btn account" onclick="selectAccount()"><i class="fas fa-credit-card" id="account-icon-display"></i></button>
                 <button class="action-btn today" onclick="selectDate()"><span id="create-date-display">TODAY</span></button>
                 <button class="action-btn add" id="addBtn" onclick="addNewItem()"><i class="fas fa-plus"></i></button>
-                <button class="action-btn check" id="actionBtn" onclick="handleActionClick()"><i class="fas fa-check"></i></button>
+                <button class="action-btn check" id="actionBtn" onclick="handleActionClick()" style="display: none;">
+                    <i class="fas fa-check"></i>
+                </button>
                 <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
                 <button class="calc-btn" onclick="appendToCalc('7')">7</button>
                 <button class="calc-btn" onclick="appendToCalc('8')">8</button>
