@@ -112,7 +112,6 @@
         padding: 10px 20px 10px 20px;
         background-color: white;
         overflow-x: auto;
-        border-bottom: 1px solid var(--bg-gray);
         align-items: center;
     }
     .dark .secondary-tab-container {
@@ -194,8 +193,6 @@
 
 <div class="add-view active">
     <div class="add-header">
-        <a href="/" class="close-btn"><i class="fas fa-times"></i></a>
-        
         <div class="tab-button-group">
             <button class="tab-button expense-tab active" id="primary-tab-expense" onclick="selectPrimaryTab('expense')">
                 <i class="fas fa-minus"></i>
@@ -210,10 +207,7 @@
                 <span>Transfer</span>
             </a>
         </div>
-        
-        <button class="check-btn" id="headerActionBtn" onclick="handleHeaderActionClick()">
-            <i class="fas fa-check"></i>
-        </button>
+        <a href="/" class="close-btn"><i class="fas fa-times"></i></a>
     </div>
 
     <div class="category-panel-container">
