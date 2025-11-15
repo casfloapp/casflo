@@ -4207,12 +4207,12 @@ async function toggleMemberList(buttonElement, walletId, walletRole, myUserId = 
                             const isOwner = member.role === 'OWNER';
                             const isMe = myUserId && member.id === myUserId;
                             const canDelete = (walletRole === 'OWNER' && !isOwner); 
-                            const labelHtml = member.label ? `<div class="email" style="font-style: italic; color: var(--primary-blue);">${member.label}</div>` : '';
+                            const labelHtml = member.label ? `<div class="email" style="color: var(--primary-blue);">${member.label}</div>` : '';
 
                             item.innerHTML = `
                                 <div class="avatar">${avatarHtml}</div>
                                 <div class="details">
-                                    <div class="name">${member.full_name} ${isMe ? '(Anda)' : ''}</div>
+                                    <div class="name">${member.full_name}</div>
                                     <div class="email">${member.email}</div>
                                     ${labelHtml} 
                                 </div>
