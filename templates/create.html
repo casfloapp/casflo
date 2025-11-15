@@ -1,14 +1,14 @@
 <style>
-    /* [PERBAIKAN] CSS untuk Header Tombol (Pengeluaran, Pemasukan, Transfer) */
+    /* [PERBAIKAN] CSS untuk Header Tombol (Pengeluaran, Pemasukan, Atur) */
     .add-header {
         display: flex;
         align-items: center;
-        padding: 10px 10px;
+        padding: 10px 15px;
         background-color: white;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         flex-shrink: 0;
         z-index: 100;
-        gap: 5px;
+        gap: 10px;
     }
     .dark .add-header {
         background-color: #1f2937;
@@ -21,6 +21,7 @@
         background: none;
         border: none;
         cursor: pointer;
+        padding: 5px;
         flex-shrink: 0;
         text-decoration: none;
     }
@@ -33,11 +34,12 @@
     }
     .dark .check-btn { color: #6d8ee1; }
 
-    /* Container untuk tombol Pengeluaran/Pemasukan/Transfer */
+    /* Container untuk tombol Pengeluaran/Pemasukan/Atur */
     .tab-button-group {
         display: flex;
         background-color: var(--bg-gray);
         border-radius: 12px;
+        padding: 5px;
         flex-grow: 1;
     }
     .dark .tab-button-group { background-color: #374151; }
@@ -49,7 +51,7 @@
         border-radius: 9px;
         background-color: transparent;
         color: var(--text-dark);
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 500;
         cursor: pointer;
         transition: background-color 0.2s, color 0.2s;
@@ -72,15 +74,17 @@
         color: white;
     }
 
+    /* Ikon di dalam tab-button */
     .tab-button i { font-size: 14px; }
     .tab-button.expense-tab.active i { color: var(--expense-red); }
     .tab-button.income-tab.active i { color: var(--income-green); }
-    .tab-button.transfer-tab { color: var(--text-dark); }
-    .dark .tab-button.transfer-tab { color: #d1d5db; }
-    .tab-button.transfer-tab.active { color: var(--primary-blue); }
-    .dark .tab-button.transfer-tab.active { color: white; }
-    /* [AKHIR CSS HEADER] */
-
+    
+    /* [BARU] Tombol Atur */
+    .tab-button.settings-tab { color: var(--text-dark); }
+    .dark .tab-button.settings-tab { color: #d1d5db; }
+    .tab-button.settings-tab:hover { background-color: rgba(0,0,0,0.05); }
+    .dark .tab-button.settings-tab:hover { background-color: rgba(255,255,255,0.1); }
+    
     /* Kontainer Panel Kategori (untuk Pengeluaran/Pemasukan) */
     .category-panel-container {
         display: none; /* [DIUBAH] Sembunyi by default */
@@ -104,95 +108,17 @@
         display: flex;
     }
 
-    /* [BARU] Kontainer Panel Transfer */
-    .transfer-content-wrapper {
-        display: none; /* Sembunyi by default */
-        flex-direction: column;
-        flex-grow: 1;
-        background-color: var(--bg-gray);
-        padding-bottom: 390px; /* Beri ruang untuk kalkulator */
-    }
-    .dark .transfer-content-wrapper {
-        background-color: #111827;
-    }
-    .transfer-content {
-        padding: 20px;
-        flex-grow: 1;
-        overflow-y: auto;
-    }
-    .account-transfer-box {
-        background-color: white;
-        border-radius: 18px;
-        padding: 20px;
-        box-shadow: 0 4px 25px rgba(0,0,0,0.06);
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-    .dark .account-transfer-box {
-        background-color: #374151;
-    }
-    .account-selector {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    .account-label {
-        width: 30px;
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--text-light);
-        flex-shrink: 0;
-    }
-    .account-select-btn {
-        flex-grow: 1;
-        background-color: var(--bg-gray);
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        padding: 12px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        cursor: pointer;
-    }
-    .dark .account-select-btn {
-        background-color: #4b5563;
-        border-color: #4b5563;
-    }
-    .account-icon {
-        width: 35px;
-        height: 35px;
-        border-radius: 8px;
-        background-color: var(--light-purple);
-        color: var(--primary-blue);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        font-weight: 600;
-        flex-shrink: 0;
-    }
-    .dark .account-icon {
-        background-color: #374151;
-        color: white;
-    }
-    .account-name {
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--text-dark);
-    }
-    .dark .account-name { color: white; }
-    /* [AKHIR CSS TRANSFER] */
-
+    /* Hapus CSS untuk Transfer Panel (sudah tidak ada) */
 
     /* Styling Tab Sekunder (Direkomendasikan/Grup/Semua) */
     .secondary-tab-container {
         display: flex;
         flex-shrink: 0;
         gap: 10px;
-        padding: 10px 10px 10px 10px;
+        padding: 10px 20px 0 20px;
         background-color: white;
         overflow-x: auto;
+        border-bottom: 1px solid var(--bg-gray);
         align-items: center;
     }
     .dark .secondary-tab-container {
@@ -224,13 +150,15 @@
         background: #1f2937;
         color: white;
     }
+    
+    /* Tombol settings ini sudah ada, tidak perlu diubah */
     .category-settings-btn {
         margin-left: auto;
         padding: 8px 10px;
         border: none;
         background: var(--bg-gray);
         border-radius: 10px;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 500;
         color: var(--text-dark);
         cursor: pointer;
@@ -250,7 +178,7 @@
     .categories-section-wrapper {
         flex-grow: 1;
         overflow-y: auto;
-        padding-bottom: 410px; /* Sesuaikan dengan tinggi kalkulator */
+        padding-bottom: 410px; 
         background-color: white;
     }
     .dark .categories-section-wrapper { background-color: #374151; }
@@ -265,40 +193,6 @@
         display: block;
     }
     .dark .categories-section { background-color: transparent; }
-
-    /* [BARU] Logika CSS untuk mode transfer */
-    .add-view.transfer-active .category-panel-container {
-        display: none;
-    }
-    .add-view.transfer-active .transfer-content-wrapper {
-        display: flex;
-    }
-    /* Sembunyikan tombol Akun dan Tambah+ saat mode transfer */
-    .add-view.transfer-active .calculator-section .action-btn.account {
-        visibility: hidden;
-    }
-
-    /* Kategori Grid (dari layout.html) */
-    .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; }
-    .category-item { display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 10px; cursor: pointer; }
-    .category-item:hover { background: #f8f9fa; }
-    .dark .category-item:hover { background: #4b5563; }
-    .category-item.selected { background: var(--primary-blue); color: white; }
-    .category-item.selected .category-icon { background: rgba(255,255,255,0.2) !important; color: white !important; }
-    .category-icon { 
-        width: 50px; 
-        height: 50px; 
-        border-radius: 12px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        margin-bottom: 5px; 
-        font-size: 36px;
-        background: var(--light-purple); /* [DIUBAH] Tambahkan background */
-    }
-    .dark .category-icon { background-color: #4b5563; }
-    .category-name { font-size: 11px; text-align: center; }
-
 
     /* [PERBAIKAN] CSS Kalkulator (dari layout.html) */
     .calculator-section {
@@ -339,7 +233,7 @@
         justify-content: space-between;
     }
     .unified-calc-grid {
-        grid-row: 2;
+        grid-row: 2; /* [DIUBAH] Jadi baris ke-2 */
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: repeat(5, 1fr);
@@ -356,7 +250,7 @@
         padding: 10px 10px;
         gap: 10px;
         border: 1px solid #f0f0f0;
-        flex: 1;
+        flex: 1; /* Biarkan flex-grow */
         min-width: 0;       
         overflow-x: auto;
     }
@@ -387,7 +281,7 @@
 
     .amount-display {
         font-size: 28px; 
-        flex: 1;
+        flex: 1; /* Biarkan flex-grow */
         min-width: 0;     
         overflow-x: auto;
         white-space: nowrap;
@@ -445,6 +339,11 @@
         background: #51CF66;
         color: white;
     }
+    .action-btn.check {
+        background: #51CF66;
+        color: white;
+        display: none; /* [DIUBAH] Sembunyikan by default, karena pindah ke header */
+    }
     .action-btn.equals {
         background: var(--primary-blue);
         color: white;
@@ -493,7 +392,7 @@
         cursor: not-allowed;
     }
     .action-btn .loading-spinner {
-        display: none; /* Disembunyikan, akan diaktifkan oleh JS */
+        display: none;
         border: 2px solid rgba(255, 255, 255, 0.5);
         border-top-color: #fff;
         width: 1.2rem;
@@ -501,6 +400,10 @@
         border-radius: 50%;
         animation: spin 0.8s ease-in-out infinite;
     }
+    .loading-spinner.active {
+        display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
     .action-btn.account:disabled .loading-spinner,
     .action-btn.today:disabled .loading-spinner {
         border-color: rgba(0,0,0,0.2);
@@ -644,16 +547,16 @@
         
         <div class="tab-button-group">
             <button class="tab-button expense-tab active" id="primary-tab-expense" onclick="selectPrimaryTab('expense')">
-                <i class="fas fa-cart-shopping"></i>
+                <i class="fas fa-minus"></i>
                 <span>Pengeluaran</span>
             </button>
             <button class="tab-button income-tab" id="primary-tab-income" onclick="selectPrimaryTab('income')">
-                <i class="fas fa-hand-holding-dollar"></i>
+                <i class="fas fa-plus"></i>
                 <span>Pemasukan</span>
             </button>
-            <button class="tab-button transfer-tab" id="primary-tab-transfer" onclick="selectPrimaryTab('transfer')">
-                <i class="fas fa-money-bill-transfer"></i>
-                <span>Transfer</span>
+            <button class="tab-button settings-tab" id="primary-tab-settings" onclick="selectPrimaryTab('settings')">
+                <i class="fas fa-cog"></i>
+                <span>Atur</span>
             </button>
         </div>
         
@@ -665,9 +568,11 @@
     <div class="category-panel-container active" id="category-panel-container">
         <div class="category-panel active" id="expense-panel">
             <div class="secondary-tab-container">
-                <button class="secondary-tab-btn active" onclick="selectSecondaryTab(this, 'expense-recommended')">✨ Rekomendasi</button>
-                <button class="secondary-tab-btn" onclick="selectSecondaryTab(this, 'expense-all')">📑 Semua</button>
-                <a href="/categories" class="category-settings-btn">⚙️ Pengaturan</a>
+                <button class="secondary-tab-btn active" onclick="selectSecondaryTab(this, 'expense-recommended')">Direkomendasikan</button>
+                <button class="secondary-tab-btn" onclick="selectSecondaryTab(this, 'expense-all')">Semua</button>
+                <a href="/categories" class="category-settings-btn">
+                    <i class="fas fa-cog"></i>
+                </a>
             </div>
             <div class="categories-section-wrapper">
                 <div class="categories-section active" id="expense-recommended">
@@ -681,9 +586,11 @@
 
         <div class="category-panel" id="income-panel">
             <div class="secondary-tab-container">
-                <button class="secondary-tab-btn active" onclick="selectSecondaryTab(this, 'income-recommended')">✨ Rekomendasi</button>
-                <button class="secondary-tab-btn" onclick="selectSecondaryTab(this, 'income-all')">📑 Semua</button>
-                <a href="/categories" class="category-settings-btn">⚙️ Pengaturan</a>
+                <button class="secondary-tab-btn active" onclick="selectSecondaryTab(this, 'income-recommended')">Direkomendasikan</button>
+                <button class="secondary-tab-btn" onclick="selectSecondaryTab(this, 'income-all')">Semua</button>
+                <a href="/categories" class="category-settings-btn">
+                    <i class="fas fa-cog"></i>
+                </a>
             </div>
             <div class="categories-section-wrapper">
                 <div class="categories-section active" id="income-recommended">
@@ -696,30 +603,7 @@
         </div>
     </div>
     
-    <div class="transfer-content-wrapper" id="transfer-content-wrapper">
-        <main class="transfer-content">
-            <div class="account-transfer-box">
-                <div class="account-selector">
-                    <span class="account-label">Dari</span>
-                    <button class="account-select-btn" id="from-account-btn" onclick="selectTransferAccount('from')">
-                        <span class="account-icon" id="from-account-icon"></span>
-                        <span class="account-name" id="from-account-name">Pilih Akun Asal...</span>
-                    </button>
-                </div>
-                
-                <div class="account-selector">
-                    <span class="account-label">Ke</span>
-                    <button class="account-select-btn" id="to-account-btn" onclick="selectTransferAccount('to')">
-                        <span class="account-icon" id="to-account-icon"></span>
-                        <span class="account-name" id="to-account-name">Pilih Akun Tujuan...</span>
-                    </button>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    
-      <div class="calculator-section" id="main-calculator-section">
+    <div class="calculator-section" id="main-calculator-section">
         <div id="calculator-view">
             <div class="amount-container">
                 <button type="button" class="note-input-wrapper" onclick="openNotesView()">
@@ -732,7 +616,9 @@
                 <button class="action-btn account" onclick="selectAccount()"><i class="fas fa-credit-card" id="account-icon-display"></i></button>
                 <button class="action-btn today" onclick="selectDate()"><span id="create-date-display">TODAY</span></button>
                 <button class="action-btn add" id="addBtn" onclick="addNewItem()"><i class="fas fa-plus"></i></button>
-                <button class="action-btn check" id="actionBtn" onclick="handleActionClick()"><i class="fas fa-check"></i></button>
+                <button class="action-btn check" id="actionBtn" onclick="handleActionClick()" style="display: none;">
+                    <i class="fas fa-check"></i>
+                </button>
                 <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
                 <button class="calc-btn" onclick="appendToCalc('7')">7</button>
                 <button class="calc-btn" onclick="appendToCalc('8')">8</button>
